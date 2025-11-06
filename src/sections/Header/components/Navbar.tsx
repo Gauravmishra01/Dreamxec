@@ -222,10 +222,10 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
                   HOME
                 </a>
                 <a
-                  href="/browse"
+                  href="/campaigns"
                   className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
                 >
-                  BROWSE
+                  CAMPAIGNS
                 </a>
                 
                 {/* Sign In Button */}

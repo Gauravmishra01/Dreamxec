@@ -141,12 +141,12 @@ export const DesktopMenu = ({ currentUser }: DesktopMenuProps) => {
               <li className="box-border caret-transparent grow min-h-0 min-w-0 md:min-h-[auto] md:min-w-[auto]">
                 <div className="box-border caret-transparent h-full">
                   <a
-                    href="/browse"
+                    href="/campaigns"
                     className="relative text-dreamxec-orange bg-transparent box-border caret-transparent block basis-[0%] grow h-full mx-0 p-0 border-t-2 border-b-[3px] border-y-transparent border-solid hover:text-dreamxec-green hover:border-b-dreamxec-green transition-colors md:bg-transparent md:mx-1 md:px-2.5 md:py-1 md:border-b-transparent md:border-b"
                   >
                     <div className="items-center box-border caret-transparent flex h-full justify-center">
                       <span className="text-dreamxec-navy text-[9px] font-bold box-border caret-transparent block leading-[normal] min-h-0 min-w-0 text-nowrap font-sans md:text-[17px] md:font-semibold md:leading-[23.8px] md:min-h-[auto] md:min-w-[auto]">
-                        BROWSE
+                        CAMPAIGNS
                       </span>
                     </div>
                   </a>
