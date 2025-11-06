@@ -1,6 +1,13 @@
 import { Navbar } from "./components/Navbar";
+import type { UserRole } from "../../types";
 
-export const Header = () => {
+interface HeaderProps {
+  currentUser?: { name: string; role: UserRole } | null;
+  onLogin?: () => void;
+  onLogout?: () => void;
+}
+
+export const Header = ({ currentUser, onLogin, onLogout }: HeaderProps) => {
   return (
     <header className="relative self-stretch box-border caret-transparent grid col-end-2 col-start-1 row-end-2 row-start-1 grid-cols-[1fr] grid-rows-[1fr] justify-self-stretch z-50">
       <section className="relative bg-transparent caret-transparent grid grid-cols-[minmax(0px,1fr)] grid-rows-[1fr] h-auto max-h-[99999px] max-w-[99999px] min-h-20 pointer-events-auto md:h-[108px] md:min-h-0">
@@ -19,7 +26,7 @@ export const Header = () => {
           >
             {/* Enhanced oil pastel card style for navbar with rounded corners */}
             <div className="absolute bg-white caret-transparent border-dreamxec-navy rounded-2xl border-5 inset-0 shadow-pastel-saffron"></div>
-            <Navbar />
+            <Navbar currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
           </div>
         </div>
       </section>
