@@ -19,7 +19,7 @@ const prisma = require("./prisma");
 // --------------------------------------------
 // COMMON FUNCTION TO PROCESS OAUTH USER
 // --------------------------------------------
-async function processOAuthUser(providerIdKey, profile, requestedRole = "USER") {
+async function processOAuthUser(providerIdKey, profile, requestedRole) {
   const email = profile.emails?.[0]?.value;
   const providerId = profile.id;
 

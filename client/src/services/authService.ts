@@ -109,13 +109,11 @@ export const handleGoogleCallback = async (): Promise<ApiResponse<AuthResponse>>
 // LinkedIn OAuth - Initiate authentication
 export const initiateLinkedInAuth = (role: 'USER' | 'DONOR' | 'ADMIN'): void => {
   const API_URL = import.meta.env.VITE_API_URL;
-
   const authUrl = `${API_URL}/auth/linkedin?role=${role}`;
   console.log('🔗 Redirecting to LinkedIn OAuth:', authUrl);
 
   window.location.href = authUrl;
 };
-
 
 // LinkedIn OAuth - Handle callback (called after redirect from LinkedIn)
 export const handleLinkedInCallback = async (): Promise<ApiResponse<AuthResponse>> => {

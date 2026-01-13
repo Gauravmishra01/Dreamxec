@@ -67,7 +67,9 @@ router.get(
 // --------------------------------------------
 router.get("/linkedin", async (req, res) => {
   try {
+    console.log("server role here", req.query.role )
     const role = req.query.role || "USER";
+    console.log(role)
     const client = await getLinkedInClient();
 
     req.session.oauthRole = role;
@@ -93,6 +95,7 @@ router.get("/linkedin/callback", async (req, res, next) => {
     const params = client.callbackParams(req);
 
     const expectedState = req.session.oauthRole || req.query.state;
+    console.log(expectedState)
 
     if (!expectedState) {
       throw new Error("Missing OAuth state");
@@ -114,7 +117,7 @@ router.get("/linkedin/callback", async (req, res, next) => {
       emails: [{ value: userInfo.email }],
     };
 
-    const user = await processOAuthUser("linkedinId", profile);
+    const user = await processOAuthUser("linkedinId", profile, expectedState);
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
 

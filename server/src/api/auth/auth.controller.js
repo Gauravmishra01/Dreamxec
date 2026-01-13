@@ -255,6 +255,28 @@ exports.googleCallback = catchAsync(async (req, res, next) => {
 });
 
 // 4b. LINKEDIN OAUTH CALLBACK
+// exports.linkedinCallback = catchAsync(async (req, res, next) => {
+//   try {
+//     // Passport middleware attaches user to req.user
+//     if (!req.user) {
+//       console.error('LinkedIn callback: no user on req');
+//       return next(new AppError('Authentication failed: no user returned from LinkedIn', 401));
+//     }
+
+//     console.log('LinkedIn callback user:', { id: req.user.id, email: req.user.email, linkedinId: req.user.linkedinId });
+
+//     const token = signToken(req.user.id);
+//     console.log('LinkedIn callback generated token for user', req.user.id);
+
+//     // Redirect to frontend with token
+//     res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+//   } catch (err) {
+//     console.error('Error in linkedinCallback:', err);
+//     return next(new AppError('Authentication failed', 500));
+//   }
+// });
+
+
 exports.linkedinCallback = catchAsync(async (req, res, next) => {
   try {
     // Passport middleware attaches user to req.user
@@ -263,7 +285,40 @@ exports.linkedinCallback = catchAsync(async (req, res, next) => {
       return next(new AppError('Authentication failed: no user returned from LinkedIn', 401));
     }
 
-    console.log('LinkedIn callback user:', { id: req.user.id, email: req.user.email, linkedinId: req.user.linkedinId });
+    console.log('LinkedIn callback user:', { 
+      id: req.user.id, 
+      email: req.user.email, 
+      linkedinId: req.user.linkedinId 
+    });
+
+    // FIXED: Extract role from state parameter (OAuth-safe)
+    let role = 'USER'; // default role
+    
+    if (req.query.state) {
+      try {
+        const state = JSON.parse(decodeURIComponent(req.query.state));
+        role = state.role || 'USER';
+        console.log('LinkedIn callback: extracted role from state:', role);
+      } catch (err) {
+        console.warn('LinkedIn callback: failed to parse state, using default role:', err.message);
+      }
+    }
+
+    // Ensure base user role is always USER
+    if (req.user.role !== 'USER') {
+      req.user.role = 'USER';
+    }
+
+    // Create the appropriate profile based on selected role
+    if (role === 'DONOR') {
+      // Create donor profile attached to this user
+      await createDonorProfile(req.user.id);
+      console.log('LinkedIn callback: created DONOR profile for user', req.user.id);
+    } else {
+      // Create student profile (default)
+      await createStudentProfile(req.user.id);
+      console.log('LinkedIn callback: created STUDENT profile for user', req.user.id);
+    }
 
     const token = signToken(req.user.id);
     console.log('LinkedIn callback generated token for user', req.user.id);
