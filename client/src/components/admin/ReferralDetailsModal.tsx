@@ -13,6 +13,9 @@ type Referral = {
   referrerEmail?: string | null;
   status: string;
   createdAt: string;
+  instagram?: string | null;
+  linkedIn?: string | null;
+  portfolio?: string | null;
   // add other fields if you store them
 };
 
@@ -88,6 +91,13 @@ export default function ReferralDetailsModal({
               <p>{referral.ficName ?? "—"}</p>
               <p className="text-sm text-gray-500">{referral.ficEmail ?? "—"}</p>
               <p className="text-sm text-gray-500">{referral.ficPhone ?? "—"}</p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold">Social Links</h3>
+              <p>{referral.instagram ?? "—"}</p>
+              <p className="text-sm text-gray-500">{referral.linkedIn ?? "—"}</p>
+              <p className="text-sm text-gray-500">{referral.portfolio ?? "—"}</p>
             </div>
 
             <div>

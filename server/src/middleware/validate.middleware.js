@@ -1,5 +1,6 @@
 const validate = (schema) => (req, res, next) => {
   try {
+    console.log(req.body)
     schema.parse({
       body: req.body,
       query: req.query,

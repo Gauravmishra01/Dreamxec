@@ -7,56 +7,93 @@ const sendEmail = require('../../services/email.service');
 // CREATE USER PROJECT
 // -------------------------
 // USER: Create a user project (Only verified club members)
+const uploadToCloudinary = require('../../utils/uploadToCloudinary');
+
+// -------------------------
+// CREATE USER PROJECT
+// -------------------------
+// USER: Create a user project (Only verified club members)
 exports.createUserProject = catchAsync(async (req, res, next) => {
-  // 1️⃣ User must belong to a club
-  if (!req.user.clubId) {
-    return next(new AppError(
-      'You must be part of a verified college club/society to create a campaign.',
-      403
-    ));
-  }
+  const { id, title, description, companyName, skillsRequired, timeline, goalAmount } = req.body;
 
-  // 2️⃣ Club must be approved by admin
-  if (!req.user.clubVerified) {
-    return next(new AppError(
-      'Your club has not been verified yet. Please wait for admin approval.',
-      403
-    ));
-  }
-
-  // 3️⃣ User must be in verified members list
-  if (!req.user.isClubMember) {
-    return next(new AppError(
-      'You are not in the approved club member list. Ask your club president to upload or verify your details.',
-      403
-    ));
-  }
-
-  // 4️⃣ (Future) Check DreamXec subscription
-  if (req.user.subscriptionStatus !== 'ACTIVE') {
-    return next(new AppError(
-      'Please activate your DreamXec membership to create campaigns.',
-      403
-    ));
-  }
-
-  // 5️⃣ Normal project creation
-  const { title, description, companyName, skillsRequired, timeline, goalAmount, imageUrl } = req.body;
-
-  const userProject = await prisma.userProject.create({
+  const initialProject = await prisma.userProject.create({
     data: {
+      id: id || undefined, 
       title,
       description,
       companyName: companyName || null,
-      skillsRequired: skillsRequired || [],
+      skillsRequired: skillsRequired ? (typeof skillsRequired === 'string' ? JSON.parse(skillsRequired) : skillsRequired) : [], 
       timeline: timeline || null,
-      goalAmount,
-      imageUrl: imageUrl || null,
+      goalAmount: parseFloat(goalAmount), 
+      imageUrl: null, 
+      campaignMedia: [],
+      presentationDeckUrl: null,
       userId: req.user.id,
     },
   });
 
-  res.status(201).json({ status: 'success', data: { userProject } });
+  const projectId = initialProject.id;
+  const updates = {};
+  
+  console.log('📦 Canpaign Created:', projectId);
+  console.log('📂 Files received:', req.files ? Object.keys(req.files) : 'None');
+
+  // Handle File Uploads
+  if (req.files) {
+    try {
+      // 1. Banner Image
+      if (req.files.bannerFile && req.files.bannerFile[0]) {
+        console.log('🖼 Processing Banner...');
+        const file = req.files.bannerFile[0];
+        const folder = `dreamxec/campaigns/${projectId}/images`;
+        const url = await uploadToCloudinary(file.path, folder);
+        console.log('✅ Banner Uploaded:', url);
+        updates.imageUrl = url;
+      }
+
+      // 2. Pitch Deck
+      if (req.files.deckFile && req.files.deckFile[0]) {
+        console.log('📄 Processing Deck...');
+        const file = req.files.deckFile[0];
+        const folder = `dreamxec/campaigns/${projectId}/documents/campaign-deck`;
+        const url = await uploadToCloudinary(file.path, folder);
+        console.log('✅ Deck Uploaded:', url);
+        updates.presentationDeckUrl = url;
+      }
+
+      // 3. Campaign Media
+      if (req.files.mediaFiles && req.files.mediaFiles.length > 0) {
+        console.log(`🎥 Processing ${req.files.mediaFiles.length} Media Files...`);
+        const mediaUrls = [];
+        for (const file of req.files.mediaFiles) {
+          let folder = `dreamxec/campaigns/${projectId}/others`;
+          if (file.mimetype.startsWith('image/')) folder = `dreamxec/campaigns/${projectId}/images`;
+          else if (file.mimetype.startsWith('video/')) folder = `dreamxec/campaigns/${projectId}/videos`;
+          
+          const url = await uploadToCloudinary(file.path, folder);
+          mediaUrls.push(url);
+        }
+        console.log('✅ Media Uploaded:', mediaUrls);
+        updates.campaignMedia = mediaUrls; // This creates a new array. Note: Prisma set/push behavior.
+      }
+    } catch (err) {
+      console.error('❌ Upload Error during creation:', err);
+    }
+  }
+
+  // Update if there are any file URLs
+  let finalProject = initialProject;
+  if (Object.keys(updates).length > 0) {
+    console.log('🔄 Updating Project with:', updates);
+    finalProject = await prisma.userProject.update({
+      where: { id: projectId },
+      data: updates,
+    });
+  } else {
+    console.log('⚠️ No updates to apply.');
+  }
+
+  res.status(201).json({ status: 'success', data: { userProject: finalProject } });
 });
 
 

@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+// API Base URL
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Icons
 const StarDecoration = ({ className }) => (
@@ -92,7 +96,7 @@ const RejectionModal = ({ applicationTitle, onClose, onSubmit }) => {
         </button>
 
         <h2 className="text-2xl font-bold text-blue-900 mb-4">Reject Application</h2>
-        
+
         <div className="mb-4 p-3 bg-orange-100 rounded-lg border-2 border-orange-400">
           <p className="text-blue-900">
             Rejecting: <span className="font-bold">{applicationTitle}</span>
@@ -146,6 +150,10 @@ export default function DonorDashboard({
   const [rejectionInfo, setRejectionInfo] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Wishlist State
+  const [wishlist, setWishlist] = useState([]);
+  const [loadingWishlist, setLoadingWishlist] = useState(false);
+
   const pendingApplicationsCount = applications.filter(app => app.status === 'PENDING').length;
 
   // Load applications
@@ -165,6 +173,24 @@ export default function DonorDashboard({
       setApplications([]);
     } finally {
       setLoadingApplications(false);
+    }
+  };
+
+  // Load Wishlist
+  const loadWishlist = async () => {
+    setLoadingWishlist(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_BASE}/wishlist`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.status === 'success') {
+        setWishlist(response.data.data.campaigns);
+      }
+    } catch (error) {
+      console.error('Failed to load wishlist', error);
+    } finally {
+      setLoadingWishlist(false);
     }
   };
 
@@ -209,10 +235,12 @@ export default function DonorDashboard({
     loadSummary();
   }, []);
 
-  // Load applications when tab is selected
+  // Load data based on tab
   useEffect(() => {
     if (selectedTab === 'applications') {
       loadApplications();
+    } else if (selectedTab === 'wishlist') {
+      loadWishlist();
     }
   }, [selectedTab]);
 
@@ -228,9 +256,8 @@ export default function DonorDashboard({
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-dreamxec-berkeley-blue border-r-4 border-orange-400 transform transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-dreamxec-berkeley-blue border-r-4 border-orange-400 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
       >
         <div className="h-full flex flex-col">
           {/* Logo/Brand */}
@@ -259,11 +286,10 @@ export default function DonorDashboard({
                 setSelectedTab('overview');
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-                selectedTab === 'overview'
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'overview'
                   ? 'bg-orange-400 text-blue-900'
                   : 'text-white hover:bg-blue-800'
-              }`}
+                }`}
             >
               <DashboardIcon className="w-5 h-5" />
               Dashboard
@@ -275,11 +301,10 @@ export default function DonorDashboard({
                 setSidebarOpen(false);
                 if (onViewProjects) onViewProjects();
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-                selectedTab === 'projects'
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'projects'
                   ? 'bg-orange-400 text-blue-900'
                   : 'text-white hover:bg-blue-800'
-              }`}
+                }`}
             >
               <FolderIcon className="w-5 h-5" />
               My Projects
@@ -295,11 +320,10 @@ export default function DonorDashboard({
                 setSelectedTab('applications');
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-                selectedTab === 'applications'
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'applications'
                   ? 'bg-orange-400 text-blue-900'
                   : 'text-white hover:bg-blue-800'
-              }`}
+                }`}
             >
               <FileTextIcon className="w-5 h-5" />
               Applications
@@ -315,20 +339,34 @@ export default function DonorDashboard({
                 setSelectedTab('donations');
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-                selectedTab === 'donations'
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'donations'
                   ? 'bg-orange-400 text-blue-900'
                   : 'text-white hover:bg-blue-800'
-              }`}
+                }`}
             >
               <HeartIcon className="w-5 h-5" />
               Donations
+            </button>
+
+            {/* Wishlist Button */}
+            <button
+              onClick={() => {
+                setSelectedTab('wishlist');
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'wishlist'
+                  ? 'bg-orange-400 text-blue-900'
+                  : 'text-white hover:bg-blue-800'
+                }`}
+            >
+              <StarDecoration className="w-5 h-5" />
+              Wishlist
             </button>
           </nav>
 
           {/* Create Project Button */}
           <div className="p-4 border-t-2 border-orange-400">
-            <button 
+            <button
               onClick={onCreateProject}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-orange-400 text-blue-900 rounded-lg font-bold hover:scale-105 transition-transform"
             >
@@ -355,6 +393,7 @@ export default function DonorDashboard({
               {selectedTab === 'projects' && 'My Projects'}
               {selectedTab === 'applications' && 'Student Applications'}
               {selectedTab === 'donations' && 'Donation History'}
+              {selectedTab === 'wishlist' && 'My Wishlist'}
             </h2>
             <div className="w-6 lg:hidden" />
           </div>
@@ -445,7 +484,7 @@ export default function DonorDashboard({
 
               {/* Quick Actions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button 
+                <button
                   onClick={onCreateProject}
                   className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
                 >
@@ -458,7 +497,7 @@ export default function DonorDashboard({
                   </p>
                 </button>
 
-                <button 
+                <button
                   onClick={onViewProjects}
                   className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
                 >
@@ -511,13 +550,12 @@ export default function DonorDashboard({
                         </div>
                       </div>
                       <span
-                        className={`px-3 py-1 rounded-full text-sm font-bold border-2 ${
-                          app.status === 'PENDING'
+                        className={`px-3 py-1 rounded-full text-sm font-bold border-2 ${app.status === 'PENDING'
                             ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
                             : app.status === 'ACCEPTED'
-                            ? 'bg-green-100 text-green-800 border-green-300'
-                            : 'bg-red-100 text-red-800 border-red-300'
-                        }`}
+                              ? 'bg-green-100 text-green-800 border-green-300'
+                              : 'bg-red-100 text-red-800 border-red-300'
+                          }`}
                       >
                         {app.status}
                       </span>
@@ -571,7 +609,7 @@ export default function DonorDashboard({
 
                     {app.status === 'PENDING' && (
                       <div className="flex gap-3">
-                        <button 
+                        <button
                           onClick={() => handleApplicationAction(app.id, 'ACCEPTED', null)}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-bold border-2 border-blue-900 hover:scale-105 transition-transform"
                         >
@@ -611,6 +649,71 @@ export default function DonorDashboard({
             <div className="bg-white rounded-xl border-4 border-blue-900 p-12 text-center shadow-lg">
               <h3 className="text-2xl font-bold text-blue-900 mb-2">Donation History</h3>
               <p className="text-blue-900 opacity-70">Your donation history will appear here</p>
+            </div>
+          )}
+
+          {/* Wishlist Tab (NEW) */}
+          {selectedTab === 'wishlist' && (
+            <div className="space-y-6">
+              {loadingWishlist ? (
+                <div className="bg-white rounded-xl border-4 border-blue-900 p-12 text-center shadow-lg">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
+                  <p className="mt-4 text-blue-900">Loading wishlist...</p>
+                </div>
+              ) : wishlist.length === 0 ? (
+                <div className="bg-white rounded-xl border-4 border-blue-900 p-12 text-center shadow-lg">
+                  <div className="w-16 h-16 bg-orange-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <HeartIcon className="w-8 h-8 text-blue-900" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Your Wishlist is Empty</h3>
+                  <p className="text-blue-900 opacity-70">
+                    Browse campaigns and click the heart icon to save them here.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {wishlist.map((campaign) => (
+                    <div key={campaign.id} className="bg-white rounded-xl border-4 border-blue-900 overflow-hidden shadow-lg hover:transform hover:scale-105 transition-all duration-300">
+                      <div className="h-48 overflow-hidden relative">
+                        <img
+                          src={campaign.imageUrl || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800"}
+                          alt={campaign.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-2 right-2 bg-dreamxec-orange text-white text-xs font-bold px-2 py-1 rounded border-2 border-blue-900">
+                          {campaign.status}
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-xl font-bold text-blue-900 mb-2 truncate">{campaign.title}</h3>
+                        <p className="text-blue-900 opacity-70 text-sm line-clamp-2 mb-4">
+                          {campaign.description}
+                        </p>
+
+                        <div className="mb-4">
+                          <div className="flex justify-between text-sm font-bold text-blue-900 mb-1">
+                            <span>₹{campaign.amountRaised?.toLocaleString() || 0}</span>
+                            <span>of ₹{campaign.goalAmount?.toLocaleString()}</span>
+                          </div>
+                          <div className="w-full h-2 bg-orange-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-green-500 rounded-full"
+                              style={{ width: `${Math.min(((campaign.amountRaised || 0) / campaign.goalAmount) * 100, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <a
+                          href={`/campaigns/${campaign.id}`}
+                          className="block w-full text-center py-2 bg-orange-400 text-blue-900 font-bold rounded-lg border-2 border-blue-900 hover:bg-orange-500 transition-colors"
+                        >
+                          View Details
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

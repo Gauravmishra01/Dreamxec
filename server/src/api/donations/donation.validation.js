@@ -1,9 +1,10 @@
-const { z } = require("zod");
+const { z, email } = require("zod");
 
 // 1) Create Razorpay Order (guest + logged-in)
 exports.createOrderSchema = z.object({
   body: z.object({
     amount: z.number().positive("Amount must be a positive number"),
+    email:z.email().required(),
     projectId: z.string().min(1, "Project ID is required"),
     guestEmail: z.string().email("Invalid email").optional(),
     guestPAN: z.string()

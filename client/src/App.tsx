@@ -28,11 +28,9 @@ import AdminClubReferrals from './components/admin/AdminClubReferrals';
 import AdminClubVerifications from './components/admin/AdminClubVerifications';
 import AuthCallback from './components/AuthCallback';
 
-
-
 // Import API services
 import { login, register, logout as apiLogout, getCurrentUser, initiateGoogleAuth, handleGoogleCallback, initiateLinkedInAuth, handleLinkedInCallback } from './services/authService';
-import { getPublicUserProjects, createUserProject } from './services/userProjectService';
+import { getPublicUserProjects, createUserProject, updateUserProject } from './services/userProjectService';
 import { getPublicDonorProjects, createDonorProject, getMyDonorProjects } from './services/donorProjectService';
 import { getAllProjects, verifyUserProject, verifyDonorProject } from './services/adminService';
 import { applyToProject, getMyApplications } from './services/applicationService';
@@ -51,6 +49,9 @@ import PerfectStorm from './sections/Pages/company/PerfectStorm';
 import Careers from './sections/Pages/company/Careers';
 import ContactUs from './sections/Pages/company/ContactUs';
 import FAQ from './sections/Pages/company/FAQ';
+import AboutUs from './components/AboutUs';
+import VerifyPresident from './components/VerifyPresident';
+
 
 // Main App Content Component
 function AppContent() {
@@ -307,29 +308,50 @@ function AppContent() {
     description: string;
     clubName: string;
     goalAmount: number;
-    imageUrl: string;
+    bannerFile: File | null;
+    mediaFiles: File[];
+    deckFile: File | null;
   }) => {
     try {
-      const response = await createUserProject({
-        title: data.title,
-        description: data.description,
-        companyName: data.clubName,
-        skillsRequired: [],
-        timeline: '3 months',
-        goalAmount: data.goalAmount,
-        imageUrl: data.imageUrl,
-      });
+      console.log('🚀 Creating Campaign with Single Request...');
 
-      console.log('📦 Backend response:', response);
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('companyName', data.clubName); // Mapped to companyName in DB
+      // skillsRequired defaults to empty array
+      // timeline defaults to '3 months' or passed value? App hardcoded '3 months' before.
+      formData.append('timeline', '3 months');
+      formData.append('goalAmount', data.goalAmount.toString());
+
+      // Append Files
+      if (data.bannerFile) {
+        formData.append('bannerFile', data.bannerFile);
+      }
+
+      if (data.deckFile) {
+        formData.append('deckFile', data.deckFile);
+      }
+
+      if (data.mediaFiles && data.mediaFiles.length > 0) {
+        data.mediaFiles.forEach((file) => {
+          formData.append('mediaFiles', file);
+        });
+      }
+
+      const response = await createUserProject(formData);
+
+      console.log('📦 Create Response:', response);
 
       if (response.data?.userProject) {
+        // Map back to frontend model
         const newCampaign = mapUserProjectToCampaign(response.data.userProject);
         setCampaigns([...campaigns, newCampaign]);
-        console.log('✅ Campaign created:', newCampaign);
+        console.log('✅ Campaign created successfully:', newCampaign);
       } else {
-        console.error('❌ No userProject in response:', response);
-        throw new Error('Invalid response from server');
+        throw new Error('Failed to create campaign: Invalid response');
       }
+
     } catch (error) {
       console.error('Failed to create campaign:', error);
       throw error;
@@ -1115,9 +1137,51 @@ function AppContent() {
                                 }
                               />
 
+
                               {/* Browse Projects - For Students */}
                               <Route
                                 path="/projects"
+                                element={
+                                  user?.role === 'student' ? (
+                                    <>
+                                      <Header
+                                        currentUser={user}
+                                        onLogin={handleLoginClick}
+                                        onLogout={handleLogout}
+                                      />
+                                      <BrowseProjects
+                                        projects={approvedProjects}
+                                        currentUserId={user?.id}
+                                        role={user?.role}
+                                        onApply={handleApplyToProject}
+                                        userApplications={userApplications}
+                                      />
+                                    </>
+                                  )
+                                    : (
+                                      <>
+                                        <Header
+                                          currentUser={user}
+                                          onLogin={handleLoginClick}
+                                          onLogout={handleLogout}
+                                        />
+                                        <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                          <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-12 text-center max-w-md">
+                                            <div className="card-tricolor-tag"></div>
+                                            <p className="text-dreamxec-navy text-xl font-sans mt-4">
+                                              Please log in as a student to browse projects.
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </>
+
+                                    )
+                                }
+                              />
+
+                              {/* About Us */}
+                              <Route
+                                path="/about"
                                 element={
                                   <>
                                     <Header
@@ -1125,18 +1189,23 @@ function AppContent() {
                                       onLogin={handleLoginClick}
                                       onLogout={handleLogout}
                                     />
-                                    <BrowseProjects
-                                      projects={approvedProjects}
-                                      currentUserId={user?.id}
-                                      onApply={handleApplyToProject}
-                                      userApplications={userApplications}
-                                    />
+                                    <AboutUs />
                                   </>
                                 }
                               />
-                            </Routes>
-                            {/* President Dashboard */}
-                            <Routes>
+                              {/* verify-president */}
+                              <Route path="/verify-president" element={
+                                <>
+                                  <Header
+                                    currentUser={user}
+                                    onLogin={handleLoginClick}
+                                    onLogout={handleLogout}
+                                  />
+                                  <VerifyPresident />
+                                </>
+                              } />
+
+                              {/* President Dashboard */}
                               <Route path="/president" element={<PresidentLayout><PresidentDashboard /></PresidentLayout>} />
                               <Route path="/president/members" element={<PresidentLayout><PresidentMembers /></PresidentLayout>} />
                               <Route path="/president/campaigns" element={<PresidentLayout><PresidentCampaigns /></PresidentLayout>} />

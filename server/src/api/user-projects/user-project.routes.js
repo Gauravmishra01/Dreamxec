@@ -39,10 +39,26 @@ router.use(protect);
 router.get('/my', restrictTo('USER'), getMyUserProjects);
 
 // Create campaign (only verified club users)
+const multer = require('multer');
+
+// Configure Multer
+const upload = multer({
+  dest: 'uploads/',
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  }
+});
+
+// Create campaign (only verified club users)
 router.post(
   '/',
   restrictTo('USER'),
   ensureClubVerified,
+  upload.fields([
+    { name: 'bannerFile', maxCount: 1 },
+    { name: 'deckFile', maxCount: 1 },
+    { name: 'mediaFiles', maxCount: 10 }
+  ]),
   validate(createUserProjectSchema),
   createUserProject
 );

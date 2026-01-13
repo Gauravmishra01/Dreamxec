@@ -1,3 +1,4 @@
+const uploadToCloudinary = require("../../utils/uploadToCloudinary");
 const prisma = require("../../config/prisma");
 
 exports.referClub = async (req, res) => {
@@ -10,10 +11,14 @@ exports.referClub = async (req, res) => {
       presidentName,
       ficEmail,
       ficPhone,
-      ficName
+      ficName,
+      instagram,
+      linkedIn,
+      portfolio
     } = req.body;
 
-    const referral = await prisma.clubReferralRequest.create({
+    // 1. Create initial referral record
+    let referral = await prisma.clubReferralRequest.create({
       data: {
         clubName,
         collegeName,
@@ -23,11 +28,39 @@ exports.referClub = async (req, res) => {
         ficEmail,
         ficPhone,
         ficName,
+        instagram,
+        linkedIn,
+        portfolio,
         referrerEmail: req.user.email,
         status: "PENDING",
         referrerId: req.user.id,
       }
     });
+
+    // 2. Handle file upload if present
+    if (req.file) {
+      try {
+        console.log("📄 Processing Referral Document...");
+        const validMimeTypes = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+        
+        let folder = `dreamxec/club-referrals/${referral.id}`;
+        // Verify mime type if strictness is needed, but uploadToCloudinary handles generic uploads.
+        
+        const url = await uploadToCloudinary(req.file.path, folder);
+        console.log("✅ Evidence Uploaded:", url);
+
+        // 3. Update record with URL
+        referral = await prisma.clubReferralRequest.update({
+          where: { id: referral.id },
+          data: {
+             evidenceUrls: [url]
+          }
+        });
+
+      } catch (uploadErr) {
+        console.error("❌ Upload failed but referral created:", uploadErr);
+      }
+    }
 
     res.status(201).json({
       success: true,

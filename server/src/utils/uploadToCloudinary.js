@@ -8,13 +8,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-module.exports = async function uploadToCloudinary(filePath) {
+module.exports = async function uploadToCloudinary(filePath,folder) {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
-      folder: "dreamxec/club-verification",
+      folder: folder,
     });
 
-    fs.unlinkSync(filePath); // remove local file
+    fs.unlinkSync(filePath); 
+    console.log("Cloudinary Upload Success:", res);
     return res.secure_url;
   } catch (err) {
     console.error("Cloudinary Upload Error:", err);

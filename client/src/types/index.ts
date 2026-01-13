@@ -1,4 +1,4 @@
-export type UserRole = 'student' | 'admin' | 'donor';
+export type UserRole = 'student' | 'admin' | 'donor' | 'DONOR';
 
 export interface User {
   id: string;
@@ -19,7 +19,10 @@ export interface Campaign {
   deadline: Date;
   category?: string;
   imageUrl?: string;
+  campaignMedia?: string[]; // Array of media URLs
+  presentationDeckUrl?: string | null; // URL for PDF/PPT deck
   createdBy?: string; // User ID of the creator
+  userId?: string; // Sometimes mapped as userId (alias for createdBy)
   rejectionReason?: string; // Reason for rejection (if rejected)
 }
 

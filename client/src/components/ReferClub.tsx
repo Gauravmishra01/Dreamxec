@@ -14,17 +14,68 @@ export default function ReferClub() {
     ficName: "",
     ficEmail: "",
     ficPhone: "",
+    instagram: "",
+    linkedIn: "",
+    portfolio: ""
+
   });
 
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const API_BASE = import.meta.env.VITE_API_URL;
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const validateUrl = (name: string, value: string) => {
+    let error = "";
+    if (!value) return "";
+
+    if (name === "instagram") {
+      const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?$/;
+      if (!instagramRegex.test(value)) {
+        error = "Please enter a valid Instagram profile URL (e.g., instagram.com/username)";
+      }
+    } else if (name === "linkedIn") {
+      const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/;
+      if (!linkedinRegex.test(value)) {
+        error = "Please enter a valid LinkedIn profile URL (e.g., linkedin.com/in/username)";
+      }
+    } else if (name === "portfolio") {
+      const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+      if (!urlRegex.test(value)) {
+        error = "Please enter a valid URL";
+      }
+    }
+    return error;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    // Validate on change
+    if (["instagram", "linkedIn", "portfolio"].includes(name)) {
+      const error = validateUrl(name, value);
+      setErrors(prev => ({ ...prev, [name]: error }));
+    }
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    // Final validation before submit
+    const newErrors: { [key: string]: string } = {};
+    ["instagram", "linkedIn", "portfolio"].forEach(field => {
+      // @ts-ignore
+      const error = validateUrl(field, form[field]);
+      if (error) newErrors[field] = error;
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      alert("Please fix the validation errors before submitting.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -39,9 +90,10 @@ export default function ReferClub() {
         data.append("document", documentFile);
       }
 
-      await axios.post(`${API_BASE}/club-referral/refer`, form, {
+      await axios.post(`${API_BASE}/club-referral/refer`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -161,6 +213,51 @@ export default function ReferClub() {
               required
               className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
             />
+          </div>
+
+          {/* Instagram */}
+          <div>
+            <label className="font-bold text-dreamxec-navy">Instagram</label>
+            <input
+              name="instagram"
+              value={form.instagram}
+              onChange={handleChange}
+              required
+              className={`w-full mt-2 p-3 border-2 ${errors.instagram ? 'border-red-500' : 'border-dreamxec-navy'} rounded-lg`}
+            />
+            {errors.instagram && (
+              <p className="text-red-500 text-sm mt-1">{errors.instagram}</p>
+            )}
+          </div>
+
+          {/* LinkedIn */}
+          <div>
+            <label className="font-bold text-dreamxec-navy">LinkedIn</label>
+            <input
+              name="linkedIn"
+              value={form.linkedIn}
+              onChange={handleChange}
+              required
+              className={`w-full mt-2 p-3 border-2 ${errors.linkedIn ? 'border-red-500' : 'border-dreamxec-navy'} rounded-lg`}
+            />
+            {errors.linkedIn && (
+              <p className="text-red-500 text-sm mt-1">{errors.linkedIn}</p>
+            )}
+          </div>
+
+          {/* Portfolio */}
+          <div>
+            <label className="font-bold text-dreamxec-navy">Portfolio</label>
+            <input
+              name="portfolio"
+              value={form.portfolio}
+              onChange={handleChange}
+              required
+              className={`w-full mt-2 p-3 border-2 ${errors.portfolio ? 'border-red-500' : 'border-dreamxec-navy'} rounded-lg`}
+            />
+            {errors.portfolio && (
+              <p className="text-red-500 text-sm mt-1">{errors.portfolio}</p>
+            )}
           </div>
 
           {/* Document Upload */}

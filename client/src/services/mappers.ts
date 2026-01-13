@@ -18,7 +18,8 @@ export const mapFrontendRole = (frontendRole: UserRole): 'USER' | 'DONOR' | 'ADM
   const roleMap: Record<UserRole, 'USER' | 'DONOR' | 'ADMIN'> = {
     'student': 'USER',
     'donor': 'DONOR',
-    'admin': 'ADMIN',
+    'DONOR': 'DONOR',
+    'admin': 'ADMIN'
   };
   return roleMap[frontendRole];
 };
@@ -56,13 +57,13 @@ export const mapUserProjectToCampaign = (userProject: UserProject): Campaign => 
 const parseTimeline = (timeline: string): { startDate: Date; endDate: Date } => {
   const startDate = new Date();
   const endDate = new Date();
-  
+
   // Extract number from timeline string (e.g., "3 months" -> 3)
   const match = timeline.match(/(\d+)\s*(month|week|day)/i);
   if (match) {
     const value = parseInt(match[1]);
     const unit = match[2].toLowerCase();
-    
+
     if (unit.startsWith('month')) {
       endDate.setMonth(endDate.getMonth() + value);
     } else if (unit.startsWith('week')) {
@@ -74,7 +75,7 @@ const parseTimeline = (timeline: string): { startDate: Date; endDate: Date } => 
     // Default to 3 months if can't parse
     endDate.setMonth(endDate.getMonth() + 3);
   }
-  
+
   return { startDate, endDate };
 };
 
@@ -112,7 +113,7 @@ export const mapCampaignToUserProjectData = (campaign: Partial<Campaign>) => {
 const formatTimeline = (timeline: { startDate: Date; endDate: Date }): string => {
   const diffTime = Math.abs(timeline.endDate.getTime() - timeline.startDate.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays < 30) {
     return `${diffDays} days`;
   } else if (diffDays < 365) {
@@ -126,10 +127,10 @@ const formatTimeline = (timeline: { startDate: Date; endDate: Date }): string =>
 
 // Map Project (frontend) to CreateDonorProjectData (backend)
 export const mapProjectToDonorProjectData = (project: Partial<Project>) => {
-  const timeline = project.timeline 
+  const timeline = project.timeline
     ? formatTimeline(project.timeline)
     : '3 months';
-    
+
   return {
     title: project.title || '',
     description: project.description || '',

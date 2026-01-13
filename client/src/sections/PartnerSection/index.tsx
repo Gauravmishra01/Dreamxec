@@ -1,33 +1,37 @@
+import { useNavigate } from 'react-router-dom';
+
+
 export const PartnersSection = () => {
+  const navigate = useNavigate();
   const partners = [
     {
       name: "Q: Is my donation tax-deductible? (Corporate/Foundation)",
-      logo: "https://via.placeholder.com/200x100/0B9C2C/FFFFFF?text=Tech+Mahindra",
+      logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734236/23_sqrtii.png",
       category: "A: Yes! 80G certificate auto-generated. 50% deduction."
     },
     {
       name: "Q: Can I donate anonymously?",
-      logo: "https://via.placeholder.com/200x100/000080/FFFFFF?text=Infosys",
+      logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734218/22_uadpdn.png",
       category: "A: Yes, you can choose to remain anonymous when making a donation."
     },
     {
       name: "Q:What if the project fails?",
-      logo: "https://via.placeholder.com/200x100/FF6B35/FFFFFF?text=TCS",
+      logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734189/21_apvr2t.png",
       category: "A: Rare (95% completion rate). If it happens, we transparently share reasons. Funds already used can't be refunded, but unused funds can be redirected."
     },
     {
       name: "Q: Can I donate from outside India?",
-      logo: "https://via.placeholder.com/200x100/0B9C2C/FFFFFF?text=Wipro",
+      logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734249/24_ikcg3l.png",
       category: "A: Yes! We accept international cards and wire transfers."
     },
     {
       name: "Q: Do I get to meet the students?",
-      logo: "https://via.placeholder.com/200x100/000080/FFFFFF?text=Microsoft",
+      logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734256/25_x3uyod.png",
       category: "A: For donations ₹25,000+, yes! Video calls or in-person if you're in the same city."
     },
     {
       name: "Q: How is DreamXec different from Ketto/Milaap?",
-      logo: "https://via.placeholder.com/200x100/FF6B35/FFFFFF?text=AWS",
+      logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734263/26_wedmyg.png",
       category: "A: We're India's ONLY platform exclusively for student research projects. Not medical fundraisers or personal causes—pure innovation support."
     }
   ];
@@ -65,7 +69,7 @@ export const PartnersSection = () => {
                 <img 
                   src={partner.logo} 
                   alt={`${partner.name} logo`}
-                  className="w-full h-16 object-contain"
+                  className="w-full h-full object-contain"
                 />
               </div>
               
@@ -90,9 +94,20 @@ export const PartnersSection = () => {
             <p className="text-dreamxec-navy font-sans text-lg mb-6 leading-relaxed">
               Join our mission to empower student innovation and drive technological advancement across India.
             </p>
-            <button className="btn-primary-animated text-dreamxec-gray-900 font-bold py-3 px-8 rounded-lg font-display box-border text-lg hover:scale-105 transition-transform">
-              Become a Partner
-            </button>
+             <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                        <button
+                            onClick={() => navigate('/auth')}
+                            className="px-8 py-3 bg-dreamxec-orange text-white font-bold rounded-xl hover:bg-dreamxec-saffron transition-colors shadow-lg"
+                        >
+                            Get Started
+                        </button>
+                        <button
+                            onClick={() => navigate('/campaigns')}
+                            className="px-8 py-3 bg-transparent border-2 border-dreamxec-navy text-dreamxec-navy font-bold rounded-xl hover:bg-dreamxec-navy/10 transition-colors"
+                        >
+                            Explore Campaigns
+                        </button>
+                    </div>
           </div>
         </div>
       </div>

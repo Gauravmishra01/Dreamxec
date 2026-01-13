@@ -116,6 +116,7 @@ model Donor {
   // Relations
   donations     Donation[]
   donorProjects DonorProject[]
+  wishlist      Wishlist[]
 
   @@index([googleId])
   @@index([linkedinId])
@@ -135,6 +136,8 @@ model UserProject {
   goalAmount      Float
   amountRaised    Float         @default(0)
   imageUrl        String?
+  campaignMedia   String[]  @default([])
+  presentationDeckUrl String?
   status          ProjectStatus @default(PENDING)
   rejectionReason String? // Admin's reason for rejection
   createdAt       DateTime      @default(now())
@@ -151,6 +154,7 @@ model UserProject {
   // Donations from donors
   donations   Donation[]
   withdrawals Withdrawal[]
+  wishlistedBy Wishlist[]
 
   @@index([userId])
   @@index([status])
@@ -343,6 +347,11 @@ model ClubReferralRequest {
   ficEmail String?
   ficPhone String?
 
+  // Social links
+  instagram String?
+  linkedIn  String?
+  portfolio String?
+
   // Supporting documents (images/PDF)
   evidenceUrls String[] @default([])
 
@@ -374,6 +383,36 @@ model ClubVerification {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// SUBSCRIBER MODEL (Newsletter)
+// -----------------------------
+model Subscriber {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  isActive  Boolean  @default(true)
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// WISHLIST MODEL (new)
+// -----------------------------
+model Wishlist {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  donorId String @db.ObjectId
+  donor Donor @relation(fields: [donorId], references: [id], onDelete: Cascade)
+
+  userProjectId String @db.ObjectId
+  userProject UserProject @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([donorId, userProjectId])
+  @@index([donorId])
 }
 
 // -----------------------------

@@ -10,6 +10,8 @@ export interface UserProject {
   goalAmount: number;
   amountRaised: number;
   imageUrl?: string;
+  campaignMedia?: string[];
+  presentationDeckUrl?: string | null;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   userId: string;
   bankAccountId?: string | null;
@@ -19,6 +21,7 @@ export interface UserProject {
 }
 
 export interface CreateUserProjectData {
+  id?: string;
   title: string;
   description: string;
   companyName: string;
@@ -26,6 +29,8 @@ export interface CreateUserProjectData {
   timeline: string;
   goalAmount: number;
   imageUrl?: string;
+  campaignMedia?: string[];
+  presentationDeckUrl?: string | null;
 }
 
 export interface UpdateUserProjectData {
@@ -36,6 +41,8 @@ export interface UpdateUserProjectData {
   timeline?: string;
   goalAmount?: number;
   imageUrl?: string;
+  campaignMedia?: string[];
+  presentationDeckUrl?: string | null;
 }
 
 // Get all public user projects (campaigns)
@@ -59,8 +66,23 @@ export const getMyUserProjects = async (): Promise<ApiResponse<{ userProjects: U
   });
 };
 
-// Create user project
-export const createUserProject = async (data: CreateUserProjectData): Promise<ApiResponse<{ userProject: UserProject }>> => {
+import axios from 'axios';
+
+// Create user project (supports FormData for file uploads)
+export const createUserProject = async (data: FormData | CreateUserProjectData): Promise<ApiResponse<{ userProject: UserProject }>> => {
+  // If data is FormData, use axios for multipart/form-data
+  if (data instanceof FormData) {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/user-projects`, data, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+
+  // Fallback for JSON (legacy support if needed)
   return apiRequest('/user-projects', {
     method: 'POST',
     body: JSON.stringify(data),

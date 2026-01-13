@@ -68,6 +68,37 @@ exports.register = catchAsync(async (req, res, next) => {
         verificationTokenExpiry,
       },
     });
+    await prisma.donation.updateMany({
+      where: {
+        guestEmail: email,
+        donorId: null
+      },
+      data: {
+        donorId: newAccount.id
+      }
+    });
+    await prisma.userProject.updateMany({
+      where: {
+        guestEmail: email,
+        donorId: null
+      },
+      data: {
+        donorId: newAccount.id
+      }
+    });
+    const donations=await prisma.donation.findMany({
+      where: {
+        donorId: newAccount.id
+      }
+    });
+    await prisma.userProject.updateMany({
+      where: {
+        donorId: newAccount.id
+      },
+      data: {
+        donations: donations
+      }
+    });
     accountType = 'DONOR';
   } else {
     // Default to USER role

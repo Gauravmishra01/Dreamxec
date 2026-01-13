@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import type { Campaign, User } from '../types';
 import { Header } from '../sections/Header';
 import { StarDecoration } from './icons/StarDecoration';
@@ -19,7 +20,13 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [donationAmount, setDonationAmount] = useState('');
+  const [email, setEmail] = useState("")
   const [showDonateModal, setShowDonateModal] = useState(false);
+
+  // Wishlist State
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   useEffect(() => {
     const findCampaign = () => {
@@ -47,6 +54,53 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
     findCampaign();
   }, [id, campaigns]);
+
+  // Check Wishlist Status
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      // Check if user is donor (safely handle case sensitivity if needed, but assuming 'donor' or 'DONOR')
+      const isDonor = currentUser?.role === 'donor' || currentUser?.role === 'DONOR';
+      if (!isDonor || !id) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_BASE}/wishlist/check/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.status === 'success') {
+          setIsWishlisted(response.data.isWishlisted);
+        }
+      } catch (error) {
+        console.error('Failed to check wishlist status', error);
+      }
+    };
+
+    if (campaign && currentUser) {
+      checkWishlistStatus();
+    }
+  }, [currentUser, id, campaign]);
+
+  const handleWishlistToggle = async () => {
+    if (!currentUser) return navigate('/auth');
+
+    setWishlistLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API_BASE}/wishlist/toggle`,
+        { campaignId: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.status === 'success') {
+        setIsWishlisted(response.data.isWishlisted);
+      }
+    } catch (error) {
+      console.error('Failed to toggle wishlist', error);
+      alert('Failed to update wishlist');
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -111,14 +165,14 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const remainingAmount = campaign.goalAmount - campaign.currentAmount;
 
   const handleDonate = () => {
-    if (!currentUser) {
-      if (onLogin) {
-        onLogin();
-      } else {
-        navigate('/auth');
-      }
-      return;
-    }
+    // if (!currentUser) {
+    //   if (onLogin) {
+    //     onLogin();
+    //   } else {
+    //     navigate('/auth');
+    //   }
+    //   return;
+    // }
     setShowDonateModal(true);
   };
 
@@ -137,6 +191,9 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
       setDonationAmount('');
     }
   };
+
+  // Helper check
+  const isDonor = currentUser?.role === 'donor' || currentUser?.role === 'DONOR';
 
   return (
     <div className="min-h-screen bg-dreamxec-cream relative overflow-hidden">
@@ -184,8 +241,21 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               <div className="card-tricolor-tag"></div>
               <div className="flex items-start justify-between gap-4 mt-4">
                 <div>
-                  <h1 className="text-4xl font-bold text-dreamxec-navy mb-3 font-display">
+                  <h1 className="text-4xl font-bold text-dreamxec-navy mb-3 font-display flex items-center gap-3">
                     {campaign.title}
+                    {isDonor && (
+                      <button
+                        onClick={handleWishlistToggle}
+                        disabled={wishlistLoading}
+                        className={`p-2 rounded-full transition-all hover:scale-110 ${isWishlisted ? 'text-red-500' : 'text-gray-300 hover:text-red-300'
+                          }`}
+                        title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+                      >
+                        <svg className="w-8 h-8" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      </button>
+                    )}
                   </h1>
                   <div className="flex items-center gap-4 text-dreamxec-navy opacity-80">
                     <div className="flex items-center gap-2">
@@ -222,7 +292,73 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               </p>
             </div>
 
-            Timeline
+            {/* Media Gallery */}
+            {campaign.campaignMedia && campaign.campaignMedia.length > 0 && (
+              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
+                <div className="card-tricolor-tag"></div>
+                <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
+                  Gallery
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {campaign.campaignMedia.map((mediaUrl, index) => (
+                    <div key={index} className="rounded-lg border-3 border-dreamxec-navy overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                      {mediaUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+                        <video controls className="w-full h-48 object-cover">
+                          <source src={mediaUrl} />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img
+                          src={mediaUrl}
+                          alt={`Campaign Media ${index + 1}`}
+                          className="w-full h-48 object-cover hover:scale-105 transition-transform"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Pitch Deck (Admin/Owner Only) */}
+            {campaign.presentationDeckUrl && (currentUser?.role === 'admin' || currentUser?.id === campaign.userId) && (
+              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
+                <div className="card-tricolor-tag"></div>
+                <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4 flex items-center gap-2">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Pitch Deck
+                </h2>
+                <div className="flex items-center justify-between p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-navy">
+                  <div className="flex items-center gap-3">
+                    <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                    </svg>
+                    <div>
+                      <p className="font-bold text-dreamxec-navy font-display">Campaign Pitch Deck</p>
+                      <p className="text-xs text-dreamxec-navy opacity-70 font-sans">PDF/PPT Presentation</p>
+                    </div>
+                  </div>
+                  <a
+                    href={campaign.presentationDeckUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-dreamxec-navy text-white rounded-lg font-bold font-display hover:bg-dreamxec-orange transition-colors flex items-center gap-2"
+                  >
+                    View / Download
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+                <p className="text-xs text-dreamxec-navy opacity-60 mt-2 font-sans italic">
+                  * Visible only to Administrators and Campaign Owner
+                </p>
+              </div>
+            )}
+
+            {/* Timeline */}
             <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
               <div className="card-tricolor-tag"></div>
               <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
@@ -261,7 +397,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
           {/* Right Column - Funding Card */}
           <div className="lg:col-span-1">
-            <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] overflow-y-auto">`
+            <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] overflow-y-auto">
               <div className="card-tricolor-tag"></div>
 
               {/* Funding Amount */}
@@ -431,6 +567,17 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   required
                   className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
                 />
+              </div>
+              <div className="mb-6">
+                <label className="block text-lg font-bold text-dreamxec-navy mb-3 font-display">
+                  Email:
+                </label>
+                <input type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
+                  required
+                  placeholder="Enter email" />
               </div>
               <div className="grid grid-cols-4 gap-2 mb-6">
                 {[100, 500, 1000, 5000].map((amount) => (

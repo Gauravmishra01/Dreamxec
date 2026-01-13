@@ -4,6 +4,7 @@ import type { Project } from '../types';
 
 interface BrowseProjectsProps {
   projects: Project[];
+  role: string;
   currentUserId?: string;
   onApply: (projectId: string, coverLetter: string, skills: string[]) => Promise<void>;
   userApplications?: string[]; // Array of project IDs user has applied to
@@ -12,6 +13,7 @@ interface BrowseProjectsProps {
 export default function BrowseProjects({
   projects,
   currentUserId: _currentUserId,
+  role,
   onApply,
   userApplications = [],
 }: BrowseProjectsProps) {
@@ -66,13 +68,13 @@ export default function BrowseProjects({
 
     setIsSubmitting(true);
     setError('');
-    
+
     try {
       const skills = skillsInput
         .split(',')
         .map((s) => s.trim())
         .filter((s) => s.length > 0);
-      
+
       await onApply(selectedProject.id, coverLetter, skills);
       handleCloseModal();
     } catch (error) {
@@ -103,7 +105,7 @@ export default function BrowseProjects({
         <StarDecoration className="absolute top-20 left-10 w-12 h-12 text-dreamxec-saffron opacity-20 animate-spin-slow" />
         <StarDecoration className="absolute top-40 right-20 w-16 h-16 text-dreamxec-green opacity-15 animate-bounce-slow" />
         <StarDecoration className="absolute bottom-32 left-1/4 w-10 h-10 text-dreamxec-orange opacity-25" />
-        
+
         <img
           src="https://c.animaapp.com/mhd6hm18SGcCN3/assets/image-28.svg"
           alt="Decorative"
@@ -149,7 +151,7 @@ export default function BrowseProjects({
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => {
               const applied = hasApplied(project.id);
-              
+
               return (
                 <div
                   key={project.id}
@@ -228,7 +230,7 @@ export default function BrowseProjects({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
           <div className="card-pastel-offwhite rounded-2xl border-5 border-dreamxec-navy max-w-2xl w-full max-h-[95vh] overflow-y-auto shadow-pastel-saffron mx-2 sm:mx-4">
             <div className="card-tricolor-tag"></div>
-            
+
             {/* Modal header */}
             <div className="p-4 sm:p-6 border-b-4 border-dreamxec-navy bg-dreamxec-beige">
               <div className="flex justify-between items-start">

@@ -9,6 +9,9 @@ exports.clubReferralSchema = z.object({
     presidentName: z.string().min(1),
     ficEmail: z.string().email(),
     ficPhone: z.string().min(5),
-    ficName: z.string().min(1)
+    ficName: z.string().min(1),
+    instagram: z.string().url(),
+    linkedIn: z.string().url(),
+    portfolio: z.string().url()
   })
 });

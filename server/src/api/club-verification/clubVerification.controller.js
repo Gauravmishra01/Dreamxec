@@ -15,7 +15,7 @@ exports.submitClubVerification = async (req, res) => {
 
     let docUrl = null;
     if (req.file) {
-      docUrl = await uploadToCloudinary(req.file.path);
+      docUrl = await uploadToCloudinary(req.file.path,"dreamxec/club-verification");
     }
 
     const verification = await prisma.clubVerification.create({
