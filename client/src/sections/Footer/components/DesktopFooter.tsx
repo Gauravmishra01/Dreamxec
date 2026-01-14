@@ -40,7 +40,7 @@ export const DesktopFooter = () => {
               Research Karega India Toh Badhega India
             </h3>
             <p className="text-dreamxec-cream text-sm leading-relaxed">
-              DreamXec is India's national crowdfunding platform dedicated to turning student projects into real-world innovations. We connect the brightest young minds with the capital and mentorship they need to build a self-reliant future.
+              DreamXec is India's crowdfunding platform dedicated to turning student projects into real-world innovations. We connect the brightest young minds with the capital and mentorship they need to build a self-reliant future.
             </p>
 
             {/* Newsletter Signup */}
@@ -147,11 +147,11 @@ export const DesktopFooter = () => {
                   Corporate & CSR Partnerships
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/alumni-giving" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Alumni Giving Programs
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a href="/become-mentor" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Become a Mentor
