@@ -20,28 +20,106 @@ exports.getVerification = async (req, res) => {
   res.json({ success: true, data: item });
 };
 
+// exports.approveVerification = async (req, res) => {
+//   const { id } = req.params;
+//   // update verification status and possibly mark user's clubVerified true
+//   const updated = await prisma.clubVerification.update({
+//     where: { id },
+//     data: {
+//       status: "APPROVED",
+//       reviewedBy: req.user.id,
+//       reviewedAt: new Date(),
+//     },
+//   });
+
+//   // OPTIONAL: mark the user (president) as clubVerified:
+//   if (updated.userId) {
+//     await prisma.user.update({
+//       where: { id: updated.userId },
+//       data: { clubVerified: true, isClubPresident: true },
+//     });
+//   }
+
+//   res.json({ success: true, data: updated });
+// };
+
+
 exports.approveVerification = async (req, res) => {
   const { id } = req.params;
-  // update verification status and possibly mark user's clubVerified true
-  const updated = await prisma.clubVerification.update({
-    where: { id },
-    data: {
-      status: "APPROVED",
-      reviewedBy: req.user.id,
-      reviewedAt: new Date(),
-    },
-  });
 
-  // OPTIONAL: mark the user (president) as clubVerified:
-  if (updated.userId) {
-    await prisma.user.update({
-      where: { id: updated.userId },
-      data: { clubVerified: true, isClubPresident: true },
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const verification = await tx.clubVerification.findUnique({
+        where: { id },
+      });
+
+      if (!verification) {
+        throw new Error("Verification not found");
+      }
+
+      if (!verification.userId) {
+        throw new Error("Verification is not linked to a user");
+      }
+
+      // 1️⃣ Approve verification
+      await tx.clubVerification.update({
+        where: { id },
+        data: {
+          status: "APPROVED",
+        },
+      });
+
+      // 2️⃣ Upgrade user role (THIS WAS MISSING)
+      await tx.user.update({
+        where: { id: verification.userId },
+        data: {
+          role: "STUDENT_PRESIDENT",
+          clubVerified: true,
+          isClubPresident: true,
+        },
+      });
+
+      // 3️⃣ Create Club
+      const club = await tx.club.create({
+        data: {
+          name: verification.clubName,
+          college: verification.collegeName,
+          description: verification.clubDescription,
+          presidentEmail: verification.studentEmail,
+          presidentUserId: verification.userId,
+        },
+      });
+
+      // 4️⃣ Create ClubMember entry for president
+      await tx.clubMember.create({
+        data: {
+          clubId: club.id,
+          email: verification.studentEmail,
+          name: verification.presidentName,
+          userId: verification.userId,
+          isUserRegistered: true,
+          isVerified: true,
+          addedBy: verification.userId,
+        },
+      });
+
+      return club;
+    });
+
+    res.json({
+      success: true,
+      message: "Verification approved and student upgraded to president",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Approve Verification Error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Approval failed",
     });
   }
-
-  res.json({ success: true, data: updated });
 };
+
 
 exports.rejectVerification = async (req, res) => {
   const { id } = req.params;

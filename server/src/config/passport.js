@@ -3,8 +3,7 @@
 // Supports:
 // - USER (student)
 // - DONOR
-// - CLUB_MEMBER
-// - CLUB_PRESIDENT
+// - STUDENT_PRESIDENT (club president)
 //
 // Rules:
 // - Existing DB records decide role
@@ -50,8 +49,8 @@ async function processOAuthUser(providerIdKey, profile, requestedRole) {
   let role = requestedRole || "USER";
 
   if (donor) role = "DONOR";
-  if (clubMember) role = "CLUB_MEMBER";
-  if (presidentClub) role = "CLUB_PRESIDENT";
+  if (clubMember) role = "USER"; // Club member is still a USER
+  if (presidentClub) role = "STUDENT_PRESIDENT"; // Club president
 
   // -----------------------------------
   // Phase 3 — Existing Donor
@@ -81,16 +80,16 @@ async function processOAuthUser(providerIdKey, profile, requestedRole) {
       data[providerIdKey] = providerId;
     }
 
-    // club member logic
+    // club member logic — User role with club membership flag
     if (clubMember) {
-      data.role = "CLUB_MEMBER";
+      data.role = "USER";
       data.isClubMember = true;
       data.clubId = clubMember.clubId;
     }
 
-    // president logic
+    // president logic — Upgrade to STUDENT_PRESIDENT
     if (presidentClub) {
-      data.role = "CLUB_PRESIDENT";
+      data.role = "STUDENT_PRESIDENT";
       data.isClubPresident = true;
       data.clubId = presidentClub.id;
     }
