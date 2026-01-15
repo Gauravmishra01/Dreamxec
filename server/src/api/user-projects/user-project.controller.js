@@ -41,7 +41,7 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
       goalAmount: parseFloat(goalAmount),
       imageUrl: null,
       campaignMedia: [],
-      presentationDeckUrl: null, // ✅ SAVE LINK
+      presentationDeckUrl: presentationDeckUrl || null, 
       userId: req.user.id,
     },
   });
