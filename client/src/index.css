@@ -483,7 +483,7 @@
   }
 
   .card-whiteboard:hover {
-    transform: translateY(-10px) scale(2);
+    transform: translateY(-10px) scale(1.05);
   }
 
   
@@ -514,8 +514,35 @@
   animation: float-updown 5s ease-in-out infinite;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
+/* Scroll reveal base */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+}
 
+/* When visible */
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger utility */
+.reveal-delay-1 { transition-delay: 120ms; }
+.reveal-delay-2 { transition-delay: 240ms; }
+.reveal-delay-3 { transition-delay: 360ms; }
+.reveal-delay-4 { transition-delay: 480ms; }
+.reveal-delay-5 { transition-delay: 600ms; }
 
 /* Optional: fade in on load for elegance */
 @keyframes fade-in {

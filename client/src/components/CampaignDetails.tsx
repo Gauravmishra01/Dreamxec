@@ -4,6 +4,10 @@ import axios from 'axios';
 import type { Campaign, User } from '../types';
 import { Header } from '../sections/Header';
 import { StarDecoration } from './icons/StarDecoration';
+import { FooterContent } from '../sections/Footer/components/FooterContent';
+import { getUserProject } from '../services/userProjectService';
+import { mapUserProjectToCampaign } from '../services/mappers';
+
 
 interface CampaignDetailsProps {
   currentUser: User | null;
@@ -12,6 +16,15 @@ interface CampaignDetailsProps {
   onLogout?: () => void;
   onDonate?: (campaignId: string, amount: number) => void;
 }
+
+export type Milestone = {
+  id?: string;
+  title: string;
+  timeline: string;
+  budget: number;
+  description?: string;
+};
+
 
 export default function CampaignDetails({ currentUser, campaigns, onLogin, onLogout, onDonate }: CampaignDetailsProps) {
   const { id } = useParams<{ id: string }>();
@@ -22,38 +35,69 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [donationAmount, setDonationAmount] = useState('');
   const [email, setEmail] = useState("")
   const [showDonateModal, setShowDonateModal] = useState(false);
+  type CampaignTab = 'about' | 'media' | 'presentation';
+  const [activeTab, setActiveTab] = useState<CampaignTab>('about');
+
+
+
 
   // Wishlist State
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-  useEffect(() => {
-    const findCampaign = () => {
-      if (!id) return;
+  const getFileType = (url: string) => {
+    const lower = url.toLowerCase();
 
+    if (lower.endsWith('.pdf')) return 'pdf';
+    if (lower.endsWith('.ppt') || lower.endsWith('.pptx')) return 'ppt';
+    return 'unknown';
+  };
+
+  const getEmbedUrl = (url: string) => {
+    if (!url) return null;
+
+    // Google Drive file
+    if (url.includes('drive.google.com')) {
+      const fileIdMatch = url.match(/\/d\/(.*?)(\/|$)/);
+      if (fileIdMatch?.[1]) {
+        return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+      }
+    }
+
+    // PDF
+    if (url.endsWith('.pdf')) {
+      return url;
+    }
+
+    return null;
+  };
+
+  useEffect(() => {
+    const fetchCampaign = async () => {
       try {
         setLoading(true);
-        setError(null);
 
-        // Find the campaign from the passed campaigns array
-        const foundCampaign = campaigns.find(c => c.id === id);
+        const res = await getUserProject(id!);
+        const mapped = mapUserProjectToCampaign(res.data.userProject);
 
-        if (!foundCampaign) {
-          throw new Error('Campaign not found');
+        // 🔒 HARD GATE
+        if (mapped.status !== 'approved') {
+          setError('This campaign is not available');
+          return;
         }
 
-        setCampaign(foundCampaign);
+        setCampaign(mapped);
       } catch (err) {
-        console.error('Failed to find campaign:', err);
-        setError('Failed to load campaign details');
+        console.error(err);
+        setError('Failed to load campaign');
       } finally {
         setLoading(false);
       }
     };
 
-    findCampaign();
-  }, [id, campaigns]);
+    fetchCampaign();
+  }, [id]);
 
   // Check Wishlist Status
   useEffect(() => {
@@ -195,6 +239,13 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   // Helper check
   const isDonor = currentUser?.role === 'donor' || currentUser?.role === 'DONOR';
 
+  // Helper function to check if URL is a video
+  const isVideo = (url: string): boolean => {
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+    const lowerUrl = url.toLowerCase();
+    return videoExtensions.some(ext => lowerUrl.includes(ext));
+  };
+
   return (
     <div className="min-h-screen bg-dreamxec-cream relative overflow-hidden">
       <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
@@ -280,119 +331,224 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 </div>
               </div>
             </div>
+            {/* Tabs */}
+            <div className="mb-6 border-b-4 border-dreamxec-navy">
+              <div className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide">
+                {(['about', 'media', 'presentation'] as CampaignTab[]).map(tab => {
+                  const isActive = activeTab === tab;
 
-            {/* Description */}
-            <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
-              <div className="card-tricolor-tag"></div>
-              <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
-                About This Campaign
-              </h2>
-              <p className="text-dreamxec-navy font-sans text-lg leading-relaxed whitespace-pre-wrap">
-                {campaign.description}
-              </p>
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`
+            relative pb-3 px-1
+            text-base sm:text-lg md:text-xl
+            font-bold font-display capitalize
+            whitespace-nowrap
+            transition-all duration-200
+            ${isActive
+                          ? 'text-dreamxec-navy'
+                          : 'text-dreamxec-navy/60 hover:text-dreamxec-navy'}
+          `}
+                    >
+                      {tab}
+
+                      {/* Active underline */}
+                      {isActive && (
+                        <span className="absolute left-0 -bottom-[4px] w-full h-[4px] bg-dreamxec-orange rounded-full" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Media Gallery */}
-            {campaign.campaignMedia && campaign.campaignMedia.length > 0 && (
+            {/* About Tab */}
+
+            {activeTab === 'about' && (
               <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
                 <div className="card-tricolor-tag"></div>
                 <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
-                  Gallery
+                  About This Campaign
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {campaign.campaignMedia.map((mediaUrl, index) => (
-                    <div key={index} className="rounded-lg border-3 border-dreamxec-navy overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                      {mediaUrl.match(/\.(mp4|webm|ogg)$/i) ? (
-                        <video controls className="w-full h-48 object-cover">
-                          <source src={mediaUrl} />
-                          Your browser does not support the video tag.
-                        </video>
-                      ) : (
-                        <img
-                          src={mediaUrl}
-                          alt={`Campaign Media ${index + 1}`}
-                          className="w-full h-48 object-cover hover:scale-105 transition-transform"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Pitch Deck (Admin/Owner Only) */}
-            {campaign.presentationDeckUrl && (currentUser?.role === 'admin' || currentUser?.id === campaign.userId) && (
-              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
-                <div className="card-tricolor-tag"></div>
-                <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4 flex items-center gap-2">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Pitch Deck
-                </h2>
-                <div className="flex items-center justify-between p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-navy">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                    </svg>
-                    <div>
-                      <p className="font-bold text-dreamxec-navy font-display">Campaign Pitch Deck</p>
-                      <p className="text-xs text-dreamxec-navy opacity-70 font-sans">PDF/PPT Presentation</p>
-                    </div>
-                  </div>
-                  <a
-                    href={campaign.presentationDeckUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-dreamxec-navy text-white rounded-lg font-bold font-display hover:bg-dreamxec-orange transition-colors flex items-center gap-2"
-                  >
-                    View / Download
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </div>
-                <p className="text-xs text-dreamxec-navy opacity-60 mt-2 font-sans italic">
-                  * Visible only to Administrators and Campaign Owner
+                <p className="text-dreamxec-navy font-sans text-lg leading-relaxed whitespace-pre-wrap">
+                  {campaign.description}
                 </p>
               </div>
             )}
 
+
+            {/* Media Gallery */}
+            {activeTab === 'media' && (
+              <div className="card-pastel-offwhite border-5 border-dreamxec-navy rounded-xl shadow-pastel-card p-6">
+                <h3 className="text-2xl font-bold mb-4 text-dreamxec-navy">
+                  Campaign Media
+                </h3>
+
+                {campaign?.campaignMedia && campaign.campaignMedia.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {campaign.campaignMedia.map((url, index) => (
+                      <div
+                        key={index}
+                        className="rounded-lg overflow-hidden border-3 border-dreamxec-navy bg-white"
+                      >
+                        {isVideo(url) ? (
+                          <video
+                            src={url}
+                            controls
+                            className="w-full h-48 object-cover"
+                          />
+                        ) : (
+                          <img
+                            src={url}
+                            alt={`Campaign media ${index + 1}`}
+                            className="w-full h-48 object-cover"
+                            loading="lazy"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-dreamxec-navy/70 text-sm">
+                    No media uploaded for this campaign yet.
+                  </p>
+                )}
+              </div>
+            )}
+
+
+            {/* Pitch Deck */}
+            {activeTab === 'presentation' && (
+              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
+                <div className="card-tricolor-tag"></div>
+
+                <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
+                  Presentation Deck
+                </h2>
+
+                {campaign.presentationDeckUrl ? (
+                  (() => {
+                    const embedUrl = getEmbedUrl(campaign.presentationDeckUrl);
+
+                    return embedUrl ? (
+                      <div className="w-full h-[70vh] border-4 border-dreamxec-navy rounded-lg overflow-hidden bg-white">
+                        <iframe
+                          src={embedUrl}
+                          className="w-full h-full"
+                          allow="autoplay"
+                        />
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-navy">
+                        <p className="text-dreamxec-navy mb-3">
+                          Preview not available for this file type.
+                        </p>
+                        <a
+                          href={campaign.presentationDeckUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-dreamxec-navy text-white rounded-lg font-bold hover:bg-dreamxec-orange transition"
+                        >
+                          Open Presentation
+                        </a>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <p className="text-dreamxec-navy/70">
+                    No presentation deck uploaded for this campaign.
+                  </p>
+                )}
+              </div>
+            )}
+
+
+            {/* Milestones */}
+
+
             {/* Timeline */}
             <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
               <div className="card-tricolor-tag"></div>
-              <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
-                Campaign Timeline
+
+              <h2 className="text-2xl font-bold text-dreamxec-navy mb-6 font-display mt-4">
+                Campaign Timeline & Fund Allocation
               </h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-orange">
-                  <svg className="w-8 h-8 text-dreamxec-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm text-dreamxec-navy opacity-70 font-sans">Started</p>
-                    <p className="text-lg font-bold text-dreamxec-navy font-display">
-                      {campaign.createdAt instanceof Date
-                        ? campaign.createdAt.toLocaleDateString()
-                        : new Date(campaign.createdAt).toLocaleDateString()}
-                    </p>
+
+              {campaign.milestones && campaign.milestones.length > 0 ? (
+                <div className="space-y-5">
+                  {campaign.milestones.map((milestone, index) => (
+                    <div
+                      key={index}
+                      className="relative flex gap-4 p-5 bg-dreamxec-cream rounded-xl border-4 border-dreamxec-navy"
+                    >
+                      {/* Step number */}
+                      <span className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-dreamxec-orange text-white font-bold text-lg shadow-md">
+                        {index + 1}
+                      </span>
+
+                      <div className="flex-1">
+                        {/* Title + Timeline */}
+                        <div className="flex flex-wrap items-center gap-3 mb-2">
+                          <h3 className="text-lg font-bold text-dreamxec-navy">
+                            {milestone.title}
+                          </h3>
+
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-dreamxec-saffron text-white">
+                            {milestone.timeline}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        {milestone.description && (
+                          <p className="text-sm text-dreamxec-navy/80 mb-3 leading-relaxed">
+                            {milestone.description}
+                          </p>
+                        )}
+
+                        {/* Budget */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-dreamxec-navy">
+                            Budget Allocation
+                          </span>
+                          <span className="text-lg font-bold text-dreamxec-green">
+                            ₹{milestone.budget.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Total Allocation */}
+                  <div className="mt-6 p-4 rounded-lg border-4 border-dreamxec-navy bg-white flex items-center justify-between">
+                    <span className="font-bold text-dreamxec-navy">
+                      Total Planned Allocation
+                    </span>
+                    <span className="text-xl font-bold text-dreamxec-green">
+                      ₹
+                      {campaign.milestones
+                        .reduce((sum, m) => sum + m.budget, 0)
+                        .toLocaleString()}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-green">
-                  <svg className="w-8 h-8 text-dreamxec-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm text-dreamxec-navy opacity-70 font-sans">Deadline</p>
-                    <p className="text-lg font-bold text-dreamxec-navy font-display">
-                      {campaign.deadline instanceof Date
-                        ? campaign.deadline.toLocaleDateString()
-                        : new Date(campaign.deadline).toLocaleDateString()}
-                    </p>
-                  </div>
+              ) : (
+                <div className="p-6 rounded-lg border-4 border-dreamxec-navy bg-dreamxec-cream text-center">
+                  <p className="text-dreamxec-navy font-bold">
+                    Timeline details will be shared soon.
+                  </p>
+                  <p className="text-sm text-dreamxec-navy/70 mt-1">
+                    The campaign owner will update milestones after approval.
+                  </p>
                 </div>
-              </div>
+              )}
+
+              <p className="mt-6 text-xs text-dreamxec-navy/60 italic">
+                * This timeline explains how funds will be utilized across execution phases.
+              </p>
             </div>
+
           </div>
 
           {/* Right Column - Funding Card */}
@@ -610,6 +766,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
           </div>
         </div>
       )}
+      <FooterContent />
     </div>
   );
 }

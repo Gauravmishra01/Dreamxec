@@ -32,11 +32,8 @@ const Careers = () => {
   ]
 
   const openRoles = [
-    "Senior Backend Engineer (Node.js, PostgreSQL, AWS)",
-    "Product Manager (India, early-stage products)",
-    "Partnerships Manager (schools, colleges, corporates)",
-    "Content & Community Manager (student community building)",
-    "Sales Development Rep (B2B school outreach)"
+    "Campus Partnership Executive (pan-India, Full-time)",
+    "Corporate Partnership Executive (pan-India, Full-time)",
   ]
 
   const internshipBenefits = [
@@ -189,15 +186,15 @@ const Careers = () => {
 
         {/* CTA Section */}
         <section className="flex items-center justify-center gap-6 py-16">
-          <a href="/careers/open-roles">
+          {/* <a href="/careers/open-roles">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
                 💼 View All Open Roles
               </h2>
             </div>
-          </a>
+          </a> */}
 
-          <a href="/careers/internship">
+          <a href="https://forms.gle/E8EXaPfyvr9ZgNqXA" target="_blank" rel="noopener noreferrer">
             <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-bold">
                 Join Our Internship Program

@@ -23,12 +23,7 @@ export const DesktopMenu = ({ currentUser, onLogin }: DesktopMenuProps) => {
         CAMPAIGNS
       </a>
 
-      <a
-        href="/about"
-        className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
-      >
-        ABOUT US
-      </a>
+      
 
       {/* Role-specific links */}
       {currentUser?.role === 'student' && (
@@ -65,6 +60,13 @@ export const DesktopMenu = ({ currentUser, onLogin }: DesktopMenuProps) => {
           DASHBOARD
         </a>
       )}
+
+      <a
+        href="/about"
+        className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
+      >
+        ABOUT US
+      </a>
 
       {/* Sign In Button for guests */}
       {!currentUser && (

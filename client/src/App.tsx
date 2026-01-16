@@ -325,28 +325,49 @@ function AppContent() {
     goalAmount: number;
     bannerFile: File | null;
     mediaFiles: File[];
-    deckFile: File | null;
+    presentationDeckUrl: string;
+    milestones: {
+      title: string;
+      timeline: string;
+      budget: string | number;
+      description?: string;
+    }[];
   }) => {
     showLoader();
     try {
-      console.log('🚀 Creating Campaign with Single Request...');
+      console.log('🚀 Creating Campaign with Milestones...');
 
       const formData = new FormData();
+
+      // Basic fields
       formData.append('title', data.title);
       formData.append('description', data.description);
-      formData.append('companyName', data.clubName); // Mapped to companyName in DB
-      // skillsRequired defaults to empty array
-      // timeline defaults to '3 months' or passed value? App hardcoded '3 months' before.
-      formData.append('timeline', '3 months');
+      formData.append('companyName', data.clubName);
       formData.append('goalAmount', data.goalAmount.toString());
 
-      // Append Files
+      // 🔹 Milestones (source of truth)
+      // Convert budget to number and send as JSON string (standard & backend-friendly)
+      const milestonesWithNumericBudget = data.milestones.map(m => ({
+        ...m,
+        budget: typeof m.budget === 'string' ? parseFloat(m.budget) : m.budget
+      }));
+      formData.append('milestones', JSON.stringify(milestonesWithNumericBudget));
+
+      // 🔹 Optional: derived timeline (display only)
+      const derivedTimeline =
+        data.milestones.length === 1
+          ? data.milestones[0].timeline
+          : `${data.milestones.length} milestones`;
+
+      formData.append('timeline', derivedTimeline);
+
+      // Files
       if (data.bannerFile) {
         formData.append('bannerFile', data.bannerFile);
       }
 
-      if (data.deckFile) {
-        formData.append('deckFile', data.deckFile);
+      if (data.presentationDeckUrl) {
+        formData.append('presentationDeckUrl', data.presentationDeckUrl);
       }
 
       if (data.mediaFiles && data.mediaFiles.length > 0) {
@@ -355,14 +376,19 @@ function AppContent() {
         });
       }
 
+      console.log('📦 Sending FormData with milestones');
+
       const response = await createUserProject(formData);
 
       console.log('📦 Create Response:', response);
 
       if (response.data?.userProject) {
-        // Map back to frontend model
-        const newCampaign = mapUserProjectToCampaign(response.data.userProject);
-        setCampaigns([...campaigns, newCampaign]);
+        const newCampaign = mapUserProjectToCampaign(
+          response.data.userProject
+        );
+
+        setCampaigns(prev => [...prev, newCampaign]);
+
         console.log('✅ Campaign created successfully:', newCampaign);
       } else {
         throw new Error('Failed to create campaign: Invalid response');
@@ -371,9 +397,11 @@ function AppContent() {
     } catch (error) {
       console.error('Failed to create campaign:', error);
       hideLoader();
+      console.error('❌ Failed to create campaign:', error);
       throw error;
     }
   };
+
 
   const handleApproveCampaign = async (id: string) => {
     showLoader();
@@ -933,7 +961,18 @@ function AppContent() {
                                       <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-12 text-center max-w-md">
                                         <div className="card-tricolor-tag"></div>
                                         <p className="text-dreamxec-navy text-xl font-sans mt-4">
-                                          Please log in as a student to access the dashboard.
+                                          <p className="text-dreamxec-navy text-xl font-sans mt-4">
+                                            Every journey begins with the right role.
+                                            <br />
+                                            Log in as a student to access your DreamXec dashboard.
+                                          </p>
+                                          <button
+                                            onClick={() => navigate("/auth")}
+                                            className="mt-8 px-8 py-3 bg-dreamxec-orange text-white font-bold rounded-xl
+                     hover:bg-dreamxec-saffron transition-colors shadow-lg"
+                                          >
+                                            Log in
+                                          </button>
                                         </p>
                                       </div>
                                     </div>

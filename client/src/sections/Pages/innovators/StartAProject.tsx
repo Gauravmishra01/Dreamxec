@@ -1,5 +1,6 @@
 import { Header } from '../../Header/index'
 import { Footer } from '../../Footer/index'
+import { RopeDivider } from '../../../components/RopeDivider'
 
 const StartAProject = () => {
 
@@ -57,37 +58,93 @@ const StartAProject = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-8">
 
-        {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        {/* Hero Section */}
+        <section className="relative max-w-6xl mx-auto px-4 pt-24 pb-16 text-center overflow-hidden">
+
+          {/* Background */}
+          <div className="absolute inset-0 -z-10 bg-[url('/your-bg-image.png')] bg-cover bg-center" />
+
+          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold tracking-tight mb-6">
             Turn Your Innovation Into Reality
           </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto">
-            Get funded. Get mentored. Make an impact. Launch your next big idea
-            with DreamXec—India's fastest growing student innovation platform.
+
+          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-10">
+            Get funded. Get mentored. Make an impact. Launch your next big idea with
+            <span className="font-semibold text-dreamxec-berkeley-blue"> DreamXec</span> —
+            India’s fastest-growing student innovation platform.
           </p>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <span className="px-5 py-2 rounded-full bg-dreamxec-berkeley-blue/10 text-dreamxec-berkeley-blue text-sm font-semibold">
+              Student-first platform
+            </span>
+            <span className="px-5 py-2 rounded-full bg-dreamxec-berkeley-blue/10 text-dreamxec-berkeley-blue text-sm font-semibold">
+              Funding + mentorship
+            </span>
+            <span className="px-5 py-2 rounded-full bg-dreamxec-berkeley-blue/10 text-dreamxec-berkeley-blue text-sm font-semibold">
+              Built for real impact
+            </span>
+          </div>
+
         </section>
 
+
+        {/* Divider */}
+        <RopeDivider />
         {/* What is DreamXec */}
-        <section className="max-w-6xl mx-auto px-4 space-y-6">
-          <h2 className="text-dreamxec-berkeley-blue text-center text-4xl md:text-7xl font-extrabold mb-8">
+        <section className="max-w-6xl mx-auto px-4 py-8 space-y-10">
+          <h2 className="text-dreamxec-berkeley-blue text-center text-4xl md:text-6xl font-extrabold tracking-tight">
             What is DreamXec for Innovators?
           </h2>
-          <p className="text-dreamxec-navy text-sm md:text-xl leading-relaxed ">
-            DreamXec is a crowdfunding platform designed specifically for student
-            innovators like you. Whether you're building a research project,
-            developing a tech solution, creating a social enterprise, or launching
-            a startup idea—DreamXec connects you with funding, mentors, and a
-            community of believers. We aim to help at least 500+ student projects
-            in 2026 and transform ideas into impact. Your idea doesn't need venture
-            capital backing; it needs DreamXec backing.
+
+          <p className="text-dreamxec-navy text-base md:text-xl leading-relaxed max-w-4xl mx-auto text-center">
+            DreamXec is a crowdfunding platform built exclusively for student innovators.
+            Whether you’re working on a research project, building a tech product,
+            creating a social enterprise, or shaping a startup idea — DreamXec connects
+            you with funding, mentors, and a community that believes in your vision.
+          </p>
+
+          {/* Feature Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            {[
+              {
+                title: "Get Funded",
+                desc: "Access capital without needing VC backing"
+              },
+              {
+                title: "Get Mentored",
+                desc: "Learn directly from industry & academic experts"
+              },
+              {
+                title: "Create Impact",
+                desc: "Turn ideas into real-world solutions"
+              }
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="card-glass p-8 text-center space-y-3"
+              >
+                <h3 className="text-xl font-bold text-dreamxec-berkeley-blue">
+                  {item.title}
+                </h3>
+                <p className="text-dreamxec-navy text-base">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Closing Line */}
+          <p className="text-dreamxec-navy text-lg md:text-xl font-semibold text-center max-w-3xl mx-auto mt-12">
+            Your idea doesn’t need venture capital backing —
+            it needs <span className="text-dreamxec-berkeley-blue">DreamXec</span> backing.
           </p>
         </section>
 
         {/* Why DreamXec – Whiteboard Cards */}
-        <section className="max-w-7xl mx-auto px-4 text-center space-y-12">
+        <section className="max-w-7xl mx-auto px-4 -pb-2 text-center space-y-12">
           <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
             How It Works
           </h2>
@@ -99,7 +156,7 @@ const StartAProject = () => {
                 style={{ animationDelay: `${200 + index * 150}ms` }}
                 className="card-whiteboard animate-fade-in"
               >
-                <div className="whiteboard-content pt-14"> 
+                <div className="whiteboard-content pt-14">
                   <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-2 p-2">
                     {col.title}
                   </h3>
@@ -112,7 +169,32 @@ const StartAProject = () => {
           </div>
         </section>
 
+        {/* CTA Section */}
+        <section className="flex  items-center justify-center gap-4">
 
+          {/* Pill-style CTA: Primary */}
+          <a href="/dashboard" className="flex justify-center">
+            <div className="relative self-start caret-transparent">
+              <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
+                <h2 className="text-dreamxec-navy text-base md:text-xl font-sans font-bold leading-tight text-center whitespace-nowrap">
+                  <span className="">Start Your Project</span>
+                </h2>
+              </div>
+            </div>
+          </a>
+
+          {/* Pill-style CTA: Secondary */}
+          {/* <a href="/innovators/success-stories" className="flex justify-center">
+            <div className="relative self-start caret-transparent">
+              <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform">
+                <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-sans font-bold leading-tight text-center whitespace-nowrap">
+                  Explore Success Stories
+                </h2>
+              </div>
+            </div>
+          </a> */}
+
+        </section>
 
         {/* What You Get */}
         <section className="max-w-7xl mx-auto px-4 space-y-12">
@@ -189,38 +271,42 @@ const StartAProject = () => {
 
 
         {/* Success Metrics – CriteriaGrid Theme */}
-        <section className="w-full  px-4">
-
-          <div className="grid grid-cols-1 md:grid-cols-2 mt-[10%] gap-8 max-w-6xl mx-auto">
+        <section className="w-full px-4 py-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
 
             {/* Section Header */}
-            <span className="col-span-1 md:col-span-2 text-center text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold mb-8">
-              <h2>What would our ‘success’ look like!</h2>
-            </span>
+            <div className="col-span-1 md:col-span-2 text-center mb-12">
+              <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold tracking-tight">
+                What does "success" look like for us?
+              </h2>
+            </div>
 
             {[
-              "Fund 500+ projects in 2026",
-              "Target to raise minimum of ₹10 crore",
-              "Engage 1,000+ mentors",
-              "Achieve minimum of 70% success rate for projects reaching their funding goal",
-              "Strengthen meaningful connections among academia, industry and goverment rasing the employment opportunities and the employability"
+              "Fund over 500 student-led projects by 2026",
+              "Raise a minimum of ₹10 crore in total funding",
+              "Engage more than 1,000 industry and academic mentors",
+              "Achieve at least a 70% success rate for projects reaching their funding goals",
+              "Build strong collaborations between academia, industry, and government to enhance employability and job creation",
+              "Enable 50,000+ students to access real-world opportunities through funded projects, mentorship, and industry collaborations"
             ].map((item, index) => (
               <div
                 key={index}
-                style={{ animationDelay: `${index * 100}ms` }}
-                className="card-glass animate-fade-in flex items-center p-6"
+                style={{ animationDelay: `${index * 120}ms` }}
+                className="card-glass animate-fade-in flex items-start gap-4 p-6"
               >
-                {/* Left Side: Text */}
-                <div className="w-full pr-4">
-                  <h2 className="text-2xl font-bold text-dreamxec-gray-250 mb-2">
-                    ✅ {item}
-                  </h2>
-                </div>
+                {/* Trophy Bullet */}
+                <span className="text-2xl mt-1">🏆</span>
+
+                {/* Text */}
+                <p className="text-xl font-semibold text-dreamxec-gray-250 leading-relaxed">
+                  {item}
+                </p>
               </div>
             ))}
 
           </div>
         </section>
+
 
 
 
@@ -257,7 +343,7 @@ const StartAProject = () => {
                     Q: {item.q}
                   </h3>
 
-                  <p className="text-dreamxec-orange font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
+                  <p className="text-dreamxec-gray-250 font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
                     A: {item.a}
                   </p>
                 </div>
@@ -266,39 +352,6 @@ const StartAProject = () => {
 
           </div>
         </section>
-
-
-
-        {/* CTA Section */}
-        <section className="flex  items-center justify-center gap-6 ">
-
-          {/* Pill-style CTA: Primary */}
-          <a href="/signup" className="flex justify-center">
-            <div className="relative self-start caret-transparent">
-              <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
-                <h2 className="text-dreamxec-navy text-base md:text-xl font-sans font-bold leading-tight text-center whitespace-nowrap">
-                  <span className="">🚀 Start Your Project</span>
-                </h2>
-              </div>
-            </div>
-          </a>
-
-          {/* Pill-style CTA: Secondary */}
-          <a href="/innovators/success-stories" className="flex justify-center">
-            <div className="relative self-start caret-transparent">
-              <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform">
-                <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-sans font-bold leading-tight text-center whitespace-nowrap">
-                  Explore Success Stories
-                </h2>
-              </div>
-            </div>
-          </a>
-
-        </section>
-
-
-
-
       </main>
 
       <Footer />

@@ -1,165 +1,228 @@
 const prisma = require('../../config/prisma');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
-const sendEmail = require('../../services/email.service');
-
-// -------------------------
-// CREATE USER PROJECT
-// -------------------------
-// USER: Create a user project (Only verified club members)
 const uploadToCloudinary = require('../../utils/uploadToCloudinary');
 
-// -------------------------
-// CREATE USER PROJECT
-// -------------------------
-// USER: Create a user project (Only verified club members)
+/* ======================================================
+   CREATE USER PROJECT (WITH MILESTONES)
+====================================================== */
 exports.createUserProject = catchAsync(async (req, res, next) => {
-  const { id, title, description, companyName, skillsRequired, timeline, goalAmount } = req.body;
+  const {
+    id,
+    title,
+    description,
+    companyName,
+    skillsRequired,
+    goalAmount,
+    presentationDeckUrl,
+  } = req.body;
 
-  const initialProject = await prisma.userProject.create({
-    data: {
-      id: id || undefined, 
-      title,
-      description,
-      companyName: companyName || null,
-      skillsRequired: skillsRequired ? (typeof skillsRequired === 'string' ? JSON.parse(skillsRequired) : skillsRequired) : [], 
-      timeline: timeline || null,
-      goalAmount: parseFloat(goalAmount), 
-      imageUrl: null, 
-      campaignMedia: [],
-      presentationDeckUrl: null,
-      userId: req.user.id,
-    },
-  });
+  /* -------------------------
+     PARSE MILESTONES
+  -------------------------- */
+  let parsedMilestones = [];
 
-  const projectId = initialProject.id;
-  const updates = {};
-  
-  console.log('📦 Canpaign Created:', projectId);
-  console.log('📂 Files received:', req.files ? Object.keys(req.files) : 'None');
-
-  // Handle File Uploads
-  if (req.files) {
-    try {
-      // 1. Banner Image
-      if (req.files.bannerFile && req.files.bannerFile[0]) {
-        console.log('🖼 Processing Banner...');
-        const file = req.files.bannerFile[0];
-        const folder = `dreamxec/campaigns/${projectId}/images`;
-        const url = await uploadToCloudinary(file.path, folder);
-        console.log('✅ Banner Uploaded:', url);
-        updates.imageUrl = url;
+  if (req.body.milestones) {
+    if (typeof req.body.milestones === 'string') {
+      try {
+        parsedMilestones = JSON.parse(req.body.milestones);
+      } catch {
+        return next(new AppError('Invalid milestones format', 400));
       }
-
-      // 2. Pitch Deck
-      if (req.files.deckFile && req.files.deckFile[0]) {
-        console.log('📄 Processing Deck...');
-        const file = req.files.deckFile[0];
-        const folder = `dreamxec/campaigns/${projectId}/documents/campaign-deck`;
-        const url = await uploadToCloudinary(file.path, folder);
-        console.log('✅ Deck Uploaded:', url);
-        updates.presentationDeckUrl = url;
-      }
-
-      // 3. Campaign Media
-      if (req.files.mediaFiles && req.files.mediaFiles.length > 0) {
-        console.log(`🎥 Processing ${req.files.mediaFiles.length} Media Files...`);
-        const mediaUrls = [];
-        for (const file of req.files.mediaFiles) {
-          let folder = `dreamxec/campaigns/${projectId}/others`;
-          if (file.mimetype.startsWith('image/')) folder = `dreamxec/campaigns/${projectId}/images`;
-          else if (file.mimetype.startsWith('video/')) folder = `dreamxec/campaigns/${projectId}/videos`;
-          
-          const url = await uploadToCloudinary(file.path, folder);
-          mediaUrls.push(url);
-        }
-        console.log('✅ Media Uploaded:', mediaUrls);
-        updates.campaignMedia = mediaUrls; // This creates a new array. Note: Prisma set/push behavior.
-      }
-    } catch (err) {
-      console.error('❌ Upload Error during creation:', err);
+    } else {
+      parsedMilestones = req.body.milestones;
     }
   }
 
-  // Update if there are any file URLs
-  let finalProject = initialProject;
-  if (Object.keys(updates).length > 0) {
-    console.log('🔄 Updating Project with:', updates);
-    finalProject = await prisma.userProject.update({
-      where: { id: projectId },
-      data: updates,
-    });
-  } else {
-    console.log('⚠️ No updates to apply.');
+  if (!Array.isArray(parsedMilestones) || parsedMilestones.length === 0) {
+    return next(new AppError('At least one milestone is required', 400));
   }
 
-  res.status(201).json({ status: 'success', data: { userProject: finalProject } });
-});
+  const totalMilestoneBudget = parsedMilestones.reduce(
+    (sum, m) => sum + Number(m.budget || 0),
+    0
+  );
 
-
-// -------------------------
-// UPDATE USER PROJECT
-// -------------------------
-exports.updateUserProject = catchAsync(async (req, res, next) => {
-  const userProject = await prisma.userProject.findUnique({
-    where: { id: req.params.id },
-  });
-
-  if (!userProject) return next(new AppError('User project not found', 404));
-
-  if (userProject.userId !== req.user.id) {
-    return next(new AppError('You are not authorized to edit this project', 403));
-  }
-
-  if (userProject.status !== 'PENDING' && userProject.status !== 'REJECTED') {
+  if (totalMilestoneBudget > Number(goalAmount)) {
     return next(
-      new AppError('Only PENDING or REJECTED projects can be updated.', 400)
+      new AppError('Total milestone budget cannot exceed goal amount', 400)
     );
   }
 
-  const updatedUserProject = await prisma.userProject.update({
+  /* -------------------------
+     FILE UPLOADS
+  -------------------------- */
+  const uploads = {};
+
+  if (req.files) {
+    // Banner image (REQUIRED)
+    if (req.files.bannerFile?.[0]) {
+      uploads.imageUrl = await uploadToCloudinary(
+        req.files.bannerFile[0].path,
+        'dreamxec/campaigns/images'
+      );
+    } else {
+      return next(new AppError('Banner image is required', 400));
+    }
+
+    // Media files (OPTIONAL)
+    if (req.files.mediaFiles?.length) {
+      uploads.campaignMedia = await Promise.all(
+        req.files.mediaFiles.map((file) => {
+          let folder = 'dreamxec/campaigns/others';
+          if (file.mimetype.startsWith('image/'))
+            folder = 'dreamxec/campaigns/images';
+          if (file.mimetype.startsWith('video/'))
+            folder = 'dreamxec/campaigns/videos';
+
+          return uploadToCloudinary(file.path, folder);
+        })
+      );
+    }
+  }
+
+  /* -------------------------
+     CREATE PROJECT + MILESTONES
+  -------------------------- */
+  const project = await prisma.$transaction(async (tx) => {
+    const createdProject = await tx.userProject.create({
+      data: {
+        id: id || undefined,
+        title,
+        description,
+        companyName: companyName || null,
+        skillsRequired: skillsRequired
+          ? typeof skillsRequired === 'string'
+            ? JSON.parse(skillsRequired)
+            : skillsRequired
+          : [],
+        goalAmount: Number(goalAmount),
+        imageUrl: uploads.imageUrl,
+        campaignMedia: uploads.campaignMedia || [],
+        presentationDeckUrl: presentationDeckUrl?.trim() || null,
+        userId: req.user.id,
+      },
+    });
+
+    await tx.milestone.createMany({
+      data: parsedMilestones.map((m) => ({
+        title: m.title,
+        timeline: m.timeline,
+        budget: Number(m.budget),
+        description: m.description || null,
+        projectId: createdProject.id,
+      })),
+    });
+
+    return createdProject;
+  });
+
+  res.status(201).json({
+    status: 'success',
+    data: { userProject: project },
+  });
+});
+
+/* ======================================================
+   UPDATE USER PROJECT (WITH MILESTONES)
+====================================================== */
+exports.updateUserProject = catchAsync(async (req, res, next) => {
+  const userProject = await prisma.userProject.findUnique({
     where: { id: req.params.id },
-    data: req.body,
+    include: { milestones: true },
+  });
+
+  if (!userProject)
+    return next(new AppError('User project not found', 404));
+
+  if (userProject.userId !== req.user.id)
+    return next(new AppError('You are not authorized', 403));
+
+  if (!['PENDING', 'REJECTED'].includes(userProject.status))
+    return next(
+      new AppError('Only PENDING or REJECTED projects can be updated', 400)
+    );
+
+  const updateData = { ...req.body };
+
+  if (!('presentationDeckUrl' in req.body)) {
+    delete updateData.presentationDeckUrl;
+  }
+
+  let parsedMilestones = null;
+  if (req.body.milestones) {
+    try {
+      parsedMilestones = JSON.parse(req.body.milestones);
+    } catch {
+      return next(new AppError('Invalid milestones format', 400));
+    }
+  }
+
+  const updatedProject = await prisma.$transaction(async (tx) => {
+    const project = await tx.userProject.update({
+      where: { id: req.params.id },
+      data: updateData,
+    });
+
+    if (Array.isArray(parsedMilestones)) {
+      await tx.milestone.deleteMany({
+        where: { projectId: project.id },
+      });
+
+      await tx.milestone.createMany({
+        data: parsedMilestones.map((m) => ({
+          title: m.title,
+          timeline: m.timeline,
+          budget: Number(m.budget),
+          description: m.description || null,
+          projectId: project.id,
+        })),
+      });
+    }
+
+    return project;
   });
 
   res.status(200).json({
     status: 'success',
-    data: { userProject: updatedUserProject },
+    data: { userProject: updatedProject },
   });
 });
 
-// -------------------------
-// DELETE USER PROJECT
-// -------------------------
+/* ======================================================
+   DELETE USER PROJECT
+====================================================== */
 exports.deleteUserProject = catchAsync(async (req, res, next) => {
   const userProject = await prisma.userProject.findUnique({
     where: { id: req.params.id },
   });
 
-  if (!userProject) return next(new AppError('User project not found', 404));
+  if (!userProject)
+    return next(new AppError('User project not found', 404));
 
-  if (userProject.userId !== req.user.id) {
-    return next(new AppError('You are not authorized to delete this project', 403));
-  }
+  if (userProject.userId !== req.user.id)
+    return next(new AppError('You are not authorized', 403));
 
-  if (userProject.status !== 'PENDING' && userProject.status !== 'REJECTED') {
+  if (!['PENDING', 'REJECTED'].includes(userProject.status))
     return next(
-      new AppError('Only PENDING or REJECTED projects can be deleted.', 400)
+      new AppError('Only PENDING or REJECTED projects can be deleted', 400)
     );
-  }
 
-  await prisma.userProject.delete({ where: { id: req.params.id } });
+  await prisma.userProject.delete({
+    where: { id: req.params.id },
+  });
 
-  res.status(204).json({ status: 'success', data: null });
+  res.status(204).json({ status: 'success' });
 });
 
-// -------------------------
-// GET USER PROJECT BY ID
-// -------------------------
+/* ======================================================
+   GET PROJECT BY ID
+====================================================== */
 exports.getUserProject = catchAsync(async (req, res, next) => {
   const userProject = await prisma.userProject.findUnique({
     where: { id: req.params.id },
     include: {
+      milestones: true,
       user: { select: { id: true, name: true } },
       donations: {
         select: {
@@ -172,20 +235,23 @@ exports.getUserProject = catchAsync(async (req, res, next) => {
     },
   });
 
-  if (!userProject) {
+  if (!userProject)
     return next(new AppError('User project not found', 404));
-  }
 
-  res.status(200).json({ status: 'success', data: { userProject } });
+  res.status(200).json({
+    status: 'success',
+    data: { userProject },
+  });
 });
 
-// -------------------------
-// GET PUBLIC PROJECTS
-// -------------------------
-exports.getPublicUserProjects = catchAsync(async (req, res, next) => {
+/* ======================================================
+   GET PUBLIC PROJECTS
+====================================================== */
+exports.getPublicUserProjects = catchAsync(async (req, res) => {
   const userProjects = await prisma.userProject.findMany({
     where: { status: 'APPROVED' },
     include: {
+      milestones: true,
       user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },
     },
@@ -199,14 +265,15 @@ exports.getPublicUserProjects = catchAsync(async (req, res, next) => {
   });
 });
 
-// -------------------------
-// GET MY PROJECTS
-// -------------------------
-exports.getMyUserProjects = catchAsync(async (req, res, next) => {
+/* ======================================================
+   GET MY PROJECTS
+====================================================== */
+exports.getMyUserProjects = catchAsync(async (req, res) => {
   const userProjects = await prisma.userProject.findMany({
     where: { userId: req.user.id },
     include: {
-      user: { select: { name: true, id: true } },
+      milestones: true,
+      user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },
     },
     orderBy: { createdAt: 'desc' },

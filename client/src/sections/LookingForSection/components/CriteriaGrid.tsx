@@ -33,7 +33,7 @@ export const CriteriaGrid = () => {
   ];
 
   return (
-    <div className="w-full py-16 px-4">
+    <div className="w-full px-4">
 
       <div className="grid grid-cols-1 md:grid-cols-2 mt-[10%] gap-8 max-w-6xl mx-auto">
         <span className="col-span-1 md:col-span-2 text-center text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold mb-8">

@@ -52,6 +52,7 @@ const LinkedInIcon = ({ className }: { className?: string }) => (
 );
 
 import { UserRole } from '../types';
+import { FooterContent } from '../sections/Footer/components/FooterContent';
 
 interface AuthPageProps {
   onLogin: (email: string, password: string, role: 'student' | 'donor') => void;
@@ -582,8 +583,10 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
             </div>
           </div>
         </div>
+        
         {/* End Auth Page Content */}
       </div>
+      <FooterContent />
     </>
   );
 }

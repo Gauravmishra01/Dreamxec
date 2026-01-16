@@ -74,7 +74,7 @@ const FAQ = () => {
             Q: {item.q}
           </h3>
 
-          <p className="text-dreamxec-orange font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
+          <p className="text-dreamxec-gray font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
             A: {item.a}
           </p>
         </div>

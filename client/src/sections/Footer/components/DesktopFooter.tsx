@@ -40,7 +40,7 @@ export const DesktopFooter = () => {
               Research Karega India Toh Badhega India
             </h3>
             <p className="text-dreamxec-cream text-sm leading-relaxed">
-              DreamXec is India's national crowdfunding platform dedicated to turning student projects into real-world innovations. We connect the brightest young minds with the capital and mentorship they need to build a self-reliant future.
+              DreamXec is India's crowdfunding platform dedicated to turning student projects into real-world innovations. We connect the brightest young minds with the capital and mentorship they need to build a self-reliant future.
             </p>
 
             {/* Newsletter Signup */}
@@ -91,11 +91,11 @@ export const DesktopFooter = () => {
                   Start a Project →
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/how-it-works/students" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   How It Works: For Students
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a href="/success-stories" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Success Stories
@@ -106,11 +106,11 @@ export const DesktopFooter = () => {
                   Project Eligibility & Guidelines
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/resources" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Resource Center
                 </a>
-              </li>
+              </li> */}
             </ul>
             <div className="space-y-6 pt-20">
               <img
@@ -147,11 +147,11 @@ export const DesktopFooter = () => {
                   Corporate & CSR Partnerships
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/alumni-giving" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Alumni Giving Programs
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a href="/become-mentor" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Become a Mentor
@@ -188,11 +188,11 @@ export const DesktopFooter = () => {
                   Press & Media
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/careers" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Careers
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a href="/contact" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
                   Contact Us

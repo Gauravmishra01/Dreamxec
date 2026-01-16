@@ -8,14 +8,26 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-module.exports = async function uploadToCloudinary(filePath,folder) {
+/**
+ * Upload file to Cloudinary
+ * @param {string} filePath
+ * @param {string} folder
+ * @param {'image' | 'video' | 'raw'} resourceType
+ */
+module.exports = async function uploadToCloudinary(
+  filePath,
+  folder,
+  resourceType = "image"
+) {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
-      folder: folder,
+      folder,
+      resource_type: resourceType,
+      use_filename: true,
+      unique_filename: false,
     });
 
-    fs.unlinkSync(filePath); 
-    console.log("Cloudinary Upload Success:", res);
+    fs.unlinkSync(filePath);
     return res.secure_url;
   } catch (err) {
     console.error("Cloudinary Upload Error:", err);

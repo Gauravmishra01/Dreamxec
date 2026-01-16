@@ -8,11 +8,11 @@ const validate = (schema) => (req, res, next) => {
     });
     next();
   } catch (err) {
-    console.error('Validation error:', JSON.stringify(err.errors, null, 2));
+    console.error('Validation error:', JSON.stringify(err.message, null, 2));
     return res.status(400).json({
       status: 'error',
       message: 'Validation failed',
-      errors: err.errors,
+      errors: err.message,
     });
   }
 };

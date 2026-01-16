@@ -1,4 +1,21 @@
 import apiRequest, { type ApiResponse } from './api';
+import axios from 'axios';
+
+/* =========================================================
+   Milestone Type (Campaign-only)
+========================================================= */
+
+export interface Milestone {
+  id?: string;
+  title: string;
+  timeline: string;
+  budget: number;
+  description?: string;
+}
+
+/* =========================================================
+   UserProject (Campaign)
+========================================================= */
 
 export interface UserProject {
   id: string;
@@ -6,19 +23,30 @@ export interface UserProject {
   description: string;
   companyName: string;
   skillsRequired: string[];
-  timeline: string;
+
   goalAmount: number;
   amountRaised: number;
+
   imageUrl?: string;
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
+
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  rejectionReason?: string;
+
   userId: string;
   bankAccountId?: string | null;
+
   createdAt: string;
   updatedAt: string;
-  rejectionReason?: string;
+
+  // ✅ NEW (campaign-only)
+  milestones: Milestone[];
 }
+
+/* =========================================================
+   Create / Update Payloads (Campaign-only)
+========================================================= */
 
 export interface CreateUserProjectData {
   id?: string;
@@ -26,11 +54,14 @@ export interface CreateUserProjectData {
   description: string;
   companyName: string;
   skillsRequired: string[];
-  timeline: string;
   goalAmount: number;
+
   imageUrl?: string;
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
+
+  // ✅ NEW
+  milestones: Milestone[];
 }
 
 export interface UpdateUserProjectData {
@@ -38,58 +69,76 @@ export interface UpdateUserProjectData {
   description?: string;
   companyName?: string;
   skillsRequired?: string[];
-  timeline?: string;
   goalAmount?: number;
+
   imageUrl?: string;
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
+
+  // ✅ NEW (editable before approval)
+  milestones?: Milestone[];
 }
 
-// Get all public user projects (campaigns)
-export const getPublicUserProjects = async (): Promise<ApiResponse<{ userProjects: UserProject[] }>> => {
+/* =========================================================
+   API Calls (unchanged endpoints)
+========================================================= */
+
+// Get all public campaigns
+export const getPublicUserProjects = async (): Promise<
+  ApiResponse<{ userProjects: UserProject[] }>
+> => {
   return apiRequest('/user-projects/public', {
     method: 'GET',
   });
 };
 
-// Get specific user project
-export const getUserProject = async (id: string): Promise<ApiResponse<{ userProject: UserProject }>> => {
+// Get specific campaign
+export const getUserProject = async (
+  id: string
+): Promise<ApiResponse<{ userProject: UserProject }>> => {
   return apiRequest(`/user-projects/${id}`, {
     method: 'GET',
   });
 };
 
-// Get my user projects
-export const getMyUserProjects = async (): Promise<ApiResponse<{ userProjects: UserProject[] }>> => {
+// Get my campaigns
+export const getMyUserProjects = async (): Promise<
+  ApiResponse<{ userProjects: UserProject[] }>
+> => {
   return apiRequest('/user-projects/my', {
     method: 'GET',
   });
 };
 
-import axios from 'axios';
-
-// Create user project (supports FormData for file uploads)
-export const createUserProject = async (data: FormData | CreateUserProjectData): Promise<ApiResponse<{ userProject: UserProject }>> => {
-  // If data is FormData, use axios for multipart/form-data
+// Create campaign (FormData for files + milestones JSON)
+export const createUserProject = async (
+  data: FormData | CreateUserProjectData
+): Promise<ApiResponse<{ userProject: UserProject }>> => {
   if (data instanceof FormData) {
     const token = localStorage.getItem('token');
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/user-projects`, data, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/user-projects`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
     return response.data;
   }
 
-  // Fallback for JSON (legacy support if needed)
+  // JSON fallback (rare)
   return apiRequest('/user-projects', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 };
 
-// Update user project
+// Update campaign
 export const updateUserProject = async (
   id: string,
   data: UpdateUserProjectData
@@ -100,8 +149,10 @@ export const updateUserProject = async (
   });
 };
 
-// Delete user project
-export const deleteUserProject = async (id: string): Promise<ApiResponse<null>> => {
+// Delete campaign
+export const deleteUserProject = async (
+  id: string
+): Promise<ApiResponse<null>> => {
   return apiRequest(`/user-projects/${id}`, {
     method: 'DELETE',
   });
