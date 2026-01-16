@@ -34,10 +34,10 @@ const upload = multer({
    PUBLIC ROUTES
 ---------------------------- */
 
-// ✅ Get all approved campaigns
+// ✅ Get all approved campaigns (milestones included by controller)
 router.get('/public', getPublicUserProjects);
 
-// ✅ Get one campaign (controller handles approval gate)
+// ✅ Get one campaign by ID (milestones included)
 router.get('/:id', getUserProject);
 
 /* ---------------------------
@@ -49,7 +49,7 @@ router.use(protect);
 // ✅ Student's own campaigns
 router.get('/my', restrictTo('USER'), getMyUserProjects);
 
-// ✅ Create campaign
+// ✅ Create campaign with milestones + uploads
 router.post(
   '/',
   restrictTo('USER'),
@@ -58,16 +58,16 @@ router.post(
     { name: 'bannerFile', maxCount: 1 },
     { name: 'mediaFiles', maxCount: 10 },
   ]),
-  validate(createUserProjectSchema),
+  validate(createUserProjectSchema), // 🔴 must validate milestones
   createUserProject
 );
 
-// ✅ Update campaign
+// ✅ Update campaign (milestones allowed only if PENDING / REJECTED)
 router.put(
   '/:id',
   restrictTo('USER'),
   ensureClubVerified,
-  validate(updateUserProjectSchema),
+  validate(updateUserProjectSchema), // 🔴 must validate milestones
   updateUserProject
 );
 

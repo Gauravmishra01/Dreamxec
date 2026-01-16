@@ -34,15 +34,22 @@ interface CreateCampaignProps {
     bannerFile: File | null;
     mediaFiles: File[];
     presentationDeckUrl: string;
+    milestones: Milestone[];
   }) => Promise<void>;
 }
-
+type Milestone = {
+  title: string;
+  timeline: string;
+  budget: string;
+  description?: string;
+};
 export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [clubName, setClubName] = useState('');
   const [goalAmount, setGoalAmount] = useState('');
   const [presentationDeckUrl, setPresentationDeckUrl] = useState('');
+  
 
   // file states
   const [bannerFile, setBannerFile] = useState<File | null>(null);
@@ -61,6 +68,10 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const mediaInputRef = useRef<HTMLInputElement>(null);
 
+
+  const [milestones, setMilestones] = useState<Milestone[]>([
+    { title: '', timeline: '', budget: '', description: '' },
+  ]);
 
   // Cleanup object URLs to avoid memory leaks
   useEffect(() => {
@@ -100,6 +111,35 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
     });
   };
 
+  const addMilestone = () => {
+    setMilestones(prev => [
+      ...prev,
+      { title: '', timeline: '', budget: '', description: '' },
+    ]);
+  };
+
+  const removeMilestone = (index: number) => {
+    setMilestones(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const updateMilestone = (
+    index: number,
+    field: keyof Milestone,
+    value: string
+  ) => {
+    setMilestones(prev =>
+      prev.map((m, i) =>
+        i === index ? { ...m, [field]: value } : m
+      )
+    );
+  };
+
+  const totalMilestoneBudget = milestones.reduce(
+    (sum, m) => sum + (parseFloat(m.budget) || 0),
+    0
+  );
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
@@ -120,7 +160,9 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
         bannerFile,
         mediaFiles,
         presentationDeckUrl,
+        milestones,
       });
+
 
       setShowSuccess(true);
       setTimeout(() => {
@@ -134,12 +176,20 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
   };
 
   const isFormValid =
-    title.trim() &&
-    description.trim() &&
-    clubName.trim() &&
+    title.trim().length > 0 &&
+    description.trim().length > 0 &&
+    clubName.trim().length > 0 &&
     parseFloat(goalAmount) > 0 &&
-    bannerFile;
-    presentationDeckUrl;
+    !!bannerFile &&
+    milestones.length > 0 &&
+    milestones.every(
+      m =>
+        m.title.trim() &&
+        m.timeline.trim() &&
+        parseFloat(m.budget) > 0
+    ) &&
+    totalMilestoneBudget <= parseFloat(goalAmount);
+
 
   if (showSuccess) {
     return (
@@ -304,6 +354,116 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                 className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all resize-none shadow-pastel-green"
               />
             </div>
+            {/* Project Milestones & Fund Allocation */}
+            <div>
+              <h2 className="text-2xl font-bold text-dreamxec-navy mb-2 font-display">
+                Project Milestones & Fund Allocation <span className="text-red-600">*</span>
+              </h2>
+
+              <p className="text-sm text-dreamxec-navy/70 mb-6 font-sans">
+                Break your project into phases so donors understand how funds will be used.
+              </p>
+
+              <div className="space-y-6">
+                {milestones.map((milestone, index) => (
+                  <div
+                    key={index}
+                    className="p-5 rounded-xl border-4 border-dreamxec-navy bg-dreamxec-cream shadow-pastel-card"
+                  >
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-bold text-dreamxec-navy">
+                        Milestone {index + 1}
+                      </h3>
+
+                      {milestones.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeMilestone(index)}
+                          className="text-red-600 font-bold text-sm"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Title */}
+                      <input
+                        type="text"
+                        placeholder="Milestone title (e.g. Development Phase)"
+                        value={milestone.title}
+                        onChange={(e) =>
+                          updateMilestone(index, 'title', e.target.value)
+                        }
+                        required
+                        className="px-4 py-3 border-4 border-dreamxec-navy rounded-lg"
+                      />
+
+                      {/* Timeline */}
+                      <input
+                        type="text"
+                        placeholder="Timeline (e.g. Weeks 3–6)"
+                        value={milestone.timeline}
+                        onChange={(e) =>
+                          updateMilestone(index, 'timeline', e.target.value)
+                        }
+                        required
+                        className="px-4 py-3 border-4 border-dreamxec-navy rounded-lg"
+                      />
+
+                      {/* Budget */}
+                      <div className="relative sm:col-span-2">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold">
+                          ₹
+                        </span>
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Budget for this milestone"
+                          value={milestone.budget}
+                          onChange={(e) =>
+                            updateMilestone(index, 'budget', e.target.value)
+                          }
+                          required
+                          className="w-full pl-10 pr-4 py-3 border-4 border-dreamxec-navy rounded-lg"
+                        />
+                      </div>
+
+                      {/* Description (optional) */}
+                      <textarea
+                        placeholder="Optional: How will the funds be used?"
+                        value={milestone.description}
+                        onChange={(e) =>
+                          updateMilestone(index, 'description', e.target.value)
+                        }
+                        rows={3}
+                        className="sm:col-span-2 px-4 py-3 border-4 border-dreamxec-navy rounded-lg resize-none"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={addMilestone}
+                className="mt-4 px-5 py-2 bg-dreamxec-orange text-white font-bold rounded-lg border-4 border-dreamxec-navy shadow-pastel-saffron"
+              >
+                + Add Milestone
+              </button>
+
+              {/* Budget validation */}
+              <p className="mt-4 text-sm font-bold text-dreamxec-navy">
+                Total Milestone Budget: ₹{totalMilestoneBudget.toLocaleString()}
+              </p>
+
+              {totalMilestoneBudget > parseFloat(goalAmount || '0') && (
+                <p className="text-red-600 font-bold text-sm mt-1">
+                  Total milestone budget cannot exceed fundraising goal.
+                </p>
+              )}
+            </div>
+
 
             {/* Campaign Main Image Upload */}
             <div>

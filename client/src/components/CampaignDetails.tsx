@@ -17,6 +17,15 @@ interface CampaignDetailsProps {
   onDonate?: (campaignId: string, amount: number) => void;
 }
 
+export type Milestone = {
+  id?: string;
+  title: string;
+  timeline: string;
+  budget: number;
+  description?: string;
+};
+
+
 export default function CampaignDetails({ currentUser, campaigns, onLogin, onLogout, onDonate }: CampaignDetailsProps) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -26,8 +35,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [donationAmount, setDonationAmount] = useState('');
   const [email, setEmail] = useState("")
   const [showDonateModal, setShowDonateModal] = useState(false);
-  type CampaignTab = 'about' | 'media' | 'presentation' | 'Milestones';
+  type CampaignTab = 'about' | 'media' | 'presentation';
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
+
+
 
 
   // Wishlist State
@@ -323,7 +334,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             {/* Tabs */}
             <div className="mb-6 border-b-4 border-dreamxec-navy">
               <div className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide">
-                {(['about', 'media', 'presentation', 'milestones'] as CampaignTab[]).map(tab => {
+                {(['about', 'media', 'presentation'] as CampaignTab[]).map(tab => {
                   const isActive = activeTab === tab;
 
                   return (
@@ -455,94 +466,89 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
 
             {/* Milestones */}
-            {activeTab === 'Milestones' && (
-              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
-                <div className="card-tricolor-tag"></div>
 
-                <h2 className="text-2xl font-bold text-dreamxec-navy mb-6 font-display mt-4">
-                  Project Milestones
-                </h2>
-
-                {/* TEMP: Timeline-based milestones (safe default) */}
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-navy">
-                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-dreamxec-orange text-white font-bold">
-                      1
-                    </span>
-                    <div>
-                      <p className="font-bold text-dreamxec-navy">Project Kickoff</p>
-                      <p className="text-sm text-dreamxec-navy/70">
-                        Campaign approval and initial setup
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-navy">
-                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-dreamxec-saffron text-white font-bold">
-                      2
-                    </span>
-                    <div>
-                      <p className="font-bold text-dreamxec-navy">Development Phase</p>
-                      <p className="text-sm text-dreamxec-navy/70">
-                        Core work execution and progress updates
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-navy">
-                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-dreamxec-green text-white font-bold">
-                      3
-                    </span>
-                    <div>
-                      <p className="font-bold text-dreamxec-navy">Completion & Review</p>
-                      <p className="text-sm text-dreamxec-navy/70">
-                        Final delivery and outcome evaluation
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="mt-6 text-xs text-dreamxec-navy/60 italic">
-                  * Detailed milestone tracking will be updated as the project progresses.
-                </p>
-              </div>
-            )}
 
             {/* Timeline */}
             <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
               <div className="card-tricolor-tag"></div>
-              <h2 className="text-2xl font-bold text-dreamxec-navy mb-4 font-display mt-4">
-                Campaign Timeline
+
+              <h2 className="text-2xl font-bold text-dreamxec-navy mb-6 font-display mt-4">
+                Campaign Timeline & Fund Allocation
               </h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-orange">
-                  <svg className="w-8 h-8 text-dreamxec-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm text-dreamxec-navy opacity-70 font-sans">Started</p>
-                    <p className="text-lg font-bold text-dreamxec-navy font-display">
-                      {campaign.createdAt instanceof Date
-                        ? campaign.createdAt.toLocaleDateString()
-                        : new Date(campaign.createdAt).toLocaleDateString()}
-                    </p>
+
+              {campaign.milestones && campaign.milestones.length > 0 ? (
+                <div className="space-y-5">
+                  {campaign.milestones.map((milestone, index) => (
+                    <div
+                      key={index}
+                      className="relative flex gap-4 p-5 bg-dreamxec-cream rounded-xl border-4 border-dreamxec-navy"
+                    >
+                      {/* Step number */}
+                      <span className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-dreamxec-orange text-white font-bold text-lg shadow-md">
+                        {index + 1}
+                      </span>
+
+                      <div className="flex-1">
+                        {/* Title + Timeline */}
+                        <div className="flex flex-wrap items-center gap-3 mb-2">
+                          <h3 className="text-lg font-bold text-dreamxec-navy">
+                            {milestone.title}
+                          </h3>
+
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-dreamxec-saffron text-white">
+                            {milestone.timeline}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        {milestone.description && (
+                          <p className="text-sm text-dreamxec-navy/80 mb-3 leading-relaxed">
+                            {milestone.description}
+                          </p>
+                        )}
+
+                        {/* Budget */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-dreamxec-navy">
+                            Budget Allocation
+                          </span>
+                          <span className="text-lg font-bold text-dreamxec-green">
+                            ₹{milestone.budget.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Total Allocation */}
+                  <div className="mt-6 p-4 rounded-lg border-4 border-dreamxec-navy bg-white flex items-center justify-between">
+                    <span className="font-bold text-dreamxec-navy">
+                      Total Planned Allocation
+                    </span>
+                    <span className="text-xl font-bold text-dreamxec-green">
+                      ₹
+                      {campaign.milestones
+                        .reduce((sum, m) => sum + m.budget, 0)
+                        .toLocaleString()}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-green">
-                  <svg className="w-8 h-8 text-dreamxec-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm text-dreamxec-navy opacity-70 font-sans">Deadline</p>
-                    <p className="text-lg font-bold text-dreamxec-navy font-display">
-                      {campaign.deadline instanceof Date
-                        ? campaign.deadline.toLocaleDateString()
-                        : new Date(campaign.deadline).toLocaleDateString()}
-                    </p>
-                  </div>
+              ) : (
+                <div className="p-6 rounded-lg border-4 border-dreamxec-navy bg-dreamxec-cream text-center">
+                  <p className="text-dreamxec-navy font-bold">
+                    Timeline details will be shared soon.
+                  </p>
+                  <p className="text-sm text-dreamxec-navy/70 mt-1">
+                    The campaign owner will update milestones after approval.
+                  </p>
                 </div>
-              </div>
+              )}
+
+              <p className="mt-6 text-xs text-dreamxec-navy/60 italic">
+                * This timeline explains how funds will be utilized across execution phases.
+              </p>
             </div>
+
           </div>
 
           {/* Right Column - Funding Card */}

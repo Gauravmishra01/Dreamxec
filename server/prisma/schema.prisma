@@ -127,21 +127,21 @@ model Donor {
 // (projects created by USERS to receive donations)
 // -----------------------------
 model UserProject {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  title           String
-  description     String
-  companyName     String?
-  skillsRequired  String[]
-  timeline        String?
-  goalAmount      Float
-  amountRaised    Float         @default(0)
-  imageUrl        String?
-  campaignMedia   String[]  @default([])
+  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
+  title               String
+  description         String
+  companyName         String?
+  skillsRequired      String[]
+  timeline            String?
+  goalAmount          Float
+  amountRaised        Float         @default(0)
+  imageUrl            String?
+  campaignMedia       String[]      @default([])
   presentationDeckUrl String?
-  status          ProjectStatus @default(PENDING)
-  rejectionReason String? // Admin's reason for rejection
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  status              ProjectStatus @default(PENDING)
+  rejectionReason     String? // Admin's reason for rejection
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 
   // Relation to user (creator)
   userId String @db.ObjectId
@@ -152,12 +152,34 @@ model UserProject {
   bankAccount   BankAccount? @relation(fields: [bankAccountId], references: [id])
 
   // Donations from donors
-  donations   Donation[]
-  withdrawals Withdrawal[]
+  donations    Donation[]
+  withdrawals  Withdrawal[]
   wishlistedBy Wishlist[]
+
+  milestones Milestone[]
 
   @@index([userId])
   @@index([status])
+}
+
+//-----------------------------------
+//MILESTONE
+//-----------------------------------
+model Milestone {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  timeline    String
+  budget      Float
+  description String?
+
+  // Relation
+  projectId String      @db.ObjectId
+  project   UserProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
 }
 
 // -----------------------------
@@ -404,10 +426,10 @@ model Wishlist {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   donorId String @db.ObjectId
-  donor Donor @relation(fields: [donorId], references: [id], onDelete: Cascade)
+  donor   Donor  @relation(fields: [donorId], references: [id], onDelete: Cascade)
 
-  userProjectId String @db.ObjectId
-  userProject UserProject @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
+  userProjectId String      @db.ObjectId
+  userProject   UserProject @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

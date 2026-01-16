@@ -311,20 +311,41 @@ function AppContent() {
     bannerFile: File | null;
     mediaFiles: File[];
     presentationDeckUrl: string;
+    milestones: {
+      title: string;
+      timeline: string;
+      budget: string | number;
+      description?: string;
+    }[];
   }) => {
     try {
-      console.log('🚀 Creating Campaign with Single Request...');
+      console.log('🚀 Creating Campaign with Milestones...');
 
       const formData = new FormData();
+
+      // Basic fields
       formData.append('title', data.title);
       formData.append('description', data.description);
-      formData.append('companyName', data.clubName); // Mapped to companyName in DB
-      // skillsRequired defaults to empty array
-      // timeline defaults to '3 months' or passed value? App hardcoded '3 months' before.
-      formData.append('timeline', '3 months');
+      formData.append('companyName', data.clubName);
       formData.append('goalAmount', data.goalAmount.toString());
 
-      // Append Files
+      // 🔹 Milestones (source of truth)
+      // Convert budget to number and send as JSON string (standard & backend-friendly)
+      const milestonesWithNumericBudget = data.milestones.map(m => ({
+        ...m,
+        budget: typeof m.budget === 'string' ? parseFloat(m.budget) : m.budget
+      }));
+      formData.append('milestones', JSON.stringify(milestonesWithNumericBudget));
+
+      // 🔹 Optional: derived timeline (display only)
+      const derivedTimeline =
+        data.milestones.length === 1
+          ? data.milestones[0].timeline
+          : `${data.milestones.length} milestones`;
+
+      formData.append('timeline', derivedTimeline);
+
+      // Files
       if (data.bannerFile) {
         formData.append('bannerFile', data.bannerFile);
       }
@@ -339,24 +360,30 @@ function AppContent() {
         });
       }
 
+      console.log('📦 Sending FormData with milestones');
+
       const response = await createUserProject(formData);
 
       console.log('📦 Create Response:', response);
 
       if (response.data?.userProject) {
-        // Map back to frontend model
-        const newCampaign = mapUserProjectToCampaign(response.data.userProject);
-        setCampaigns([...campaigns, newCampaign]);
+        const newCampaign = mapUserProjectToCampaign(
+          response.data.userProject
+        );
+
+        setCampaigns(prev => [...prev, newCampaign]);
+
         console.log('✅ Campaign created successfully:', newCampaign);
       } else {
         throw new Error('Failed to create campaign: Invalid response');
       }
 
     } catch (error) {
-      console.error('Failed to create campaign:', error);
+      console.error('❌ Failed to create campaign:', error);
       throw error;
     }
   };
+
 
   const handleApproveCampaign = async (id: string) => {
     try {
