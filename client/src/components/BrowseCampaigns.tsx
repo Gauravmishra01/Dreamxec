@@ -112,7 +112,7 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full sm:w-auto pl-12 pr-10 py-3 border-4 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all appearance-none cursor-pointer shadow-pastel-green font-display font-bold"
+              className="w-full sm:w-auto pl-12 pr-10 py-3 border-4 border-dreamxec-navy rounded-lg text-lg  text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all appearance-none cursor-pointer shadow-pastel-green font-display font-bold"
             >
               <option value="recent">Most Recent</option>
               <option value="goal">Highest Goal</option>
