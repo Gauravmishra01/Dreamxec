@@ -1,10 +1,45 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Header } from '../sections/Header';
+import { FooterContent } from "../sections/Footer/components/FooterContent";
 
+
+/* -------------------- Reusable Input -------------------- */
+type InputProps = {
+  label: string;
+  error?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+const Input = ({ label, error, ...props }: InputProps) => (
+  <div>
+    <label className="block font-bold text-dreamxec-navy mb-2">
+      {label}
+    </label>
+    <input
+      {...props}
+      className={`
+        w-full p-3 rounded-lg bg-white
+        border-2
+        ${error ? "border-red-500" : "border-dreamxec-navy"}
+        focus:outline-none focus:ring-2 focus:ring-dreamxec-orange
+      `}
+    />
+    {error && (
+      <p className="text-sm text-red-500 mt-1">{error}</p>
+    )}
+  </div>
+);
+
+
+/* -------------------- Main Component -------------------- */
 export default function ReferClub() {
   const navigate = useNavigate();
+  const API_BASE = import.meta.env.VITE_API_URL;
+
   const [loading, setLoading] = useState(false);
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
+
   const [form, setForm] = useState({
     clubName: "",
     collegeName: "",
@@ -16,79 +51,69 @@ export default function ReferClub() {
     ficPhone: "",
     instagram: "",
     linkedIn: "",
-    portfolio: ""
-
+    portfolio: "",
   });
-
-  const [documentFile, setDocumentFile] = useState<File | null>(null);
-  const API_BASE = import.meta.env.VITE_API_URL;
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+  /* -------------------- Validation -------------------- */
   const validateUrl = (name: string, value: string) => {
-    let error = "";
     if (!value) return "";
 
     if (name === "instagram") {
-      const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?$/;
-      if (!instagramRegex.test(value)) {
-        error = "Please enter a valid Instagram profile URL (e.g., instagram.com/username)";
-      }
-    } else if (name === "linkedIn") {
-      const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/;
-      if (!linkedinRegex.test(value)) {
-        error = "Please enter a valid LinkedIn profile URL (e.g., linkedin.com/in/username)";
-      }
-    } else if (name === "portfolio") {
-      const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-      if (!urlRegex.test(value)) {
-        error = "Please enter a valid URL";
-      }
+      return /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?$/.test(value)
+        ? ""
+        : "Enter a valid Instagram profile URL";
     }
-    return error;
+
+    if (name === "linkedIn") {
+      return /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/.test(value)
+        ? ""
+        : "Enter a valid LinkedIn profile URL";
+    }
+
+    if (name === "portfolio") {
+      return /^(https?:\/\/)?.+\..+/.test(value)
+        ? ""
+        : "Enter a valid website URL";
+    }
+
+    return "";
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prev) => ({ ...prev, [name]: value }));
 
-    // Validate on change
     if (["instagram", "linkedIn", "portfolio"].includes(name)) {
       const error = validateUrl(name, value);
-      setErrors(prev => ({ ...prev, [name]: error }));
+      setErrors((prev) => ({ ...prev, [name]: error }));
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  /* -------------------- Submit -------------------- */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Final validation before submit
-    const newErrors: { [key: string]: string } = {};
-    ["instagram", "linkedIn", "portfolio"].forEach(field => {
-      // @ts-ignore
-      const error = validateUrl(field, form[field]);
+    const newErrors: any = {};
+    ["instagram", "linkedIn", "portfolio"].forEach((field) => {
+      const error = validateUrl(field, (form as any)[field]);
       if (error) newErrors[field] = error;
     });
 
-    if (Object.keys(newErrors).length > 0) {
+    if (Object.keys(newErrors).length) {
       setErrors(newErrors);
-      alert("Please fix the validation errors before submitting.");
+      alert("Please fix validation errors");
       return;
     }
 
-    setLoading(true);
-
     try {
-      const token = localStorage.getItem("token"); // JWT
+      setLoading(true);
+      const token = localStorage.getItem("token");
 
       const data = new FormData();
-      Object.entries(form).forEach(([key, value]) => {
-        data.append(key, value);
-      });
-
-      if (documentFile) {
-        data.append("document", documentFile);
-      }
+      Object.entries(form).forEach(([k, v]) => data.append(k, v));
+      if (documentFile) data.append("document", documentFile);
 
       await axios.post(`${API_BASE}/club-referral/refer`, data, {
         headers: {
@@ -97,191 +122,116 @@ export default function ReferClub() {
         },
       });
 
-      alert("Referral submitted successfully!");
+      alert("Club referral submitted successfully!");
       navigate("/dashboard");
-      setLoading(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to submit referral.");
+      alert("Failed to submit referral");
+    } finally {
       setLoading(false);
     }
   };
 
+  /* -------------------- UI -------------------- */
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
-      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-8 border-4 border-dreamxec-navy">
-        <h1 className="text-3xl font-bold text-dreamxec-navy mb-6">
-          Refer Your Club
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Submit your club details so DreamXec can verify the president and faculty in-charge.
-        </p>
+    <>
+    <Header />
+    <div className="min-h-screen bg-dreamxec-cream/80 py-16 px-4">
+      <div className="max-w-4xl mx-auto">
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-display font-bold text-dreamxec-navy">
+            Refer Your Club
+          </h1>
+          <p className="mt-3 text-lg text-dreamxec-navy/70">
+            Help DreamXec verify and onboard student clubs
+          </p>
+        </div>
 
-          {/* College Name */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">College Name</label>
-            <input
-              name="collegeName"
-              value={form.collegeName}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
-          {/* Club Name */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Club Name</label>
-            <input
-              name="clubName"
-              value={form.clubName}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
-          {/* Student Email */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">President College Email</label>
-            <input
-              name="presidentEmail"
-              type="email"
-              value={form.presidentEmail}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
+        <form
+          onSubmit={handleSubmit}
+          className="card-pastel rounded-3xl border-4 border-dreamxec-navy p-8 space-y-10"
+        >
 
-          {/* Student Phone */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">President Phone Number</label>
-            <input
-              name="presidentPhone"
-              value={form.presidentPhone}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
+          {/* Club Info */}
+          <section>
+            <h2 className="text-xl font-bold text-dreamxec-navy mb-6">
+              Club Information
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Input label="College Name" name="collegeName" value={form.collegeName} onChange={handleChange} required />
+              <Input label="Club Name" name="clubName" value={form.clubName} onChange={handleChange} required />
+            </div>
+          </section>
 
-          {/* President Name */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Club President Name</label>
-            <input
-              name="presidentName"
-              value={form.presidentName}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
+          {/* President */}
+          <section>
+            <h2 className="text-xl font-bold text-dreamxec-navy mb-6">
+              Club President Details
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Input label="President Name" name="presidentName" value={form.presidentName} onChange={handleChange} required />
+              <Input label="President Phone" name="presidentPhone" value={form.presidentPhone} onChange={handleChange} required />
+              <Input label="President College Email" type="email" name="presidentEmail" value={form.presidentEmail} onChange={handleChange} required />
+            </div>
+          </section>
 
-          {/* Faculty In-Charge Name */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Faculty In-Charge Name</label>
-            <input
-              name="ficName"
-              value={form.ficName}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
+          {/* Faculty */}
+          <section>
+            <h2 className="text-xl font-bold text-dreamxec-navy mb-6">
+              Faculty In-Charge Details
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Input label="Faculty Name" name="ficName" value={form.ficName} onChange={handleChange} required />
+              <Input label="Faculty Phone" name="ficPhone" value={form.ficPhone} onChange={handleChange} required />
+              <Input label="Faculty Email" type="email" name="ficEmail" value={form.ficEmail} onChange={handleChange} required />
+            </div>
+          </section>
 
-          {/* Faculty Email */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Faculty Email</label>
-            <input
-              name="ficEmail"
-              type="email"
-              value={form.ficEmail}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
+          {/* Links */}
+          <section>
+            <h2 className="text-xl font-bold text-dreamxec-navy mb-6">
+              Online Presence
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Input label="Instagram" name="instagram" value={form.instagram} onChange={handleChange} error={errors.instagram} required />
+              <Input label="LinkedIn" name="linkedIn" value={form.linkedIn} onChange={handleChange} error={errors.linkedIn} required />
+              <Input label="Portfolio / Website" name="portfolio" value={form.portfolio} onChange={handleChange} error={errors.portfolio} required />
+            </div>
+          </section>
 
-          {/* Faculty Phone */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Faculty Phone</label>
-            <input
-              name="ficPhone"
-              value={form.ficPhone}
-              onChange={handleChange}
-              required
-              className="w-full mt-2 p-3 border-2 border-dreamxec-navy rounded-lg"
-            />
-          </div>
-
-          {/* Instagram */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Instagram</label>
-            <input
-              name="instagram"
-              value={form.instagram}
-              onChange={handleChange}
-              required
-              className={`w-full mt-2 p-3 border-2 ${errors.instagram ? 'border-red-500' : 'border-dreamxec-navy'} rounded-lg`}
-            />
-            {errors.instagram && (
-              <p className="text-red-500 text-sm mt-1">{errors.instagram}</p>
-            )}
-          </div>
-
-          {/* LinkedIn */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">LinkedIn</label>
-            <input
-              name="linkedIn"
-              value={form.linkedIn}
-              onChange={handleChange}
-              required
-              className={`w-full mt-2 p-3 border-2 ${errors.linkedIn ? 'border-red-500' : 'border-dreamxec-navy'} rounded-lg`}
-            />
-            {errors.linkedIn && (
-              <p className="text-red-500 text-sm mt-1">{errors.linkedIn}</p>
-            )}
-          </div>
-
-          {/* Portfolio */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Portfolio</label>
-            <input
-              name="portfolio"
-              value={form.portfolio}
-              onChange={handleChange}
-              required
-              className={`w-full mt-2 p-3 border-2 ${errors.portfolio ? 'border-red-500' : 'border-dreamxec-navy'} rounded-lg`}
-            />
-            {errors.portfolio && (
-              <p className="text-red-500 text-sm mt-1">{errors.portfolio}</p>
-            )}
-          </div>
-
-          {/* Document Upload */}
-          <div>
-            <label className="font-bold text-dreamxec-navy">Upload Proof Document (Optional)</label>
+          {/* Document */}
+          <section>
+            <label className="block font-bold text-dreamxec-navy mb-2">
+              Proof Document (optional)
+            </label>
             <input
               type="file"
               accept="image/*,application/pdf"
-              className="w-full mt-2"
               onChange={(e) => setDocumentFile(e.target.files?.[0] || null)}
+              className="w-full p-3 bg-white border-2 border-dreamxec-navy rounded-lg"
             />
-          </div>
+          </section>
 
+          {/* CTA */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-dreamxec-orange text-white font-bold p-4 rounded-lg border-4 border-dreamxec-navy hover:bg-orange-600 transition"
+            className="
+              w-full bg-dreamxec-orange text-white
+              font-bold text-lg py-4 rounded-full
+              border-4 border-dreamxec-navy
+              hover:opacity-90 transition
+            "
           >
-            {loading ? "Submitting..." : "Submit Referral"}
+            {loading ? "Submitting…" : "Submit Club Referral"}
           </button>
 
         </form>
-
       </div>
     </div>
+    <FooterContent />
+    </>
   );
 }

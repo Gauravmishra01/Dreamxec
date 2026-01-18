@@ -188,7 +188,7 @@ const CorporateCSRPartnerships = () => {
 
         {/* CTA Section */}
         <section className="flex items-center justify-center gap-6 py-16">
-          <a href="/partnerships-contact">
+          <a href="/contact">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
                 💼 Discuss Partnership Options

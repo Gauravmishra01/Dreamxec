@@ -48,7 +48,7 @@ export interface Campaign extends Omit<Project, 'detail' | 'amountRaised' | 'sta
   studentId?: string;
   status: CampaignStatus;
   createdAt: Date | string;
-  deadline?: Date | string;
+  // deadline?: Date | string;
   approvedAt?: string;
   approvedBy?: string;
   rejectionReason?: string;
@@ -69,7 +69,7 @@ export function projectToCampaign(project: Project, additionalData?: Partial<Cam
     studentId: project.ownerId,
     status: projectStatusToCampaignStatus(project.status),
     createdAt: project.createdAt,
-    deadline: additionalData?.deadline,
+    // deadline: additionalData?.deadline,
     ownerId: project.ownerId,
     owner: project.owner,
     ...additionalData,

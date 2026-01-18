@@ -278,9 +278,9 @@ export default function StudentDashboard({
             <div className="flex items-center gap-3">
               <button className="relative p-2 hover:bg-orange-50 rounded-lg transition-colors">
                 <BellIcon className="w-6 h-6 text-blue-900" />
-                {pendingCount > 0 && (
+                {rejectedCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                    {pendingCount}
+                    {rejectedCount}
                   </span>
                 )}
               </button>

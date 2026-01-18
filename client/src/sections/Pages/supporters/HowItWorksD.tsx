@@ -1,8 +1,16 @@
 import { Header } from '../../Header'
-import { Footer } from '../../Footer'
+import { FooterContent } from '../../Footer/components/FooterContent'
+import useScrollReveal from '../../../hooks/useScrollReveal'
 
 const HowItWorksDonors = () => {
 
+    /* -------------------- Scroll Reveal Hooks -------------------- */
+    const fundingFlow = useScrollReveal()
+    const transparency = useScrollReveal()
+    const impact = useScrollReveal()
+    const faq = useScrollReveal()
+
+    /* -------------------- Data -------------------- */
     const steps = [
         {
             title: "STEP 1: DISCOVER & RESEARCH",
@@ -23,73 +31,26 @@ const HowItWorksDonors = () => {
     ]
 
     const budgetBreakdown = [
-        {
-            category: "Materials & Supplies",
-            amount: "30–40%",
-            description: "(components, lab materials, equipment rentals)"
-        },
-        {
-            category: "Team Stipends",
-            amount: "20–30%",
-            description: "(if students need to take time off internships/part-time jobs)"
-        },
-        {
-            category: "Mentorship Support",
-            amount: "5–10%",
-            description: "(if bringing in specialized mentors or consultants)"
-        },
-        {
-            category: "Manufacturing/Production",
-            amount: "15–25%",
-            description: "(if moving from prototype to small-scale production)"
-        },
-        {
-            category: "Platform & Legal",
-            amount: "5%",
-            description: "(DreamXec fees, insurance, regulatory compliance)"
-        }
+        { category: "Materials & Supplies", amount: "30–40%", description: "(components, lab materials, equipment rentals)" },
+        { category: "Team Stipends", amount: "20–30%", description: "(if students need to take time off internships/part-time jobs)" },
+        { category: "Mentorship Support", amount: "5–10%", description: "(specialized mentors or consultants)" },
+        { category: "Manufacturing / Production", amount: "15–25%", description: "(prototype → small-scale production)" },
+        { category: "Platform & Legal", amount: "5%", description: "(DreamXec fees, compliance, insurance)" }
     ]
 
     const impactMetrics = [
-        {
-            title: "Career Outcomes",
-            description: "Did the student get a job, internship, or admission to dream school?"
-        },
-        {
-            title: "Innovation Impact",
-            description: "Did they file a patent? Publish research? Launch a startup?"
-        },
-        {
-            title: "Social Impact",
-            description: "How many people did their project help? What changed in a community?"
-        },
-        {
-            title: "Learning Gains",
-            description: "What did they learn? New skills? Confidence boost?"
-        }
+        { title: "Career Outcomes", description: "Jobs, internships, or higher education admissions." },
+        { title: "Innovation Impact", description: "Patents filed, research published, startups launched." },
+        { title: "Social Impact", description: "Communities helped and problems solved." },
+        { title: "Learning Gains", description: "Skills gained, confidence built, growth achieved." }
     ]
 
     const FAQ = [
-        {
-            q: "What's the minimum pledge amount?",
-            a: "₹100. Even small amounts add up and show the team they have community support."
-        },
-        {
-            q: "Can I change my pledge amount or get a refund?",
-            a: "No, since this is a donation refunds will not be possible."
-        },
-        {
-            q: "What if the project doesn't deliver?",
-            a: "Research is based on educated hypotheses hence the chances for failure is always there. You may however raise a concern with the DX team for review of a particular project if the milestone report submission does not seem correct. If there is any misappropriation of funds dishonest projects will face removal from the platform as well as downgrading of club rankings and a concern report to the affiliated college."
-        },
-        {
-            q: "Can I contribute anonymously?",
-            a: "Yes. Check the \"Anonymous Backer\" option at checkout. The creator won't see your name (though they'll know one anonymous person backed them)."
-        },
-        {
-            q: "How often do projects actually succeed?",
-            a: "In research success isn't just about creating a final product but also crossing out ways to how not to approach a problem."
-        }
+        { q: "What's the minimum pledge amount?", a: "₹100. Small amounts collectively create big impact." },
+        { q: "Can I change my pledge or get a refund?", a: "No. Since this is a donation, refunds are not possible." },
+        { q: "What if a project fails?", a: "Research can fail. If misuse is suspected, DreamXec investigates and takes strict action." },
+        { q: "Can I contribute anonymously?", a: "Yes. Enable Anonymous Backer during checkout." },
+        { q: "How often do projects succeed?", a: "Success includes learning, iteration, and outcomes — not just final products." }
     ]
 
     return (
@@ -98,40 +59,45 @@ const HowItWorksDonors = () => {
             <title>How It Works for Donors | DreamXec</title>
             <meta
                 name="description"
-                content="Support Innovation in 4 Simple Steps. From finding a project to seeing real-world impact. Here's exactly how DreamXec works for supporters."
+                content="Support innovation in 4 simple steps. See how DreamXec turns donations into real-world impact."
             />
 
             <Header />
 
-            <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+            <main className="space-y-24 py-20 w-full">
 
-                {/* Hero */}
+                {/* -------------------- Hero -------------------- */}
                 <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
                     <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
                         Support Innovation in 4 Simple Steps
                     </h1>
                     <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-                        From finding a project to seeing real-world impact. Here's exactly how DreamXec works for supporters.
+                        From discovering a project to seeing real-world impact — here’s exactly how DreamXec works.
                     </p>
                 </section>
 
-                {/* Funding Flow */}
-                <section className="max-w-7xl mx-auto px-4 space-y-12">
-                    <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+                {/* -------------------- Funding Flow -------------------- */}
+                <section
+                    ref={fundingFlow.ref}
+                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''
+                        }`}
+                >
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Funding Flow
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
+                    <div className="grid grid-cols-1 gap-8">
                         {steps.map((step, index) => (
                             <div
                                 key={index}
-                                style={{ animationDelay: `${index * 120}ms` }}
-                                className="card-pastel animate-fade-in p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card text-left"
+                                style={{ transitionDelay: `${index * 120}ms` }}
+                                className={`card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
+              reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
                                     {step.title}
                                 </h3>
-                                <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                                <p className="text-dreamxec-navy text-lg md:text-xl leading-[1.75]">
                                     {step.text}
                                 </p>
                             </div>
@@ -139,148 +105,100 @@ const HowItWorksDonors = () => {
                     </div>
                 </section>
 
-                {/* Money Usage Transparency */}
-                <section className="max-w-7xl mx-auto px-4 space-y-12">
-                    <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+                {/* -------------------- Transparency -------------------- */}
+                <section
+                    ref={transparency.ref}
+                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${transparency.isVisible ? 'reveal-visible' : ''
+                        }`}
+                >
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Money Usage Transparency
                     </h2>
 
-                    <div className="max-w-6xl mx-auto">
-                        <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-8 text-center">
-                            Where Does Your Money Go?
-                        </h3>
-
-                        <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto mb-8">
-                            Each project specifies a budget breakdown:
-                        </p>
-
-                        <div className="space-y-4 mb-8">
-                            {budgetBreakdown.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-                                >
-                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                        <div>
-                                            <h4 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue mb-2">
-                                                {item.category}
-                                            </h4>
-                                            <p className="text-dreamxec-navy text-sm md:text-base">
-                                                {item.description}
-                                            </p>
-                                        </div>
-                                        <span className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue whitespace-nowrap">
-                                            {item.amount}
-                                        </span>
+                    <div className="space-y-4 max-w-5xl mx-auto">
+                        {budgetBreakdown.map((item, index) => (
+                            <div
+                                key={index}
+                                style={{ transitionDelay: `${index * 120}ms` }}
+                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
+              reveal ${transparency.isVisible ? 'reveal-visible' : ''}`}
+                            >
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                                            {item.category}
+                                        </h4>
+                                        <p className="text-base md:text-lg text-dreamxec-navy">
+                                            {item.description}
+                                        </p>
                                     </div>
+                                    <span className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue">
+                                        {item.amount}
+                                    </span>
                                 </div>
-                            ))}
-                        </div>
-
-                        <div className='flex justify-between gap-8 items-center'>
-                            <div className="card-pastel p-6 h-42 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                                <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                    <span className='font-bold'>You can challenge any project</span> that seems to have unrealistic budget allocations. Our team reviews. If something looks off, we pause the project until it's explained.
-                                </p>
                             </div>
-
-                            <div className="card-pastel p-6 h-42 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card ">
-                                <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                    <span className='font-bold'>Monthly transparency reports:</span> Projects raising &gt; ₹5L must submit monthly expense reports (itemized). Backers can see receipts. This level of accountability is rare in Indian crowdfunding—we've made it standard.
-                                </p>
-                            </div>
-
-
-                        </div>
-
+                        ))}
                     </div>
                 </section>
 
-                {/* Impact Tracking */}
-                <section className="max-w-7xl mx-auto px-4 space-y-12">
-                    <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+                {/* -------------------- Impact -------------------- */}
+                <section
+                    ref={impact.ref}
+                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${impact.isVisible ? 'reveal-visible' : ''
+                        }`}
+                >
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Impact Tracking
                     </h2>
 
-                    <div className="max-w-6xl mx-auto">
-                        <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-8 text-center">
-                            Beyond Money: Measuring Real Change
-                        </h3>
-
-                        <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto mb-8">
-                            DreamXec doesn't stop at funding. We track what happens after projects launch:
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                            {impactMetrics.map((metric, index) => (
-                                <div
-                                    key={index}
-                                    className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-                                >
-                                    <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                                        {metric.title}
-                                    </h4>
-                                    <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                                        {metric.description}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                <span className='font-bold'>You receive outcome reports</span> 6 months, 1 year, and 3 years post-funding. See where your support led. Many of our backers become repeat supporters once they see the real-world impact.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* FAQ Section */}
-                <section className="relative px-4">
-                    <div className="relative max-w-7xl mx-auto">
-
-                        {/* Header */}
-                        <div className="text-center mb-16">
-                            <div className="flex justify-center mb-6">
-                                <div className="bg-tricolor-horizontal h-3 w-48 rounded-full"></div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                        {impactMetrics.map((metric, index) => (
+                            <div
+                                key={index}
+                                style={{ transitionDelay: `${index * 120}ms` }}
+                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
+              reveal ${impact.isVisible ? 'reveal-visible' : ''}`}
+                            >
+                                <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+                                    {metric.title}
+                                </h4>
+                                <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed">
+                                    {metric.description}
+                                </p>
                             </div>
-
-                            <h2 className="text-4xl md:text-5xl font-display font-extrabold text-dreamxec-berkeley-blue mb-4">
-                                Frequently Asked Questions
-                            </h2>
-                        </div>
-
-                        {/* FAQ Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                            {FAQ.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
-                                    style={{ animationDelay: `${index * 0.1}s` }}
-                                >
-                                    <div className="card-tricolor-tag"></div>
-
-                                    <h3 className="text-lg font-bold text-dreamxec-navy font-display mb-3">
-                                        Q: {item.q}
-                                    </h3>
-
-                                    <p className="text-dreamxec-orange font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
-                                        A: {item.a}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-
+                        ))}
                     </div>
                 </section>
 
-
+                {/* -------------------- FAQ -------------------- */}
+                <section
+                    ref={faq.ref}
+                    className={`px-4 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
+                >
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {FAQ.map((item, index) => (
+                            <div
+                                key={index}
+                                style={{ transitionDelay: `${index * 120}ms` }}
+                                className="card-pastel-offwhite p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                            >
+                                <h3 className="text-lg md:text-xl font-bold mb-2 text-dreamxec-navy">
+                                    Q: {item.q}
+                                </h3>
+                                <p className="text-base md:text-lg text-dreamxec-gray leading-relaxed">
+                                    A: {item.a}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
             </main>
 
-            <Footer />
+            <FooterContent />
         </>
     )
+
 }
 
 export default HowItWorksDonors

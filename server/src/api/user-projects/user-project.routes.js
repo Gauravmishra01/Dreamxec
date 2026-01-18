@@ -16,63 +16,62 @@ const {
   createUserProjectSchema,
   updateUserProjectSchema,
 } = require('./user-project.validation');
-
 const { ensureClubVerified } = require('../../middleware/club.middleware');
+
+const multer = require('multer');
+
+/* ---------------------------
+   MULTER CONFIG
+---------------------------- */
+const upload = multer({
+  dest: 'uploads/',
+  limits: {
+    fileSize: 20 * 1024 * 1024, // 20MB
+  },
+});
 
 /* ---------------------------
    PUBLIC ROUTES
 ---------------------------- */
 
-// Get all approved public projects
+// ✅ Get all approved campaigns (milestones included by controller)
 router.get('/public', getPublicUserProjects);
 
-// Get a single project publicly
+// ✅ Get one campaign by ID (milestones included)
 router.get('/:id', getUserProject);
 
 /* ---------------------------
-   AUTHENTICATED USER ROUTES
+   AUTHENTICATED ROUTES
 ---------------------------- */
 
 router.use(protect);
 
-// Student's own campaigns
+// ✅ Student's own campaigns
 router.get('/my', restrictTo('USER'), getMyUserProjects);
 
-// Create campaign (only verified club users)
-const multer = require('multer');
-
-// Configure Multer
-const upload = multer({
-  dest: 'uploads/',
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  }
-});
-
-// Create campaign (only verified club users)
+// ✅ Create campaign with milestones + uploads
 router.post(
   '/',
   restrictTo('USER'),
   ensureClubVerified,
   upload.fields([
     { name: 'bannerFile', maxCount: 1 },
-    { name: 'deckFile', maxCount: 1 },
-    { name: 'mediaFiles', maxCount: 10 }
+    { name: 'mediaFiles', maxCount: 10 },
   ]),
-  validate(createUserProjectSchema),
+  validate(createUserProjectSchema), // 🔴 must validate milestones
   createUserProject
 );
 
-// Update campaign
+// ✅ Update campaign (milestones allowed only if PENDING / REJECTED)
 router.put(
   '/:id',
   restrictTo('USER'),
   ensureClubVerified,
-  validate(updateUserProjectSchema),
+  validate(updateUserProjectSchema), // 🔴 must validate milestones
   updateUserProject
 );
 
-// Delete campaign
+// ✅ Delete campaign
 router.delete(
   '/:id',
   restrictTo('USER'),

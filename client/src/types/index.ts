@@ -1,4 +1,7 @@
 export type UserRole = 'student' | 'admin' | 'donor' | 'DONOR' | 'STUDENT_PRESIDENT';
+import { Milestone } from "../components/CampaignDetails";
+
+export type UserRole = 'student' | 'admin' | 'donor' | 'DONOR';
 
 export interface User {
   id: string;
@@ -16,14 +19,18 @@ export interface Campaign {
   currentAmount: number;
   status: 'approved' | 'pending' | 'rejected';
   createdAt: Date;
-  deadline: Date;
+
   category?: string;
   imageUrl?: string;
-  campaignMedia?: string[]; // Array of media URLs
-  presentationDeckUrl?: string | null; // URL for PDF/PPT deck
-  createdBy?: string; // User ID of the creator
-  userId?: string; // Sometimes mapped as userId (alias for createdBy)
-  rejectionReason?: string; // Reason for rejection (if rejected)
+  campaignMedia?: string[];
+  presentationDeckUrl?: string | null;
+
+  createdBy?: string;
+  userId?: string;
+  rejectionReason?: string;
+
+  // ✅ Milestone-based timeline
+  milestones?: Milestone[];
 }
 
 export interface Project {

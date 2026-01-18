@@ -19,7 +19,7 @@ const columns = [
 
 export const WhatWeBringSection = () => {
   return (
-    <div className="w-full py-20 px-4">
+    <div className="w-full py-16 px-4">
       <div className="max-w-7xl mx-auto text-center">
         {/* Main Headline */}
         <h1
@@ -30,7 +30,7 @@ export const WhatWeBringSection = () => {
         </h1>
 
         {/* 3-Column Layout with Whiteboard Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12">
           {columns.map((col, index) => (
             <div
               key={index}
@@ -39,11 +39,11 @@ export const WhatWeBringSection = () => {
             >
               {/* This new div holds the content */}
               <div className="whiteboard-content mt-8">
-                <div>
-                  <h3 className="text-xl  md:text-2xl lg:text-3xl font-bold text-slate-800 mb-2">
+                <div className=" p-2">
+                  <h3 className="text-xl md:text-2xl font-bold text-slate-800 text-wrap">
                     {col.title}
                   </h3>
-                  <p className="text-xs md:text-sm lg:text-base text-slate-600 leading-relaxed">
+                  <p className="text-xs md:text-sm lg:text-base text-slate-600 leading-relaxed ">
                     {col.text}
                   </p>
                 </div>

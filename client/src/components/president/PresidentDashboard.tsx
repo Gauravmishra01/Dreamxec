@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { Header } from "../../sections/Header";
 
 export default function PresidentDashboard() {
   return (
+    <>
+      <Header currentUser={null} onLogin={() => {}} onLogout={() => {}} />
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
 
@@ -56,5 +59,6 @@ export default function PresidentDashboard() {
 
       </div>
     </div>
+    </>
   );
 }

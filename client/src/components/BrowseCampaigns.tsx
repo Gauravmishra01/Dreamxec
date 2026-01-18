@@ -2,26 +2,27 @@ import { useState } from 'react';
 import type { Campaign } from '../types';
 import CampaignCard from './CampaignCard';
 import { StarDecoration } from './icons/StarDecoration';
+import { FooterContent } from '../sections/Footer/components/FooterContent';
 
 // Simple SVG Icons
 const SearchIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="11" cy="11" r="8"/>
-    <path d="m21 21-4.35-4.35"/>
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.35-4.35" />
   </svg>
 );
 
 const SlidersIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="4" x2="4" y1="21" y2="14"/>
-    <line x1="4" x2="4" y1="10" y2="3"/>
-    <line x1="12" x2="12" y1="21" y2="12"/>
-    <line x1="12" x2="12" y1="8" y2="3"/>
-    <line x1="20" x2="20" y1="21" y2="16"/>
-    <line x1="20" x2="20" y1="12" y2="3"/>
-    <line x1="2" x2="6" y1="14" y2="14"/>
-    <line x1="10" x2="14" y1="8" y2="8"/>
-    <line x1="18" x2="22" y1="16" y2="16"/>
+    <line x1="4" x2="4" y1="21" y2="14" />
+    <line x1="4" x2="4" y1="10" y2="3" />
+    <line x1="12" x2="12" y1="21" y2="12" />
+    <line x1="12" x2="12" y1="8" y2="3" />
+    <line x1="20" x2="20" y1="21" y2="16" />
+    <line x1="20" x2="20" y1="12" y2="3" />
+    <line x1="2" x2="6" y1="14" y2="14" />
+    <line x1="10" x2="14" y1="8" y2="8" />
+    <line x1="18" x2="22" y1="16" y2="16" />
   </svg>
 );
 
@@ -111,7 +112,7 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full sm:w-auto pl-12 pr-10 py-3 border-4 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all appearance-none cursor-pointer shadow-pastel-green font-display font-bold"
+              className="w-full sm:w-auto pl-12 pr-10 py-3 border-4 border-dreamxec-navy rounded-lg text-lg  text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all appearance-none cursor-pointer shadow-pastel-green font-display font-bold"
             >
               <option value="recent">Most Recent</option>
               <option value="goal">Highest Goal</option>
@@ -151,13 +152,15 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
                 <CampaignCard
                   key={campaign.id}
                   campaign={campaign}
-                  onClick={() => onViewCampaign(campaign.id)}
+                  href={`/campaign/${campaign.id}`}
                 />
               ))}
             </div>
+
           </>
         )}
       </div>
+      <FooterContent />
     </div>
   );
 }
