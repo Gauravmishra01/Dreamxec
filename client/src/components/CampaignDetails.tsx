@@ -8,6 +8,9 @@ import { FooterContent } from '../sections/Footer/components/FooterContent';
 import { getUserProject } from '../services/userProjectService';
 import { mapUserProjectToCampaign } from '../services/mappers';
 import MobileDonateCTA from './MobileDonateCTA';
+import { addRecentCampaign } from '../lib/recentCampaigns';
+import DiscoverySection from './DiscoverySection';
+
 
 
 interface CampaignDetailsProps {
@@ -76,6 +79,15 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     return null;
   };
 
+
+  //Recent Viewed Campaigns
+  useEffect(() => {
+    if (campaign) {
+      addRecentCampaign(campaign);
+    }
+  }, [campaign]);
+
+  // Fetch Campaign Details
   useEffect(() => {
     const fetchCampaign = async () => {
       try {
@@ -797,6 +809,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             </div>
           </div>
         </div>
+
+        <DiscoverySection
+          campaigns={campaigns}
+          currentCampaign={campaign}
+        />
       </div>
 
       {/* Donation Modal */}
@@ -871,8 +888,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             </form>
           </div>
         </div>
+
+
       )
       }
+
+
 
       <MobileDonateCTA
         visible={showMobileCTA}
