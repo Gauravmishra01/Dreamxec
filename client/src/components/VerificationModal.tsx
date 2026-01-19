@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { generateEmailOtp, generateMobileOtp, verifyOtp, submitVerification, createVerificationPaymentOrder } from '../services/verificationService';
+import { generateEmailOtp, generateMobileOtp, submitVerification, createVerificationPaymentOrder } from '../services/verificationService';
 import { data } from 'react-router-dom';
+import apiRequest from '../services/api';
 interface VerificationModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -95,19 +96,33 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
 
     const verifyEmailOtpHandler = async () => {
         if (!emailOtp) {
-            alert("Please enter OTP and ensure it was sent.");
+            alert("Please enter the OTP sent to your email.");
             return;
         }
+
         try {
-            await verifyOtp(emailOtp, { email: studentEmail });
-            setEmailOtpStatus('verified');
-            alert("Email Verified Successfully!");
+            await apiRequest("/otp/verify-otp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    type: "email",
+                    value: studentEmail,
+                    otp: emailOtp,
+                }),
+            });
+
+            setEmailOtpStatus("verified");
+            alert("Email verified successfully!");
+
         } catch (error) {
             console.error(error);
-            alert("Invalid Email OTP. Please try again.");
-            setEmailOtpStatus('failed');
+            setEmailOtpStatus("failed");
+            alert("Invalid or expired OTP. Please try again.");
         }
     };
+
 
     const sendMobileOtp = async () => {
         if (!mobile) {
@@ -135,25 +150,42 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
 
     const verifyMobileOtpHandler = async () => {
         if (!mobileOtp) {
-            alert("Please enter OTP and ensure it was sent.");
+            alert("Please enter the OTP sent to your mobile number.");
             return;
         }
+
         try {
-            await verifyOtp(mobileOtp, { phonenumber: mobile });
-            setMobileOtpStatus('verified');
-            alert("Mobile Number Verified Successfully!");
+            await apiRequest("/otp/verify-otp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    type: "phone",
+                    value: mobile,
+                    otp: mobileOtp,
+                }),
+            });
+
+
+            setMobileOtpStatus("verified");
+            alert("Mobile number verified successfully!");
+
         } catch (error) {
             console.error(error);
-            alert("Invalid Mobile OTP. Please try again.");
-            setMobileOtpStatus('failed');
+            setMobileOtpStatus("failed");
+            alert("Invalid or expired OTP. Please try again.");
         }
     };
+
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
         }
     };
+
+   
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -171,7 +203,7 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
         setIsSubmitting(true);
         try {
             // 1. Create Order
-            const orderData = await createVerificationPaymentOrder(studentEmail, officialEmail) as any;
+            const orderData = await createVerificationPaymentOrder(studentEmail, officialEmail, mobile) as any;
             console.log(orderData)
 
             if (!orderData || !orderData.order) {
@@ -182,12 +214,14 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
             await loadRazorpay();
 
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_S3LrizJmJMIXjR",
-                amount: orderData.order.amount,
-                currency: orderData.order.currency,
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+                // ✅ IMPORTANT: Use ONLY order_id when Orders API is used
+                order_id: orderData.order.id,
+
                 name: "DreamXec",
                 description: "Student Verification",
-                order_id: orderData.order.id,
+
                 handler: async function (response: any) {
                     try {
                         const formData = new FormData();
@@ -210,6 +244,7 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
                             setSubmitStatus('idle');
                             resetForm();
                         }, 2000);
+
                         alert("Verification Submitted Successfully! 🎉");
                     } catch (error) {
                         console.error("Submission failed", error);
@@ -217,20 +252,24 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
                         setIsSubmitting(false);
                     }
                 },
+
                 prefill: {
                     name: fullName,
                     email: studentEmail,
-                    contact: mobile
+                    contact: mobile,
                 },
+
                 theme: {
-                    color: "#F97316"
+                    color: "#F97316",
                 },
+
                 modal: {
                     ondismiss: function () {
                         setIsSubmitting(false);
                     }
                 }
             };
+
 
             const rzp1 = new (window as any).Razorpay(options);
             rzp1.open();

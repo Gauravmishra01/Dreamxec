@@ -245,9 +245,9 @@ export default function StudentDashboard({
             {!studentVerified && (
               <button
                 onClick={() => setIsVerificationModalOpen(true)}
-                className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-bold hover:bg-purple-700 transition-all shadow-md animate-pulse"
+                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all shadow-md animate-pulse"
               >
-                ✓ Student Status Verification
+                ✓ Verify Student Status Now
               </button>
             )}
 
@@ -261,7 +261,7 @@ export default function StudentDashboard({
                 </button>
                 <button
                   onClick={() => window.location.href = "/refer-club"}
-                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-bold hover:bg-purple-700 transition-all"
+                  className="w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all"
                 >
                   ✓ Refer Club
                 </button>
@@ -330,6 +330,17 @@ export default function StudentDashboard({
                 </h1>
                 <p className="text-blue-900 opacity-70">
                   Manage your fundraising campaigns and track your progress
+                </p>
+                <p className="text-sm text-green-600 font-bold mt-2">
+                  {!studentVerified && (
+                    <button
+                      onClick={() => setIsVerificationModalOpen(true)}
+                      className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all shadow-md animate-pulse"
+                    >
+                      ✓ Verify Student Status Now
+                    </button>
+                  )}
+
                 </p>
               </div>
 

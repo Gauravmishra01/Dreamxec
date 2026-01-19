@@ -1,17 +1,50 @@
-const express=require("express")
+const express = require("express");
+const multer = require("multer");
 const { protect } = require("../../middleware/auth.middleware");
-const router=express.Router()
-const {verify, createOrder}=require("./studentverfication.controller")
-const multer = require('multer');
+const {
+  verify,
+  createOrder
+} = require("./studentverfication.controller");
 
-// Configure Multer
-const upload = multer({ 
-    dest: 'uploads/',
-  });
+const router = express.Router();
 
-router.use(protect)
+/* ────────────────────────────── */
+/* Multer configuration */
+/* ────────────────────────────── */
+const upload = multer({
+  dest: "uploads/",
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max
+  },
+});
 
-router.post("/verify", upload.single('document'), verify)
-router.post("/create-order", createOrder)
+/* ────────────────────────────── */
+/* All routes are protected */
+/* ────────────────────────────── */
+router.use(protect);
 
-module.exports=router
+/**
+ * Create Razorpay Order
+ * REQUIREMENTS:
+ * - User logged in
+ * - Email OTP verified
+ * - WhatsApp OTP verified
+ */
+router.post("/create-order", createOrder);
+
+/**
+ * Submit student verification
+ * REQUIREMENTS:
+ * - User logged in
+ * - Email OTP verified
+ * - WhatsApp OTP verified
+ * - Payment completed
+ * - Document uploaded
+ */
+router.post(
+  "/verify",
+  upload.single("document"),
+  verify
+);
+
+module.exports = router;

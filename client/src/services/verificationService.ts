@@ -1,59 +1,122 @@
 import apiRequest, { type ApiResponse } from './api';
 
+/* ────────────────────────────── */
+/* Types */
+/* ────────────────────────────── */
+
 export interface GenerateOtpResponse {
     message: string;
-    otp?: string; // Optional, present only in dev/test mode or if backend sends it
+    otp?: string; // only in dev/test
 }
 
 export interface VerifyOtpResponse {
     message: string;
 }
 
-export const generateEmailOtp = async (email: string): Promise<ApiResponse<GenerateOtpResponse>> => {
+/* ────────────────────────────── */
+/* OTP GENERATION */
+/* ────────────────────────────── */
+
+export const generateEmailOtp = async (
+    email: string
+): Promise<ApiResponse<GenerateOtpResponse>> => {
     return apiRequest<GenerateOtpResponse>('/otp/generate-otp', {
         method: 'POST',
-        body: JSON.stringify({ email, purpose: 'verification' }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email,
+        }),
     });
 };
 
-export const generateMobileOtp = async (phonenumber: string): Promise<ApiResponse<GenerateOtpResponse>> => {
+export const generateMobileOtp = async (
+    phonenumber: string
+): Promise<ApiResponse<GenerateOtpResponse>> => {
     return apiRequest<GenerateOtpResponse>('/otp/generate-otp', {
         method: 'POST',
-        body: JSON.stringify({ phonenumber, purpose: 'verification' }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            phonenumber,
+        }),
     });
 };
 
-export const verifyOtp = async (otp: string, identifier: { email?: string; phonenumber?: string }): Promise<ApiResponse<VerifyOtpResponse>> => {
-    const body = { otp, ...identifier };
+/* ────────────────────────────── */
+/* OTP VERIFICATION (DUAL OTP) */
+/* ────────────────────────────── */
+
+export const verifyOtp = async (
+    type: 'email' | 'phone',
+    value: string,
+    otp: string
+): Promise<ApiResponse<VerifyOtpResponse>> => {
     return apiRequest<VerifyOtpResponse>('/otp/verify-otp', {
         method: 'POST',
-        body: JSON.stringify(body),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            type,
+            value,
+            otp,
+        }),
     });
 };
 
-export const createVerificationPaymentOrder = async (studentEmail: string, officialEmail: string): Promise<ApiResponse<any>> => {
+/* ────────────────────────────── */
+/* PAYMENT ORDER (CRITICAL FIX) */
+/* ────────────────────────────── */
+
+export const createVerificationPaymentOrder = async (
+    studentEmail: string,
+    officialEmail: string,
+    mobileNumber: string
+): Promise<ApiResponse<any>> => {
     return apiRequest<any>('/student-verification/create-order', {
         method: 'POST',
-        body: JSON.stringify({ amount: 29, type: 'verification', studentEmail, officialEmail }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            studentEmail,
+            officialEmail,
+            mobileNumber, // 🔑 MUST MATCH BACKEND
+        }),
     });
 };
 
-export const submitVerification = async (formData: FormData): Promise<ApiResponse<any>> => {
+/* ────────────────────────────── */
+/* FINAL VERIFICATION SUBMIT */
+/* ────────────────────────────── */
+
+export const submitVerification = async (
+    formData: FormData
+): Promise<ApiResponse<any>> => {
     const token = localStorage.getItem('token');
+
     const headers: HeadersInit = {};
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/student-verification/verify`, {
-        method: 'POST',
-        headers,
-        body: formData,
-    });
+    const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/student-verification/verify`,
+        {
+            method: 'POST',
+            headers,
+            body: formData,
+        }
+    );
 
     const data = await response.json();
+
     if (!response.ok) {
         throw new Error(data.message || 'Verification submission failed');
     }
+
     return data;
 };
