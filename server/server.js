@@ -38,10 +38,7 @@ require('./src/config/passport');
 
 const app = express();
 
-setTimeout(async () => {
-  const health = await checkRedisHealth();
-  console.log("🧠 Redis health check:", health);
-}, 3000);
+
 
 // --------------------------------------------
 // 1️⃣ CORS CONFIG — Required for OAuth cookies/sessions
@@ -152,7 +149,7 @@ app.use('/api/upload', uploadRoutes);
 app.use("/api/otp",otpRoutes)
 app.use("/api/student-verification",studentverfication)
 app.use("/api/payments", require("./src/api/payments/payment.routes"))
-app.use(cors())
+// app.use(cors())
 
 // --------------------------------------------
 // HANDLE 404
