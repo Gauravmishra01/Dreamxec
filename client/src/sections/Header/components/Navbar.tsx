@@ -475,10 +475,10 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
                 {currentUser.role === 'STUDENT_PRESIDENT' && (
                   <>
                     <a
-                      href="/president"
+                      href="/dashboard"
                       className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
                     >
-                      PRESIDENT DASHBOARD
+                      DASHBOARD
                     </a>
                     <a
                       href="/campaigns"

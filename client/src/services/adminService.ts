@@ -62,6 +62,12 @@ export const getAllDonors = async (): Promise<ApiResponse<{ donors: User[] }>> =
   });
 };
 
+export const getClubVerifications = async (): Promise<ApiResponse<any[]>> => {
+  return apiRequest('/admin/club-verifications/verifications', {
+    method: 'GET',
+  });
+};
+
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const uploadClubMembers = async (file: File, clubId: string, token?: string) => {

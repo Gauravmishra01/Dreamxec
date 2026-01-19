@@ -916,7 +916,7 @@ function AppContent() {
                               <Route
                                 path="/dashboard"
                                 element={
-                                  user?.role === 'student' ? (
+                                  (user?.role === 'student' || user?.role === 'STUDENT_PRESIDENT') ? (
                                     <>
                                       <Header
                                         currentUser={user}
@@ -928,6 +928,9 @@ function AppContent() {
                                         campaigns={userCampaigns}
                                         onCreateCampaign={() => navigate('/create')}
                                         onViewCampaign={(id) => navigate(`/campaign/${id}`)}
+                                        isClubPresident={user.role === 'STUDENT_PRESIDENT'}
+                                        isClubMember={false}
+                                        clubVerified={user.role === 'STUDENT_PRESIDENT'}
                                       />
 
                                     </>

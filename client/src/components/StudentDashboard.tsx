@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 
 // Icons
-const StarDecoration = ({ className, color }) => (
+const StarDecoration = ({ className, color }: { className?: string; color?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill={color || "currentColor"}>
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
   </svg>
 );
 
-const MenuIcon = ({ className }) => (
+const MenuIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M3 12h18M3 6h18M3 18h18" />
   </svg>
 );
 
-const DashboardIcon = ({ className }) => (
+const DashboardIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="3" width="7" height="7" />
     <rect x="14" y="3" width="7" height="7" />
@@ -22,61 +22,61 @@ const DashboardIcon = ({ className }) => (
   </svg>
 );
 
-const FolderIcon = ({ className }) => (
+const FolderIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
   </svg>
 );
 
-const PlusIcon = ({ className }) => (
+const PlusIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M12 5v14M5 12h14" />
   </svg>
 );
 
-const TrendingUpIcon = ({ className }) => (
+const TrendingUpIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
     <polyline points="17 6 23 6 23 12" />
   </svg>
 );
 
-const ClockIcon = ({ className }) => (
+const ClockIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10" />
     <path d="M12 6v6l4 2" />
   </svg>
 );
 
-const CheckCircleIcon = ({ className }) => (
+const CheckCircleIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10" />
     <path d="M9 12l2 2 4-4" />
   </svg>
 );
 
-const XCircleIcon = ({ className }) => (
+const XCircleIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10" />
     <path d="M15 9l-6 6M9 9l6 6" />
   </svg>
 );
 
-const SearchIcon = ({ className }) => (
+const SearchIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="11" cy="11" r="8" />
     <path d="m21 21-4.35-4.35" />
   </svg>
 );
 
-const BellIcon = ({ className }) => (
+const BellIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
     <path d="M13.73 21a2 2 0 0 1-3.46 0" />
   </svg>
 );
 
-const UsersIcon = ({ className }) => (
+const UsersIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
     <circle cx="9" cy="7" r="4" />
@@ -85,7 +85,7 @@ const UsersIcon = ({ className }) => (
   </svg>
 );
 
-const AwardIcon = ({ className }) => (
+const AwardIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="8" r="7" />
     <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
@@ -101,6 +101,14 @@ export default function StudentDashboard({
   isClubPresident = false,
   isClubMember = false,
   clubVerified = false,
+}: {
+  studentName: string;
+  campaigns: any[];
+  onCreateCampaign: () => void;
+  onViewCampaign: (id: string) => void;
+  isClubPresident: boolean;
+  isClubMember: boolean;
+  clubVerified: boolean;
 }) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -126,8 +134,8 @@ export default function StudentDashboard({
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusBadge = (status) => {
-    const config = {
+  const getStatusBadge = (status: string) => {
+    const config: any = {
       approved: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-300' },
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-300' },
       rejected: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300' },
@@ -171,7 +179,9 @@ export default function StudentDashboard({
               </div>
               <div>
                 <p className="text-white font-bold">{studentName}</p>
-                <p className="text-orange-200 text-sm">Student</p>
+                <p className="text-orange-200 text-sm">
+                  {isClubPresident ? "Club President" : "Student"}
+                </p>
               </div>
             </div>
             {isClubPresident && (
@@ -219,6 +229,7 @@ export default function StudentDashboard({
               )}
             </button>
 
+            {/* President Panel Button - Only visible for Presidents */}
             {isClubPresident && (
               <button
                 onClick={() => window.location.href = "/president"}
@@ -232,7 +243,8 @@ export default function StudentDashboard({
 
           {/* Quick Actions */}
           <div className="p-4 space-y-2 border-t-2 border-orange-400">
-            {!clubVerified && (
+            {/* Hide "I'm President" and "Refer Club" if already verified or is president */}
+            {!clubVerified && !isClubPresident && (
               <>
                 <button
                   onClick={() => window.location.href = "/verify-president"}

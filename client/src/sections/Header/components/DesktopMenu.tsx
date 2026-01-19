@@ -50,10 +50,10 @@ export const DesktopMenu = ({ currentUser, onLogin }: DesktopMenuProps) => {
 
       {currentUser?.role === 'STUDENT_PRESIDENT' && (
         <a
-          href="/president"
+          href="/dashboard"
           className="text-dreamxec-navy font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
         >
-          PRESIDENT DASHBOARD
+          DASHBOARD
         </a>
       )}
 
