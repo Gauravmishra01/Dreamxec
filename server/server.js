@@ -30,7 +30,8 @@ const adminClubVerificationRoutes = require('./src/api/admin-club/adminClubVerif
 const newsletterRoutes = require('./src/api/newsletter/newsletter.routes');
 const wishlistRoutes = require('./src/api/wishlist/wishlist.routes');
 const uploadRoutes = require('./src/api/upload/upload.routes');
-
+const otpRoutes=require("./src/api/otp/otp.routes")
+const studentverfication=require("./src/api/studentVerification/studentVerification.routes")
 // Load Passport (Google only, LinkedIn handled via OIDC file)
 require('./src/config/passport');
 
@@ -138,6 +139,9 @@ app.use("/api/admin/club-verifications", adminClubVerificationRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use("/api/otp",otpRoutes)
+app.use("/api/student-verification",studentverfication)
+app.use("/api/payments", require("./src/api/payments/payment.routes"))
 app.use(cors())
 
 // --------------------------------------------

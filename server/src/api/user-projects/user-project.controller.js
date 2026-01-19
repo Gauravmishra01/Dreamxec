@@ -7,6 +7,27 @@ const uploadToCloudinary = require('../../utils/uploadToCloudinary');
    CREATE USER PROJECT (WITH MILESTONES)
 ====================================================== */
 exports.createUserProject = catchAsync(async (req, res, next) => {
+  if (!req.user.studentVerified) {
+    return next(new AppError('You must be a verified student to create a campaign.', 403));
+  }
+
+  const { id, title, description, companyName, skillsRequired, timeline, goalAmount } = req.body;
+
+  const initialProject = await prisma.userProject.create({
+    data: {
+      id: id || undefined, 
+      title,
+      description,
+      companyName: companyName || null,
+      skillsRequired: skillsRequired ? (typeof skillsRequired === 'string' ? JSON.parse(skillsRequired) : skillsRequired) : [], 
+      timeline: timeline || null,
+      goalAmount: parseFloat(goalAmount), 
+      imageUrl: null, 
+      campaignMedia: [],
+      presentationDeckUrl: null,
+      userId: req.user.id,
+    },
+  });
   const {
     id,
     title,

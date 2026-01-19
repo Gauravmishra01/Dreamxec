@@ -7,7 +7,7 @@ if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY.startsWith('SG.
 }
 
 const sendEmail = async (options) => {
- 
+ console.log(options)
   if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_API_KEY.startsWith('SG.')) {
     console.log('Email would be sent:', {
       to: options.email,

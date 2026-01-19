@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { VerificationModal } from './VerificationModal';
 
 // Icons
 const StarDecoration = ({ className, color }) => (
@@ -97,7 +98,9 @@ export default function StudentDashboard({
   studentName = "Rahul",
   campaigns = [],
   onCreateCampaign,
+  user = null,
   onViewCampaign,
+  studentVerified = false,
   isClubPresident = false,
   isClubMember = false,
   clubVerified = false,
@@ -106,8 +109,10 @@ export default function StudentDashboard({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('ALL');
+  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
 
   // Calculate stats
+  console.log(studentVerified)
   const totalRaised = campaigns
     .filter((c) => c.status === 'approved')
     .reduce((sum, c) => sum + c.currentAmount, 0);
@@ -117,12 +122,12 @@ export default function StudentDashboard({
 
   // Filter campaigns
   const filteredCampaigns = campaigns.filter(campaign => {
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       campaign.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign.clubName?.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesStatus = filterStatus === 'ALL' || campaign.status === filterStatus;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -152,9 +157,8 @@ export default function StudentDashboard({
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-blue-900 border-r-4 border-orange-400 transform transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-blue-900 border-r-4 border-orange-400 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
@@ -170,7 +174,14 @@ export default function StudentDashboard({
                 {studentName?.charAt(0) || 'S'}
               </div>
               <div>
-                <p className="text-white font-bold">{studentName}</p>
+                <p className="text-white font-bold flex items-center gap-2">
+                  {studentName}
+                  {studentVerified && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 border border-green-300">
+                      Verified
+                    </span>
+                  )}
+                </p>
                 <p className="text-orange-200 text-sm">Student</p>
               </div>
             </div>
@@ -189,11 +200,10 @@ export default function StudentDashboard({
                 setSelectedTab('overview');
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-                selectedTab === 'overview'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
-              }`}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'overview'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
+                }`}
             >
               <DashboardIcon className="w-5 h-5" />
               Dashboard
@@ -204,11 +214,10 @@ export default function StudentDashboard({
                 setSelectedTab('campaigns');
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${
-                selectedTab === 'campaigns'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
-              }`}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'campaigns'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
+                }`}
             >
               <FolderIcon className="w-5 h-5" />
               My Campaigns
@@ -232,6 +241,16 @@ export default function StudentDashboard({
 
           {/* Quick Actions */}
           <div className="p-4 space-y-2 border-t-2 border-orange-400">
+            {/* Show Verification Button ONLY if NOT verified */}
+            {!studentVerified && (
+              <button
+                onClick={() => setIsVerificationModalOpen(true)}
+                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all shadow-md animate-pulse"
+              >
+                ✓ Verify Student Status Now
+              </button>
+            )}
+
             {!clubVerified && (
               <>
                 <button
@@ -242,15 +261,26 @@ export default function StudentDashboard({
                 </button>
                 <button
                   onClick={() => window.location.href = "/refer-club"}
-                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-bold hover:bg-purple-700 transition-all"
+                  className="w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all"
                 >
                   ✓ Refer Club
                 </button>
               </>
             )}
             <button
-              onClick={onCreateCampaign}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-orange-400 text-blue-900 rounded-lg font-bold hover:scale-105 transition-transform"
+              onClick={() => {
+                if (studentVerified) {
+                  onCreateCampaign();
+                } else {
+                  alert("Please verify your student status to create a campaign.");
+                }
+              }}
+              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold transition-transform ${studentVerified
+                ? "bg-orange-400 text-blue-900 hover:scale-105"
+                : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                }`}
+              disabled={!studentVerified}
+              title={!studentVerified ? "Please verify student status first" : ""}
             >
               <PlusIcon className="w-5 h-5" />
               Create Campaign
@@ -274,7 +304,7 @@ export default function StudentDashboard({
               {selectedTab === 'overview' && 'Dashboard Overview'}
               {selectedTab === 'campaigns' && 'My Campaigns'}
             </h2>
-            
+
             <div className="flex items-center gap-3">
               <button className="relative p-2 hover:bg-orange-50 rounded-lg transition-colors">
                 <BellIcon className="w-6 h-6 text-blue-900" />
@@ -300,6 +330,17 @@ export default function StudentDashboard({
                 </h1>
                 <p className="text-blue-900 opacity-70">
                   Manage your fundraising campaigns and track your progress
+                </p>
+                <p className="text-sm text-green-600 font-bold mt-2">
+                  {!studentVerified && (
+                    <button
+                      onClick={() => setIsVerificationModalOpen(true)}
+                      className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all shadow-md animate-pulse"
+                    >
+                      ✓ Verify Student Status Now
+                    </button>
+                  )}
+
                 </p>
               </div>
 
@@ -353,10 +394,21 @@ export default function StudentDashboard({
               {/* Quick Actions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
-                  onClick={onCreateCampaign}
-                  className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
+                  onClick={() => {
+                    if (studentVerified) {
+                      onCreateCampaign();
+                    } else {
+                      alert("Please verify your student status to create a campaign.");
+                    }
+                  }}
+                  className={`bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg transition-transform text-left group ${user?.studentVerified
+                    ? "hover:scale-105 cursor-pointer"
+                    : "opacity-60 cursor-not-allowed"
+                    }`}
+                  disabled={!studentVerified}
+                  title={!studentVerified ? "Please verify student status first" : ""}
                 >
-                  <div className="w-16 h-16 bg-green-400 rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform">
+                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center mb-4 transition-transform ${user?.studentVerified ? "bg-green-400 group-hover:rotate-12" : "bg-gray-300"}`}>
                     <PlusIcon className="w-8 h-8 text-blue-900" />
                   </div>
                   <h3 className="text-2xl font-bold text-blue-900 mb-2">Create New Campaign</h3>
@@ -410,11 +462,10 @@ export default function StudentDashboard({
                       <button
                         key={status}
                         onClick={() => setFilterStatus(status)}
-                        className={`px-4 py-2 rounded-lg font-bold border-2 border-blue-900 transition-all ${
-                          filterStatus === status
-                            ? 'bg-blue-900 text-white'
-                            : 'bg-white text-blue-900 hover:bg-orange-50'
-                        }`}
+                        className={`px-4 py-2 rounded-lg font-bold border-2 border-blue-900 transition-all ${filterStatus === status
+                          ? 'bg-blue-900 text-white'
+                          : 'bg-white text-blue-900 hover:bg-orange-50'
+                          }`}
                       >
                         {status === 'ALL' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
                       </button>
@@ -434,8 +485,19 @@ export default function StudentDashboard({
                     Create your first campaign to start raising funds
                   </p>
                   <button
-                    onClick={onCreateCampaign}
-                    className="px-6 py-3 bg-orange-400 text-blue-900 rounded-lg font-bold border-2 border-blue-900 hover:scale-105 transition-transform"
+                    onClick={() => {
+                      if (studentVerified) {
+                        onCreateCampaign();
+                      } else {
+                        alert("Please verify your student status to create a campaign.");
+                      }
+                    }}
+                    className={`px-6 py-3 rounded-lg font-bold border-2 border-blue-900 transition-transform ${studentVerified
+                      ? "bg-orange-400 text-blue-900 hover:scale-105"
+                      : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                      }`}
+                    disabled={!studentVerified}
+                    title={!studentVerified ? "Please verify student status first" : ""}
                   >
                     Create Campaign
                   </button>
@@ -445,7 +507,7 @@ export default function StudentDashboard({
                   <div className="text-blue-900 font-bold mb-2">
                     Showing {filteredCampaigns.length} of {campaigns.length} campaigns
                   </div>
-                  
+
                   <div className="space-y-4">
                     {filteredCampaigns.map((campaign) => {
                       const progress = (campaign.currentAmount / campaign.goalAmount) * 100;
@@ -505,6 +567,11 @@ export default function StudentDashboard({
           )}
         </div>
       </main>
-    </div>
+
+      <VerificationModal
+        isOpen={isVerificationModalOpen}
+        onClose={() => setIsVerificationModalOpen(false)}
+      />
+    </div >
   );
 }
