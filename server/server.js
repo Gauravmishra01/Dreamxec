@@ -5,7 +5,7 @@ const passport = require('passport');
 const session = require('express-session');
 const AppError = require('./src/utils/AppError');
 const globalErrorHandler = require('./src/middleware/error.middleware');
-const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis').default;
 const redis = require('./src/services/redis.service');
 
 // Load environment variables
@@ -65,10 +65,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
