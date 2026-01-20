@@ -497,7 +497,7 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
                                     disabled={emailOtpStatus !== 'verified' || mobileOtpStatus !== 'verified' || isSubmitting}
                                     className="w-full py-4 bg-dreamxec-orange disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-md hover:translate-y-[-2px] hover:shadow-lg transition-all duration-200 font-display text-lg"
                                 >
-                                    {isSubmitting ? 'Processing Payment...' : 'Pay ₹29 & Verify'}
+                                    {isSubmitting ? 'Processing Payment...' : 'Pay ₹5 & Verify'}
                                 </button>
                                 {(emailOtpStatus !== 'verified' || mobileOtpStatus !== 'verified') && (
                                     <p className="text-xs text-orange-600 text-center mt-2 font-bold animate-pulse">
