@@ -7,6 +7,7 @@ export interface ApiResponse<T> {
   message?: string;
   data?: T;
   token?: string;
+  otp?: string; // Added for dev/testing OTP usage
   results?: number;
 }
 

@@ -67,6 +67,7 @@ model User {
   isClubPresident      Boolean @default(false)
   isExternallyVerified Boolean @default(false) // KYC / 3rd-party verification status
   clubVerified         Boolean @default(false)
+  studentVerified      Boolean @default(false)
 
   subscriptionStatus String    @default("NONE") // NEW
   subscriptionId     String? // NEW
@@ -80,6 +81,7 @@ model User {
   bankAccounts  BankAccount[]
   applications  Application[] // Applications to donor projects
   clubsPresided Club[]        @relation("ClubPresident")
+  studentVerification StudentVerification?
 
   // reverse relation (ClubMember.user)
   clubMembers ClubMember[] // optional helper
@@ -449,3 +451,29 @@ model Wishlist {
 // -----------------------------
 // Additional notes: keep your existing models and relations unchanged.
 // -----------------------------
+
+// -----------------------------
+// STUDENT VERIFICATION MODEL
+// -----------------------------
+model StudentVerification {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  fullName        String
+  studentEmail    String
+  officialEmail   String
+  mobileNumber    String
+  docType         String
+  documentUrl     String   // Cloudinary URL
+  
+  // Payment Details
+  razorpayPaymentId String?
+  razorpayOrderId   String?
+  razorpaySignature String?
+
+  status          String   @default("PENDING") // PENDING, VERIFIED, REJECTED
+  
+  userId          String   @unique @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

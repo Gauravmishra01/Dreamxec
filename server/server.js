@@ -5,6 +5,8 @@ const passport = require('passport');
 const session = require('express-session');
 const AppError = require('./src/utils/AppError');
 const globalErrorHandler = require('./src/middleware/error.middleware');
+const RedisStore = require('connect-redis').default;
+const redis = require('./src/services/redis.service');
 
 // Load environment variables
 dotenv.config();
@@ -30,11 +32,15 @@ const adminClubVerificationRoutes = require('./src/api/admin-club/adminClubVerif
 const newsletterRoutes = require('./src/api/newsletter/newsletter.routes');
 const wishlistRoutes = require('./src/api/wishlist/wishlist.routes');
 const uploadRoutes = require('./src/api/upload/upload.routes');
-
+const otpRoutes=require("./src/api/otp/otp.routes")
+const studentverfication=require("./src/api/studentVerification/studentVerification.routes")
+const healthRoutes = require("./src/routes/health.routes");
 // Load Passport (Google only, LinkedIn handled via OIDC file)
 require('./src/config/passport');
 
 const app = express();
+
+
 
 // --------------------------------------------
 // 1️⃣ CORS CONFIG — Required for OAuth cookies/sessions
@@ -51,13 +57,20 @@ app.use(
 // --------------------------------------------
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "default_super_secret_key",
+    store: new RedisStore({
+      client: redis,
+      prefix: "dreamxec:sess:",
+    }),
+    name: "dreamxec.sid",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
-      secure: false, // change to true ONLY when using HTTPS
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
@@ -77,6 +90,10 @@ app.use(
   webhookRoutes
 );
 
+//-------------------------------
+//Redis Health Check
+//-------------------------------
+app.use("/api", healthRoutes);
 
 // --------------------------------------------
 // 5️⃣ JSON BODY PARSER
@@ -138,7 +155,10 @@ app.use("/api/admin/club-verifications", adminClubVerificationRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use(cors())
+app.use("/api/otp",otpRoutes)
+app.use("/api/student-verification",studentverfication)
+app.use("/api/payments", require("./src/api/payments/payment.routes"))
+// app.use(cors())
 
 // --------------------------------------------
 // HANDLE 404

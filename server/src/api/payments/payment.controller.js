@@ -1,26 +1,38 @@
-const razorpay = require("./payment.service");
+const razorpay = require("../../services/payment.service");
 const prisma = require("../../config/prisma");
 const AppError = require("../../utils/AppError");
 const catchAsync = require("../../utils/catchAsync");
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-  const { amount, projectId } = req.body;
+  const { amount, projectId, type } = req.body; // Added 'type' to distinguish donation vs verification
 
-  if (!amount || !projectId) {
-    return next(new AppError("Amount and ProjectId required", 400));
+  if (!amount) {
+    return next(new AppError("Amount required", 400));
   }
+
+  // Receipt ID logic
+  let receiptId = `rcpt_${Date.now()}`;
+  if (projectId) receiptId = `${projectId}-${Date.now()}`;
+  if (type === 'verification') receiptId = `verify-${req.user.id}-${Date.now()}`;
 
   // Create Razorpay order
   const order = await razorpay.orders.create({
     amount: amount * 100,
     currency: "INR",
-    receipt: `${projectId}-${Date.now()}`,
+    receipt: receiptId,
+    notes: {
+      type: type || 'donation',
+      userId: req.user.id,
+      projectId: projectId || ''
+    }
   });
 
   res.json({
     success: true,
     orderId: order.id,
-    key: process.env.RAZORPAY_KEY_ID
+    key: process.env.RAZORPAY_KEY_ID,
+    amount: order.amount, // Return amount in paise
+    currency: order.currency
   });
 });
 
