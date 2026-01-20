@@ -20,29 +20,6 @@ exports.getVerification = async (req, res) => {
   res.json({ success: true, data: item });
 };
 
-// exports.approveVerification = async (req, res) => {
-//   const { id } = req.params;
-//   // update verification status and possibly mark user's clubVerified true
-//   const updated = await prisma.clubVerification.update({
-//     where: { id },
-//     data: {
-//       status: "APPROVED",
-//       reviewedBy: req.user.id,
-//       reviewedAt: new Date(),
-//     },
-//   });
-
-//   // OPTIONAL: mark the user (president) as clubVerified:
-//   if (updated.userId) {
-//     await prisma.user.update({
-//       where: { id: updated.userId },
-//       data: { clubVerified: true, isClubPresident: true },
-//     });
-//   }
-
-//   res.json({ success: true, data: updated });
-// };
-
 
 exports.approveVerification = async (req, res) => {
   const { id } = req.params;
@@ -124,14 +101,41 @@ exports.approveVerification = async (req, res) => {
 exports.rejectVerification = async (req, res) => {
   const { id } = req.params;
   const { reason } = req.body;
-  const updated = await prisma.clubVerification.update({
-    where: { id },
-    data: {
-      status: "REJECTED",
-      rejectionReason: reason || null,
-      reviewedBy: req.user.id,
-      reviewedAt: new Date(),
-    },
-  });
-  res.json({ success: true, data: updated });
+
+  try {
+    // Optional: Check if record exists first (or rely on Prisma's P2025 error)
+    // and prevent rejecting already processed requests if needed.
+    
+    const updated = await prisma.clubVerification.update({
+      where: { id },
+      data: {
+        status: "REJECTED",
+        rejectionReason: reason || "No reason specified",
+        reviewedBy: req.user.id,
+        reviewedAt: new Date(),
+      },
+    });
+
+    res.json({ 
+      success: true, 
+      message: "Verification rejected successfully",
+      data: updated 
+    });
+
+  } catch (error) {
+    console.error("Reject Verification Error:", error);
+
+    // Handle "Record not found" error from Prisma
+    if (error.code === 'P2025') {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Verification request not found" 
+      });
+    }
+
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to reject verification" 
+    });
+  }
 };

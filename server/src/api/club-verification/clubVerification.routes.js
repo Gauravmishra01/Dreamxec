@@ -24,6 +24,6 @@ router.post(
   upload.single("document"),
   validate(clubVerificationSchema),
   submitClubVerification
-);
+);``
 
 module.exports = router;

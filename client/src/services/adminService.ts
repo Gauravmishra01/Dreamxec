@@ -68,6 +68,19 @@ export const getClubVerifications = async (): Promise<ApiResponse<any[]>> => {
   });
 };
 
+export const approveClubVerification = async (id: string): Promise<ApiResponse<any>> => {
+  return apiRequest(`/admin/club-verifications/verifications/${id}/approve`, {
+    method: 'POST',
+  });
+};
+
+export const rejectClubVerification = async (id: string, reason: string): Promise<ApiResponse<any>> => {
+  return apiRequest(`/admin/club-verifications/verifications/${id}/reject`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  });
+};
+
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const uploadClubMembers = async (file: File, clubId: string, token?: string) => {
