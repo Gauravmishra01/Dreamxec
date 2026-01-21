@@ -871,19 +871,6 @@ function AppContent() {
                           <div className="pointer-events-auto">
                             <Routes>
                               {/* Homepage */}
-                              {/* <Route
-                                path="/"
-                                element={
-                                  <>
-                                    <Header
-                                      currentUser={user}
-                                      onLogin={handleLoginClick}
-                                      onLogout={handleLogout}
-                                    />
-                                    <Main />
-                                  </>
-                                }
-                              /> */}
                               <Route
                                 path="/"
                                 element={
@@ -939,7 +926,7 @@ function AppContent() {
                               />
                               <Route path="/refer-club" element={<ReferClub />} />
                               {/* Student Dashboard */}
-                              <Route
+                              {/* <Route
                                 path="/dashboard"
                                 element={
                                   (user?.role === 'student' || user?.role === 'STUDENT_PRESIDENT') ? (
@@ -978,6 +965,51 @@ function AppContent() {
                                             Log in
                                           </button>
                                         </p>
+                                      </div>
+                                    </div>
+                                  )
+                                }
+                              /> */}
+                              <Route
+                                path="/dashboard"
+                                element={
+                                  (user?.role === 'student' || user?.role === 'STUDENT_PRESIDENT') ? (
+                                    <>
+                                      <Header
+                                        currentUser={user}
+                                        onLogin={handleLoginClick}
+                                        onLogout={handleLogout}
+                                      />
+                                      <StudentDashboard
+                                        studentName={user.name || 'User'}
+                                        campaigns={userCampaigns}
+                                        onCreateCampaign={() => navigate('/create')}
+                                        onViewCampaign={(id) => navigate(`/campaign/${id}`)}
+                                        // FIXED: Passed correct props expected by the component
+                                        isClubPresident={user?.role === 'STUDENT_PRESIDENT'}
+                                        isClubMember={false} // Logic can be updated if you track membership
+                                        clubVerified={user?.role === 'STUDENT_PRESIDENT'}
+                                      />
+                                    </>
+                                  ) : (
+                                    // ... (restricted access div remains the same)
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-12 text-center max-w-md">
+                                        <div className="card-tricolor-tag"></div>
+                                        <div className="text-dreamxec-navy text-xl font-sans mt-4">
+                                          <p className="text-dreamxec-navy text-xl font-sans mt-4">
+                                            Every journey begins with the right role.
+                                            <br />
+                                            Log in as a student to access your DreamXec dashboard.
+                                          </p>
+                                          <button
+                                            onClick={() => navigate("/auth")}
+                                            className="mt-8 px-8 py-3 bg-dreamxec-orange text-white font-bold rounded-xl
+                     hover:bg-dreamxec-saffron transition-colors shadow-lg"
+                                          >
+                                            Log in
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
                                   )
@@ -1315,24 +1347,24 @@ function AppContent() {
 
                             {/* Footer Routes */}
                             <Routes>
-                              
-                              
+
+
                               <Route path="/start-project" element={<StartAProject />} />
-                                <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
-                                <Route path="/eligibility" element={<ProjectEligibility />} />
-                                <Route path="/resources" element={<ResourceCenter />} />
-                                <Route path="/fund-innovation" element={<FundInnovation />} />
-                                <Route path="/how-it-works/donors" element={<HowItWorksDonors />} />
-                                <Route path="/why-donate" element={<WhyDonate />} />
-                                <Route path="/corporate-partnerships" element={<CorporateCSRPartnerships />} />
-                                <Route path="/alumni-giving" element={<AlumniGivingPrograms />} />
-                                <Route path="/become-mentor" element={<BecomeMentor />} />
-                                <Route path="/perfect-storm" element={<PerfectStorm />} />
-                                <Route path="/careers" element={<Careers />} />
-                                <Route path="/contact" element={<ContactUs />} />
-                                <Route path="/faq" element={<FAQ />} />
-                                <Route path="/terms-And-Conditions" element={<TermsAndConditions />} />
-                                {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                              <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
+                              <Route path="/eligibility" element={<ProjectEligibility />} />
+                              <Route path="/resources" element={<ResourceCenter />} />
+                              <Route path="/fund-innovation" element={<FundInnovation />} />
+                              <Route path="/how-it-works/donors" element={<HowItWorksDonors />} />
+                              <Route path="/why-donate" element={<WhyDonate />} />
+                              <Route path="/corporate-partnerships" element={<CorporateCSRPartnerships />} />
+                              <Route path="/alumni-giving" element={<AlumniGivingPrograms />} />
+                              <Route path="/become-mentor" element={<BecomeMentor />} />
+                              <Route path="/perfect-storm" element={<PerfectStorm />} />
+                              <Route path="/careers" element={<Careers />} />
+                              <Route path="/contact" element={<ContactUs />} />
+                              <Route path="/faq" element={<FAQ />} />
+                              <Route path="/terms-And-Conditions" element={<TermsAndConditions />} />
+                              {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                */}
                               <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
                               <Route path="/eligibility" element={<ProjectEligibility />} />

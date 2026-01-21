@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import type { Campaign } from '../types';
 
-// Icons
+// --- Icons ---
 const StarDecoration = ({ className, color }: { className?: string; color?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill={color || "currentColor"}>
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -92,7 +93,18 @@ const AwardIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Main Component
+// --- Interface Definition (Fixes Vercel Build Error) ---
+interface StudentDashboardProps {
+  studentName: string;
+  campaigns: Campaign[];
+  onCreateCampaign: () => void;
+  onViewCampaign: (id: string) => void;
+  isClubPresident: boolean;
+  isClubMember: boolean;
+  clubVerified: boolean;
+}
+
+// --- Main Component ---
 export default function StudentDashboard({
   studentName = "Rahul",
   campaigns = [],
@@ -101,15 +113,7 @@ export default function StudentDashboard({
   isClubPresident = false,
   isClubMember = false,
   clubVerified = false,
-}: {
-  studentName: string;
-  campaigns: any[];
-  onCreateCampaign: () => void;
-  onViewCampaign: (id: string) => void;
-  isClubPresident: boolean;
-  isClubMember: boolean;
-  clubVerified: boolean;
-}) {
+}: StudentDashboardProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -135,7 +139,7 @@ export default function StudentDashboard({
   });
 
   const getStatusBadge = (status: string) => {
-    const config: any = {
+    const config: Record<string, { bg: string; text: string; border: string }> = {
       approved: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-300' },
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-300' },
       rejected: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300' },
@@ -229,7 +233,6 @@ export default function StudentDashboard({
               )}
             </button>
 
-            {/* President Panel Button - Only visible for Presidents */}
             {isClubPresident && (
               <button
                 onClick={() => window.location.href = "/president"}
@@ -243,7 +246,6 @@ export default function StudentDashboard({
 
           {/* Quick Actions */}
           <div className="p-4 space-y-2 border-t-2 border-orange-400">
-            {/* Hide "I'm President" and "Refer Club" if already verified or is president */}
             {!clubVerified && !isClubPresident && (
               <>
                 <button
@@ -290,9 +292,9 @@ export default function StudentDashboard({
             <div className="flex items-center gap-3">
               <button className="relative p-2 hover:bg-orange-50 rounded-lg transition-colors">
                 <BellIcon className="w-6 h-6 text-blue-900" />
-                {rejectedCount > 0 && (
+                {pendingCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                    {rejectedCount}
+                    {pendingCount}
                   </span>
                 )}
               </button>
