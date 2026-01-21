@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { VerificationModal } from './VerificationModal';
-import type { Campaign } from '../types';
+import type { Campaign, User } from '../types';
 
 // --- Icons ---
 const StarDecoration = ({ className, color }: { className?: string; color?: string }) => (
@@ -103,6 +103,8 @@ interface StudentDashboardProps {
   isClubPresident: boolean;
   isClubMember: boolean;
   clubVerified: boolean;
+  user?: User | null;
+  studentVerified?: boolean;
 }
 
 // --- Main Component ---
@@ -253,17 +255,8 @@ export default function StudentDashboard({
 
           {/* Quick Actions */}
           <div className="p-4 space-y-2 border-t-2 border-orange-400">
-            {/* Show Verification Button ONLY if NOT verified */}
-            {!studentVerified && (
-              <button
-                onClick={() => setIsVerificationModalOpen(true)}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all shadow-md animate-pulse"
-              >
-                ✓ Verify Student Status Now
-              </button>
-            )}
-
-            {!clubVerified && (
+            {/* Hide "I'm President" and "Refer Club" if already verified or is president */}
+            {!clubVerified && !isClubPresident && (
               <>
                 <button
                   onClick={() => window.location.href = "/verify-president"}
