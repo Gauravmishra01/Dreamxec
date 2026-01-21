@@ -1,19 +1,41 @@
 export const SkeletonCard = () => {
   return (
     <div
-      aria-hidden="true"
-      className="min-w-[280px] md:min-w-[320px] rounded-2xl bg-black/5 animate-pulse overflow-hidden"
+      className="
+        w-full
+        h-full
+        card-pastel rounded-2xl
+        overflow-hidden
+        flex flex-col
+        animate-pulse
+      "
     >
-      {/* Image placeholder */}
-      <div className="h-40 bg-black/10" />
+      {/* Image skeleton */}
+      <div className="h-40 sm:h-48 w-full bg-gray-200 flex-shrink-0" />
 
-      {/* Content placeholders */}
-      <div className="p-6 space-y-4">
-        <div className="h-3 w-24 bg-black/10 rounded" />
-        <div className="h-4 w-full bg-black/10 rounded" />
-        <div className="h-4 w-3/4 bg-black/10 rounded" />
-        <div className="h-2 w-full bg-black/10 rounded" />
-        <div className="h-9 w-full bg-black/10 rounded-full" />
+      {/* Content skeleton */}
+      <div className="p-4 sm:p-6 flex flex-col flex-1">
+        {/* Header skeleton */}
+        <div className="flex-shrink-0">
+          <div className="h-3 w-20 bg-gray-200 rounded mb-2" />
+          <div className="h-5 w-full bg-gray-200 rounded mb-1" />
+          <div className="h-5 w-3/4 bg-gray-200 rounded" />
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-1 min-h-[1rem]" />
+
+        {/* Progress skeleton */}
+        <div className="flex-shrink-0">
+          <div className="flex justify-between mb-1">
+            <div className="h-3 w-16 bg-gray-200 rounded" />
+            <div className="h-3 w-20 bg-gray-200 rounded" />
+          </div>
+          <div className="h-2 w-full bg-gray-200 rounded-full" />
+        </div>
+
+        {/* Button skeleton */}
+        <div className="mt-4 sm:mt-6 h-10 w-full bg-gray-200 rounded-full flex-shrink-0" />
       </div>
     </div>
   );

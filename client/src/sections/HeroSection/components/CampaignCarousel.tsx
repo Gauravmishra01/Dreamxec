@@ -11,7 +11,8 @@ export const CampaignCarousel = () => {
   const rafRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
 
-  const items = [...data, ...data]; // duplicate for infinite loop
+  // Triple the items for smoother infinite loop
+  const items = data.length > 0 ? [...data, ...data, ...data] : [];
 
   useEffect(() => {
     if (!containerRef.current || data.length === 0) return;
@@ -22,8 +23,9 @@ export const CampaignCarousel = () => {
       if (!isPausedRef.current) {
         container.scrollLeft += SPEED;
 
-        // seamless reset (no visual jump)
-        if (container.scrollLeft >= container.scrollWidth / 2) {
+        // Seamless reset when reaching the second set
+        const maxScroll = container.scrollWidth / 3;
+        if (container.scrollLeft >= maxScroll) {
           container.scrollLeft = 0;
         }
       }
@@ -39,7 +41,7 @@ export const CampaignCarousel = () => {
   }, [data.length]);
 
   return (
-    <div className="mt-10 relative">
+    <div className="mt-10 relative w-full overflow-hidden">
       {error && (
         <p className="px-4 text-sm text-red-500">
           Failed to load campaigns
@@ -49,11 +51,16 @@ export const CampaignCarousel = () => {
       <div
         ref={containerRef}
         className="
-          flex gap-6 px-4
+          flex gap-4 sm:gap-6 px-4
           overflow-x-auto overflow-y-hidden
           scrollbar-hide
           scroll-smooth
+          pb-2
         "
+        style={{
+          // Ensure cards maintain equal height in flexbox
+          alignItems: 'stretch'
+        }}
         onMouseEnter={() => (isPausedRef.current = true)}
         onMouseLeave={() => (isPausedRef.current = false)}
         onTouchStart={() => (isPausedRef.current = true)}
@@ -61,17 +68,26 @@ export const CampaignCarousel = () => {
       >
         {loading &&
           Array.from({ length: 3 }).map((_, i) => (
-            <SkeletonCard key={i} />
+            <div 
+              key={i}
+              className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px]"
+            >
+              <SkeletonCard />
+            </div>
           ))}
 
         {!loading &&
           items.map((campaign, i) => (
-            <CampaignCard
+            <div
               key={`${campaign.id}-${i}`}
-              campaign={campaign}
-            />
+              className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px] h-auto"
+            >
+              <CampaignCard campaign={campaign} />
+            </div>
           ))}
       </div>
+
+      
     </div>
   );
 };
