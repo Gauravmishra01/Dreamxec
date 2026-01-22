@@ -16,7 +16,9 @@ const {
   createUserProjectSchema,
   updateUserProjectSchema,
 } = require('./user-project.validation');
-const { ensureClubVerified } = require('../../middleware/club.middleware');
+
+// 🟢 Import the new middleware
+const { validateCampaignEligibility } = require('../../middleware/club.middleware');
 
 const multer = require('multer');
 
@@ -33,49 +35,44 @@ const upload = multer({
 /* ---------------------------
    PUBLIC ROUTES
 ---------------------------- */
-
-// ✅ Get all approved campaigns (milestones included by controller)
 router.get('/public', getPublicUserProjects);
-
-// ✅ Get one campaign by ID (milestones included)
 router.get('/:id', getUserProject);
 
 /* ---------------------------
    AUTHENTICATED ROUTES
 ---------------------------- */
-
 router.use(protect);
 
-// ✅ Student's own campaigns
-router.get('/my', restrictTo('USER'), getMyUserProjects);
+// Student's own campaigns
+router.get('/my', restrictTo('USER', 'STUDENT_PRESIDENT'), getMyUserProjects);
 
-// ✅ Create campaign with milestones + uploads
+// 🚀 CREATE CAMPAIGN
 router.post(
   '/',
-  restrictTo('USER'),
-  ensureClubVerified,
+  restrictTo('USER', 'STUDENT_PRESIDENT'),           // 1. Must be a User
+  validateCampaignEligibility,  // 2. 🛡️ Strict Flow Check (Student -> Club -> Verified)
   upload.fields([
     { name: 'bannerFile', maxCount: 1 },
     { name: 'mediaFiles', maxCount: 10 },
   ]),
-  validate(createUserProjectSchema), // 🔴 must validate milestones
+  validate(createUserProjectSchema),
   createUserProject
 );
 
-// ✅ Update campaign (milestones allowed only if PENDING / REJECTED)
+// UPDATE CAMPAIGN
 router.put(
   '/:id',
-  restrictTo('USER'),
-  ensureClubVerified,
-  validate(updateUserProjectSchema), // 🔴 must validate milestones
+  restrictTo('USER', 'STUDENT_PRESIDENT'),
+  validateCampaignEligibility, // (Optional: Keep strict check on updates too)
+  validate(updateUserProjectSchema),
   updateUserProject
 );
 
-// ✅ Delete campaign
+// DELETE CAMPAIGN
 router.delete(
   '/:id',
-  restrictTo('USER'),
-  ensureClubVerified,
+  restrictTo('USER', 'STUDENT_PRESIDENT'),
+  validateCampaignEligibility, 
   deleteUserProject
 );
 

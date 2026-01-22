@@ -87,3 +87,25 @@ const sendWhatsAppMessage = async ({ to, message }) => {
 };
 
 module.exports = { sendWhatsAppMessage };
+
+
+// const sendWhatsAppMessage = async ({ to, message }) => {
+//   // Extract OTP (4–6 digits)
+//   const otpMatch = message.match(/\b\d{4,6}\b/);
+//   const otp = otpMatch ? otpMatch[0] : 'OTP_NOT_FOUND';
+
+//   console.log('[OTP][DEBUG]', {
+//     to,
+//     otp,
+//     message,
+//   });
+
+//   // Pretend everything went fine
+//   return {
+//     skipped: true,
+//     reason: 'WHATSAPP_DISABLED',
+//     otp,
+//   };
+// };
+
+// module.exports = { sendWhatsAppMessage };

@@ -350,20 +350,33 @@ function AppContent() {
       formData.append('description', data.description);
       formData.append('companyName', data.clubName);
       formData.append('goalAmount', data.goalAmount.toString());
+      formData.append('presentationDeckUrl', data.presentationDeckUrl || '');
+
+      // Optional timeline derived from milestones
+      const derivedTimeline = data.milestones.length > 0
+        ? data.milestones[0].timeline
+        : 'TBD';
+      formData.append('timeline', derivedTimeline);
 
       // 🔹 Milestones (source of truth)
       // Convert budget to number and send as JSON string (standard & backend-friendly)
-      const milestonesWithNumericBudget = data.milestones.map(m => ({
+      // const milestonesWithNumericBudget = data.milestones.map(m => ({
+      //   ...m,
+      //   budget: typeof m.budget === 'string' ? parseFloat(m.budget) : m.budget
+      // }));
+      // formData.append('milestones', JSON.stringify(milestonesWithNumericBudget));
+      const cleanMilestones = data.milestones.map(m => ({
         ...m,
-        budget: typeof m.budget === 'string' ? parseFloat(m.budget) : m.budget
+        budget: Number(m.budget) // Ensure number
       }));
-      formData.append('milestones', JSON.stringify(milestonesWithNumericBudget));
+
+      formData.append('milestones', JSON.stringify(cleanMilestones));
 
       // 🔹 Optional: derived timeline (display only)
-      const derivedTimeline =
-        data.milestones.length === 1
-          ? data.milestones[0].timeline
-          : `${data.milestones.length} milestones`;
+      // const derivedTimeline =
+      //   data.milestones.length === 1
+      //     ? data.milestones[0].timeline
+      //     : `${data.milestones.length} milestones`;
 
       formData.append('timeline', derivedTimeline);
 
@@ -1354,8 +1367,8 @@ function AppContent() {
                             {/* Footer Routes */}
                             <Routes>
                               <Route path="/start-project" element={<StartAProject />} />
-                              
-                              
+
+
                               <Route path="/start-project" element={<StartAProject />} />
                               <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
                               <Route path="/eligibility" element={<ProjectEligibility />} />
@@ -1371,7 +1384,7 @@ function AppContent() {
                               <Route path="/contact" element={<ContactUs />} />
                               <Route path="/faq" element={<FAQ />} />
                               <Route path="/terms-And-Conditions" element={<TermsAndConditions />} />
-  {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                              {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                */}
                               <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
                               <Route path="/eligibility" element={<ProjectEligibility />} />
@@ -1400,15 +1413,15 @@ function AppContent() {
               </div >
             </div >
           </div >
-    <div
-      role="region"
-      aria-label="bottom of page"
-      className="caret-transparent h-0 pointer-events-none text-nowrap overflow-hidden"
-    >
-      <span className="caret-transparent hidden text-nowrap">
-        bottom of page
-      </span>
-    </div>
+          <div
+            role="region"
+            aria-label="bottom of page"
+            className="caret-transparent h-0 pointer-events-none text-nowrap overflow-hidden"
+          >
+            <span className="caret-transparent hidden text-nowrap">
+              bottom of page
+            </span>
+          </div>
         </div >
       </div >
     </div >
