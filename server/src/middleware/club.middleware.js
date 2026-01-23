@@ -103,6 +103,6 @@ const validateCampaignEligibility = (req, res, next) => {
 
 module.exports = {
   ensureClubVerified,
-  ensureMembershipActive,
+  // ensureMembershipActive,
   validateCampaignEligibility, // 🟢 Exporting the new function
 };
