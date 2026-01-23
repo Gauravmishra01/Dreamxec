@@ -6,9 +6,7 @@ const sendEmail = require('../../services/email.service');
 // USER: Create a project
 exports.createProject = catchAsync(async (req, res, next) => {
   const { title, detail, goalAmount} = req.body;
-  if(!req.user.studentVerified){
-    return next(new AppError('Please verify your student identity before creating a campaign.', 403))
-  }
+ 
   const project = await prisma.project.create({
     data: {
       title,
