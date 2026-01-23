@@ -1056,7 +1056,7 @@ function AppContent() {
                               <Route
                                 path="/create"
                                 element={
-                                  user?.role === 'student' ? (
+                                  user?.role === 'student' || user?.role === 'STUDENT_PRESIDENT' ? (
                                     <>
                                       <Header
                                         currentUser={user}
