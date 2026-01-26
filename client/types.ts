@@ -1,17 +1,20 @@
-export type UserRole = 'student' | 'admin';
+//types.ts
+
+// export type UserRole = 'student' | 'admin';
+export type UserRole = 'student' | 'admin' | 'donor' | 'STUDENT_PRESIDENT';
 
 export type ProjectStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
 
 export interface User {
   id: string;
   email: string;
-  name?: string;
+  name: string;
   role: UserRole;
   emailVerified: boolean;
-  studentVerified?: boolean;
-  isClubPresident?: boolean;
-  isClubMember?: boolean;
-  clubVerified?: boolean;
+  studentVerified: boolean;
+  isClubPresident: boolean;
+  isClubMember: boolean;
+  clubVerified: boolean;
   clubIds: string[];
   createdAt: string;
   updatedAt: string;

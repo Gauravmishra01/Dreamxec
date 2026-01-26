@@ -121,14 +121,17 @@ function AppContent() {
             // ✅ FIX: Include all fields required by User type
             const userData: User = {
               id: response.data.user.id,
-              name: response.data.user.name,
               email: response.data.user.email,
               role: mapBackendRole(response.data.user.role),
-              studentVerified: response.data.user.studentVerified || false,
-              isClubPresident: response.data.user.isClubPresident || false,
-              isClubMember: response.data.user.isClubMember || false,
-              clubVerified: response.data.user.clubVerified || false,
-              clubIds: response.data.user.clubIds || [],
+              emailVerified: response.data.user.emailVerified || false,
+              clubIds: response.data.user?.clubIds || [],
+              createdAt: response.data.user.createdAt || new Date().toISOString(),
+              updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+              isClubPresident: response.data.user?.isClubPresident || false,
+              isClubMember: response.data.user?.isClubMember || false,
+              clubVerified: response.data.user?.clubVerified || false,
+              name: response.data.user.name,
+              studentVerified: response.data.user?.studentVerified,
             };
 
             setUser(userData);
@@ -176,14 +179,17 @@ function AppContent() {
           // ✅ FIX: Include all fields required by User type
           const userData: User = {
             id: response.data.user.id,
-            name: response.data.user.name,
             email: response.data.user.email,
             role: mapBackendRole(response.data.user.role),
-            studentVerified: response.data.user.studentVerified || false,
-            isClubPresident: response.data.user.isClubPresident || false,
-            isClubMember: response.data.user.isClubMember || false,
-            clubVerified: response.data.user.clubVerified || false,
-            clubIds: response.data.user.clubIds || [],
+            emailVerified: response.data.user.emailVerified || false,
+            clubIds: response.data.user?.clubIds || [],
+            createdAt: response.data.user.createdAt || new Date().toISOString(),
+            updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+            isClubPresident: response.data.user?.isClubPresident || false,
+            isClubMember: response.data.user?.isClubMember || false,
+            clubVerified: response.data.user?.clubVerified || false,
+            name: response.data.user.name,
+            studentVerified: response.data.user?.studentVerified,
           };
           setUser(userData);
         }
@@ -465,14 +471,17 @@ function AppContent() {
         // ✅ FIX: Include all fields required by User type
         const userData: User = {
           id: response.data.user.id,
-          name: response.data.user.name,
           email: response.data.user.email,
           role: mapBackendRole(response.data.user.role),
-          studentVerified: response.data.user.studentVerified || false,
-          isClubPresident: response.data.user.isClubPresident || false,
+          emailVerified: response.data.user?.emailVerified || false,
+          clubIds: response.data.user?.clubIds || [],
+          createdAt: response.data.user.createdAt || new Date().toISOString(),
+          updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+          isClubPresident: response.data.user?.isClubPresident || false,
           isClubMember: response.data.user?.isClubMember || false,
-          clubVerified: response.data?.user?.clubVerified || false,
-          clubIds: response.data?.user?.clubIds || [],
+          clubVerified: response.data.user?.clubVerified || false,
+          name: response.data.user.name,
+          studentVerified: response.data.user?.studentVerified,
         };
 
         setUser(userData);
@@ -520,14 +529,17 @@ function AppContent() {
         // ✅ FIX: Include all fields required by User type
         const userData: User = {
           id: response.data.user.id,
-          name: response.data.user.name,
           email: response.data.user.email,
           role: mapBackendRole(response.data.user.role),
-          studentVerified: response.data.user.studentVerified || false,
-          isClubPresident: response.data.user.isClubPresident || false,
-          isClubMember: response.data.user.isClubMember || false,
-          clubVerified: response.data.user.clubVerified || false,
-          clubIds: response.data.user.clubIds   || [],
+          emailVerified: response.data.user.emailVerified || false,
+          clubIds: response.data.user?.clubIds || [],
+          createdAt: response.data.user.createdAt || new Date().toISOString(),
+          updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+          isClubPresident: response.data.user?.isClubPresident || false,
+          isClubMember: response.data.user?.isClubMember || false,
+          clubVerified: response.data.user?.clubVerified || false,
+          name: response.data.user.name,
+          studentVerified: response.data.user?.studentVerified,
         };
 
         setUser(userData);
@@ -589,14 +601,17 @@ function AppContent() {
     // ✅ FIX: Include all fields required by User type
     const userData: User = {
       id: backendUser.id,
-      name: backendUser.name,
       email: backendUser.email,
       role: mapBackendRole(backendUser.role),
-      studentVerified: backendUser.studentVerified || false,
-      isClubPresident: backendUser.isClubPresident || false,
-      isClubMember: backendUser.isClubMember || false,
-      clubVerified: backendUser.clubVerified || false,
-      clubIds: backendUser.clubIds || [],
+      emailVerified: backendUser.emailVerified || false,
+      clubIds: backendUser?.clubIds || [],
+      createdAt: backendUser.createdAt || new Date().toISOString(),
+      updatedAt: backendUser.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+      isClubPresident: backendUser?.isClubPresident || false,
+      isClubMember: backendUser?.isClubMember || false,
+      clubVerified: backendUser?.clubVerified || false,
+      name: backendUser.name,
+      studentVerified: backendUser?.studentVerified, 
     };
     setUser(userData);
   };
@@ -941,12 +956,12 @@ function AppContent() {
                 />
               }
             />
-            
+
             {/* Alias Route */}
             <Route path="/login" element={<AuthPage onLogin={handleLogin} onSignup={handleSignup} onGoogleAuth={handleGoogleAuth} onLinkedInAuth={handleLinkedInAuth} onForgotPassword={handleForgotPassword} currentUser={user} onHeaderLogin={handleLoginClick} onLogout={handleLogout} />} />
 
             <Route path="/auth/callback" element={<AuthCallback />} />
-            
+
             <Route
               path="/check-email"
               element={

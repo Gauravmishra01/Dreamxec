@@ -15,14 +15,17 @@ export type UserRole =
 
 export interface User {
   id: string;
-  name: string;
   email: string;
+  name: string;
   role: UserRole;
-  studentVerified?: boolean;
+  emailVerified: boolean;
+  studentVerified: boolean;
   isClubPresident: boolean;
   isClubMember: boolean;
   clubVerified: boolean;
-  clubIds: string[]; 
+  clubIds: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 /* =========================================================
