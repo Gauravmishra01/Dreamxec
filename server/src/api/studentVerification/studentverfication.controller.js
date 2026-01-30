@@ -4,6 +4,7 @@ const uploadToCloudinary = require('../../utils/uploadToCloudinary');
 const redis = require("../../services/redis.service");
 const catchAsync = require("../../utils/catchAsync");
 const AppError = require("../../utils/AppError");
+const crypto = require("crypto")
 
 /* ───────────────────────────────────────── */
 /* CREATE ORDER (requires OTP verification) */
@@ -75,26 +76,49 @@ const verify = catchAsync(async (req, res, next) => {
         return next(new AppError("Email and WhatsApp OTP verification required before submission.", 403));
     }
 
+    const generated_signature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(razorpay_order_id + "|" + razorpay_payment_id)
+        .digest("hex");
+
+    if (generated_signature !== razorpay_signature) {
+        return next(new AppError("Payment verification failed! Invalid signature.", 400));
+    }
+
     /* ─── Upload Document ─── */
     const folder = `dreamxec/verifications/${user.id}`;
     const documentUrl = await uploadToCloudinary(file.path, folder);
 
     // Create Verification Request
-    // NOTE: We do NOT set user.studentVerified = true here. That happens on Admin Approval.
-    const verification = await prisma.studentVerification.create({
-        data: {
-            fullName,
-            studentEmail,
-            officialEmail,
-            mobileNumber,
-            docType,
-            documentUrl,
-            razorpayPaymentId: razorpay_payment_id || null,
-            razorpayOrderId: razorpay_order_id || null,
-            razorpaySignature: razorpay_signature || null,
-            userId: user.id,
-            status: "PENDING"
-        }
+    // NOTE: We DO set user.studentVerified = true here. That happens on Admin Approval.
+    const result = await prisma.$transaction(async (tx) => {
+        // A. Immediately verify the user
+        await tx.user.update({
+            where: { id: user.id },
+            data: { 
+                studentVerified: true,   // ✅ Auto-verify
+                emailVerified: true,
+                canCreateCampaign: true, // ✅ Unlock campaigns (if club req met)
+                hasPaid: true            // ✅ Mark as paid
+            } 
+        });
+
+        // B. Save Verification Record as 'VERIFIED'
+        return await tx.studentVerification.create({
+            data: {
+                fullName,
+                studentEmail,
+                officialEmail,
+                mobileNumber,
+                docType,
+                documentUrl,
+                razorpayPaymentId: razorpay_payment_id,
+                razorpayOrderId: razorpay_order_id,
+                razorpaySignature: razorpay_signature,
+                userId: user.id,
+                status: "VERIFIED" // ✅ Saved as verified
+            }
+        });
     });
 await prisma.user.update({
     where: { id: user.id },
@@ -103,7 +127,7 @@ await prisma.user.update({
     return res.status(201).json({
         success: true,
         message: "Verification submitted successfully. Please wait for admin approval.",
-        data: verification
+        data: result
     });
 });
 
@@ -167,7 +191,7 @@ const approveStudentVerification = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        message: 'Student verified successfully. User privileges updated.'
+        message: 'Student is already verified via payment.'
     });
 });
 

@@ -67,13 +67,8 @@ const validateCampaignEligibility = (req, res, next) => {
   }
 
   // 4. Check Club Association
-  if (!user.clubId) {
-    return next(
-      new AppError(
-        'Campaign creation blocked: You are not associated with any club. Please register a club as President or refer an existing club.',
-        403
-      )
-    );
+  if (!user.clubIds || user.clubIds.length === 0) {
+    return next(new AppError('You are not associated with any club.', 403));
   }
 
   // 5. Check Club Verification Status

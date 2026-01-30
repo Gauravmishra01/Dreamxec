@@ -52,11 +52,9 @@ import ContactUs from './sections/Pages/company/ContactUs';
 import FAQ from './sections/Pages/company/FAQ';
 import AboutUs from './components/AboutUs';
 import TermsAndConditions from './sections/Pages/legal/TermsAndConditions';
-// import PrivacyPolicy from './sections/Pages/company/PrivacyPolicy';
 import VerifyPresident from './components/VerifyPresident';
 import { LoaderProvider, useLoader } from './context/LoaderContext';
 import LoadingAnimation from './components/LoadingAnimation';
-
 
 // Main App Content Component
 function AppContent() {
@@ -65,7 +63,7 @@ function AppContent() {
   const [_isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [userApplications, setUserApplications] = useState<string[]>([]); // Project IDs user has applied to
+  const [userApplications, setUserApplications] = useState<string[]>([]);
   const [_showCheckEmail, setShowCheckEmail] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
   const { showLoader, hideLoader } = useLoader();
@@ -75,7 +73,6 @@ function AppContent() {
 
   useEffect(() => {
     const initialize = async () => {
-      // Load data...
       setTimeout(() => {
         setIsInitialLoading(false);
       }, 2500);
@@ -88,17 +85,15 @@ function AppContent() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const error = urlParams.get('error');
-    const provider = urlParams.get('provider'); // Could be 'google' or 'linkedin'
+    const provider = urlParams.get('provider');
 
-    // Only process OAuth callbacks on root path or /auth/callback
     const isOAuthCallback = window.location.pathname === '/' ||
       window.location.pathname === '/auth/callback';
 
     if (!isOAuthCallback) {
-      return; // Don't process token if not on OAuth callback route
+      return;
     }
 
-    // Handle error from OAuth
     if (error) {
       console.error(`${provider || 'OAuth'} error:`, error);
       alert(`${provider || 'OAuth'} authentication failed: ${error}`);
@@ -109,33 +104,38 @@ function AppContent() {
     }
 
     if (token) {
-      // OAuth callback detected
       const processOAuthCallback = async () => {
         try {
           console.log(`📥 Processing ${provider || 'OAuth'} callback...`);
 
-          // Use the appropriate callback handler based on provider
           let response;
           if (provider === 'linkedin') {
             response = await handleLinkedInCallback();
           } else {
-            // Default to Google OAuth handler for backward compatibility
             response = await handleGoogleCallback();
           }
 
           console.log(`✅ ${provider || 'OAuth'} callback response:`, response);
 
           if (response.data?.user) {
-            const userData = {
+            // ✅ FIX: Include all fields required by User type
+            const userData: User = {
               id: response.data.user.id,
-              name: response.data.user.name,
               email: response.data.user.email,
               role: mapBackendRole(response.data.user.role),
+              emailVerified: response.data.user.emailVerified || false,
+              clubIds: response.data.user?.clubIds || [],
+              createdAt: response.data.user.createdAt || new Date().toISOString(),
+              updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+              isClubPresident: response.data.user?.isClubPresident || false,
+              isClubMember: response.data.user?.isClubMember || false,
+              clubVerified: response.data.user?.clubVerified || false,
+              name: response.data.user.name,
+              studentVerified: response.data.user?.studentVerified,
             };
 
             setUser(userData);
 
-            // Navigate based on role from backend
             if (userData.role === 'student') {
               navigate('/dashboard');
             } else if (userData.role === 'donor') {
@@ -143,11 +143,9 @@ function AppContent() {
             } else if (userData.role === 'admin') {
               navigate('/admin');
             } else if (userData.role === 'STUDENT_PRESIDENT') {
-              // Add this new condition
               navigate('/president');
             }
           } else {
-            // Fallback: if backend indicates verification is required, show check-email
             const needsVerification =
               Boolean((response as any).verificationRequired) ||
               Boolean(response.data && (response.data as any).verificationRequired) ||
@@ -178,15 +176,24 @@ function AppContent() {
       try {
         const response = await getCurrentUser();
         if (response.data?.user) {
-          setUser({
+          // ✅ FIX: Include all fields required by User type
+          const userData: User = {
             id: response.data.user.id,
-            name: response.data.user.name,
             email: response.data.user.email,
             role: mapBackendRole(response.data.user.role),
-            studentVerified: response.data.user.studentVerified,
-          });
+            emailVerified: response.data.user.emailVerified || false,
+            clubIds: response.data.user?.clubIds || [],
+            createdAt: response.data.user.createdAt || new Date().toISOString(),
+            updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+            isClubPresident: response.data.user?.isClubPresident || false,
+            isClubMember: response.data.user?.isClubMember || false,
+            clubVerified: response.data.user?.clubVerified || false,
+            name: response.data.user.name,
+            studentVerified: response.data.user?.studentVerified,
+          };
+          setUser(userData);
         }
-      } catch (error) {
+      } catch (error: any) {
         if (error?.response?.status === 401) {
           setUser(null)
         } else {
@@ -204,14 +211,12 @@ function AppContent() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Load campaigns
         const campaignsResponse = await getPublicUserProjects();
         if (campaignsResponse.data?.userProjects) {
           const mappedCampaigns = campaignsResponse.data.userProjects.map(mapUserProjectToCampaign);
           setCampaigns(mappedCampaigns);
         }
 
-        // Load donor projects
         const projectsResponse = await getPublicDonorProjects();
         if (projectsResponse.data?.donorProjects) {
           const mappedProjects = projectsResponse.data.donorProjects.map(mapDonorProjectToProject);
@@ -236,13 +241,11 @@ function AppContent() {
 
           if (response.data?.userProjects?.projects) {
             const mappedCampaigns = response.data.userProjects.projects.map(mapUserProjectToCampaign);
-            console.log('✅ Mapped campaigns:', mappedCampaigns);
             setCampaigns(mappedCampaigns);
           }
 
           if (response.data?.donorProjects?.projects) {
             const mappedProjects = response.data.donorProjects.projects.map(mapDonorProjectToProject);
-            console.log('✅ Mapped projects:', mappedProjects);
             setProjects(mappedProjects);
           }
         } catch (error) {
@@ -255,7 +258,6 @@ function AppContent() {
   }, [user?.role]);
 
   // Load user-specific data for donors only
-  // Students and admins use the public campaigns data
   useEffect(() => {
     const loadUserData = async () => {
       if (user?.role === 'donor') {
@@ -264,7 +266,6 @@ function AppContent() {
           const response = await getMyDonorProjects();
           if (response.data?.donorProjects) {
             const mappedProjects = response.data.donorProjects.map(mapDonorProjectToProject);
-            console.log('✅ Donor projects loaded:', mappedProjects.length);
             setProjects(mappedProjects);
           }
         } catch (error) {
@@ -276,7 +277,7 @@ function AppContent() {
     loadUserData();
   }, [user?.role, user?.id]);
 
-  // Load user applications for students to check which projects they've already applied to
+  // Load user applications for students
   useEffect(() => {
     const loadUserApplications = async () => {
       if (user?.role === 'student') {
@@ -284,12 +285,9 @@ function AppContent() {
           console.log('📝 Loading user applications for student:', user.name);
           const response = await getMyApplications();
           if (response.status === 'success' && response.data?.applications) {
-            // Extract project IDs from applications
-            const appliedProjectIds = response.data.applications.map(app => app.donorProjectId);
-            console.log('✅ User has applied to projects:', appliedProjectIds);
+            const appliedProjectIds = response.data.applications.map((app: any) => app.donorProjectId);
             setUserApplications(appliedProjectIds);
           } else {
-            console.log('No applications found for user');
             setUserApplications([]);
           }
         } catch (error) {
@@ -297,8 +295,6 @@ function AppContent() {
           setUserApplications([]);
         }
       } else {
-        // Clear applications if not a student
-        console.log('Clearing user applications (user is not a student)');
         setUserApplications([]);
       }
     };
@@ -313,7 +309,6 @@ function AppContent() {
   const approvedProjects = projects.filter((p) => p.status === 'approved');
   const pendingProjects = projects.filter((p) => p.status === 'pending');
 
-  // Show loading screen while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
@@ -345,43 +340,26 @@ function AppContent() {
       console.log('🚀 Creating Campaign with Milestones...');
 
       const formData = new FormData();
-
-      // Basic fields
       formData.append('title', data.title);
       formData.append('description', data.description);
       formData.append('companyName', data.clubName);
       formData.append('goalAmount', data.goalAmount.toString());
       formData.append('presentationDeckUrl', data.presentationDeckUrl || '');
 
-      // Optional timeline derived from milestones
+      // Derived timeline
       const derivedTimeline = data.milestones.length > 0
         ? data.milestones[0].timeline
         : 'TBD';
       formData.append('timeline', derivedTimeline);
 
-      // 🔹 Milestones (source of truth)
-      // Convert budget to number and send as JSON string (standard & backend-friendly)
-      // const milestonesWithNumericBudget = data.milestones.map(m => ({
-      //   ...m,
-      //   budget: typeof m.budget === 'string' ? parseFloat(m.budget) : m.budget
-      // }));
-      // formData.append('milestones', JSON.stringify(milestonesWithNumericBudget));
+      // Clean Milestones
       const cleanMilestones = data.milestones.map(m => ({
         ...m,
-        budget: Number(m.budget) // Ensure number
+        budget: Number(m.budget)
       }));
 
       formData.append('milestones', JSON.stringify(cleanMilestones));
 
-      // 🔹 Optional: derived timeline (display only)
-      // const derivedTimeline =
-      //   data.milestones.length === 1
-      //     ? data.milestones[0].timeline
-      //     : `${data.milestones.length} milestones`;
-
-      formData.append('timeline', derivedTimeline);
-
-      // Files
       if (data.bannerFile) {
         formData.append('bannerFile', data.bannerFile);
       }
@@ -396,11 +374,7 @@ function AppContent() {
         });
       }
 
-      console.log('📦 Sending FormData with milestones');
-
       const response = await createUserProject(formData);
-
-      console.log('📦 Create Response:', response);
 
       if (response.data?.userProject) {
         const newCampaign = mapUserProjectToCampaign(
@@ -408,20 +382,16 @@ function AppContent() {
         );
 
         setCampaigns(prev => [...prev, newCampaign]);
-
         console.log('✅ Campaign created successfully:', newCampaign);
       } else {
         throw new Error('Failed to create campaign: Invalid response');
       }
-
     } catch (error) {
       console.error('Failed to create campaign:', error);
       hideLoader();
-      console.error('❌ Failed to create campaign:', error);
       throw error;
     }
   };
-
 
   const handleApproveCampaign = async (id: string) => {
     showLoader();
@@ -429,7 +399,6 @@ function AppContent() {
       console.log('✅ Approving campaign:', id);
       await verifyUserProject(id, { status: 'APPROVED' });
 
-      // Update local state
       setCampaigns(
         campaigns.map((c) => (c.id === id ? { ...c, status: 'approved' as const } : c))
       );
@@ -447,7 +416,6 @@ function AppContent() {
       console.log('❌ Rejecting campaign:', id, 'Reason:', reason);
       await verifyUserProject(id, { status: 'REJECTED', reason });
 
-      // Update local state
       setCampaigns(
         campaigns.map((c) => (c.id === id ? { ...c, status: 'rejected' as const, rejectionReason: reason } : c))
       );
@@ -465,7 +433,6 @@ function AppContent() {
       console.log('✅ Approving donor project:', id);
       await verifyDonorProject(id, { status: 'APPROVED' });
 
-      // Update local state
       setProjects(
         projects.map((p) => (p.id === id ? { ...p, status: 'approved' as const } : p))
       );
@@ -483,7 +450,6 @@ function AppContent() {
       console.log('❌ Rejecting donor project:', id, 'Reason:', reason);
       await verifyDonorProject(id, { status: 'REJECTED', reason });
 
-      // Update local state
       setProjects(
         projects.map((p) => (p.id === id ? { ...p, status: 'rejected' as const, rejectionReason: reason } : p))
       );
@@ -500,18 +466,26 @@ function AppContent() {
     setIsSubmitting(true);
     try {
       const response = await login({ email, password });
-
+      console.log("USER DATA", response.data)
       if (response.data?.user) {
-        const userData = {
+        // ✅ FIX: Include all fields required by User type
+        const userData: User = {
           id: response.data.user.id,
-          name: response.data.user.name,
           email: response.data.user.email,
           role: mapBackendRole(response.data.user.role),
+          emailVerified: response.data.user?.emailVerified || false,
+          clubIds: response.data.user?.clubIds || [],
+          createdAt: response.data.user.createdAt || new Date().toISOString(),
+          updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+          isClubPresident: response.data.user?.isClubPresident || false,
+          isClubMember: response.data.user?.isClubMember || false,
+          clubVerified: response.data.user?.clubVerified || false,
+          name: response.data.user.name,
+          studentVerified: response.data.user?.studentVerified,
         };
 
         setUser(userData);
 
-        // Navigate based on role from backend, not from form
         if (userData.role === 'student') {
           navigate('/dashboard');
         } else if (userData.role === 'donor') {
@@ -539,7 +513,6 @@ function AppContent() {
     showLoader();
     setIsSubmitting(true);
     try {
-      console.log('🔐 Register payload:', { name, email, password, role: mapFrontendRole(role), organizationName: institution });
       const response = await register({
         name,
         email,
@@ -547,26 +520,30 @@ function AppContent() {
         role: mapFrontendRole(role),
         organizationName: institution,
       });
-      console.log('🔐 Register response:', response);
 
-      // Check if email verification is required
       if (response.message && response.message.includes('verification email')) {
-        // Show check email page
         setSignupEmail(email);
         setShowCheckEmail(true);
         navigate('/check-email');
       } else if (response.data?.user) {
-        // If no email verification required (already verified or instant login)
-        const userData = {
+        // ✅ FIX: Include all fields required by User type
+        const userData: User = {
           id: response.data.user.id,
-          name: response.data.user.name,
           email: response.data.user.email,
           role: mapBackendRole(response.data.user.role),
+          emailVerified: response.data.user.emailVerified || false,
+          clubIds: response.data.user?.clubIds || [],
+          createdAt: response.data.user.createdAt || new Date().toISOString(),
+          updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+          isClubPresident: response.data.user?.isClubPresident || false,
+          isClubMember: response.data.user?.isClubMember || false,
+          clubVerified: response.data.user?.clubVerified || false,
+          name: response.data.user.name,
+          studentVerified: response.data.user?.studentVerified,
         };
 
         setUser(userData);
 
-        // Navigate based on role
         if (userData.role === 'student') {
           navigate('/dashboard');
         } else if (userData.role === 'donor') {
@@ -586,19 +563,10 @@ function AppContent() {
 
   const handleGoogleAuth = async (role: 'student' | 'donor') => {
     showLoader();
-    console.log('🔐 Google Auth initiated with role:', role);
     setIsSubmitting(true);
-
     try {
-      // Map frontend role to backend role
       const backendRole = mapFrontendRole(role);
-      console.log('📤 Sending to backend with role:', backendRole);
-
-      // Initiate Google OAuth flow - this will redirect to Google
       initiateGoogleAuth(backendRole);
-
-      // Note: User will be redirected to Google, then back to our app
-      // The callback will be handled in useEffect checking for ?token= param
     } catch (error) {
       console.error('Google auth error:', error);
       hideLoader()
@@ -609,17 +577,9 @@ function AppContent() {
 
   const handleLinkedInAuth = async (role: 'student' | 'donor') => {
     showLoader();
-    console.log('🔐 LinkedIn Auth:', { role });
-
     try {
-      // Convert frontend role to backend role format
       const backendRole = role === 'student' ? 'USER' : 'DONOR';
-
-      // Initiate LinkedIn OAuth by redirecting to backend endpoint
       initiateLinkedInAuth(backendRole);
-
-      // Note: After LinkedIn authentication, the backend will redirect back to the frontend
-      // with a token, and the OAuth callback handling in useEffect will process it
     } catch (error) {
       console.error('LinkedIn auth error:', error);
       hideLoader();
@@ -628,20 +588,9 @@ function AppContent() {
   };
 
   const handleForgotPassword = async (email: string) => {
-    console.log('🔑 Forgot Password:', { email });
-
     try {
-      // Mock forgot password - Replace with actual implementation
-      // This would typically:
-      // 1. Verify email exists in database
-      // 2. Generate password reset token
-      // 3. Send email with reset link
-
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-
       console.log(`✅ Password reset link sent to ${email}`);
-      // In production, the success message would be shown in the AuthPage component
     } catch (error) {
       console.error('Forgot password error:', error);
       throw new Error('Failed to send password reset email');
@@ -649,12 +598,20 @@ function AppContent() {
   };
 
   const handleEmailVerificationSuccess = (backendUser: any) => {
-    console.log('✅ Email verified, setting user:', backendUser);
-    const userData = {
+    // ✅ FIX: Include all fields required by User type
+    const userData: User = {
       id: backendUser.id,
-      name: backendUser.name,
       email: backendUser.email,
       role: mapBackendRole(backendUser.role),
+      emailVerified: backendUser.emailVerified || false,
+      clubIds: backendUser?.clubIds || [],
+      createdAt: backendUser.createdAt || new Date().toISOString(),
+      updatedAt: backendUser.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+      isClubPresident: backendUser?.isClubPresident || false,
+      isClubMember: backendUser?.isClubMember || false,
+      clubVerified: backendUser?.clubVerified || false,
+      name: backendUser.name,
+      studentVerified: backendUser?.studentVerified, 
     };
     setUser(userData);
   };
@@ -664,11 +621,8 @@ function AppContent() {
   };
 
   const handleLogout = () => {
-    console.log('👋 Logout');
-    // Clear user session and token
     apiLogout();
     setUser(null);
-    // Navigate to home
     navigate('/');
   };
 
@@ -729,8 +683,6 @@ function AppContent() {
     }
   };
 
-
-  // Project handlers for donors
   const handleCreateProject = async (data: {
     title: string;
     companyName: string;
@@ -741,9 +693,6 @@ function AppContent() {
   }) => {
     showLoader();
     try {
-      console.log('📤 Creating project with data:', data);
-
-      // Calculate timeline string from dates
       const diffTime = Math.abs(data.endDate.getTime() - data.startDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       const months = Math.ceil(diffDays / 30);
@@ -755,10 +704,8 @@ function AppContent() {
         organization: data.companyName,
         skillsRequired: data.skillsRequired,
         timeline,
-        totalBudget: 10000, // Default budget - can be added to the form if needed
+        totalBudget: 10000,
       };
-
-      console.log('📦 Sending to backend:', projectData);
 
       const response = await createDonorProject(projectData);
 
@@ -776,19 +723,10 @@ function AppContent() {
   };
 
   const handleApplyToProject = async (projectId: string, coverLetter: string, skills: string[]) => {
-    if (!user) {
-      console.error('User must be logged in to apply');
-      throw new Error('Please log in to apply');
-    }
-
-    // Check if user has already applied to this project
-    if (userApplications.includes(projectId)) {
-      console.error('User has already applied to this project');
-      throw new Error('You have already applied to this project');
-    }
+    if (!user) throw new Error('Please log in to apply');
+    if (userApplications.includes(projectId)) throw new Error('You have already applied to this project');
 
     try {
-      console.log('📝 Applying to project:', projectId);
       const response = await applyToProject({
         donorProjectId: projectId,
         coverLetter,
@@ -796,8 +734,6 @@ function AppContent() {
       });
 
       if (response.data?.application) {
-        console.log('✅ Application submitted:', response.data.application);
-        // Add the project ID to user applications
         setUserApplications([...userApplications, projectId]);
       }
     } catch (error) {
@@ -824,30 +760,12 @@ function AppContent() {
         return project;
       })
     );
-    console.log(`✅ Application ${applicationId} ${status}`);
   };
 
-  const handleUpdateBankDetails = async (bankDetails: {
-    accountHolderName: string;
-    bankName: string;
-    accountNumber: string;
-    ifscCode: string;
-    accountType: 'savings' | 'current';
-    upiId?: string;
-  }) => {
-    console.log('💰 Updating bank details:', bankDetails);
-
+  const handleUpdateBankDetails = async (bankDetails: any) => {
     try {
-      // Mock API call to save bank details
       await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // In production, this would:
-      // 1. Send bank details to backend API
-      // 2. Store securely in database
-      // 3. Update user profile
-
       console.log('✅ Bank details updated successfully');
-      // You might want to update user state with bank details if needed
     } catch (error) {
       console.error('Failed to update bank details:', error);
       throw new Error('Failed to update bank details');
@@ -874,14 +792,8 @@ function AppContent() {
 
       />
 
-      {/* Floating doodle animations */}
       <FloatingDoodles count={8} />
 
-      <img
-        src="https://c.animaapp.com/mhd6hm18SGcCN3/assets/icon-1.svg"
-        alt="Icon"
-        className="caret-transparent hidden"
-      />
       <div className="relative caret-transparent z-10">
         <div className="caret-transparent">
           <div
@@ -1444,11 +1356,10 @@ function AppContent() {
       </div >
     </div >
   );
-};
+}
 
 // Main App Component with Router
 const App = () => {
-
   return (
     <Router>
       <LoaderProvider>

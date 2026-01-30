@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { VerificationModal } from './VerificationModal';
+// 🟢 Import the new restriction modal
+import { RestrictionModal } from './RestictionModal';
 import type { Campaign, User } from '../types';
 
 // --- Icons ---
@@ -94,7 +96,7 @@ const AwardIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// --- Interface Definition (Fixes Vercel Build Error) ---
+// --- Interface Definition ---
 interface StudentDashboardProps {
   studentName: string;
   campaigns: Campaign[];
@@ -123,10 +125,19 @@ export default function StudentDashboard({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('ALL');
+  
+  // Modals state
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+  const [isPresidentRestrictionOpen, setIsPresidentRestrictionOpen] = useState(false);
+
+  // 🔒 SECURITY RULES
+  // 1. To create a campaign: Verified + (President OR Member)
+  const isPartOfClub = isClubPresident || isClubMember;
+  const canCreateCampaign = studentVerified && isPartOfClub;
+
+  // 2. To become President: Must be Verified (Handled by handlePresidentClick)
 
   // Calculate stats
-  console.log(studentVerified)
   const totalRaised = campaigns
     .filter((c) => c.status === 'approved')
     .reduce((sum, c) => sum + c.currentAmount, 0);
@@ -157,6 +168,15 @@ export default function StudentDashboard({
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
+  };
+
+  // 🟢 Handler for "I'm President" Button
+  const handlePresidentClick = () => {
+    if (studentVerified) {
+      window.location.href = "/verify-president";
+    } else {
+      setIsPresidentRestrictionOpen(true);
+    }
   };
 
   return (
@@ -258,12 +278,14 @@ export default function StudentDashboard({
             {/* Hide "I'm President" and "Refer Club" if already verified or is president */}
             {!clubVerified && !isClubPresident && (
               <>
+                {/* 🟢 I'M PRESIDENT BUTTON (With check) */}
                 <button
-                  onClick={() => window.location.href = "/verify-president"}
+                  onClick={handlePresidentClick}
                   className="w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all"
                 >
                   ✓ I'm President
                 </button>
+
                 <button
                   onClick={() => window.location.href = "/refer-club"}
                   className="w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all"
@@ -272,20 +294,30 @@ export default function StudentDashboard({
                 </button>
               </>
             )}
+            
+            {/* 🟢 SIDEBAR CREATE CAMPAIGN (With check) */}
             <button
               onClick={() => {
-                if (studentVerified) {
+                if (canCreateCampaign) {
                   onCreateCampaign();
-                } else {
+                } else if (!studentVerified) {
                   alert("Please verify your student status to create a campaign.");
+                } else {
+                  alert("You must be part of a club (Member or President) to create a campaign.");
                 }
               }}
-              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold transition-transform ${studentVerified
+              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold transition-transform ${canCreateCampaign
                 ? "bg-orange-400 text-blue-900 hover:scale-105"
                 : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
-              disabled={!studentVerified}
-              title={!studentVerified ? "Please verify student status first" : ""}
+              disabled={!canCreateCampaign}
+              title={
+                !studentVerified 
+                  ? "Please verify student status first" 
+                  : !isPartOfClub 
+                    ? "Join a club to create campaigns" 
+                    : ""
+              }
             >
               <PlusIcon className="w-5 h-5" />
               Create Campaign
@@ -398,22 +430,31 @@ export default function StudentDashboard({
 
               {/* Quick Actions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* 🟢 MAIN CONTENT CREATE CAMPAIGN (With check) */}
                 <button
                   onClick={() => {
-                    if (studentVerified) {
+                    if (canCreateCampaign) {
                       onCreateCampaign();
-                    } else {
+                    } else if (!studentVerified) {
                       alert("Please verify your student status to create a campaign.");
+                    } else {
+                      alert("You must be part of a club (Member or President) to create a campaign.");
                     }
                   }}
-                  className={`bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg transition-transform text-left group ${user?.studentVerified
+                  className={`bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg transition-transform text-left group ${canCreateCampaign
                     ? "hover:scale-105 cursor-pointer"
                     : "opacity-60 cursor-not-allowed"
                     }`}
-                  disabled={!studentVerified}
-                  title={!studentVerified ? "Please verify student status first" : ""}
+                  disabled={!canCreateCampaign}
+                  title={
+                    !studentVerified 
+                      ? "Please verify student status first" 
+                      : !isPartOfClub 
+                        ? "Join a club to create campaigns" 
+                        : ""
+                  }
                 >
-                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center mb-4 transition-transform ${user?.studentVerified ? "bg-green-400 group-hover:rotate-12" : "bg-gray-300"}`}>
+                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center mb-4 transition-transform ${canCreateCampaign ? "bg-green-400 group-hover:rotate-12" : "bg-gray-300"}`}>
                     <PlusIcon className="w-8 h-8 text-blue-900" />
                   </div>
                   <h3 className="text-2xl font-bold text-blue-900 mb-2">Create New Campaign</h3>
@@ -489,20 +530,29 @@ export default function StudentDashboard({
                   <p className="text-blue-900 opacity-70 mb-4">
                     Create your first campaign to start raising funds
                   </p>
+                  {/* 🟢 EMPTY STATE CREATE CAMPAIGN (With check) */}
                   <button
                     onClick={() => {
-                      if (studentVerified) {
+                      if (canCreateCampaign) {
                         onCreateCampaign();
-                      } else {
+                      } else if (!studentVerified) {
                         alert("Please verify your student status to create a campaign.");
+                      } else {
+                        alert("You must be part of a club (Member or President) to create a campaign.");
                       }
                     }}
-                    className={`px-6 py-3 rounded-lg font-bold border-2 border-blue-900 transition-transform ${studentVerified
+                    className={`px-6 py-3 rounded-lg font-bold border-2 border-blue-900 transition-transform ${canCreateCampaign
                       ? "bg-orange-400 text-blue-900 hover:scale-105"
                       : "bg-gray-400 text-gray-700 cursor-not-allowed"
                       }`}
-                    disabled={!studentVerified}
-                    title={!studentVerified ? "Please verify student status first" : ""}
+                    disabled={!canCreateCampaign}
+                    title={
+                      !studentVerified 
+                        ? "Please verify student status first" 
+                        : !isPartOfClub 
+                          ? "Join a club to create campaigns" 
+                          : ""
+                    }
                   >
                     Create Campaign
                   </button>
@@ -573,10 +623,23 @@ export default function StudentDashboard({
         </div>
       </main>
 
+      {/* --- MODALS --- */}
+      
       <VerificationModal
         isOpen={isVerificationModalOpen}
         onClose={() => setIsVerificationModalOpen(false)}
       />
+
+      {/* 🟢 The New Restriction Modal */}
+      <RestrictionModal 
+        isOpen={isPresidentRestrictionOpen}
+        onClose={() => setIsPresidentRestrictionOpen(false)}
+        onVerify={() => {
+          setIsPresidentRestrictionOpen(false);
+          setIsVerificationModalOpen(true);
+        }}
+      />
+
     </div >
   );
 }

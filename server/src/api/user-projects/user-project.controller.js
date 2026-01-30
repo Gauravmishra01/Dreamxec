@@ -21,7 +21,6 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
     companyName,
     skillsRequired,
     goalAmount,
-    timeline,
     presentationDeckUrl,
     milestones,
   } = req.body;

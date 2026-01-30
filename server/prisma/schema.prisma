@@ -61,8 +61,8 @@ model User {
   // Campaign / club related flags
   canCreateCampaign    Boolean @default(false) // toggled when president is approved
   isClubMember         Boolean @default(false) // true when matched with ClubMember
-  clubId               String? @db.ObjectId // reference to Club.id (optional)
-  club                 Club?   @relation("UserClubRelation", fields: [clubId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clubIds              String[]  @db.ObjectId 
+  clubs                Club[]    @relation("UserClubRelation", fields: [clubIds], references: [id]) 
   hasPaid              Boolean @default(false) // payment status for campaign permission
   isClubPresident      Boolean @default(false)
   isExternallyVerified Boolean @default(false) // KYC / 3rd-party verification status
@@ -312,8 +312,8 @@ model Club {
   presidentEmail  String
   presidentUserId String? @db.ObjectId
   presidentUser   User?   @relation("ClubPresident", fields: [presidentUserId], references: [id])
-  users           User[]  @relation("UserClubRelation")
-
+  users           User[]   @relation("UserClubRelation", fields: [userIds], references: [id])
+  userIds         String[] @db.ObjectId
   members   ClubMember[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt

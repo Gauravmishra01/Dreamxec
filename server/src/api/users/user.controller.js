@@ -13,6 +13,18 @@ exports.getMe = catchAsync(async (req, res, next) => {
       name: true,
       role: true,
       emailVerified: true,
+      studentVerified: true,
+      clubVerified: true,
+      clubIds: true, 
+      clubs: {
+        select: {
+          id: true,
+          name: true,
+          college: true,
+          description: true,
+          isVerified: true 
+        }
+      },
       createdAt: true,
     },
   });

@@ -1,6 +1,13 @@
 import apiRequest, { setToken, removeToken, type ApiResponse } from './api';
 
 export interface User {
+  clubVerified: boolean;
+  isClubMember: boolean;
+  isClubPresident: boolean;
+  updatedAt: string;
+  createdAt: string;
+  clubIds: any[];
+  emailVerified: boolean;
   id: string;
   name: string;
   email: string;
