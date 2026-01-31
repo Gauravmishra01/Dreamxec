@@ -116,7 +116,11 @@ exports.approveVerification = async (req, res) => {
       // 2. Upgrade user role
       await tx.user.update({
         where: { id: verification.userId },
-        data: { role: "STUDENT_PRESIDENT" },
+        data: { 
+          role: "STUDENT_PRESIDENT",
+          canCreateCampaign: true,
+          clubVerified: true
+        },
       });
 
       // 3. Create & verify club
@@ -127,6 +131,9 @@ exports.approveVerification = async (req, res) => {
           description: verification.clubDescription,
           presidentEmail: verification.studentEmail,
           presidentUserId: verification.userId,
+          users:{
+            connect : { id: verification.userId}
+          }
         },
       });
 

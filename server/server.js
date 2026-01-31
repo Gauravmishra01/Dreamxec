@@ -154,7 +154,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin', adminRedisRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use("/api/club-verification", clubVerificationRoutes);
-// app.use("/api/club-referral", clubReferralRoutes);
+app.use("/api/club-referral", clubReferralRoutes);
 app.use("/api/admin/referrals", adminClubReferralRoutes);
 app.use("/api/admin/club-verifications", adminClubVerificationRoutes);
 app.use('/api/newsletter', newsletterRoutes);

@@ -119,7 +119,10 @@ exports.uploadMembers = async (req, res, next) => {
             where: { id: user.id },
             data: {
               isClubMember: true,
-              clubId,
+              clubVerified: true,
+              clubs: {
+                connect: { id: clubId }
+              }
             },
           });
           // update clubMember to link user id and isUserRegistered
@@ -163,7 +166,13 @@ exports.addSingleMember = async (req, res, next) => {
     if (user) {
       await prisma.user.update({
         where: { id: user.id },
-        data: { isClubMember: true, clubId },
+        data: {
+          isClubMember: true,
+          clubVerified: true,
+          clubs: {
+            connect: { id: clubId }
+          }
+        },
       });
       await prisma.clubMember.updateMany({
         where: { clubId, email: value[0].email },

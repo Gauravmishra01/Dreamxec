@@ -297,7 +297,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                         : 'bg-white text-dreamxec-navy border-dreamxec-navy hover:bg-dreamxec-cream'
                       }`}
                   >
-                    Studdent
+                    Student
                   </button>
                   <button
                     type="button"
