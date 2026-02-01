@@ -1,7 +1,7 @@
 export const Hero = () => {
   return (
-    <div className="relative self-center caret-transparent w-full">
-      <div className="relative inline-block w-full">
+    <div className="relative self-center caret-transparent w-full" style={{ overflow: 'visible' }}>
+      <div className="relative inline-block w-full" style={{ overflow: 'visible' }}>
         
         {/* Premium glow border - Responsive inset */}
         <div className="absolute 
@@ -25,6 +25,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300"
+          style={{
+            minWidth: '64px',
+            minHeight: '64px',
+            maxWidth: '192px',
+            maxHeight: '192px'
+          }}
         />
 
         {/* SVG Corner Accent - Bottom Right */}
@@ -40,6 +46,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300"
+          style={{
+            minWidth: '64px',
+            minHeight: '64px',
+            maxWidth: '192px',
+            maxHeight: '192px'
+          }}
         />
 
         {/* Main Heading - Fluid Typography */}
@@ -109,6 +121,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300"
+          style={{
+            minWidth: '64px',
+            minHeight: '64px',
+            maxWidth: '192px',
+            maxHeight: '192px'
+          }}
         />
 
         {/* SVG Corner Accent - Top Right */}
@@ -124,6 +142,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300"
+          style={{
+            minWidth: '64px',
+            minHeight: '64px',
+            maxWidth: '192px',
+            maxHeight: '192px'
+          }}
         />
 
       </div>

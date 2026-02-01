@@ -71,12 +71,13 @@ export default function FloatingDoodles({ count = 8 }: { count?: number }) {
           key={doodle.id}
           className="absolute"
           style={{
-            left: `${doodle.x}%`,
-            top: `${doodle.y}%`,
-            width: `${doodle.size}px`,
-            height: `${doodle.size}px`,
+            left: `clamp(5%, ${doodle.x}%, 95%)`,
+            top: `clamp(5%, ${doodle.y}%, 95%)`,
+            width: `clamp(20px, ${doodle.size}px, 40px)`,
+            height: `clamp(20px, ${doodle.size}px, 40px)`,
             animation: `floatDoodle ${doodle.duration}s ease-in-out ${doodle.delay}s infinite alternate`,
             opacity: 0.3,
+            transform: `translate(-50%, -50%)`,
           }}
         >
           {doodle.type === 'star' ? (

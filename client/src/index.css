@@ -66,7 +66,6 @@ body {
     background-size: 100% 100%;
     background-repeat: repeat;
     background-attachment: fixed;
-    overflow-x: hidden;
     overflow-y: auto;
     min-height: 100vh;
     position: relative;
@@ -570,6 +569,23 @@ body {
 
 img {
   animation: fade-in 1s ease-in forwards;
+}
+
+/* Media queries for zoom support - ensure images remain visible at different zoom levels */
+@media (min-resolution: 1.25dppx) and (max-resolution: 1.99dppx) {
+  /* 125% - 199% zoom */
+  .fixed.inset-0 {
+    /* Ensure fixed positioned elements like FloatingDoodles remain constrained */
+    max-width: 100vw;
+  }
+}
+
+@media (min-resolution: 2dppx) {
+  /* 200%+ zoom */
+  .fixed.inset-0 {
+    /* Ensure fixed positioned elements scale properly at high zoom */
+    max-width: 100vw;
+  }
 }
 
 
