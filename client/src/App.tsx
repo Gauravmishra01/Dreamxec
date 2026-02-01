@@ -69,16 +69,7 @@ function AppContent() {
   const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
 
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
-
-  useEffect(() => {
-    const initialize = async () => {
-      setTimeout(() => {
-        setIsInitialLoading(false);
-      }, 2500);
-    };
-    initialize();
-  }, []);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
 
   // Handle OAuth callbacks (Google and LinkedIn)
   useEffect(() => {
