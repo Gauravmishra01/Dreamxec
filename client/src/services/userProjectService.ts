@@ -1,8 +1,8 @@
-import apiRequest, { type ApiResponse } from './api';
-import axios from 'axios';
+import apiRequest, { type ApiResponse } from "./api";
+import axios from "axios";
 
 /* =========================================================
-   Milestone Type (Campaign-only)
+   TYPES
 ========================================================= */
 
 export interface Milestone {
@@ -13,46 +13,69 @@ export interface Milestone {
   description?: string;
 }
 
+export interface TeamMember {
+  name: string;
+  role: string;
+  image?: string; // Cloudinary URL from backend
+}
+
+export interface FAQ {
+  question: string;
+  answer: string;
+}
+
 /* =========================================================
-   UserProject (Campaign)
+   USER PROJECT (CAMPAIGN)
 ========================================================= */
 
 export interface UserProject {
   id: string;
+
+  /* BASIC */
   title: string;
   description: string;
   companyName: string;
+
   skillsRequired: string[];
 
   goalAmount: number;
   amountRaised: number;
 
+  /* MEDIA */
   imageUrl?: string;
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  /* NEW FIELDS */
+  campaignType?: "INDIVIDUAL" | "TEAM";
+  teamMembers?: TeamMember[];
+  faqs?: FAQ[];
+  youtubeUrl?: string;
+
+  /* STATUS */
+  status: "PENDING" | "APPROVED" | "REJECTED";
   rejectionReason?: string;
 
+  /* OWNER */
   userId: string;
   bankAccountId?: string | null;
 
   createdAt: string;
   updatedAt: string;
 
-  // ✅ NEW (campaign-only)
+  /* TIMELINE */
   milestones: Milestone[];
 }
 
 /* =========================================================
-   Create / Update Payloads (Campaign-only)
+   CREATE PAYLOAD
 ========================================================= */
 
 export interface CreateUserProjectData {
-  id?: string;
   title: string;
   description: string;
   companyName: string;
+
   skillsRequired: string[];
   goalAmount: number;
 
@@ -60,14 +83,24 @@ export interface CreateUserProjectData {
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
-  // ✅ NEW
+  /* NEW */
+  campaignType?: "INDIVIDUAL" | "TEAM";
+  teamMembers?: TeamMember[];
+  faqs?: FAQ[];
+  youtubeUrl?: string;
+
   milestones: Milestone[];
 }
+
+/* =========================================================
+   UPDATE PAYLOAD
+========================================================= */
 
 export interface UpdateUserProjectData {
   title?: string;
   description?: string;
   companyName?: string;
+
   skillsRequired?: string[];
   goalAmount?: number;
 
@@ -75,47 +108,52 @@ export interface UpdateUserProjectData {
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
-  // ✅ NEW (editable before approval)
+  campaignType?: "INDIVIDUAL" | "TEAM";
+  teamMembers?: TeamMember[];
+  faqs?: FAQ[];
+  youtubeUrl?: string;
+
   milestones?: Milestone[];
 }
 
 /* =========================================================
-   API Calls (unchanged endpoints)
+   API CALLS
 ========================================================= */
 
-// Get all public campaigns
+// PUBLIC CAMPAIGNS
 export const getPublicUserProjects = async (): Promise<
   ApiResponse<{ userProjects: UserProject[] }>
 > => {
-  return apiRequest('/user-projects/public', {
-    method: 'GET',
+  return apiRequest("/user-projects/public", {
+    method: "GET",
   });
 };
 
-// Get specific campaign
+// SINGLE CAMPAIGN
 export const getUserProject = async (
   id: string
 ): Promise<ApiResponse<{ userProject: UserProject }>> => {
   return apiRequest(`/user-projects/${id}`, {
-    method: 'GET',
+    method: "GET",
   });
 };
 
-// Get my campaigns
+// MY CAMPAIGNS
 export const getMyUserProjects = async (): Promise<
   ApiResponse<{ userProjects: UserProject[] }>
 > => {
-  return apiRequest('/user-projects/my', {
-    method: 'GET',
+  return apiRequest("/user-projects/my", {
+    method: "GET",
   });
 };
 
-// Create campaign (FormData for files + milestones JSON)
+// CREATE CAMPAIGN
 export const createUserProject = async (
   data: FormData | CreateUserProjectData
 ): Promise<ApiResponse<{ userProject: UserProject }>> => {
+
   if (data instanceof FormData) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/user-projects`,
@@ -123,7 +161,7 @@ export const createUserProject = async (
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -131,29 +169,29 @@ export const createUserProject = async (
     return response.data;
   }
 
-  // JSON fallback (rare)
-  return apiRequest('/user-projects', {
-    method: 'POST',
+  // JSON fallback
+  return apiRequest("/user-projects", {
+    method: "POST",
     body: JSON.stringify(data),
   });
 };
 
-// Update campaign
+// UPDATE CAMPAIGN
 export const updateUserProject = async (
   id: string,
   data: UpdateUserProjectData
 ): Promise<ApiResponse<{ userProject: UserProject }>> => {
   return apiRequest(`/user-projects/${id}`, {
-    method: 'PUT',
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };
 
-// Delete campaign
+// DELETE CAMPAIGN
 export const deleteUserProject = async (
   id: string
 ): Promise<ApiResponse<null>> => {
   return apiRequest(`/user-projects/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
 };

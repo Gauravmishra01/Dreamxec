@@ -51,10 +51,11 @@ router.post(
   '/',
   restrictTo('USER', 'STUDENT_PRESIDENT'),           // 1. Must be a User
   validateCampaignEligibility,  // 2. 🛡️ Strict Flow Check (Student -> Club -> Verified)
-  upload.fields([
-    { name: 'bannerFile', maxCount: 1 },
-    { name: 'mediaFiles', maxCount: 10 },
-  ]),
+ upload.fields([
+  { name: "bannerFile", maxCount: 1 },
+  { name: "mediaFiles", maxCount: 10 },
+  { name: "teamImages", maxCount: 20 }, // 🟢 NEW
+]),
   validate(createUserProjectSchema),
   createUserProject
 );

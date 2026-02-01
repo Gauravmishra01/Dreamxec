@@ -7,43 +7,107 @@ const uploadToCloudinary = require('../../utils/uploadToCloudinary');
    CREATE USER PROJECT (WITH MILESTONES)
 ====================================================== */
 exports.createUserProject = catchAsync(async (req, res, next) => {
-  // 1. Authorization
+
+  /* =============================
+     AUTH CHECK
+  ============================== */
   if (!req.user.studentVerified) {
     return next(
       new AppError('You must be a verified student to create a campaign.', 403)
     );
   }
 
-  // 2. Destructure FIRST
+  /* =============================
+     BODY FIELDS
+  ============================== */
   const {
     title,
     description,
     companyName,
     skillsRequired,
+    campaignType = "INDIVIDUAL",
+    teamMembers,
+    faqs,
+    youtubeUrl,
     goalAmount,
     presentationDeckUrl,
     milestones,
   } = req.body;
 
-  /* -------------------------
+  /* =============================
+     PARSE TEAM MEMBERS
+  ============================== */
+  let parsedTeamMembers = [];
+
+  if (teamMembers) {
+    try {
+      parsedTeamMembers =
+        typeof teamMembers === "string"
+          ? JSON.parse(teamMembers)
+          : teamMembers;
+    } catch {
+      return next(new AppError("Invalid teamMembers JSON", 400));
+    }
+  }
+
+  // If team campaign → must have members
+  if (campaignType === "TEAM" && parsedTeamMembers.length === 0) {
+    return next(
+      new AppError("Team campaigns must include team members", 400)
+    );
+  }
+
+  /* =============================
+     PARSE FAQS
+  ============================== */
+  let parsedFaqs = [];
+
+  if (faqs) {
+    try {
+      parsedFaqs =
+        typeof faqs === "string"
+          ? JSON.parse(faqs)
+          : faqs;
+    } catch {
+      return next(new AppError("Invalid FAQs format", 400));
+    }
+  }
+
+  /* =============================
+     YOUTUBE SANITIZATION
+  ============================== */
+  let cleanYoutubeUrl = null;
+
+  if (youtubeUrl) {
+    const match = youtubeUrl.match(
+      /(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&\n?#]+)/
+    );
+
+    if (!match) {
+      return next(new AppError("Invalid YouTube URL", 400));
+    }
+
+    cleanYoutubeUrl = `https://www.youtube.com/watch?v=${match[1]}`;
+  }
+
+  /* =============================
      PARSE MILESTONES
-  -------------------------- */
+  ============================== */
   let parsedMilestones = [];
 
   if (milestones) {
-    if (typeof milestones === 'string') {
-      try {
-        parsedMilestones = JSON.parse(milestones);
-      } catch {
-        return next(new AppError('Invalid milestones format', 400));
-      }
-    } else {
-      parsedMilestones = milestones;
+    try {
+      parsedMilestones =
+        typeof milestones === "string"
+          ? JSON.parse(milestones)
+          : milestones;
+    } catch {
+      return next(new AppError("Invalid milestones format", 400));
     }
   }
 
   if (!Array.isArray(parsedMilestones) || parsedMilestones.length === 0) {
-    return next(new AppError('At least one milestone is required', 400));
+    return next(new AppError("At least one milestone is required", 400));
   }
 
   const totalMilestoneBudget = parsedMilestones.reduce(
@@ -53,56 +117,101 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
 
   if (totalMilestoneBudget > Number(goalAmount)) {
     return next(
-      new AppError('Total milestone budget cannot exceed goal amount', 400)
+      new AppError("Total milestone budget cannot exceed goal amount", 400)
     );
   }
 
-  /* -------------------------
-     FILE UPLOADS
-  -------------------------- */
+  /* =============================
+    FILE UPLOADS
+ ============================== */
   const uploads = {};
 
+  /* ---------- Banner ---------- */
   if (req.files?.bannerFile?.[0]) {
     uploads.imageUrl = await uploadToCloudinary(
       req.files.bannerFile[0].path,
-      'dreamxec/campaigns/images'
+      "dreamxec/campaigns/images"
     );
   }
 
+  /* ---------- Media ---------- */
   if (req.files?.mediaFiles?.length) {
     uploads.campaignMedia = await Promise.all(
       req.files.mediaFiles.map((file) => {
-        let folder = 'dreamxec/campaigns/others';
-        if (file.mimetype.startsWith('image/'))
-          folder = 'dreamxec/campaigns/images';
-        if (file.mimetype.startsWith('video/'))
-          folder = 'dreamxec/campaigns/videos';
+        const folder = file.mimetype.startsWith("image/")
+          ? "dreamxec/campaigns/images"
+          : "dreamxec/campaigns/others";
+
         return uploadToCloudinary(file.path, folder);
       })
     );
   }
 
-  /* -------------------------
+  /* =============================
+     TEAM MEMBER IMAGE UPLOAD
+  ============================== */
+
+  let finalTeamMembers = parsedTeamMembers;
+
+  if (campaignType === "TEAM") {
+
+    const teamImages = req.files?.teamImages || [];
+
+    if (teamImages.length !== parsedTeamMembers.length) {
+      return next(
+        new AppError(
+          "Each team member must have one image",
+          400
+        )
+      );
+    }
+
+    const uploadedImages = await Promise.all(
+      teamImages.map(file =>
+        uploadToCloudinary(
+          file.path,
+          "dreamxec/team-members"
+        )
+      )
+    );
+
+    finalTeamMembers = parsedTeamMembers.map((member, i) => ({
+      ...member,
+      image: uploadedImages[i],
+    }));
+  }
+
+  /* =============================
      TRANSACTION
-  -------------------------- */
+  ============================== */
   const project = await prisma.$transaction(async (tx) => {
+
     const createdProject = await tx.userProject.create({
       data: {
         title,
         description,
         companyName: companyName || null,
+
+        campaignType,
+        teamMembers: finalTeamMembers,
+        faqs: parsedFaqs,
+        youtubeUrl: cleanYoutubeUrl,
+
         skillsRequired: skillsRequired
-          ? typeof skillsRequired === 'string'
+          ? typeof skillsRequired === "string"
             ? JSON.parse(skillsRequired)
             : skillsRequired
           : [],
+
         goalAmount: Number(goalAmount),
-        timeline: typeof timeline === 'string' ? timeline : null,
+
         presentationDeckUrl: presentationDeckUrl?.trim() || null,
+
         imageUrl: uploads.imageUrl || null,
         campaignMedia: uploads.campaignMedia || [],
+
         userId: req.user.id,
-        status: 'PENDING',
+        status: "PENDING",
       },
     });
 
@@ -120,10 +229,11 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
   });
 
   res.status(201).json({
-    status: 'success',
+    status: "success",
     data: { userProject: project },
   });
 });
+
 
 
 // ... (Rest of the file: updateUserProject, deleteUserProject, etc. remains the same)

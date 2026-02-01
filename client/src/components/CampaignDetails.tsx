@@ -10,6 +10,7 @@ import { mapUserProjectToCampaign } from '../services/mappers';
 import MobileDonateCTA from './MobileDonateCTA';
 import { addRecentCampaign } from '../lib/recentCampaigns';
 import DiscoverySection from './DiscoverySection';
+import YouTube from "react-youtube";
 
 
 
@@ -29,6 +30,45 @@ export type Milestone = {
   description?: string;
 };
 
+const FAQItem = ({
+  faq,
+}: {
+  faq: { question: string; answer: string };
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border-4 border-dreamxec-navy rounded-xl overflow-hidden bg-white">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex justify-between items-center px-5 py-4 text-left font-bold text-dreamxec-navy font-display"
+      >
+        {faq.question}
+        <span className={`transition-transform ${open ? "rotate-180" : ""}`}>
+          ▼
+        </span>
+      </button>
+
+      {open && (
+        <div className="px-5 pb-4">
+          <p className="text-dreamxec-navy/80">{faq.answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+const getYoutubeId = (url?: string) => {
+  if (!url) return null;
+
+  const regExp =
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
+
+  const match = url.match(regExp);
+  return match ? match[1] : null;
+};
+
 
 export default function CampaignDetails({ currentUser, campaigns, onLogin, onLogout, onDonate }: CampaignDetailsProps) {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +79,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [donationAmount, setDonationAmount] = useState('');
   const [email, setEmail] = useState("")
   const [showDonateModal, setShowDonateModal] = useState(false);
-  type CampaignTab = 'about' | 'media' | 'presentation';
+  type CampaignTab = 'about' | 'video' | 'media' | 'presentation' | 'faqs';
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
   const showMobileCTA = campaign?.status === 'approved';
 
@@ -111,8 +151,15 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
       }
     };
 
+
     fetchCampaign();
   }, [id]);
+
+  useEffect(() => {
+    if (campaign) {
+      console.log("FAQs:", campaign.faqs); // Log FAQs to verify they are present
+    }
+  }, [campaign]);
 
   // Check Wishlist Status
   useEffect(() => {
@@ -165,6 +212,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     return (
       <div className="min-h-screen bg-dreamxec-cream">
         <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
+
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <p className="text-xl text-dreamxec-navy">Loading campaign...</p>
@@ -380,8 +428,8 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* Tabs */}
             <div className="mb-6 border-b-4 border-dreamxec-navy">
-              <div className="flex gap-2 sm:gap-4 md:gap-6 overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-                {(['about', 'media', 'presentation'] as CampaignTab[]).map((tab, index) => {
+              <div className="flex gap-2 sm:gap-4 md:gap-6  scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+                {(['about', 'video', 'media', 'presentation', 'faqs'] as const).map((tab: CampaignTab, index) => {
                   const isActive = activeTab === tab;
 
                   return (
@@ -410,7 +458,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                       {/* Active indicator with animation */}
                       {isActive && (
                         <span
-                          className="absolute left-0 -bottom-[4px] w-full h-[4px] bg-dreamxec-orange rounded-full animate-in slide-in-from-bottom-2 duration-300"
+                          className="absolute left-0 bottom-0 w-full h-[4px] bg-dreamxec-orange rounded-full animate-in  duration-300"
                         />
                       )}
 
@@ -475,6 +523,39 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 </div>
               </div>
             )}
+
+            {/* ================= YOUTUBE VIDEO TAB ================= */}
+
+            {activeTab === "video" && campaign.youtubeUrl && (
+              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
+                <div className="card-tricolor-tag"></div>
+
+                <h2 className="text-3xl font-bold text-dreamxec-navy mb-6 font-display mt-4">
+                  Campaign Video
+                </h2>
+
+                <div className="rounded-xl overflow-hidden border-4 border-dreamxec-navy shadow-lg">
+                  <YouTube
+                    videoId={getYoutubeId(campaign.youtubeUrl) || ""}
+                    className="w-full"
+                    iframeClassName="w-full aspect-video"
+                    opts={{
+                      width: "100%",
+                      height: "500",
+                      playerVars: {
+                        autoplay: 0,
+                      },
+                    }}
+                  />
+                </div>
+
+                <p className="mt-4 text-dreamxec-navy/70 text-sm text-center">
+                  Watch how this campaign makes an impact 🎯
+                </p>
+              </div>
+            )}
+
+
 
 
 
@@ -581,6 +662,26 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 )}
               </div>
             )}
+
+            {/* ================= FAQ TAB ================= */}
+            {activeTab === 'faqs' && campaign.faqs?.length > 0 && (
+              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
+                <div className="card-tricolor-tag"></div>
+
+                <h2 className="text-3xl font-bold text-dreamxec-navy mb-6 font-display mt-4">
+                  Campaign FAQs
+                </h2>
+
+                <div className="space-y-4">
+                  {campaign.faqs.map((faq, index) => (
+                    <FAQItem key={index} faq={faq} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+
+
 
 
 
@@ -806,8 +907,48 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 </div>
               </div>
 
+
+
             </div>
+
+            {campaign.campaignType === "TEAM" &&
+              campaign.teamMembers?.length > 0 && (
+                <div className="card-pastel-offwhite mt-8 rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-6">
+                  <div className="card-tricolor-tag"></div>
+
+                  <h2 className="text-2xl font-bold text-dreamxec-navy mb-6 font-display">
+                    Meet the Team
+                  </h2>
+
+                  <div className="space-y-4">
+                    {campaign.teamMembers.map((member, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-4 bg-white border-3 border-dreamxec-navy rounded-xl p-3"
+                      >
+                        <img
+                          src={member.image || "https://via.placeholder.com/100"}
+                          className="w-14 h-14 rounded-full object-cover border-2 border-dreamxec-orange"
+                        />
+
+                        <div>
+                          <p className="font-bold text-dreamxec-navy">
+                            {member.name}
+                          </p>
+                          <p className="text-sm text-dreamxec-navy/70">
+                            {member.role}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
           </div>
+          {/* 👥 TEAM SECTION BELOW FUNDING */}
+
+
         </div>
 
         <DiscoverySection
@@ -887,13 +1028,13 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               </div>
             </form>
           </div>
+
         </div>
+
 
 
       )
       }
-
-
 
       <MobileDonateCTA
         visible={showMobileCTA}

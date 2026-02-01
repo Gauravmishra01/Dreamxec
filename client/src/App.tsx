@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Toast, Toaster } from 'react-hot-toast';
+import toast, { Toast, Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import FloatingDoodles from './components/FloatingDoodles';
 import { Header } from './sections/Header';
@@ -320,78 +320,150 @@ function AppContent() {
     );
   }
 
-  const handleCreateCampaign = async (data: {
+ const handleCreateCampaign = async (data: {
+  title: string;
+  description: string;
+  clubName: string;
+  // skillsRequired?: string[];
+  goalAmount: number;
+
+  bannerFile: File | null;
+  mediaFiles: File[];
+
+  presentationDeckUrl: string;
+
+  /* NEW */
+  campaignType: "INDIVIDUAL" | "TEAM";
+
+  teamMembers?: {
+    name: string;
+    role: string;
+    image?: File | null; // FE image file
+  }[];
+
+  faqs?: {
+    question: string;
+    answer: string;
+  }[];
+
+  youtubeUrl?: string;
+
+  milestones: {
     title: string;
-    description: string;
-    clubName: string;
-    goalAmount: number;
-    bannerFile: File | null;
-    mediaFiles: File[];
-    presentationDeckUrl: string;
-    milestones: {
-      title: string;
-      timeline: string;
-      budget: string | number;
-      description?: string;
-    }[];
-  }) => {
-    showLoader();
-    try {
-      console.log('🚀 Creating Campaign with Milestones...');
+    timeline: string;
+    budget: string | number;
+    description?: string;
+  }[];
+}) => {
 
-      const formData = new FormData();
-      formData.append('title', data.title);
-      formData.append('description', data.description);
-      formData.append('companyName', data.clubName);
-      formData.append('goalAmount', data.goalAmount.toString());
-      formData.append('presentationDeckUrl', data.presentationDeckUrl || '');
+  showLoader();
 
-      // Derived timeline
-      const derivedTimeline = data.milestones.length > 0
-        ? data.milestones[0].timeline
-        : 'TBD';
-      formData.append('timeline', derivedTimeline);
+  try {
+    console.log("🚀 Creating Campaign...");
 
-      // Clean Milestones
-      const cleanMilestones = data.milestones.map(m => ({
-        ...m,
-        budget: Number(m.budget)
+    const formData = new FormData();
+
+    /* ---------------- BASIC ---------------- */
+
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("companyName", data.clubName);
+    formData.append("goalAmount", data.goalAmount.toString());
+
+    formData.append(
+      "presentationDeckUrl",
+      data.presentationDeckUrl || ""
+    );
+
+    /* ---------------- TYPE ---------------- */
+
+    formData.append("campaignType", data.campaignType);
+
+    /* ---------------- YOUTUBE ---------------- */
+
+    if (data.youtubeUrl) {
+      formData.append("youtubeUrl", data.youtubeUrl);
+    }
+
+    /* ---------------- FAQS ---------------- */
+
+    if (data.faqs?.length) {
+      formData.append("faqs", JSON.stringify(data.faqs));
+    }
+
+    /* ---------------- MILESTONES ---------------- */
+
+    const cleanMilestones = data.milestones.map(m => ({
+      ...m,
+      budget: Number(m.budget),
+    }));
+
+    formData.append(
+      "milestones",
+      JSON.stringify(cleanMilestones)
+    );
+
+    /* ---------------- TEAM ---------------- */
+
+    if (
+      data.campaignType === "TEAM" &&
+      data.teamMembers?.length
+    ) {
+      // Send team data WITHOUT images
+      const teamData = data.teamMembers.map(m => ({
+        name: m.name,
+        role: m.role,
       }));
 
-      formData.append('milestones', JSON.stringify(cleanMilestones));
+      formData.append(
+        "teamMembers",
+        JSON.stringify(teamData)
+      );
 
-      if (data.bannerFile) {
-        formData.append('bannerFile', data.bannerFile);
-      }
-
-      if (data.presentationDeckUrl) {
-        formData.append('presentationDeckUrl', data.presentationDeckUrl);
-      }
-
-      if (data.mediaFiles && data.mediaFiles.length > 0) {
-        data.mediaFiles.forEach((file) => {
-          formData.append('mediaFiles', file);
-        });
-      }
-
-      const response = await createUserProject(formData);
-
-      if (response.data?.userProject) {
-        const newCampaign = mapUserProjectToCampaign(
-          response.data.userProject
-        );
-
-        setCampaigns(prev => [...prev, newCampaign]);
-        console.log('✅ Campaign created successfully:', newCampaign);
-      } else {
-        throw new Error('Failed to create campaign: Invalid response');
-      }
-    } catch (error) {
-      console.error('Failed to create campaign:', error);
-      hideLoader();
-      throw error;
+      // Send images separately
+      data.teamMembers.forEach(member => {
+        if (member.image) {
+          formData.append("teamImages", member.image);
+        }
+      });
     }
-  };
+
+    /* ---------------- FILES ---------------- */
+
+    if (data.bannerFile) {
+      formData.append("bannerFile", data.bannerFile);
+    }
+
+    if (data.mediaFiles?.length) {
+      data.mediaFiles.forEach(file => {
+        formData.append("mediaFiles", file);
+      });
+    }
+
+    /* ---------------- API CALL ---------------- */
+
+    const response = await createUserProject(formData);
+
+    if (response.data?.userProject) {
+      const newCampaign = mapUserProjectToCampaign(
+        response.data.userProject
+      );
+
+      setCampaigns(prev => [...prev, newCampaign]);
+
+      console.log("✅ Campaign created:", newCampaign);
+    } else {
+      throw new Error("Invalid response");
+    }
+
+  } catch (error) {
+    console.error("❌ Campaign creation failed:", error);
+    throw error;
+  } finally {
+    hideLoader();
+  }
+};
+
 
   const handleApproveCampaign = async (id: string) => {
     showLoader();
@@ -611,7 +683,7 @@ function AppContent() {
       isClubMember: backendUser?.isClubMember || false,
       clubVerified: backendUser?.clubVerified || false,
       name: backendUser.name,
-      studentVerified: backendUser?.studentVerified, 
+      studentVerified: backendUser?.studentVerified,
     };
     setUser(userData);
   };
@@ -669,7 +741,7 @@ function AppContent() {
             }
           );
 
-          alert("🎉 Donation successful!");
+          toast.success("🎉 Donation successful!");
         },
         theme: { color: "#0B9C2C" },
       };
@@ -679,7 +751,7 @@ function AppContent() {
     } catch (err) {
       console.error(err);
       hideLoader();
-      alert("❌ Donation failed");
+      toast.error("❌ Donation failed");
     }
   };
 
@@ -1009,7 +1081,7 @@ function AppContent() {
                                         allCampaigns={campaigns}
                                         pendingProjects={pendingProjects}
                                         allProjects={projects}
-                                    
+
                                         onApprove={handleApproveCampaign}
                                         onReject={handleRejectCampaign}
                                         onApproveProject={handleApproveProject}

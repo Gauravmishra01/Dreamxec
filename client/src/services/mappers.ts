@@ -92,19 +92,37 @@ export const mapUserProjectToCampaign = (
     id: userProject.id,
     title: userProject.title,
     description: userProject.description,
+
     clubName: userProject.companyName,
+
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
+
     status: mapBackendStatus(userProject.status),
+
     createdBy: userProject.userId,
+
     imageUrl: userProject.imageUrl,
     campaignMedia: userProject.campaignMedia || [],
+
     presentationDeckUrl: userProject.presentationDeckUrl || null,
-    category: 'Technology',
+
+    category: "Technology",
+
     createdAt: new Date(userProject.createdAt),
+
     rejectionReason: userProject.rejectionReason,
 
-    // Campaign-only
+    /* ✅ NEW FIELDS */
+
+    campaignType: userProject.campaignType || "INDIVIDUAL",
+
+    teamMembers: userProject.teamMembers || [],
+
+    faqs: userProject.faqs || [],
+
+    youtubeUrl: userProject.youtubeUrl || undefined,
+
     milestones,
   };
 };

@@ -3,33 +3,52 @@
 import type { Milestone } from "../components/CampaignDetails";
 
 /* =========================================================
+   Campaign Sub-Types
+========================================================= */
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  image?: string; // Cloudinary URL
+}
+
+export interface FAQ {
+  question: string;
+  answer: string;
+}
+
+/* =========================================================
    User & Roles
 ========================================================= */
 
 export type UserRole =
-  | 'student'
-  | 'admin'
-  | 'donor'
-  | 'DONOR'
-  | 'STUDENT_PRESIDENT';
+  | "student"
+  | "admin"
+  | "donor"
+  | "DONOR"
+  | "STUDENT_PRESIDENT";
 
 export interface User {
   id: string;
   email: string;
   name: string;
   role: UserRole;
+
   emailVerified: boolean;
   studentVerified: boolean;
+
   isClubPresident: boolean;
   isClubMember: boolean;
   clubVerified: boolean;
+
   clubIds: string[];
+
   createdAt: string;
   updatedAt: string;
 }
 
 /* =========================================================
-   Campaign Types
+   Campaign Types (User Projects)
 ========================================================= */
 
 export interface Campaign {
@@ -37,10 +56,22 @@ export interface Campaign {
   title: string;
   clubName: string;
   description: string;
+
   goalAmount: number;
   currentAmount: number;
-  status: 'approved' | 'pending' | 'rejected';
+
+  status: "approved" | "pending" | "rejected";
   createdAt: Date;
+
+  /* ✅ NEW BACKEND FIELDS */
+
+  campaignType?: "INDIVIDUAL" | "TEAM";
+
+  teamMembers?: TeamMember[];
+
+  faqs?: FAQ[];
+
+  youtubeUrl?: string;
 
   category?: string;
   imageUrl?: string;
@@ -49,6 +80,7 @@ export interface Campaign {
 
   createdBy?: string;
   userId?: string;
+
   rejectionReason?: string;
 
   // ✅ Milestone-based timeline
@@ -56,7 +88,7 @@ export interface Campaign {
 }
 
 /* =========================================================
-   Project Types (Donor)
+   Donor Project Types
 ========================================================= */
 
 export interface Project {
@@ -64,28 +96,37 @@ export interface Project {
   title: string;
   companyName: string;
   description: string;
+
   skillsRequired: string[];
+
   timeline: {
     startDate: Date;
     endDate: Date;
   };
-  createdBy: string; // Donor ID
+
+  createdBy: string;
   createdAt: Date;
+
   interestedUsers: ProjectApplication[];
-  status: 'approved' | 'pending' | 'rejected';
+
+  status: "approved" | "pending" | "rejected";
   rejectionReason?: string;
 }
 
 export interface ProjectApplication {
   id: string;
   projectId: string;
+
   userId: string;
   userName: string;
   userEmail: string;
+
   coverLetter: string;
   skills: string[];
-  status: 'pending' | 'accepted' | 'rejected';
+
+  status: "pending" | "accepted" | "rejected";
   rejectionReason?: string;
+
   appliedAt: Date;
 }
 
