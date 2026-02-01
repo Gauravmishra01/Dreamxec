@@ -1,25 +1,32 @@
-import { useState } from 'react';
-import { subscribeToNewsletter } from '../../../services/newsletterService';
+import { useState } from "react";
+import { subscribeToNewsletter } from "../../../services/newsletterService";
 
 export const DesktopFooter = () => {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [message, setMessage] = useState("");
 
   const handleSubscribe = async () => {
     if (!email) return;
-    setStatus('loading');
-    setMessage('');
+    setStatus("loading");
+    setMessage("");
 
     try {
-      await subscribeToNewsletter(email, 'footer');
-      setStatus('success');
-      setMessage('Subscribed successfully!');
-      setEmail('');
-      setTimeout(() => setStatus('idle'), 3000);
-    } catch (error: any) {
-      setStatus('error');
-      setMessage(error.message || 'Failed to subscribe');
+      await subscribeToNewsletter(email, "footer");
+      setStatus("success");
+      setMessage("Subscribed successfully!");
+      setEmail("");
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (error) {
+      setStatus("error");
+
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("Failed to subscribe");
+      }
     }
   };
 
@@ -28,11 +35,10 @@ export const DesktopFooter = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         {/* 4-Column Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-12 border-b border-dreamxec-orange/20">
-
           {/* Column 1: DreamXec Brand & Mission */}
           <div className="space-y-6">
             <img
-              src='/assets/dx-logo-2.png'
+              src="/assets/dx-logo-2.png"
               alt="DreamXec Logo"
               className="h-12 w-auto object-contain"
             />
@@ -40,7 +46,10 @@ export const DesktopFooter = () => {
               Research Karega India Toh Badhega India
             </h3>
             <p className="text-dreamxec-cream text-sm leading-relaxed">
-              DreamXec is India's crowdfunding platform dedicated to turning student projects into real-world innovations. We connect the brightest young minds with the capital and mentorship they need to build a self-reliant future.
+              DreamXec is India's crowdfunding platform dedicated to turning
+              student projects into real-world innovations. We connect the
+              brightest young minds with the capital and mentorship they need to
+              build a self-reliant future.
             </p>
 
             {/* Newsletter Signup */}
@@ -54,28 +63,33 @@ export const DesktopFooter = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  disabled={status === 'loading' || status === 'success'}
+                  disabled={status === "loading" || status === "success"}
                   className="flex-1 px-4 py-2 bg-dreamxec-cream/10 border border-dreamxec-orange/30 text-dreamxec-cream placeholder-dreamxec-cream/50 focus:outline-none focus:border-dreamxec-orange transition-colors disabled:opacity-50"
-                  onKeyDown={(e) => e.key === 'Enter' && handleSubscribe()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
                 />
                 <button
                   onClick={handleSubscribe}
-                  disabled={status === 'loading' || status === 'success'}
+                  disabled={status === "loading" || status === "success"}
                   className="px-6 py-2 bg-dreamxec-orange hover:bg-dreamxec-green text-white font-semibold transition-all duration-300 whitespace-nowrap disabled:bg-gray-500"
                 >
-                  {status === 'loading' ? '...' : status === 'success' ? '✔' : 'Subscribe'}
+                  {status === "loading"
+                    ? "..."
+                    : status === "success"
+                      ? "✔"
+                      : "Subscribe"}
                 </button>
               </div>
 
-              {status === 'error' && (
+              {status === "error" && (
                 <p className="text-red-400 text-xs mt-1">{message}</p>
               )}
-              {status === 'success' && (
+              {status === "success" && (
                 <p className="text-green-400 text-xs mt-1">{message}</p>
               )}
 
               <p className="text-dreamxec-cream/70 text-xs">
-                Get weekly briefs on India's most promising student projects, success stories, and funding opportunities.
+                Get weekly briefs on India's most promising student projects,
+                success stories, and funding opportunities.
               </p>
             </div>
           </div>
@@ -87,7 +101,10 @@ export const DesktopFooter = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="/start-project" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 font-semibold text-base">
+                <a
+                  href="/start-project"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 font-semibold text-base"
+                >
                   Start a Project →
                 </a>
               </li>
@@ -97,12 +114,18 @@ export const DesktopFooter = () => {
                 </a>
               </li> */}
               <li>
-                <a href="/success-stories" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/success-stories"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Success Stories
                 </a>
               </li>
               <li>
-                <a href="/eligibility" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/eligibility"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Project Eligibility & Guidelines
                 </a>
               </li>
@@ -114,7 +137,7 @@ export const DesktopFooter = () => {
             </ul>
             <div className="space-y-6 pt-20">
               <img
-                src='/assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg'
+                src="/assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg"
                 alt="DreamXec Logo"
                 className="h-auto w-auto object-contain"
               />
@@ -128,22 +151,34 @@ export const DesktopFooter = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="/fund-innovation" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 font-semibold text-base">
+                <a
+                  href="/fund-innovation"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 font-semibold text-base"
+                >
                   Fund Innovation →
                 </a>
               </li>
               <li>
-                <a href="/how-it-works/donors" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/how-it-works/donors"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   How It Works: For Donors
                 </a>
               </li>
               <li>
-                <a href="/why-donate" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/why-donate"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Why Donate?
                 </a>
               </li>
               <li>
-                <a href="/corporate-partnerships" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/corporate-partnerships"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Corporate & CSR Partnerships
                 </a>
               </li>
@@ -153,14 +188,17 @@ export const DesktopFooter = () => {
                 </a>
               </li> */}
               <li>
-                <a href="/become-mentor" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/become-mentor"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Become a Mentor
                 </a>
               </li>
             </ul>
             <div className="space-y-6 pt-12">
               <img
-                src='/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg'
+                src="/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg"
                 alt="DreamXec Logo"
                 className="h-auto w-auto object-contain"
               />
@@ -174,17 +212,26 @@ export const DesktopFooter = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="/about" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/about"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   About Us
                 </a>
               </li>
               <li>
-                <a href="/perfect-storm" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/perfect-storm"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   The Perfect Storm for Innovation
                 </a>
               </li>
               <li>
-                <a href="/press" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/press"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Press & Media
                 </a>
               </li>
@@ -194,25 +241,30 @@ export const DesktopFooter = () => {
                 </a>
               </li> */}
               <li>
-                <a href="/contact" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/contact"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="/faq" className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm">
+                <a
+                  href="/faq"
+                  className="text-dreamxec-cream hover:text-dreamxec-orange transition-colors duration-300 text-sm"
+                >
                   FAQ
                 </a>
               </li>
             </ul>
             <div className="space-y-6 pt-12">
               <img
-                src='/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg'
+                src="/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
                 alt="DreamXec Logo"
                 className="h-auto w-auto object-contain"
               />
             </div>
           </div>
-
         </div>
 
         {/* Sub-Footer: Final Trust Layer */}
@@ -220,7 +272,8 @@ export const DesktopFooter = () => {
           {/* Left: Copyright */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <p className="text-dreamxec-cream/70 text-sm">
-              © 2025 DreamXec Investment Consultancy Pvt. LTD. All Rights Reserved.
+              © 2025 DreamXec Investment Consultancy Pvt. LTD. All Rights
+              Reserved.
             </p>
           </div>
 
@@ -266,18 +319,22 @@ export const DesktopFooter = () => {
             </a>
           </div>
 
-
           {/* Right: Legal & Patriotic */}
           <div className="text-center lg:text-right order-3">
             <p className="text-dreamxec-cream/70 text-sm">
-              <a href="/terms-And-Conditions"
+              <a
+                href="/terms-And-Conditions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-dreamxec-orange transition-colors">
+                className="hover:text-dreamxec-orange transition-colors"
+              >
                 Terms of Service
               </a>
               {" | "}
-              <a href="/privacy-policy" className="hover:text-dreamxec-orange transition-colors">
+              <a
+                href="/privacy-policy"
+                className="hover:text-dreamxec-orange transition-colors"
+              >
                 Privacy Policy
               </a>
               <span className="inline-block ml-2">
