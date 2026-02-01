@@ -25,7 +25,7 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-cover"
+                     object-contain"
         />
 
         {/* SVG Corner Accent - Bottom Right */}
@@ -41,7 +41,7 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-cover"
+                     object-contain"
         />
 
         {/* Main Heading - Fluid Typography */}
@@ -111,7 +111,7 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-cover"
+                     object-contain"
         />
 
         {/* SVG Corner Accent - Top Right */}
@@ -127,7 +127,7 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-cover"
+                     object-contain"
         />
 
       </div>
