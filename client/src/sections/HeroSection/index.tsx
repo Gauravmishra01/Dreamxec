@@ -1,7 +1,7 @@
 import { HeroTitle } from "./components/HeroTitle";
 import { Hero } from "./components/Hero";
 import { CampaignCarousel } from "./components/CampaignCarousel";
-import { RopeDivider } from "../../components/RopeDivider";
+
 
 export const HeroSection = () => {
   const currentUser = null;
