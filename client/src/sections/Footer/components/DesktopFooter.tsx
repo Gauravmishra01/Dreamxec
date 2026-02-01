@@ -32,7 +32,7 @@ export const DesktopFooter = () => {
           {/* Column 1: DreamXec Brand & Mission */}
           <div className="space-y-6">
             <img
-              src='assets/dx-logo-2.png'
+              src='/assets/dx-logo-2.png'
               alt="DreamXec Logo"
               className="h-12 w-auto object-contain"
             />
@@ -114,7 +114,7 @@ export const DesktopFooter = () => {
             </ul>
             <div className="space-y-6 pt-20">
               <img
-                src='assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg'
+                src='/assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg'
                 alt="DreamXec Logo"
                 className="h-auto w-auto object-contain"
               />
@@ -160,7 +160,7 @@ export const DesktopFooter = () => {
             </ul>
             <div className="space-y-6 pt-12">
               <img
-                src='assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg'
+                src='/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg'
                 alt="DreamXec Logo"
                 className="h-auto w-auto object-contain"
               />
@@ -206,7 +206,7 @@ export const DesktopFooter = () => {
             </ul>
             <div className="space-y-6 pt-12">
               <img
-                src='assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg'
+                src='/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg'
                 alt="DreamXec Logo"
                 className="h-auto w-auto object-contain"
               />
