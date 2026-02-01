@@ -309,16 +309,7 @@ function AppContent() {
   const approvedProjects = projects.filter((p) => p.status === 'approved');
   const pendingProjects = projects.filter((p) => p.status === 'pending');
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-dreamxec-navy text-xl font-bold">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  // Circular spinner removed - LoadingAnimation component handles all loading states
 
  const handleCreateCampaign = async (data: {
   title: string;
