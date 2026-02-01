@@ -69,8 +69,6 @@ function AppContent() {
   const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
 
-  const [isInitialLoading, setIsInitialLoading] = useState(false);
-
   // Handle OAuth callbacks (Google and LinkedIn)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -883,19 +881,13 @@ function AppContent() {
                                 path="/"
                                 element={
                                   <>
-                                    {isInitialLoading ? (
-                                      <LoadingAnimation fullScreen={true} showDarkModeToggle={false} />
-                                    ) : (
-                                      <>
-                                        <Header
-                                          currentUser={user}
-                                          onLogin={handleLoginClick}
-                                          onLogout={handleLogout}
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
 
-                                        />
-                                        <Main />
-                                      </>
-                                    )}
+                                    />
+                                    <Main />
                                   </>
                                 }
                               />
