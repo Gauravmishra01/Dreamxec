@@ -24,7 +24,7 @@ export const Hero = () => {
                      xl:-top-6 xl:-left-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-all duration-300
+                     transition-opacity duration-300
                      object-contain"
         />
 
@@ -40,7 +40,7 @@ export const Hero = () => {
                      xl:-bottom-6 xl:-right-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-all duration-300
+                     transition-opacity duration-300
                      object-contain"
         />
 
@@ -110,7 +110,7 @@ export const Hero = () => {
                      xl:-bottom-6 xl:-left-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-all duration-300
+                     transition-opacity duration-300
                      object-contain"
         />
 
@@ -126,7 +126,7 @@ export const Hero = () => {
                      xl:-top-6 xl:-right-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-all duration-300
+                     transition-opacity duration-300
                      object-contain"
         />
 
