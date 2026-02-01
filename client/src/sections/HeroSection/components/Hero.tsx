@@ -1,10 +1,4 @@
 export const Hero = () => {
-  // Shared styles for decorative images to improve rendering performance
-  const decorativeImageStyle = {
-    transform: 'translateZ(0)',
-    backfaceVisibility: 'hidden' as const
-  };
-
   return (
     <div className="relative self-center caret-transparent w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 overflow-visible">
       <div className="relative inline-block w-full overflow-visible hero-decorations-container">
@@ -32,9 +26,7 @@ export const Hero = () => {
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
                      object-contain
-                     will-change-transform
                      hero-decoration-image"
-          style={decorativeImageStyle}
         />
 
         {/* SVG Corner Accent - Bottom Right */}
@@ -51,9 +43,7 @@ export const Hero = () => {
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
                      object-contain
-                     will-change-transform
                      hero-decoration-image"
-          style={decorativeImageStyle}
         />
 
         {/* Main Heading - Fluid Typography */}
@@ -124,9 +114,7 @@ export const Hero = () => {
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
                      object-contain
-                     will-change-transform
                      hero-decoration-image"
-          style={decorativeImageStyle}
         />
 
         {/* SVG Corner Accent - Top Right */}
@@ -143,9 +131,7 @@ export const Hero = () => {
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
                      object-contain
-                     will-change-transform
                      hero-decoration-image"
-          style={decorativeImageStyle}
         />
 
       </div>

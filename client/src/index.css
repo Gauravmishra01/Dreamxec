@@ -584,7 +584,7 @@ img {
   
   /* GPU acceleration for smooth rendering */
   transform: translateZ(0);
-  will-change: transform, opacity;
+  will-change: opacity;
 }
 
 
