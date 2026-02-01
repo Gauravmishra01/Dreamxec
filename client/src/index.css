@@ -572,6 +572,36 @@ img {
   animation: fade-in 1s ease-in forwards;
 }
 
+/* Zoom-level specific adjustments for side images */
+@media (min-resolution: 1.25dppx) {
+  /* For 125% zoom and above */
+  .absolute[class*="-top-"],
+  .absolute[class*="-bottom-"],
+  .absolute[class*="-left-"],
+  .absolute[class*="-right-"] {
+    transform: scale(0.95) translateZ(0);
+  }
+}
+
+@media (min-resolution: 1.5dppx) {
+  /* For 150% zoom and above */
+  .absolute[class*="-top-"],
+  .absolute[class*="-bottom-"],
+  .absolute[class*="-left-"],
+  .absolute[class*="-right-"] {
+    transform: scale(0.9) translateZ(0);
+  }
+}
+
+@media (min-resolution: 2dppx) {
+  /* For 200% zoom and above */
+  .absolute[class*="-top-"],
+  .absolute[class*="-bottom-"],
+  .absolute[class*="-left-"],
+  .absolute[class*="-right-"] {
+    transform: scale(0.85) translateZ(0);
+  }
+}
 
 
 @layer base {

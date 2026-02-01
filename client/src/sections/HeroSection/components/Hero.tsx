@@ -1,7 +1,7 @@
 export const Hero = () => {
   return (
-    <div className="relative self-center caret-transparent w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-      <div className="relative inline-block w-full">
+    <div className="relative self-center caret-transparent w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 overflow-visible">
+      <div className="relative inline-block w-full overflow-visible">
         
         {/* Premium glow border - Responsive inset */}
         <div className="absolute 
@@ -25,7 +25,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-contain"
+                     object-contain
+                     will-change-transform"
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
         />
 
         {/* SVG Corner Accent - Bottom Right */}
@@ -41,7 +46,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-contain"
+                     object-contain
+                     will-change-transform"
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
         />
 
         {/* Main Heading - Fluid Typography */}
@@ -111,7 +121,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-contain"
+                     object-contain
+                     will-change-transform"
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
         />
 
         {/* SVG Corner Accent - Top Right */}
@@ -127,7 +142,12 @@ export const Hero = () => {
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
                      transition-opacity duration-300
-                     object-contain"
+                     object-contain
+                     will-change-transform"
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
         />
 
       </div>

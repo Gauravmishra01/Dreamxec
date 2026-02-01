@@ -7,7 +7,7 @@ export const HeroSection = () => {
   const currentUser = null;
 
   return (
-    <section className="relative w-full overflow-hidden">
+    <section className="relative w-full overflow-visible">
       {/* Constrained Content */}
       <div
         className="
@@ -15,6 +15,7 @@ export const HeroSection = () => {
           pt-20 pb-12
           sm:pt-24 sm:pb-14
           md:pt-28 md:pb-16
+          overflow-visible
         "
       >
         {/* Illustration */}
