@@ -1,6 +1,6 @@
 export const Hero = () => {
   return (
-    <div className="relative self-center caret-transparent w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
+    <div className="relative self-center caret-transparent w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 overflow-hidden">
       <div className="relative inline-block w-full">
         
         {/* Premium glow border - Responsive inset */}
@@ -17,14 +17,14 @@ export const Hero = () => {
           src="/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
           alt="Top Left Corner Decoration"
           className="absolute 
-                     -top-6 -left-6 w-12 h-12
-                     sm:-top-8 sm:-left-8 sm:w-16 sm:h-16
-                     md:-top-10 md:-left-10 md:w-20 md:h-20
-                     lg:-top-12 lg:-left-12 lg:w-24 lg:h-24
-                     xl:-top-14 xl:-left-14 xl:w-28 xl:h-28
+                     top-0 left-0 w-8 h-8
+                     sm:top-0 sm:left-0 sm:w-12 sm:h-12
+                     md:-top-2 md:-left-2 md:w-16 md:h-16
+                     lg:-top-4 lg:-left-4 lg:w-20 lg:h-20
+                     xl:-top-6 xl:-left-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-opacity duration-300
+                     transition-all duration-300
                      object-contain"
         />
 
@@ -33,14 +33,14 @@ export const Hero = () => {
           src="/assets/icon-pack/DX-ILLUSTRATION-PACK/13.svg"
           alt="Bottom Right Corner Decoration"
           className="absolute 
-                     -bottom-6 -right-6 w-12 h-12
-                     sm:-bottom-8 sm:-right-8 sm:w-16 sm:h-16
-                     md:-bottom-10 md:-right-10 md:w-20 md:h-20
-                     lg:-bottom-12 lg:-right-12 lg:w-24 lg:h-24
-                     xl:-bottom-14 xl:-right-14 xl:w-28 xl:h-28
+                     bottom-0 right-0 w-8 h-8
+                     sm:bottom-0 sm:right-0 sm:w-12 sm:h-12
+                     md:-bottom-2 md:-right-2 md:w-16 md:h-16
+                     lg:-bottom-4 lg:-right-4 lg:w-20 lg:h-20
+                     xl:-bottom-6 xl:-right-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-opacity duration-300
+                     transition-all duration-300
                      object-contain"
         />
 
@@ -103,14 +103,14 @@ export const Hero = () => {
           src="/assets/icon-pack/DX-ILLUSTRATION-PACK/19.svg"
           alt="Bottom Left Corner Decoration"
           className="absolute 
-                     -bottom-6 -left-6 w-12 h-12
-                     sm:-bottom-8 sm:-left-8 sm:w-16 sm:h-16
-                     md:-bottom-10 md:-left-10 md:w-20 md:h-20
-                     lg:-bottom-12 lg:-left-12 lg:w-24 lg:h-24
-                     xl:-bottom-14 xl:-left-14 xl:w-28 xl:h-28
+                     bottom-0 left-0 w-8 h-8
+                     sm:bottom-0 sm:left-0 sm:w-12 sm:h-12
+                     md:-bottom-2 md:-left-2 md:w-16 md:h-16
+                     lg:-bottom-4 lg:-left-4 lg:w-20 lg:h-20
+                     xl:-bottom-6 xl:-left-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-opacity duration-300
+                     transition-all duration-300
                      object-contain"
         />
 
@@ -119,14 +119,14 @@ export const Hero = () => {
           src="/assets/icon-pack/DX-ILLUSTRATION-PACK/11.svg"
           alt="Top Right Corner Decoration"
           className="absolute 
-                     -top-6 -right-6 w-12 h-12
-                     sm:-top-8 sm:-right-8 sm:w-16 sm:h-16
-                     md:-top-10 md:-right-10 md:w-20 md:h-20
-                     lg:-top-12 lg:-right-12 lg:w-24 lg:h-24
-                     xl:-top-14 xl:-right-14 xl:w-28 xl:h-28
+                     top-0 right-0 w-8 h-8
+                     sm:top-0 sm:right-0 sm:w-12 sm:h-12
+                     md:-top-2 md:-right-2 md:w-16 md:h-16
+                     lg:-top-4 lg:-right-4 lg:w-20 lg:h-20
+                     xl:-top-6 xl:-right-6 xl:w-24 xl:h-24
                      pointer-events-none 
                      opacity-90 hover:opacity-100 
-                     transition-opacity duration-300
+                     transition-all duration-300
                      object-contain"
         />
 
