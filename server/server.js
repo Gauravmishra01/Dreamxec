@@ -102,7 +102,11 @@ app.use("/api", healthRoutes);
 // --------------------------------------------
 // 5️⃣ JSON BODY PARSER
 // --------------------------------------------
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf;
+  }
+}));
 
 // --------------------------------------------
 // Dev Token Generator (No change)
