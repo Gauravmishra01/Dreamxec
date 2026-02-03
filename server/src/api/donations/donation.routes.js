@@ -10,7 +10,8 @@ const router = express.Router();
 router.post('/create-order', donationController.createOrder);
 
 // Razorpay webhook
-router.post('/webhook', donationController.razorpayWebhook);
+// router.post('/webhook', donationController.razorpayWebhook);
+router.post('/verify', donationController.verifyPayment);
 
 // Logged-in donor only: show their donations
 router.get('/my', protect, donationController.getMyDonations);

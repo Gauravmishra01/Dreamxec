@@ -50,18 +50,80 @@ exports.createOrder = async (req, res, next) => {
 };
 
 
-// STEP 2: Razorpay Webhook → Verify & record donation
-exports.razorpayWebhook = async (req, res) => {
-  const signature = req.headers["x-razorpay-signature"];
+
+exports.verifyPayment = async (req, res, next) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body)
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      return next(new AppError("Invalid payment signature", 400));
+    }
+
+    const order = await razorpay.orders.fetch(razorpay_order_id);
+
+    if (!order) {
+       return next(new AppError("Razorpay order not found", 404));
+    }
+
+    const { projectId, donorId, guestName, guestEmail, message, anonymous } = order.notes;
+    const amount = order.amount / 100;
+
+    const existingDonation = await prisma.donation.findFirst({
+        where: { razorpayOrderId: razorpay_order_id }
+    });
+
+
+    await prisma.$transaction(async (tx) => {
+   
+             await tx.donation.create({
+                data: {
+                  amount,
+                  message: message || "",
+                  anonymous: anonymous === "yes",
+                  userProjectId: projectId,
+                  donorId: donorId || null,
+                  guestName: guestName || "",
+                  guestEmail: req.user ? null : (guestEmail || ""),
+                  razorpayOrderId: razorpay_order_id,
+                  razorpayPaymentId: razorpay_payment_id,
+                  paymentStatus: "completed",
+                },
+              });
+        
+         
+         await tx.userProject.update({
+             where: { id: projectId },
+             data: { amountRaised: { increment: amount } }
+         });
+       });
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Verification Error:", error);
+    return next(new AppError("Payment verification failed", 500));
+  }
+};
+
+exports.razorpayWebhook = async (req, res, next) => {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature, projectId, amount } = req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
 
   const expectedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
-    .update(JSON.stringify(req.body))
+    .update(body)
     .digest("hex");
 
-  if (signature !== expectedSignature) {
+  if (razorpay_signature !== expectedSignature) {
     console.log("❌ Invalid webhook signature");
-    return res.status(400).json({ status: "invalid" });
+    return next(new AppError("Invalid webhook signature", 400));
   }
 
   const event = req.body;
@@ -78,6 +140,7 @@ exports.razorpayWebhook = async (req, res) => {
     } = payment.notes;
 
     const amount = payment.amount / 100;
+    console.log(amount)
 
     await prisma.$transaction(async (tx) => {
       // Create Donation
