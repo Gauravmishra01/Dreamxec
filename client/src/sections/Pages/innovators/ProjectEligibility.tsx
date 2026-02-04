@@ -163,11 +163,11 @@ const ProjectEligibility = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             What Projects Can We Fund? Full Eligibility Guide
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -176,8 +176,8 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Eligible Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Eligible Projects
           </h2>
 
@@ -185,12 +185,12 @@ const ProjectEligibility = () => {
             DreamXec funds student-led innovations across:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {eligibleCategories.map((cat, index) => (
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
+                className="card-glass animate-fade-in p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
                   {cat.category}
@@ -203,11 +203,11 @@ const ProjectEligibility = () => {
           </div>
 
           {/* Eligibility Requirements */}
-          <div className="max-w-6xl mx-auto mt-12">
+          <div className="max-w-7xl mx-auto mt-12">
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
               Eligibility Requirements:
             </h3>
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
               <ul className="space-y-3">
                 {eligibilityRequirements.map((req, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -221,8 +221,8 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Ineligible Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Ineligible Projects
           </h2>
 
@@ -230,12 +230,12 @@ const ProjectEligibility = () => {
             We cannot fund:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {ineligibleCategories.map((cat, index) => (
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
+                className="card-glass animate-fade-in p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
                   ❌ {cat.title}
@@ -249,17 +249,17 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Review & Approval Process */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Review & Approval Process
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {reviewProcess.map((item, index) => (
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
+                className="card-glass animate-fade-in p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
                   {item.step}
@@ -271,8 +271,8 @@ const ProjectEligibility = () => {
             ))}
           </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="card-glass p-8 text-left">
+          <div className="max-w-7xl mx-auto">
+            <div className="card-glass p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
                 Appeal Process
               </h3>
@@ -283,11 +283,11 @@ const ProjectEligibility = () => {
           </div>
 
           {/* Review Checklist */}
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
               What We Check:
             </h3>
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
               <ul className="space-y-3">
                 {reviewChecklist.map((item, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -301,13 +301,13 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Content Rules */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Content Rules
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Videos:
               </h3>
@@ -318,7 +318,7 @@ const ProjectEligibility = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Description:
               </h3>
@@ -329,7 +329,7 @@ const ProjectEligibility = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Updates:
               </h3>
@@ -343,16 +343,16 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Legal & Compliance */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Legal & Compliance Note
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {legalItems.map((item, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {item.title}:
@@ -366,7 +366,7 @@ const ProjectEligibility = () => {
         </section>
 
         {/* FAQ Section */}
-        <section className="relative  px-4">
+        <section className="relative px-4 sm:px-6 lg:px-8">
           <div className="relative max-w-7xl mx-auto">
 
             {/* Header */}
@@ -375,7 +375,7 @@ const ProjectEligibility = () => {
                 <div className="bg-tricolor-horizontal h-3 w-48 rounded-full"></div>
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-display font-extrabold text-dreamxec-berkeley-blue mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold text-dreamxec-berkeley-blue mb-4">
                 Frequently Asked Questions
               </h2>
 
@@ -385,11 +385,11 @@ const ProjectEligibility = () => {
             </div>
 
             {/* FAQ Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
               {FAQ.map((item, index) => (
                 <div
                   key={index}
-                  className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
+                  className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:scale-105 hover:shadow-lg transition-all duration-300"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="card-tricolor-tag"></div>

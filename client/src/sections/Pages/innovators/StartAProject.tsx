@@ -58,19 +58,19 @@ const StartAProject = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-8">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero Section */}
-        <section className="relative max-w-6xl mx-auto px-4 pt-24 pb-16 text-center overflow-hidden">
+        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center overflow-hidden">
 
           {/* Background */}
           <div className="absolute inset-0 -z-10 bg-[url('/your-bg-image.png')] bg-cover bg-center" />
 
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold tracking-tight mb-6">
+          <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 animate-fade-in">
             Turn Your Innovation Into Reality
           </h1>
 
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-10">
+          <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12">
             Get funded. Get mentored. Make an impact. Launch your next big idea with
             <span className="font-semibold text-dreamxec-berkeley-blue"> DreamXec</span> —
             India’s fastest-growing student innovation platform.
@@ -94,12 +94,12 @@ const StartAProject = () => {
         {/* Divider */}
         <RopeDivider />
         {/* What is DreamXec */}
-        <section className="max-w-6xl mx-auto px-4 py-8 space-y-10">
-          <h2 className="text-dreamxec-berkeley-blue text-center text-4xl md:text-6xl font-extrabold tracking-tight">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
             What is DreamXec for Innovators?
           </h2>
 
-          <p className="text-dreamxec-navy text-base md:text-xl leading-relaxed max-w-4xl mx-auto text-center">
+          <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed max-w-4xl mx-auto text-center">
             DreamXec is a crowdfunding platform built exclusively for student innovators.
             Whether you’re working on a research project, building a tech product,
             creating a social enterprise, or shaping a startup idea — DreamXec connects
@@ -107,7 +107,7 @@ const StartAProject = () => {
           </p>
 
           {/* Feature Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-12">
             {[
               {
                 title: "Get Funded",
@@ -124,7 +124,7 @@ const StartAProject = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className="card-glass p-8 text-center space-y-3"
+                className="card-glass p-6 md:p-8 text-center space-y-3 hover:scale-105 transition-transform duration-300"
               >
                 <h3 className="text-xl font-bold text-dreamxec-berkeley-blue">
                   {item.title}
@@ -144,12 +144,12 @@ const StartAProject = () => {
         </section>
 
         {/* Why DreamXec – Whiteboard Cards */}
-        <section className="max-w-7xl mx-auto px-4 -pb-2 text-center space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             How It Works
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {columns.map((col, index) => (
               <div
                 key={index}
@@ -197,13 +197,13 @@ const StartAProject = () => {
         </section>
 
         {/* What You Get */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             What You Get
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
                 Funding (₹5K–₹50L)
               </h3>
@@ -223,8 +223,8 @@ const StartAProject = () => {
               </p>
             </div>
 
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
                 Exposure (Build Your Network)
               </h3>
               <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
@@ -237,14 +237,14 @@ const StartAProject = () => {
 
 
         {/* Eligibility Snapshot */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Eligibility Snapshot
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Who Can Apply */}
-            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-8">
+            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Who Can Apply
               </h3>
@@ -257,7 +257,7 @@ const StartAProject = () => {
             </div>
 
             {/* What Doesn't Qualify */}
-            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-8">
+            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
                 What Doesn&apos;t Qualify
               </h3>
@@ -271,12 +271,12 @@ const StartAProject = () => {
 
 
         {/* Success Metrics – CriteriaGrid Theme */}
-        <section className="w-full px-4 py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <section className="w-full px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-7xl mx-auto">
 
             {/* Section Header */}
-            <div className="col-span-1 md:col-span-2 text-center mb-12">
-              <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold tracking-tight">
+            <div className="col-span-1 md:col-span-2 text-center mb-8">
+              <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
                 What does "success" look like for us?
               </h2>
             </div>
@@ -292,7 +292,7 @@ const StartAProject = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in flex items-start gap-4 p-6"
+                className="card-glass animate-fade-in flex items-start gap-4 p-6 md:p-8 hover:shadow-lg transition-shadow duration-300"
               >
                 {/* Trophy Bullet */}
                 <span className="text-2xl mt-1">🏆</span>
@@ -311,7 +311,7 @@ const StartAProject = () => {
 
 
         {/* FAQ Section */}
-        <section className="relative py-16 px-4">
+        <section className="relative py-16 px-4 sm:px-6 lg:px-8">
           <div className="relative max-w-7xl mx-auto">
 
             {/* Header */}
@@ -330,7 +330,7 @@ const StartAProject = () => {
             </div>
 
             {/* FAQ Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
               {FAQ.map((item, index) => (
                 <div
                   key={index}
