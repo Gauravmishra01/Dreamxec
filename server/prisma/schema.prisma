@@ -229,28 +229,29 @@ model DonorProject {
 // APPLICATION MODEL
 // (students applying to donor projects)
 // -----------------------------
+// schema.prisma - Application model
 model Application {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  coverLetter     String // Why they want to join
-  skills          String[] // Skills they can contribute
+  coverLetter     String
+  skills          String[]
   status          ApplicationStatus @default(PENDING)
-  rejectionReason String? // Donor's reason for rejection
+  rejectionReason String?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 
-  // Relation to student (User)
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // ✅ Make relations SAFE for Studio
+  userId         String  @db.ObjectId
+  user           User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  donorProjectId String  @db.ObjectId
+  donorProject   DonorProject? @relation(fields: [donorProjectId], references: [id], onDelete: Cascade)
 
-  // Relation to donor project
-  donorProjectId String       @db.ObjectId
-  donorProject   DonorProject @relation(fields: [donorProjectId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, donorProjectId]) // One application per user per project
+  @@unique([userId, donorProjectId])
   @@index([userId])
   @@index([donorProjectId])
   @@index([status])
 }
+
 
 // -----------------------------
 // DONATION MODEL
@@ -261,27 +262,35 @@ model Donation {
   message   String?
   anonymous Boolean @default(false)
 
-   // ✅ NEW — identity
+  // 🔑 Logged-in identity (student / admin / donor / OAuth)
   userId String? @db.ObjectId
   user   User?   @relation(fields: [userId], references: [id])
 
-  donorId String? @db.ObjectId // for logged-in donors
+  // 👤 Custom donor profile (legacy / features)
+  donorId String? @db.ObjectId
   donor   Donor?  @relation(fields: [donorId], references: [id])
 
-  guestName  String? // NEW
-  guestEmail String? // NEW
+  // 🧾 Guest snapshot
+  guestName  String?
+  guestEmail String?
   guestPAN   String?
 
+  // 🎯 Project
   userProjectId String      @db.ObjectId
   userProject   UserProject @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
 
-  paymentStatus String @default("pending")
-
-  razorpayOrderId   String?
-  razorpayPaymentId String?
+  // 💳 Payment
+  paymentStatus       String @default("created")
+  razorpayOrderId     String? @unique
+  razorpayPaymentId   String?
 
   createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([donorId])
+  @@index([userProjectId])
 }
+
 
 // -----------------------------
 // BANK ACCOUNT MODEL

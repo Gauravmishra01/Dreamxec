@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import DonorAnalyticsChart from "./DonorAnalyticsChart";
+import DonationHeatmap from './CalendarHeatmap';
 
 // API Base URL
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -149,12 +151,96 @@ export default function DonorDashboard({
   const [donationSummary, setDonationSummary] = useState(null);
   const [rejectionInfo, setRejectionInfo] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [myDonations, setMyDonations] = useState([]);
+  const [loadingDonations, setLoadingDonations] = useState(false);
+  const [filterAmount, setFilterAmount] = useState(0);
+
+
 
   // Wishlist State
   const [wishlist, setWishlist] = useState([]);
   const [loadingWishlist, setLoadingWishlist] = useState(false);
 
   const pendingApplicationsCount = applications.filter(app => app.status === 'PENDING').length;
+
+  // ===== CORE ANALYTICS =====
+
+  const totalDonated =
+    myDonations.reduce((sum, d) => sum + d.amount, 0);
+
+  const avgDonation =
+    myDonations.length
+      ? Math.round(totalDonated / myDonations.length)
+      : 0;
+
+  const maxDonation =
+    myDonations.length
+      ? Math.max(...myDonations.map(d => d.amount))
+      : 0;
+
+  const projectsSupported =
+    new Set(myDonations.map(d => d.userProjectId)).size;
+
+  const filteredDonations =
+    myDonations.filter(d => d.amount >= filterAmount);
+
+
+  // ===== ELITE ANALYTICS =====
+
+  // 1️⃣ Most Supported Project
+  const projectTotals = {};
+
+  myDonations.forEach(d => {
+    const title = d.userProject?.title || "Unknown";
+    projectTotals[title] =
+      (projectTotals[title] || 0) + d.amount;
+  });
+
+
+
+  // 2️⃣ Monthly Donations (this month)
+  const now = new Date();
+
+  const monthlyTotal =
+    myDonations
+      .filter(d => {
+        const dt = new Date(d.createdAt);
+        return dt.getMonth() === now.getMonth() &&
+          dt.getFullYear() === now.getFullYear();
+      })
+      .reduce((s, d) => s + d.amount, 0);
+
+
+  // 3️⃣ Impact Score (fun metric)
+  const impactScore =
+    totalDonated +
+    projectsSupported * 500 +
+    myDonations.length * 50;
+
+
+  // 4️⃣ Donor Tier
+  let donorTier = "Bronze";
+
+  if (totalDonated > 5000) donorTier = "Silver";
+  if (totalDonated > 20000) donorTier = "Gold";
+  if (totalDonated > 50000) donorTier = "Platinum";
+
+
+
+  const exportCSV = () => {
+    const rows = myDonations.map(d =>
+      `${d.userProject.title},${d.amount},${d.createdAt}`
+    ).join("\n");
+
+    const blob = new Blob([rows]);
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "donations.csv";
+    a.click();
+  };
+
 
   // Load applications
   const loadApplications = async () => {
@@ -194,6 +280,27 @@ export default function DonorDashboard({
     }
   };
 
+  const loadMyDonations = async () => {
+    try {
+      setLoadingDonations(true);
+
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API_BASE}/donations/my`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (res.data.success) {
+        setMyDonations(res.data.donations);
+      }
+    } catch (err) {
+      console.error("Failed to load donations", err);
+    } finally {
+      setLoadingDonations(false);
+    }
+  };
+
+
   // Handle application actions
   const handleApplicationAction = async (applicationId, status, rejectionReason) => {
     try {
@@ -221,19 +328,37 @@ export default function DonorDashboard({
   useEffect(() => {
     const loadSummary = async () => {
       try {
-        const res = await getDonationSummary();
-        if (res.status === 'success' && res.data?.summary) {
-          setDonationSummary(res.data.summary);
-        } else {
-          setDonationSummary(null);
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.log("No token found");
+          return;
         }
+
+        const res = await axios.get(
+          `${API_BASE}/donations/summary`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        console.log("SUMMARY:", res.data);
+
+        if (res.data.status === "success") {
+          setDonationSummary(res.data.data);
+        }
+
       } catch (err) {
-        console.error('Failed to load donation summary', err);
-        setDonationSummary(null);
+        console.error("Summary error:", err);
       }
     };
+
     loadSummary();
   }, []);
+
+
 
   // Load data based on tab
   useEffect(() => {
@@ -242,7 +367,35 @@ export default function DonorDashboard({
     } else if (selectedTab === 'wishlist') {
       loadWishlist();
     }
+    else if (selectedTab === 'donations') {
+      loadMyDonations();
+    }
   }, [selectedTab]);
+
+  const EliteCard = ({ title, value }) => (
+    <div className="bg-white border-2 border-blue-900 rounded-xl p-4 shadow text-center">
+      <p className="opacity-70 font-bold">{title}</p>
+      <p className="text-2xl font-bold text-blue-900">{value}</p>
+    </div>
+  );
+
+  const EliteStat = ({ icon, title, value }) => (
+    <div className="bg-white rounded-xl border-2 border-blue-900 p-5 shadow-lg">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center text-xl">
+          {icon}
+        </div>
+        <p className="font-bold text-blue-900 opacity-70">
+          {title}
+        </p>
+      </div>
+
+      <p className="text-2xl font-bold text-blue-900">
+        {value}
+      </p>
+    </div>
+  );
+
 
   return (
     <div className="min-h-screen bg-orange-50 flex">
@@ -261,10 +414,10 @@ export default function DonorDashboard({
       >
         <div className="h-full flex flex-col">
           {/* Logo/Brand */}
-          <div className="p-6 border-b-4 border-orange-400">
+          {/* <div className="p-6 border-b-4 border-orange-400">
             <h1 className="text-2xl font-bold text-orange-400">DreamXec</h1>
             <p className="text-orange-200 text-sm mt-1">Donor Portal</p>
-          </div>
+          </div> */}
 
           {/* User Info */}
           <div className="p-6 border-b-2 border-orange-400">
@@ -287,8 +440,8 @@ export default function DonorDashboard({
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'overview'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
                 }`}
             >
               <DashboardIcon className="w-5 h-5" />
@@ -302,8 +455,8 @@ export default function DonorDashboard({
                 if (onViewProjects) onViewProjects();
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'projects'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
                 }`}
             >
               <FolderIcon className="w-5 h-5" />
@@ -321,8 +474,8 @@ export default function DonorDashboard({
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'applications'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
                 }`}
             >
               <FileTextIcon className="w-5 h-5" />
@@ -340,8 +493,8 @@ export default function DonorDashboard({
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'donations'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
                 }`}
             >
               <HeartIcon className="w-5 h-5" />
@@ -355,8 +508,8 @@ export default function DonorDashboard({
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all ${selectedTab === 'wishlist'
-                  ? 'bg-orange-400 text-blue-900'
-                  : 'text-white hover:bg-blue-800'
+                ? 'bg-orange-400 text-blue-900'
+                : 'text-white hover:bg-blue-800'
                 }`}
             >
               <StarDecoration className="w-5 h-5" />
@@ -405,64 +558,118 @@ export default function DonorDashboard({
           {selectedTab === 'overview' && (
             <div className="space-y-6">
               {/* Welcome Message */}
-              <div className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg">
-                <h1 className="text-3xl font-bold text-blue-900 mb-2">
-                  Welcome back, {donorName}! 👋
-                </h1>
-                <p className="text-blue-900 opacity-70">
-                  Research Krega India, Tabhi Toh aage Badhega India
-                </p>
+              <div className="bg-white rounded-lg border border-blue-900/30 px-5 py-4 shadow-sm">
+
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+
+                  {/* LEFT SIDE */}
+                  <div>
+                    <h1 className="text-2xl font-bold text-blue-900">
+                      Welcome back, {donorName}! 👋
+                    </h1>
+
+                    <p className="text-blue-900/60 text-sm mt-1">
+                      Research Krega India, Tabhi Toh aage Badhega India
+                    </p>
+                  </div>
+
+                  {/* RIGHT SIDE — SLIM DONOR TIER BADGE */}
+                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-blue-900 px-4 py-2 rounded-lg font-semibold shadow-sm">
+                    ⭐ {donorTier} Donor
+                  </div>
+
+
+                </div>
+
               </div>
+
+
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-12 h-12 bg-green-400 rounded-lg flex items-center justify-center">
-                      <FolderIcon className="w-6 h-6 text-blue-900" />
-                    </div>
-                  </div>
-                  <p className="text-3xl font-bold text-blue-900">{projectsCount}</p>
-                  <p className="text-blue-900 opacity-70 font-bold">Total Projects</p>
-                </div>
+              {/* ===== ELITE STATS GRID ===== */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-                <div className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-12 h-12 bg-orange-400 rounded-lg flex items-center justify-center">
-                      <FileTextIcon className="w-6 h-6 text-blue-900" />
-                    </div>
-                  </div>
-                  <p className="text-3xl font-bold text-blue-900">{pendingApplicationsCount}</p>
-                  <p className="text-blue-900 opacity-70 font-bold">Pending Applications</p>
-                </div>
+                <EliteStat
+                  icon="💝"
+                  title="Total Donated"
+                  value={`₹${totalDonated}`}
+                />
 
-                <div className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-12 h-12 bg-yellow-400 rounded-lg flex items-center justify-center">
-                      <HeartIcon className="w-6 h-6 text-blue-900" />
-                    </div>
-                  </div>
-                  <p className="text-3xl font-bold text-blue-900">
-                    {donationSummary?.donationsCount || 0}
-                  </p>
-                  <p className="text-blue-900 opacity-70 font-bold">Donations Made</p>
-                </div>
+                <EliteStat
+                  icon="📊"
+                  title="Avg Donation"
+                  value={`₹${avgDonation}`}
+                />
 
-                <div className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-12 h-12 bg-green-400 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-900 font-bold text-xl">₹</span>
-                    </div>
-                  </div>
-                  <p className="text-3xl font-bold text-blue-900">
-                    ₹{donationSummary ? (donationSummary.totalAmount / 1000).toFixed(0) : 0}k
-                  </p>
-                  <p className="text-blue-900 opacity-70 font-bold">Total Donated</p>
-                </div>
+                <EliteStat
+                  icon="🏆"
+                  title="Biggest Gift"
+                  value={`₹${maxDonation}`}
+                />
+
+                <EliteStat
+                  icon="🎯"
+                  title="Projects"
+                  value={projectsSupported}
+                />
+
               </div>
 
+              <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl border-2 border-orange-400 p-6 shadow-lg text-white">
+
+                <h3 className="text-2xl font-bold mb-4">
+                  Your Impact 🚀
+                </h3>
+
+                <div className="grid md:grid-cols-3 gap-4">
+
+                  <div>
+                    <p className="text-orange-200 text-sm">
+                      Lives Impacted
+                    </p>
+                    <p className="text-3xl font-bold">
+                      {projectsSupported}+
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-orange-200 text-sm">
+                      Research Enabled
+                    </p>
+                    <p className="text-3xl font-bold">
+                      {projectsSupported} Projects
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-orange-200 text-sm">
+                      Community Rank
+                    </p>
+                    <p className="text-3xl font-bold">
+                      🌟 Top Supporter
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* ===== DONOR INSIGHTS ===== */}
+              <div className="grid md:grid-cols-1 gap-4">
+
+                <DonorAnalyticsChart
+                  monthlyTotal={monthlyTotal}
+                  impactScore={impactScore}
+                />
+                <DonationHeatmap donations={myDonations} />
+
+              </div>
+
+
+              {/* ===== IMPACT CARD ===== */}
+
               {/* Donation Summary Card */}
-              {donationSummary && (
+              {/* {donationSummary && (
                 <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl border-4 border-orange-400 p-6 shadow-lg text-white">
                   <h3 className="text-2xl font-bold mb-4">Your Impact</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -480,7 +687,7 @@ export default function DonorDashboard({
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* Quick Actions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -551,10 +758,10 @@ export default function DonorDashboard({
                       </div>
                       <span
                         className={`px-3 py-1 rounded-full text-sm font-bold border-2 ${app.status === 'PENDING'
-                            ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-                            : app.status === 'ACCEPTED'
-                              ? 'bg-green-100 text-green-800 border-green-300'
-                              : 'bg-red-100 text-red-800 border-red-300'
+                          ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                          : app.status === 'ACCEPTED'
+                            ? 'bg-green-100 text-green-800 border-green-300'
+                            : 'bg-red-100 text-red-800 border-red-300'
                           }`}
                       >
                         {app.status}
@@ -645,12 +852,75 @@ export default function DonorDashboard({
           )}
 
           {/* Donations Tab */}
-          {selectedTab === 'donations' && (
-            <div className="bg-white rounded-xl border-4 border-blue-900 p-12 text-center shadow-lg">
-              <h3 className="text-2xl font-bold text-blue-900 mb-2">Donation History</h3>
-              <p className="text-blue-900 opacity-70">Your donation history will appear here</p>
+          {selectedTab === "donations" && (
+            <div className="space-y-6">
+
+              {/* ===== ELITE STATS ===== */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                <EliteCard title="Total Donated" value={`₹${totalDonated}`} />
+                <EliteCard title="Avg Donation" value={`₹${avgDonation}`} />
+                <EliteCard title="Biggest Gift" value={`₹${maxDonation}`} />
+                <EliteCard title="Projects" value={projectsSupported} />
+
+              </div>
+
+              {/* ===== ACTION BAR ===== */}
+              <div className="flex gap-3 items-center">
+
+                <input
+                  type="number"
+                  placeholder="Min Amount Filter"
+                  className="border-2 border-blue-900 p-2 rounded"
+                  onChange={e => setFilterAmount(Number(e.target.value))}
+                />
+
+                <button
+                  onClick={exportCSV}
+                  className="bg-green-500 text-white px-4 py-2 rounded font-bold"
+                >
+                  Export CSV
+                </button>
+
+                <button
+                  onClick={loadMyDonations}
+                  className="bg-blue-500 text-white px-4 py-2 rounded font-bold"
+                >
+                  Refresh
+                </button>
+
+              </div>
+
+              {/* ===== DONATION CARDS ===== */}
+              {filteredDonations.map(d => (
+
+                <div
+                  key={d.id}
+                  className="bg-white border-4 border-blue-900 rounded-xl p-6 shadow-lg hover:scale-[1.02] transition"
+                >
+                  <p className="text-xl font-bold text-blue-900">
+                    {d.userProject.title}
+                  </p>
+
+                  <p className="text-green-600 font-bold text-lg">
+                    ₹{d.amount}
+                  </p>
+
+                  <p className="text-sm opacity-60">
+                    {new Date(d.createdAt).toLocaleDateString()}
+                  </p>
+
+                  {d.message &&
+                    <p className="italic mt-2">"{d.message}"</p>
+                  }
+
+                </div>
+
+              ))}
+
             </div>
           )}
+
 
           {/* Wishlist Tab (NEW) */}
           {selectedTab === 'wishlist' && (

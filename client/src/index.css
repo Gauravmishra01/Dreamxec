@@ -498,6 +498,42 @@ body {
     transform: translateY(-10px) scale(1.05);
   }
 
+  /* EMPTY */
+.react-calendar-heatmap .dx-empty {
+  fill: #e5e7eb;
+  rx: 4px;
+}
+.react-calendar-heatmap .dx-empty { fill: #e5e7eb; }
+.react-calendar-heatmap .dx-1 { fill: #bfdbfe; }
+.react-calendar-heatmap .dx-2 { fill: #60a5fa; }
+.react-calendar-heatmap .dx-3 { fill: #2563eb; }
+.react-calendar-heatmap .dx-4 { fill: #1e3a8a; }
+
+
+/* LIGHT */
+.react-calendar-heatmap .dx-1 {
+  fill: #bfdbfe;
+  rx: 4px;
+}
+
+/* MEDIUM */
+.react-calendar-heatmap .dx-2 {
+  fill: #60a5fa;
+  rx: 4px;
+}
+
+/* STRONG */
+.react-calendar-heatmap .dx-3 {
+  fill: #2563eb;
+  rx: 4px;
+}
+
+/* MAX */
+.react-calendar-heatmap .dx-4 {
+  fill: #1e3a8a;
+  rx: 4px;
+}
+
   
 }
 

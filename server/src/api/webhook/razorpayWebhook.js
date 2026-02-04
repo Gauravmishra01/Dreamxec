@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const prisma = require("../../config/prisma");
 
 exports.handleRazorpayWebhook = async (req, res) => {
+  console.log("🔥2 WEBHOOK HIT", req.body.event);
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
   const body = JSON.stringify(req.body);
 
