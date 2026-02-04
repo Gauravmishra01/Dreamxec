@@ -40,6 +40,7 @@ import StartAProject from './sections/Pages/innovators/StartAProject';
 import HowItWorksStudents from './sections/Pages/innovators/HowItWorks';
 import ProjectEligibility from './sections/Pages/innovators/ProjectEligibility';
 import ResourceCenter from './sections/Pages/innovators/Resources';
+import SuccessStories from './sections/Pages/innovators/SuccessStories';
 import FundInnovation from './sections/Pages/supporters/FundInnovation';
 import HowItWorksDonors from './sections/Pages/supporters/HowItWorksD';
 import WhyDonate from './sections/Pages/supporters/WhyDonate';
@@ -50,6 +51,7 @@ import PerfectStorm from './sections/Pages/company/PerfectStorm';
 import Careers from './sections/Pages/company/Careers';
 import ContactUs from './sections/Pages/company/ContactUs';
 import FAQ from './sections/Pages/company/FAQ';
+import PressMedia from './sections/Pages/company/PressMedia';
 import AboutUs from './components/AboutUs';
 import TermsAndConditions from './sections/Pages/legal/TermsAndConditions';
 import VerifyPresident from './components/VerifyPresident';
@@ -1385,6 +1387,8 @@ function AppContent() {
                               <Route path="/careers" element={<Careers />} />
                               <Route path="/contact" element={<ContactUs />} />
                               <Route path="/faq" element={<FAQ />} />
+                              <Route path="/success-stories" element={<SuccessStories />} />
+                              <Route path="/press" element={<PressMedia />} />
                               <Route path="/terms-And-Conditions" element={<TermsAndConditions />} />
                               {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                */}
@@ -1404,6 +1408,8 @@ function AppContent() {
                               <Route path="/careers" element={<Careers />} />
                               <Route path="/contact" element={<ContactUs />} />
                               <Route path="/faq" element={<FAQ />} />
+                              <Route path="/success-stories" element={<SuccessStories />} />
+                              <Route path="/press" element={<PressMedia />} />
 
                             </Routes >
                           </div >
