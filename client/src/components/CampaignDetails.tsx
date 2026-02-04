@@ -11,6 +11,12 @@ import MobileDonateCTA from './MobileDonateCTA';
 import { addRecentCampaign } from '../lib/recentCampaigns';
 import DiscoverySection from './DiscoverySection';
 import YouTube from "react-youtube";
+import {
+  createRazorpayOrderAuthenticated,  // ✅ Google users
+  createRazorpayOrderGuest,          // ✅ Guests only
+  verifyPayment,
+} from "../services/donationService";
+
 
 
 
@@ -82,6 +88,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   type CampaignTab = 'about' | 'video' | 'media' | 'presentation' | 'faqs';
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
   const showMobileCTA = campaign?.status === 'approved';
+  const refreshCampaign = async () => {
+    const res = await getUserProject(id!);
+    const mapped = mapUserProjectToCampaign(res.data.userProject);
+    setCampaign(mapped);
+  };
+
 
 
 
@@ -282,22 +294,78 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     // }
     setShowDonateModal(true);
   };
-
-  const handleDonateSubmit = (e: React.FormEvent) => {
+  const handleDonateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const amount = parseFloat(donationAmount);
-    if (amount > 0) {
-      if (onDonate) {
-        onDonate(campaign.id, amount);
+
+    const amount = Number(donationAmount);
+    if (!amount || amount <= 0) return;
+
+    try {
+      // 🔥 FIXED: Check auth status FIRST
+      let res;
+
+      if (currentUser) {
+        // ✅ GOOGLE USER - NO EMAIL!
+        console.log("✅ GOOGLE USER DONATION:", currentUser.email);
+        res = await createRazorpayOrderAuthenticated({
+          amount,
+          projectId: campaign.id,
+          // NO EMAIL = Goes to userId field ✅
+        });
       } else {
-        // Fallback: simply log — real donation flow should be provided via prop
-        console.log('Donate:', campaign.id, amount);
-        alert('Donation has stopped Due to some technical error. Please try again later.');
+        // ✅ GUEST - SEND EMAIL
+        console.log("✅ GUEST DONATION:", email);
+        if (!email) throw new Error("Email required for guests");
+        res = await createRazorpayOrderGuest({
+          amount,
+          projectId: campaign.id,
+          email,
+          // Email = Goes to donorId field ✅
+        });
       }
-      setShowDonateModal(false);
-      setDonationAmount('');
+
+      console.log("CREATE ORDER RESPONSE =", res);
+
+      // Rest stays EXACTLY same...
+      const { orderId, amount: razorAmount, key } = res;
+      if (!orderId || !key) {
+        throw new Error("Invalid order payload");
+      }
+
+      const options = {
+        key,
+        amount: razorAmount,
+        currency: "INR",
+        order_id: orderId,
+        name: "DreamXec",
+        description: campaign.title,
+        prefill: currentUser ? { email: currentUser.email } : { email }, // ✅ Smart prefill
+        handler: async (response: any) => {
+          await verifyPayment({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          });
+
+          setShowDonateModal(false);
+          setDonationAmount("");
+          setTimeout(async () => {
+            await refreshCampaign();
+          }, 2000);
+        },
+        theme: { color: "#0B9C2C" },
+      };
+
+      // @ts-ignore
+      new window.Razorpay(options).open();
+    } catch (err) {
+      console.error("Donation failed", err);
+      alert("Payment failed. Please try again.");
     }
   };
+
+
+
 
   // Helper check
   const isDonor = currentUser?.role === 'donor' || currentUser?.role === 'DONOR';
@@ -958,6 +1026,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
       </div>
 
       {/* Donation Modal */}
+      {/* Donation Modal - FIXED! */}
       {showDonateModal && (
         <div
           className="fixed inset-0 z-[9999] flex justify-center items-center p-4"
@@ -972,7 +1041,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             <h2 className="text-3xl font-bold text-dreamxec-navy mb-6 font-display mt-4">
               Support This Campaign
             </h2>
+
+            {/* 🔥 FIXED: Conditional form based on auth */}
             <form onSubmit={handleDonateSubmit}>
+              {/* Amount field - ALWAYS shown */}
               <div className="mb-6">
                 <label className="block text-lg font-bold text-dreamxec-navy mb-3 font-display">
                   Donation Amount (₹)
@@ -988,17 +1060,25 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
                 />
               </div>
-              <div className="mb-6">
-                <label className="block text-lg font-bold text-dreamxec-navy mb-3 font-display">
-                  Email:
-                </label>
-                <input type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                  className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
-                  required
-                  placeholder="Enter email" />
-              </div>
+
+              {/* 🔥 Email field ONLY for GUESTS */}
+              {!currentUser && (
+                <div className="mb-6">
+                  <label className="block text-lg font-bold text-dreamxec-navy mb-3 font-display">
+                    Email:
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
+                    required
+                    placeholder="Enter email"
+                  />
+                </div>
+              )}
+
+              {/* Quick amounts */}
               <div className="grid grid-cols-4 gap-2 mb-6">
                 {[100, 500, 1000, 5000].map((amount) => (
                   <button
@@ -1011,6 +1091,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   </button>
                 ))}
               </div>
+
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -1021,20 +1102,17 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-dreamxec-green text-white rounded-lg border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green"
+                  disabled={!donationAmount || (!currentUser && !email)}
+                  className="flex-1 px-6 py-3 bg-dreamxec-green text-white rounded-lg border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Donate
+                  Donate Now
                 </button>
               </div>
             </form>
           </div>
-
         </div>
+      )}
 
-
-
-      )
-      }
 
       <MobileDonateCTA
         visible={showMobileCTA}

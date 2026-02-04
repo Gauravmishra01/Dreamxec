@@ -9,15 +9,14 @@ const RedisStore = require('connect-redis').default;
 const redis = require('./src/services/redis.service');
 const cleanupOtpRedisKeys = require("./src/utils/redisOTPCleanup");
 
-
-// Load environment variables
+// Load env
 dotenv.config();
 
 const CLIENT_URL = process.env.CLIENT_URL;
 console.log("CLIENT_URL =", CLIENT_URL);
 
 // --------------------------------------------
-// Import Routes
+// IMPORT ROUTES
 // --------------------------------------------
 const authRoutes = require('./src/api/auth/auth.routes');
 const userProjectRoutes = require('./src/api/user-projects/user-project.routes');
@@ -25,7 +24,6 @@ const donorProjectRoutes = require('./src/api/donor-projects/donor-project.route
 const userRoutes = require('./src/api/users/user.routes');
 const donationRoutes = require('./src/api/donations/donation.routes');
 const adminRoutes = require('./src/api/admin/admin.routes');
-const webhookRoutes = require('./src/api/webhook/webhook.routes');
 const applicationRoutes = require('./src/api/applications/application.routes');
 const clubVerificationRoutes = require("./src/api/club-verification/clubVerification.routes");
 const clubReferralRoutes = require('./src/api/club-referral/clubReferral.routes');
@@ -34,20 +32,18 @@ const adminClubVerificationRoutes = require('./src/api/admin-club/adminClubVerif
 const newsletterRoutes = require('./src/api/newsletter/newsletter.routes');
 const wishlistRoutes = require('./src/api/wishlist/wishlist.routes');
 const uploadRoutes = require('./src/api/upload/upload.routes');
-const otpRoutes=require("./src/api/otp/otp.routes")
-const studentverfication=require("./src/api/studentVerification/studentVerification.routes")
+const otpRoutes = require("./src/api/otp/otp.routes");
+const studentVerificationRoutes = require("./src/api/studentVerification/studentVerification.routes");
 const healthRoutes = require("./src/routes/health.routes");
 const adminRedisRoutes = require("./src/api/admin/adminRedis.routes");
 
-// Load Passport (Google only, LinkedIn handled via OIDC file)
+// Passport config
 require('./src/config/passport');
 
 const app = express();
 
-
-
 // --------------------------------------------
-// 1️⃣ CORS CONFIG — Required for OAuth cookies/sessions
+// 1️⃣ CORS
 // --------------------------------------------
 app.use(
   cors({
@@ -57,7 +53,7 @@ app.use(
 );
 
 // --------------------------------------------
-// 2️⃣ EXPRESS SESSION — Required for LinkedIn PKCE
+// 2️⃣ SESSION (Redis-backed)
 // --------------------------------------------
 app.use(
   session({
@@ -80,36 +76,32 @@ app.use(
 );
 
 // --------------------------------------------
-// 3️⃣ PASSPORT INITIALIZATION
+// 3️⃣ PASSPORT
 // --------------------------------------------
 app.use(passport.initialize());
 app.use(passport.session());
 
 // --------------------------------------------
-// 4️⃣ STRIPE WEBHOOK MUST COME BEFORE JSON BODY PARSER
+// 4️⃣ RAZORPAY WEBHOOK (RAW BODY ONLY)
+// MUST come BEFORE express.json()
 // --------------------------------------------
-app.use(
-  '/api/webhook',
-  express.raw({ type: 'application/json' }),
-  webhookRoutes
-);
+// app.use(
+//   '/api/donations/webhook',
+//   express.raw({ type: 'application/json' })
+// );
 
-//-------------------------------
-//Redis Health Check
-//-------------------------------
+// --------------------------------------------
+// 5️⃣ JSON BODY PARSER (EVERYTHING ELSE)
+// --------------------------------------------
+app.use(express.json());
+
+// --------------------------------------------
+// HEALTH / REDIS
+// --------------------------------------------
 app.use("/api", healthRoutes);
 
 // --------------------------------------------
-// 5️⃣ JSON BODY PARSER
-// --------------------------------------------
-app.use(express.json({
-  verify: (req, res, buf) => {
-    req.rawBody = buf;
-  }
-}));
-
-// --------------------------------------------
-// Dev Token Generator (No change)
+// DEV TOKEN (optional)
 // --------------------------------------------
 app.get("/dev/gen-token", (req, res) => {
   const generateDevToken = require("./src/utils/devToken");
@@ -129,21 +121,11 @@ app.get("/dev/gen-token", (req, res) => {
 });
 
 // --------------------------------------------
-// Health Check
-// --------------------------------------------
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok, very healthy',
-    env: process.env.NODE_ENV || 'development',
-  });
-});
-
-// --------------------------------------------
-// Root Redirect to Frontend
+// ROOT
 // --------------------------------------------
 app.get('/', (req, res) => {
   if (CLIENT_URL) return res.redirect(CLIENT_URL);
-  res.json({ service: 'project-x backend', status: 'running' });
+  res.json({ service: 'dreamxec backend', status: 'running' });
 });
 
 // --------------------------------------------
@@ -153,7 +135,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user-projects', userProjectRoutes);
 app.use('/api/donor-projects', donorProjectRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/donations', donationRoutes);
+app.use('/api/donations', donationRoutes); // includes webhook
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', adminRedisRoutes);
 app.use('/api/applications', applicationRoutes);
@@ -164,13 +146,12 @@ app.use("/api/admin/club-verifications", adminClubVerificationRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use("/api/otp",otpRoutes)
-app.use("/api/student-verification",studentverfication)
-app.use("/api/payments", require("./src/api/payments/payment.routes"))
-// app.use(cors())
+app.use("/api/otp", otpRoutes);
+app.use("/api/student-verification", studentVerificationRoutes);
+app.use("/api/payments", require("./src/api/payments/payment.routes"));
 
 // --------------------------------------------
-// HANDLE 404
+// 404 HANDLER
 // --------------------------------------------
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
@@ -182,7 +163,7 @@ app.all('*', (req, res, next) => {
 app.use(globalErrorHandler);
 
 // --------------------------------------------
-// REDIS OTP CLEANUP ON SERVER START
+// REDIS CLEANUP ON BOOT
 // --------------------------------------------
 redis.on("ready", async () => {
   console.log("✅ Redis connected");
@@ -197,11 +178,10 @@ redis.on("ready", async () => {
   }
 });
 
-
 // --------------------------------------------
 // START SERVER
 // --------------------------------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(` Server is running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
