@@ -64,14 +64,14 @@ const HowItWorksDonors = () => {
 
             <Header />
 
-            <main className="space-y-20 py-12 w-full">
+            <main className="space-y-24 py-20 w-full">
 
                 {/* -------------------- Hero -------------------- */}
-                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-center space-y-6">
-                    <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold animate-fade-in">
+                <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
+                    <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
                         Support Innovation in 4 Simple Steps
                     </h1>
-                    <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
                         From discovering a project to seeing real-world impact — here’s exactly how DreamXec works.
                     </p>
                 </section>
@@ -79,19 +79,19 @@ const HowItWorksDonors = () => {
                 {/* -------------------- Funding Flow -------------------- */}
                 <section
                     ref={fundingFlow.ref}
-                    className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''
+                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''
                         }`}
                 >
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Funding Flow
                     </h2>
 
-                    <div className="grid grid-cols-1 gap-6 md:gap-8 max-w-5xl mx-auto">
+                    <div className="grid grid-cols-1 gap-8">
                         {steps.map((step, index) => (
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
+                                className={`card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
               reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
@@ -108,10 +108,10 @@ const HowItWorksDonors = () => {
                 {/* -------------------- Transparency -------------------- */}
                 <section
                     ref={transparency.ref}
-                    className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 reveal ${transparency.isVisible ? 'reveal-visible' : ''
+                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${transparency.isVisible ? 'reveal-visible' : ''
                         }`}
                 >
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Money Usage Transparency
                     </h2>
 
@@ -120,7 +120,7 @@ const HowItWorksDonors = () => {
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
+                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
               reveal ${transparency.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <div className="flex justify-between items-center">
@@ -144,19 +144,19 @@ const HowItWorksDonors = () => {
                 {/* -------------------- Impact -------------------- */}
                 <section
                     ref={impact.ref}
-                    className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 reveal ${impact.isVisible ? 'reveal-visible' : ''
+                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${impact.isVisible ? 'reveal-visible' : ''
                         }`}
                 >
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Impact Tracking
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                         {impactMetrics.map((metric, index) => (
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
+                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
               reveal ${impact.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
@@ -173,14 +173,14 @@ const HowItWorksDonors = () => {
                 {/* -------------------- FAQ -------------------- */}
                 <section
                     ref={faq.ref}
-                    className={`px-4 sm:px-6 lg:px-8 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
+                    className={`px-4 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
                 >
-                    <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                         {FAQ.map((item, index) => (
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className="card-pastel-offwhite p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300"
+                                className="card-pastel-offwhite p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
                             >
                                 <h3 className="text-lg md:text-xl font-bold mb-2 text-dreamxec-navy">
                                     Q: {item.q}
