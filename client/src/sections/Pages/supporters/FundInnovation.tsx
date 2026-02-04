@@ -60,11 +60,11 @@ const FundInnovation = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             Your Support Powers India's Next Generation of Innovators
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -80,16 +80,16 @@ const FundInnovation = () => {
         </section>
 
         {/* How to Discover Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             How to Discover Projects
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {discoverMethods.map((method, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {method.title}
@@ -103,8 +103,8 @@ const FundInnovation = () => {
         </section>
 
         {/* Trust & Transparency */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Trust & Transparency
           </h2>
 
@@ -112,7 +112,7 @@ const FundInnovation = () => {
             {trustPoints.map((point, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {point.title}
@@ -126,7 +126,7 @@ const FundInnovation = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="/discover-projects">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">

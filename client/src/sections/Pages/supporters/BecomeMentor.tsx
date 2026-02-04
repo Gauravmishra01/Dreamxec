@@ -73,11 +73,11 @@ const BecomeMentor = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             Guide the Next Generation of Indian Innovators
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -86,17 +86,17 @@ const BecomeMentor = () => {
         </section>
 
         {/* Who Can Mentor */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Who Can Mentor
           </h2>
 
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto mb-8">
               Any expert can mentor:
             </p>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card mb-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card mb-8 hover:shadow-lg transition-shadow duration-300">
               <ul className="space-y-3">
                 {mentorTypes.map((type, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -107,7 +107,7 @@ const BecomeMentor = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <p className="text-dreamxec-navy text-base md:text-xl font-medium leading-relaxed">
                 No specific experience required. Just genuine interest in helping students, ability to give 1 hour/week for 8–12 weeks, and willingness to share what you've learned (successes and failures both).
               </p>
@@ -116,16 +116,16 @@ const BecomeMentor = () => {
         </section>
 
         {/* Mentor Benefits */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Mentor Benefits
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {mentorBenefits.map((benefit, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                   {benefit.category}:
@@ -144,13 +144,13 @@ const BecomeMentor = () => {
         </section>
 
         {/* Time Commitment */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Time Commitment
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 max-w-7xl mx-auto">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Per Mentee: 1 Hour/Week
               </h3>
@@ -162,7 +162,7 @@ const BecomeMentor = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 For Multiple Mentees
               </h3>
@@ -177,16 +177,16 @@ const BecomeMentor = () => {
         </section>
 
         {/* Mentor Stories */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Mentor Stories
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {mentorStories.map((story, index) => (
               <div
                 key={index}
-                className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="mb-6">
                   <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue">
@@ -206,7 +206,7 @@ const BecomeMentor = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="/contact">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">

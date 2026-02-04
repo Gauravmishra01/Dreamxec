@@ -42,11 +42,11 @@ const WhyDonate = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             You Have the Power to Change India's Future with One Research at a Time
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -55,8 +55,8 @@ const WhyDonate = () => {
         </section>
 
         {/* Why Your Support Matters */}
-        <section className="max-w-6xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Why Your Support Matters
           </h2>
 
@@ -65,7 +65,7 @@ const WhyDonate = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 max-w-6xl mx-auto"
+                className="card-glass animate-fade-in p-6 md:p-8 max-w-7xl mx-auto hover:shadow-lg transition-shadow duration-300"
               >
                 <p className="text-dreamxec-navy text-base md:text-2xl  leading-relaxed max-w-7xl mx-auto">
                   <span className="text-dreamxec-berkeley-blue font-semibold">{reason.title}:</span> {reason.description}
@@ -76,16 +76,16 @@ const WhyDonate = () => {
         </section>
 
         {/* Donor Stories */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Donor Stories
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {stories.map((story, index) => (
               <div
                 key={index}
-                className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="mb-6">
                   <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue">
@@ -105,7 +105,7 @@ const WhyDonate = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="/discover-projects">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">

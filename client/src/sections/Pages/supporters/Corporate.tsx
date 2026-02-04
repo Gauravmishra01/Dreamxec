@@ -89,11 +89,11 @@ const CorporateCSRPartnerships = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             Turn Your CSR Into Real Student Impact
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -102,12 +102,12 @@ const CorporateCSRPartnerships = () => {
         </section>
 
         {/* CSR Alignment */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             CSR Alignment
           </h2>
 
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-8 text-center">
               Why DreamXec Fits Your CSR Strategy:
             </h3>
@@ -120,7 +120,7 @@ const CorporateCSRPartnerships = () => {
               {sdgAlignments.map((item, index) => (
                 <div
                   key={index}
-                  className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
                 >
                   <h4 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue mb-2">
                     * {item.sdg}
@@ -135,8 +135,8 @@ const CorporateCSRPartnerships = () => {
         </section>
 
         {/* Partnership Models */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Partnership Models
           </h2>
 
@@ -145,7 +145,7 @@ const CorporateCSRPartnerships = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 max-w-6xl mx-auto"
+                className="card-glass animate-fade-in p-6 md:p-8 max-w-7xl mx-auto hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
                   {model.title}
@@ -159,16 +159,16 @@ const CorporateCSRPartnerships = () => {
         </section>
 
         {/* Corporate Benefits */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Corporate Benefits
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {corporateBenefits.map((benefit, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                   {benefit.category}:
@@ -187,7 +187,7 @@ const CorporateCSRPartnerships = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="/contact">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
