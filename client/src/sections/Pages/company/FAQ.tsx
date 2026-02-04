@@ -61,11 +61,11 @@ const FAQ = () => {
   ]
 
   const FAQGrid = ({ faqs }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       {faqs.map((item, index) => (
         <div
           key={index}
-          className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
+          className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="card-tricolor-tag"></div>
@@ -74,7 +74,7 @@ const FAQ = () => {
             Q: {item.q}
           </h3>
 
-          <p className="text-dreamxec-gray font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
+          <p className="text-dreamxec-gray font-sans text-sm sm:text-base md:text-lg leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
             A: {item.a}
           </p>
         </div>
@@ -93,11 +93,11 @@ const FAQ = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold">
             Frequently Asked Questions
           </h1>
           <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
@@ -106,8 +106,8 @@ const FAQ = () => {
         </section>
 
         {/* Student FAQs */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             For Students
           </h2>
 
@@ -115,8 +115,8 @@ const FAQ = () => {
         </section>
 
         {/* Donor FAQs */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             For Supporters & Donors
           </h2>
 
@@ -124,8 +124,8 @@ const FAQ = () => {
         </section>
 
         {/* Corporate FAQs */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             For Corporate Partners
           </h2>
 

@@ -44,29 +44,29 @@ const ContactUs = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold">
             Get in Touch
           </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
             Have questions? Want to partner with DreamXec? Need support with your project? We're here to help. Below are all the ways you can reach us—email, phone, social media, or in person.
           </p>
         </section>
 
         {/* Contact Categories */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             How to Reach Us
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {contactCategories.map((category, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="flex items-start gap-4 mb-3">
                   <Mail className="w-6 h-6 text-dreamxec-berkeley-blue flex-shrink-0 mt-1" />
@@ -74,11 +74,11 @@ const ContactUs = () => {
                     {category.title}
                   </h3>
                 </div>
-                <p className="text-dreamxec-navy text-base md:text-lg font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
+                <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
                   {category.email}
                 </p>
                 {category.details && (
-                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                  <p className="text-dreamxec-navy text-sm sm:text-base md:text-lg leading-relaxed">
                     {category.details}
                   </p>
                 )}
@@ -88,32 +88,32 @@ const ContactUs = () => {
         </section>
 
         {/* Email & Socials */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Connect With Us
           </h2>
 
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <Mail className="w-7 h-7 text-dreamxec-berkeley-blue" />
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
                   Email
                 </h3>
               </div>
-              <p className="text-dreamxec-navy text-base md:text-lg">
+              <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl">
                 <span className="font-mono bg-dreamxec-cream px-3 py-2 rounded">hello@dreamxec.com</span>
               </p>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-center gap-3 mb-6">
                 <MessageSquare className="w-7 h-7 text-dreamxec-berkeley-blue" />
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
                   Follow Us On Social
                 </h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {socials.map((social, index) => {
                   const getIcon = () => {
                     switch(social.platform) {
@@ -154,33 +154,33 @@ const ContactUs = () => {
         </section>
 
         {/* Address & Legal */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Legal Information
           </h2>
 
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <MapPin className="w-7 h-7 text-dreamxec-berkeley-blue" />
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
                   Registered Office
                 </h3>
               </div>
-              <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
+              <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed">
                 FinXec Investments Consultancy Private Limited<br />
                 Gurugram, Haryana 122001, India
               </p>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <FileText className="w-7 h-7 text-dreamxec-berkeley-blue" />
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
                   Legal Inquiries
                 </h3>
               </div>
-              <p className="text-dreamxec-navy text-base md:text-lg">
+              <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl">
                 Email: <span className="font-mono bg-dreamxec-cream px-3 py-2 rounded">legal@dreamxec.com</span>
               </p>
             </div>
@@ -188,7 +188,7 @@ const ContactUs = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="mailto:hello@dreamxec.com">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
