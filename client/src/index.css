@@ -311,47 +311,54 @@ body {
 
   /* Modern Glassmorphism Card */
   .card-glass-modern {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px 0 rgba(0, 51, 102, 0.1);
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      0 4px 6px rgba(0, 51, 102, 0.05),
+      0 10px 24px rgba(0, 51, 102, 0.08);
+    border-radius: 18px;
     position: relative;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-glass-modern:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 48px 0 rgba(0, 51, 102, 0.15);
-    background: rgba(255, 255, 255, 0.85);
+    transform: translateY(-6px);
+    box-shadow: 
+      0 8px 16px rgba(0, 51, 102, 0.08),
+      0 20px 48px rgba(0, 51, 102, 0.12);
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 153, 51, 0.3);
   }
 
   /* Gradient Border Card */
   .card-gradient-border {
     background: #FFFFFF;
-    border-radius: 16px;
+    border-radius: 18px;
     position: relative;
     padding: 2px;
     background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #0B9C2C 100%);
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-gradient-border-inner {
     background: #FFFFFF;
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 1.5rem;
     height: 100%;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-gradient-border:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(255, 127, 0, 0.2);
+    transform: translateY(-6px);
+    box-shadow: 
+      0 12px 32px rgba(255, 127, 0, 0.15),
+      0 0 40px rgba(255, 153, 51, 0.2);
   }
 
   .card-gradient-border:hover .card-gradient-border-inner {
-    background: linear-gradient(to bottom right, rgba(255, 248, 240, 0.8), rgba(255, 255, 255, 0.9));
+    background: linear-gradient(to bottom right, rgba(255, 248, 240, 0.9), rgba(255, 255, 255, 0.95));
   }
 
   /* Premium Card with Gradient Background */
@@ -361,13 +368,13 @@ body {
       rgba(255, 255, 255, 0.98) 50%, 
       rgba(240, 255, 240, 0.95) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(0, 51, 102, 0.1);
+    border: 1px solid rgba(0, 51, 102, 0.08);
     box-shadow: 
-      0 4px 6px rgba(0, 51, 102, 0.05),
-      0 10px 20px rgba(0, 51, 102, 0.08);
+      0 4px 8px rgba(0, 51, 102, 0.04),
+      0 12px 24px rgba(0, 51, 102, 0.06);
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-premium::before {
@@ -377,16 +384,16 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 153, 51, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 153, 51, 0.15) 0%, transparent 70%);
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.35s ease;
   }
 
   .card-premium:hover {
-    transform: translateY(-10px) scale(1.03);
+    transform: translateY(-6px);
     box-shadow: 
-      0 8px 12px rgba(255, 127, 0, 0.1),
-      0 20px 40px rgba(0, 51, 102, 0.15),
+      0 8px 16px rgba(255, 127, 0, 0.08),
+      0 20px 48px rgba(0, 51, 102, 0.12),
       0 0 60px rgba(255, 153, 51, 0.2);
   }
 

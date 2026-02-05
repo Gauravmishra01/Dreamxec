@@ -103,15 +103,16 @@ const Carousel = ({
         }
         
         .carousel-container .slick-dots li button {
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           padding: 0;
-          border: 2px solid #003366;
+          border: none;
           border-radius: 50%;
-          background: transparent;
-          transition: all 0.3s ease;
+          background: rgba(0, 51, 102, 0.2);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           font-size: 0;
           line-height: 0;
+          cursor: pointer;
         }
         
         .carousel-container .slick-dots li button:before {
@@ -119,27 +120,41 @@ const Carousel = ({
         }
         
         .carousel-container .slick-dots li.slick-active button {
-          background: #FF7F00;
-          border-color: #FF7F00;
-          transform: scale(1.2);
+          width: 24px;
+          border-radius: 4px;
+          background: linear-gradient(135deg, #FF9933, #FF7F00);
+          box-shadow: 0 2px 8px rgba(255, 127, 0, 0.3);
         }
         
         .carousel-container .slick-dots li button:hover {
-          background: #0B9C2C;
-          border-color: #0B9C2C;
+          background: rgba(255, 127, 0, 0.6);
+          transform: scale(1.2);
         }
 
         .carousel-container .slick-track {
           display: flex;
-          gap: 1rem;
+          gap: 1.5rem;
         }
 
         .carousel-container .slick-slide {
-          padding: 0 0.5rem;
+          padding: 0 0.75rem;
+          opacity: 0.6;
+          transform: scale(0.95);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-container .slick-slide.slick-active {
+          opacity: 1;
+          transform: scale(1);
         }
 
         .carousel-container .slick-slide > div {
           height: 100%;
+        }
+
+        .carousel-container .slick-list {
+          overflow: visible;
+          padding: 20px 0;
         }
         
         @media (prefers-reduced-motion: reduce) {
@@ -147,6 +162,22 @@ const Carousel = ({
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .carousel-container .slick-slide {
+            padding: 0 0.5rem;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .carousel-container .slick-slide {
+            padding: 0 0.25rem;
+          }
+          
+          .carousel-container .slick-track {
+            gap: 1rem;
           }
         }
       `}</style>
@@ -159,17 +190,17 @@ const Carousel = ({
         <>
           <button
             onClick={goToPrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white border-3 border-dreamxec-navy rounded-full p-3 shadow-pastel-card hover:bg-dreamxec-orange hover:border-dreamxec-orange transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-dreamxec-navy focus:ring-offset-2"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 z-10 w-10 h-10 md:w-12 md:h-12 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:bg-dreamxec-orange hover:border-dreamxec-orange transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-dreamxec-orange focus:ring-offset-2 group"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-6 h-6 text-dreamxec-navy" />
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-dreamxec-navy group-hover:text-white transition-colors" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white border-3 border-dreamxec-navy rounded-full p-3 shadow-pastel-card hover:bg-dreamxec-orange hover:border-dreamxec-orange transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-dreamxec-navy focus:ring-offset-2"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 z-10 w-10 h-10 md:w-12 md:h-12 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:bg-dreamxec-orange hover:border-dreamxec-orange transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-dreamxec-orange focus:ring-offset-2 group"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-6 h-6 text-dreamxec-navy" />
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-dreamxec-navy group-hover:text-white transition-colors" />
           </button>
         </>
       )}
