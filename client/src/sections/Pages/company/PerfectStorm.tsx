@@ -91,7 +91,7 @@ const PerfectStorm = () => {
                       animation="slide-up"
                       delay={400 + index * 100}
                     >
-                      <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-saffron transition-all duration-300">
+                      <div className="card-india-gradient p-6">
                         <p className="text-dreamxec-navy text-base md:text-lg">
                           <span className="font-bold text-dreamxec-berkeley-blue">{item.stat}</span> {item.desc}
                         </p>
@@ -101,7 +101,7 @@ const PerfectStorm = () => {
                 </div>
               </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 The Narrative:
               </h3>
@@ -110,7 +110,7 @@ const PerfectStorm = () => {
               </p>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 What Gets Lost:
               </h3>
@@ -126,7 +126,7 @@ const PerfectStorm = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Why This Gap Exists:
               </h3>
@@ -169,7 +169,7 @@ const PerfectStorm = () => {
                   animation="slide-up"
                   delay={700 + index * 120}
                 >
-                  <div className="card-glass p-8 max-w-6xl mx-auto hover:shadow-pastel-glow-saffron transition-all duration-300">
+                  <div className="card-glass-modern p-8 max-w-6xl mx-auto hover:shadow-pastel-glow-saffron transition-all duration-300">
                     <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
                       {reason.title}
                     </h3>
@@ -190,7 +190,7 @@ const PerfectStorm = () => {
           </h2>
 
           <div className="max-w-6xl mx-auto space-y-8">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Why Students?
               </h3>
@@ -205,7 +205,7 @@ const PerfectStorm = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Why Youth?
               </h3>
@@ -214,7 +214,7 @@ const PerfectStorm = () => {
               </p>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 What Happens When We Fund Students:
               </h3>
@@ -225,7 +225,7 @@ const PerfectStorm = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Statistical Reality:
               </h3>
@@ -243,7 +243,7 @@ const PerfectStorm = () => {
           </h2>
 
           <div className="max-w-6xl mx-auto space-y-8">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed mb-6">
                 We're not inventing anything new. Crowdfunding exists. Mentorship networks exist. Student innovation happens. We're just connecting the dots.
               </p>

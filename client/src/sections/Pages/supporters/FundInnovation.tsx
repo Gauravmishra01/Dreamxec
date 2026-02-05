@@ -152,8 +152,8 @@ const FundInnovation = () => {
                   animation="slide-up"
                   delay={400 + index * 100}
                 >
-                  <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-saffron transition-all duration-300 hover:scale-105">
-                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                  <div className="card-premium p-8">
+                    <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-orange bg-clip-text text-transparent mb-3">
                       {method.title}
                     </h3>
                     <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
@@ -180,8 +180,8 @@ const FundInnovation = () => {
                   animation="slide-up"
                   delay={700 + index * 100}
                 >
-                  <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-green transition-all duration-300">
-                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                  <div className="card-soft-shadow p-8">
+                    <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent mb-3">
                       {point.title}
                     </h3>
                     <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">

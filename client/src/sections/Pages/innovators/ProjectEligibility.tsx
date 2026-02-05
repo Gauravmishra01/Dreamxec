@@ -196,7 +196,7 @@ const ProjectEligibility = () => {
                   animation="slide-up"
                   delay={300 + index * 100}
                 >
-                  <div className="card-glass p-8 text-left hover:shadow-pastel-glow-saffron transition-all duration-300">
+                  <div className="card-glass-modern p-8 text-left">
                     <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
                       {cat.category}
                     </h3>
@@ -214,7 +214,7 @@ const ProjectEligibility = () => {
               <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
                 Eligibility Requirements:
               </h3>
-              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-green transition-all duration-300">
+              <div className="card-soft-shadow p-8">
                 <ul className="space-y-3">
                   {eligibilityRequirements.map((req, index) => (
                     <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -247,7 +247,7 @@ const ProjectEligibility = () => {
                   animation="slide-up"
                   delay={800 + index * 100}
                 >
-                  <div className="card-glass p-8 text-left hover:shadow-lg transition-all duration-300">
+                  <div className="card-glass-modern p-8 text-left hover:shadow-lg transition-all duration-300">
                     <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
                       ❌ {cat.title}
                     </h3>
@@ -285,7 +285,7 @@ const ProjectEligibility = () => {
           </div>
 
           <div className="max-w-6xl mx-auto">
-            <div className="card-glass p-8 text-left">
+            <div className="card-glass-modern p-8 text-left">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
                 Appeal Process
               </h3>
@@ -300,7 +300,7 @@ const ProjectEligibility = () => {
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
               What We Check:
             </h3>
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-premium p-8">
               <ul className="space-y-3">
                 {reviewChecklist.map((item, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -320,7 +320,7 @@ const ProjectEligibility = () => {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-soft-shadow p-6">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Videos:
               </h3>
@@ -331,7 +331,7 @@ const ProjectEligibility = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-soft-shadow p-6">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Description:
               </h3>
@@ -342,7 +342,7 @@ const ProjectEligibility = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-soft-shadow p-6">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Updates:
               </h3>
@@ -365,7 +365,7 @@ const ProjectEligibility = () => {
             {legalItems.map((item, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-soft-shadow p-6"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {item.title}:
