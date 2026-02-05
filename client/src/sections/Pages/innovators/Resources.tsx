@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const ResourceCenter = () => {
 
@@ -105,29 +106,27 @@ const ResourceCenter = () => {
             Browse by Category
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 animate-fade-in"
-              >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-2">
-                  {category.title}
-                </h3>
-                <p className="text-sm md:text-base text-dreamxec-navy font-semibold mb-4">
-                  {category.subtitle}
-                </p>
-                <ul className="space-y-2">
-                  {category.resources.map((resource, idx) => (
-                    <li key={idx} className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                      • {resource}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={categories.map((category) => ({
+              title: category.title,
+              content: (
+                <div>
+                  <p className="text-sm md:text-base text-dreamxec-navy font-semibold mb-4">
+                    {category.subtitle}
+                  </p>
+                  <ul className="space-y-2">
+                    {category.resources.map((resource, idx) => (
+                      <li key={idx} className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                        • {resource}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ),
+            }))}
+            autoScrollInterval={5000}
+            showPagination={true}
+          />
         </section>
 
         {/* Resource Cards */}
@@ -136,33 +135,28 @@ const ResourceCenter = () => {
             Featured Resources
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {resourceCards.map((resource, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:scale-105 transition-all duration-300"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="mb-4">
-                  <span className="inline-block bg-dreamxec-berkeley-blue text-white px-3 py-1 rounded-full text-xs md:text-sm font-bold">
-                    {resource.type}
-                  </span>
+          <HorizontalCardCarousel
+            cards={resourceCards.map((resource) => ({
+              title: resource.title,
+              content: (
+                <div>
+                  <div className="mb-4">
+                    <span className="inline-block bg-dreamxec-berkeley-blue text-white px-3 py-1 rounded-full text-xs md:text-sm font-bold">
+                      {resource.type}
+                    </span>
+                  </div>
+                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed mb-4">
+                    {resource.description}
+                  </p>
+                  <button className="text-dreamxec-navy font-bold text-sm md:text-base hover:text-dreamxec-berkeley-blue transition-colors">
+                    Access Resource →
+                  </button>
                 </div>
-
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                  {resource.title}
-                </h3>
-
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                  {resource.description}
-                </p>
-
-                <button className="mt-4 text-dreamxec-navy font-bold text-sm md:text-base hover:text-dreamxec-berkeley-blue transition-colors">
-                  Access Resource →
-                </button>
-              </div>
-            ))}
-          </div>
+              ),
+            }))}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
         </section>
 
         {/* CTA Section */}

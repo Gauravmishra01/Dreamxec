@@ -1,6 +1,7 @@
 import { Header } from '../../Header/index'
 import { Footer } from '../../Footer/index'
 import { RopeDivider } from '../../../components/RopeDivider'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const StartAProject = () => {
 
@@ -202,37 +203,24 @@ const StartAProject = () => {
             What You Get
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Funding (₹5K–₹50L)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Access capital from passionate supporters. No interference in the research
-                process—you own the journey completely!.
-              </p>
-            </div>
-
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Mentorship (Expert Guidance)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Paired with 1,000+ mentors across engineering, business, social impact,
-                product with weekly guidance calls.
-              </p>
-            </div>
-
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Exposure (Build Your Network)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Featured on platform homepage, media coverage for standout projects,
-                and LinkedIn visibility for your team.
-              </p>
-            </div>
-          </div>
+          <HorizontalCardCarousel
+            cards={[
+              {
+                title: "Funding (₹5K–₹50L)",
+                description: "Access capital from passionate supporters. No interference in the research process—you own the journey completely!",
+              },
+              {
+                title: "Mentorship (Expert Guidance)",
+                description: "Paired with 1,000+ mentors across engineering, business, social impact, product with weekly guidance calls.",
+              },
+              {
+                title: "Exposure (Build Your Network)",
+                description: "Featured on platform homepage, media coverage for standout projects, and LinkedIn visibility for your team.",
+              },
+            ]}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
         </section>
 
 
@@ -329,26 +317,21 @@ const StartAProject = () => {
               </p>
             </div>
 
-            {/* FAQ Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {FAQ.map((item, index) => (
-                <div
-                  key={index}
-                  className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="card-tricolor-tag"></div>
-
-                  <h3 className="text-xl font-bold text-dreamxec-navy font-display mb-3">
-                    Q: {item.q}
-                  </h3>
-
-                  <p className="text-dreamxec-gray-250 font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
-                    A: {item.a}
-                  </p>
-                </div>
-              ))}
-            </div>
+            {/* FAQ Carousel */}
+            <HorizontalCardCarousel
+              cards={FAQ.map((item) => ({
+                title: `Q: ${item.q}`,
+                content: (
+                  <div className="bg-dreamxec-cream px-4 py-3 rounded-lg">
+                    <p className="text-dreamxec-gray-250 font-sans text-sm md:text-base leading-relaxed">
+                      A: {item.a}
+                    </p>
+                  </div>
+                ),
+              }))}
+              autoScrollInterval={5000}
+              showPagination={true}
+            />
 
           </div>
         </section>

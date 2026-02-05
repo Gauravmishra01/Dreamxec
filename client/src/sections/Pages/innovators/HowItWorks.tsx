@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const HowItWorksStudents = () => {
 
@@ -66,29 +67,20 @@ const HowItWorksStudents = () => {
                     </p>
                 </section>
 
-                {/* Step-by-Step – Transparent / Glass Cards */}
+                {/* Step-by-Step – Horizontal Carousel */}
                 <section className="max-w-7xl mx-auto px-4 text-center space-y-16">
                     <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
                         Step-by-Step Guide
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
-                        {steps.map((step, index) => (
-                            <div
-                                key={index}
-                                style={{ animationDelay: `${index * 120}ms` }}
-                                className="card-glass animate-fade-in p-8 text-left"
-                            >
-                                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                                    {step.title}
-                                </h3>
-
-                                <p className="text-base md:text-lg lg:text-xl text-dreamxec-gray-600 font-semibold leading-relaxed">
-                                    {step.text}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                    <HorizontalCardCarousel
+                        cards={steps.map((step) => ({
+                            title: step.title,
+                            description: step.text,
+                        }))}
+                        autoScrollInterval={5000}
+                        showPagination={true}
+                    />
                 </section>
 
                 {/* Do's & Don'ts */}
@@ -131,52 +123,28 @@ const HowItWorksStudents = () => {
                         Common Mistakes
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                                Vague Project Description
-                            </h3>
-                            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                Vague project description. "We're building an app" doesn't cut it. Explain
-                                why (problem), what (solution), how (approach), impact (measurable outcome).
-                                Specific projects raise 3x more.
-                            </p>
-                        </div>
-
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                                Incorrect Funding Goal
-                            </h3>
-                            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                Setting the wrong funding goal. Too low = underestimate costs. Too high =
-                                looks unrealistic. Research similar projects; aim for ₹1–5L for most student
-                                projects.
-                            </p>
-                        </div>
-
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                                Poor Video Quality
-                            </h3>
-                            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                Poor video quality. Doesn't need to be Hollywood. Just clear lighting, good
-                                audio, genuine enthusiasm. Phone videos often outperform produced videos
-                                because they feel authentic.
-                            </p>
-                        </div>
-
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                                Missing Updates
-                            </h3>
-                            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                Missing milestone updates. Not updating donors/backers can reduce trust and
-                                hurt future fundraising. Credibility and consistency accelerate success.
-                            </p>
-                        </div>
-
-                    </div>
+                    <HorizontalCardCarousel
+                        cards={[
+                            {
+                                title: "Vague Project Description",
+                                description: "Vague project description. \"We're building an app\" doesn't cut it. Explain why (problem), what (solution), how (approach), impact (measurable outcome). Specific projects raise 3x more.",
+                            },
+                            {
+                                title: "Incorrect Funding Goal",
+                                description: "Setting the wrong funding goal. Too low = underestimate costs. Too high = looks unrealistic. Research similar projects; aim for ₹1–5L for most student projects.",
+                            },
+                            {
+                                title: "Poor Video Quality",
+                                description: "Poor video quality. Doesn't need to be Hollywood. Just clear lighting, good audio, genuine enthusiasm. Phone videos often outperform produced videos because they feel authentic.",
+                            },
+                            {
+                                title: "Missing Updates",
+                                description: "Missing milestone updates. Not updating donors/backers can reduce trust and hurt future fundraising. Credibility and consistency accelerate success.",
+                            },
+                        ]}
+                        autoScrollInterval={4500}
+                        showPagination={true}
+                    />
 
                 </section>
 

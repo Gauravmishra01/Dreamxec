@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const PerfectStorm = () => {
 
@@ -151,22 +152,14 @@ const PerfectStorm = () => {
             Why Now
           </h2>
 
-          <div className="space-y-8">
-            {whyNowReasons.map((reason, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 max-w-6xl mx-auto"
-              >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                  {reason.title}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {reason.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={whyNowReasons.map((reason) => ({
+              title: reason.title,
+              description: reason.description,
+            }))}
+            autoScrollInterval={5000}
+            showPagination={true}
+          />
         </section>
 
         {/* Role of Students & Youth */}

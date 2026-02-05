@@ -1,6 +1,7 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
 import { Mail, Phone, MessageSquare, Linkedin, Twitter, Instagram, MapPin, FileText } from 'lucide-react'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const ContactUs = () => {
 
@@ -62,29 +63,26 @@ const ContactUs = () => {
             How to Reach Us
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {contactCategories.map((category, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <div className="flex items-start gap-4 mb-3">
-                  <Mail className="w-6 h-6 text-dreamxec-berkeley-blue flex-shrink-0 mt-1" />
-                  <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue">
-                    {category.title}
-                  </h3>
-                </div>
-                <p className="text-dreamxec-navy text-base md:text-lg font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
-                  {category.email}
-                </p>
-                {category.details && (
-                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                    {category.details}
+          <HorizontalCardCarousel
+            cards={contactCategories.map((category) => ({
+              title: category.title,
+              icon: <Mail className="w-8 h-8" />,
+              content: (
+                <div>
+                  <p className="text-dreamxec-navy text-base md:text-lg font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
+                    {category.email}
                   </p>
-                )}
-              </div>
-            ))}
-          </div>
+                  {category.details && (
+                    <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                      {category.details}
+                    </p>
+                  )}
+                </div>
+              ),
+            }))}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
         </section>
 
         {/* Email & Socials */}

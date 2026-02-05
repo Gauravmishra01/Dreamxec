@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const ProjectEligibility = () => {
 
@@ -185,22 +186,14 @@ const ProjectEligibility = () => {
             DreamXec funds student-led innovations across:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {eligibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
-              >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                  {cat.category}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {cat.items}
-                </p>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={eligibleCategories.map((cat) => ({
+              title: cat.category,
+              description: cat.items,
+            }))}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
 
           {/* Eligibility Requirements */}
           <div className="max-w-6xl mx-auto mt-12">
@@ -230,22 +223,14 @@ const ProjectEligibility = () => {
             We cannot fund:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {ineligibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
-                  ❌ {cat.title}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {cat.items}
-                </p>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={ineligibleCategories.map((cat) => ({
+              title: `❌ ${cat.title}`,
+              description: cat.items,
+            }))}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
         </section>
 
         {/* Review & Approval Process */}
@@ -254,22 +239,14 @@ const ProjectEligibility = () => {
             Review & Approval Process
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {reviewProcess.map((item, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
-                  {item.step}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={reviewProcess.map((item) => ({
+              title: item.step,
+              description: item.description,
+            }))}
+            autoScrollInterval={5000}
+            showPagination={true}
+          />
 
           <div className="max-w-6xl mx-auto">
             <div className="card-glass p-8 text-left">

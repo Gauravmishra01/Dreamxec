@@ -1,6 +1,7 @@
 import { Header } from '../../Header'
 import { FooterContent } from '../../Footer/components/FooterContent'
 import useScrollReveal from '../../../hooks/useScrollReveal'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const HowItWorksDonors = () => {
 
@@ -86,23 +87,14 @@ const HowItWorksDonors = () => {
                         Funding Flow
                     </h2>
 
-                    <div className="grid grid-cols-1 gap-8">
-                        {steps.map((step, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
-              reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
-                            >
-                                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
-                                    {step.title}
-                                </h3>
-                                <p className="text-dreamxec-navy text-lg md:text-xl leading-[1.75]">
-                                    {step.text}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                    <HorizontalCardCarousel
+                        cards={steps.map((step) => ({
+                            title: step.title,
+                            description: step.text,
+                        }))}
+                        autoScrollInterval={5000}
+                        showPagination={true}
+                    />
                 </section>
 
                 {/* -------------------- Transparency -------------------- */}
@@ -115,30 +107,23 @@ const HowItWorksDonors = () => {
                         Money Usage Transparency
                     </h2>
 
-                    <div className="space-y-4 max-w-5xl mx-auto">
-                        {budgetBreakdown.map((item, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
-              reveal ${transparency.isVisible ? 'reveal-visible' : ''}`}
-                            >
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
-                                            {item.category}
-                                        </h4>
-                                        <p className="text-base md:text-lg text-dreamxec-navy">
-                                            {item.description}
-                                        </p>
-                                    </div>
-                                    <span className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue">
+                    <HorizontalCardCarousel
+                        cards={budgetBreakdown.map((item) => ({
+                            title: item.category,
+                            content: (
+                                <div className="flex flex-col h-full justify-between">
+                                    <p className="text-base md:text-lg text-dreamxec-navy mb-4">
+                                        {item.description}
+                                    </p>
+                                    <span className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue text-center">
                                         {item.amount}
                                     </span>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ),
+                        }))}
+                        autoScrollInterval={4500}
+                        showPagination={true}
+                    />
                 </section>
 
                 {/* -------------------- Impact -------------------- */}
@@ -151,23 +136,14 @@ const HowItWorksDonors = () => {
                         Impact Tracking
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                        {impactMetrics.map((metric, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
-              reveal ${impact.isVisible ? 'reveal-visible' : ''}`}
-                            >
-                                <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                                    {metric.title}
-                                </h4>
-                                <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed">
-                                    {metric.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                    <HorizontalCardCarousel
+                        cards={impactMetrics.map((metric) => ({
+                            title: metric.title,
+                            description: metric.description,
+                        }))}
+                        autoScrollInterval={4500}
+                        showPagination={true}
+                    />
                 </section>
 
                 {/* -------------------- FAQ -------------------- */}
@@ -175,21 +151,18 @@ const HowItWorksDonors = () => {
                     ref={faq.ref}
                     className={`px-4 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
                 >
-                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {FAQ.map((item, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className="card-pastel-offwhite p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-                            >
-                                <h3 className="text-lg md:text-xl font-bold mb-2 text-dreamxec-navy">
-                                    Q: {item.q}
-                                </h3>
-                                <p className="text-base md:text-lg text-dreamxec-gray leading-relaxed">
-                                    A: {item.a}
-                                </p>
-                            </div>
-                        ))}
+                    <div className="max-w-7xl mx-auto">
+                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue mb-12">
+                            Frequently Asked Questions
+                        </h2>
+                        <HorizontalCardCarousel
+                            cards={FAQ.map((item) => ({
+                                title: `Q: ${item.q}`,
+                                description: `A: ${item.a}`,
+                            }))}
+                            autoScrollInterval={5000}
+                            showPagination={true}
+                        />
                     </div>
                 </section>
 

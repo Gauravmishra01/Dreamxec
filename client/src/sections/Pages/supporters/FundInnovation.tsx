@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { HorizontalCardCarousel } from '../../../components/HorizontalCardCarousel'
 
 const FundInnovation = () => {
 
@@ -85,21 +86,14 @@ const FundInnovation = () => {
             How to Discover Projects
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {discoverMethods.map((method, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                  {method.title}
-                </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                  {method.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={discoverMethods.map((method) => ({
+              title: method.title,
+              description: method.description,
+            }))}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
         </section>
 
         {/* Trust & Transparency */}
@@ -108,21 +102,14 @@ const FundInnovation = () => {
             Trust & Transparency
           </h2>
 
-          <div className="space-y-6">
-            {trustPoints.map((point, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                  {point.title}
-                </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                  {point.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <HorizontalCardCarousel
+            cards={trustPoints.map((point) => ({
+              title: point.title,
+              description: point.description,
+            }))}
+            autoScrollInterval={4500}
+            showPagination={true}
+          />
         </section>
 
         {/* CTA Section */}
