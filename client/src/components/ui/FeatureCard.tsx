@@ -15,12 +15,12 @@ const FeatureCard = ({
   className = '',
   variant = 'premium',
 }: FeatureCardProps) => {
-  const baseClasses = 'p-6 md:p-8 h-full flex flex-col transition-all duration-[350ms] ease-out hover:-translate-y-1.5 rounded-[18px]';
+  const baseClasses = 'p-6 md:p-8 h-full flex flex-col rounded-[18px]';
   
   const variantClasses = {
-    glass: 'card-glass-modern hover:shadow-[0_20px_60px_rgba(0,51,102,0.15)] hover:scale-[1.02]',
-    gradient: 'card-gradient-border hover:shadow-[0_20px_60px_rgba(255,127,0,0.2)]',
-    premium: 'card-premium hover:shadow-[0_20px_60px_rgba(255,153,51,0.25),0_0_40px_rgba(255,153,51,0.15)]',
+    glass: 'card-glass-modern',
+    gradient: 'card-gradient-border',
+    premium: 'card-premium',
     default: 'card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:scale-105 hover:shadow-pastel-glow-saffron',
   };
 
@@ -54,7 +54,7 @@ const FeatureCard = ({
 
   if (variant === 'gradient') {
     return (
-      <div className={`card-gradient-border hover:-translate-y-1.5 hover:shadow-[0_20px_60px_rgba(255,127,0,0.2)] transition-all duration-[350ms] ease-out ${className}`}>
+      <div className={`card-gradient-border ${className}`}>
         <div className="card-gradient-border-inner">
           {content}
         </div>

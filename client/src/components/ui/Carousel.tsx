@@ -153,7 +153,6 @@ const Carousel = ({
         }
 
         .carousel-container .slick-list {
-          overflow: visible;
           padding: 20px 0;
         }
         
