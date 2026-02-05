@@ -1,6 +1,11 @@
 import { Header } from '../../Header'
 import { FooterContent } from '../../Footer/components/FooterContent'
 import useScrollReveal from '../../../hooks/useScrollReveal'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 const HowItWorksDonors = () => {
 
@@ -86,23 +91,47 @@ const HowItWorksDonors = () => {
                         Funding Flow
                     </h2>
 
-                    <div className="grid grid-cols-1 gap-8">
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        spaceBetween={32}
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ clickable: true }}
+                        autoplay={{ 
+                            delay: 4000, 
+                            pauseOnMouseEnter: true,
+                            disableOnInteraction: false
+                        }}
+                        breakpoints={{
+                            768: { 
+                                slidesPerView: 2,
+                                spaceBetween: 24
+                            },
+                            1024: { 
+                                slidesPerView: 3,
+                                spaceBetween: 32
+                            },
+                        }}
+                        className="pb-12"
+                    >
                         {steps.map((step, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
-              reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
-                            >
-                                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
-                                    {step.title}
-                                </h3>
-                                <p className="text-dreamxec-navy text-lg md:text-xl leading-[1.75]">
-                                    {step.text}
-                                </p>
-                            </div>
+                            <SwiperSlide key={index}>
+                                <div
+                                    style={{ transitionDelay: `${index * 120}ms` }}
+                                    className={`card-pastel p-8 rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card h-full
+                                    hover:transform hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300
+                                    reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
+                                >
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
+                                        {step.title}
+                                    </h3>
+                                    <p className="text-dreamxec-navy text-lg md:text-xl leading-[1.75]">
+                                        {step.text}
+                                    </p>
+                                </div>
+                            </SwiperSlide>
                         ))}
-                    </div>
+                    </Swiper>
                 </section>
 
                 {/* -------------------- Transparency -------------------- */}
@@ -151,23 +180,47 @@ const HowItWorksDonors = () => {
                         Impact Tracking
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        spaceBetween={32}
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ clickable: true }}
+                        autoplay={{ 
+                            delay: 4000, 
+                            pauseOnMouseEnter: true,
+                            disableOnInteraction: false
+                        }}
+                        breakpoints={{
+                            768: { 
+                                slidesPerView: 2,
+                                spaceBetween: 24
+                            },
+                            1024: { 
+                                slidesPerView: 3,
+                                spaceBetween: 32
+                            },
+                        }}
+                        className="pb-12"
+                    >
                         {impactMetrics.map((metric, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
-              reveal ${impact.isVisible ? 'reveal-visible' : ''}`}
-                            >
-                                <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                                    {metric.title}
-                                </h4>
-                                <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed">
-                                    {metric.description}
-                                </p>
-                            </div>
+                            <SwiperSlide key={index}>
+                                <div
+                                    style={{ transitionDelay: `${index * 120}ms` }}
+                                    className={`card-pastel p-6 rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card h-full
+                                    hover:transform hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300
+                                    reveal ${impact.isVisible ? 'reveal-visible' : ''}`}
+                                >
+                                    <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+                                        {metric.title}
+                                    </h4>
+                                    <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed">
+                                        {metric.description}
+                                    </p>
+                                </div>
+                            </SwiperSlide>
                         ))}
-                    </div>
+                    </Swiper>
                 </section>
 
                 {/* -------------------- FAQ -------------------- */}

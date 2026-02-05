@@ -572,6 +572,47 @@ img {
   animation: fade-in 1s ease-in forwards;
 }
 
+/* Swiper Carousel Custom Styles */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #003262 !important; /* dreamxec-berkeley-blue */
+  background: rgba(255, 255, 255, 0.9);
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 50, 98, 0.2);
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 20px !important;
+  font-weight: bold;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #003262;
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.swiper-pagination-bullet {
+  background: #003262 !important; /* dreamxec-berkeley-blue */
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #003262 !important;
+  transform: scale(1.2);
+}
+
+.swiper-pagination {
+  bottom: 0 !important;
+}
+
 
 
 @layer base {

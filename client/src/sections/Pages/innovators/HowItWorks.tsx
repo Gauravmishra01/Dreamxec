@@ -1,5 +1,10 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 const HowItWorksStudents = () => {
 
@@ -66,29 +71,52 @@ const HowItWorksStudents = () => {
                     </p>
                 </section>
 
-                {/* Step-by-Step – Transparent / Glass Cards */}
+                {/* Step-by-Step – Horizontal Carousel */}
                 <section className="max-w-7xl mx-auto px-4 text-center space-y-16">
                     <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
                         Step-by-Step Guide
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        spaceBetween={32}
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ clickable: true }}
+                        autoplay={{ 
+                            delay: 4000, 
+                            pauseOnMouseEnter: true,
+                            disableOnInteraction: false
+                        }}
+                        breakpoints={{
+                            768: { 
+                                slidesPerView: 2,
+                                spaceBetween: 24
+                            },
+                            1024: { 
+                                slidesPerView: 3,
+                                spaceBetween: 32
+                            },
+                        }}
+                        className="pb-12"
+                    >
                         {steps.map((step, index) => (
-                            <div
-                                key={index}
-                                style={{ animationDelay: `${index * 120}ms` }}
-                                className="card-glass animate-fade-in p-8 text-left"
-                            >
-                                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                                    {step.title}
-                                </h3>
+                            <SwiperSlide key={index}>
+                                <div
+                                    style={{ animationDelay: `${index * 120}ms` }}
+                                    className="card-glass animate-fade-in p-8 text-left rounded-2xl h-full hover:transform hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+                                >
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
+                                        {step.title}
+                                    </h3>
 
-                                <p className="text-base md:text-lg lg:text-xl text-dreamxec-gray-600 font-semibold leading-relaxed">
-                                    {step.text}
-                                </p>
-                            </div>
+                                    <p className="text-base md:text-lg lg:text-xl text-dreamxec-gray-600 font-semibold leading-relaxed">
+                                        {step.text}
+                                    </p>
+                                </div>
+                            </SwiperSlide>
                         ))}
-                    </div>
+                    </Swiper>
                 </section>
 
                 {/* Do's & Don'ts */}
