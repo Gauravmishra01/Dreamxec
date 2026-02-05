@@ -181,7 +181,7 @@ export const HorizontalCardCarousel: React.FC<HorizontalCardCarouselProps> = ({
             >
               <div
                 className={`
-                  w-full h-96 
+                  w-full min-h-96 
                   bg-white 
                   rounded-2xl 
                   border-4 border-dreamxec-navy 

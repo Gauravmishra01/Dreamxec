@@ -27,6 +27,25 @@ const HowItWorksStudents = () => {
         }
     ]
 
+    const commonMistakes = [
+        {
+            title: "Vague Project Description",
+            description: "Vague project description. \"We're building an app\" doesn't cut it. Explain why (problem), what (solution), how (approach), impact (measurable outcome). Specific projects raise 3x more.",
+        },
+        {
+            title: "Incorrect Funding Goal",
+            description: "Setting the wrong funding goal. Too low = underestimate costs. Too high = looks unrealistic. Research similar projects; aim for ₹1–5L for most student projects.",
+        },
+        {
+            title: "Poor Video Quality",
+            description: "Poor video quality. Doesn't need to be Hollywood. Just clear lighting, good audio, genuine enthusiasm. Phone videos often outperform produced videos because they feel authentic.",
+        },
+        {
+            title: "Missing Updates",
+            description: "Missing milestone updates. Not updating donors/backers can reduce trust and hurt future fundraising. Credibility and consistency accelerate success.",
+        },
+    ]
+
     return (
         <>
             {/* SEO */}
@@ -124,24 +143,7 @@ const HowItWorksStudents = () => {
                     </h2>
 
                     <HorizontalCardCarousel
-                        cards={[
-                            {
-                                title: "Vague Project Description",
-                                description: "Vague project description. \"We're building an app\" doesn't cut it. Explain why (problem), what (solution), how (approach), impact (measurable outcome). Specific projects raise 3x more.",
-                            },
-                            {
-                                title: "Incorrect Funding Goal",
-                                description: "Setting the wrong funding goal. Too low = underestimate costs. Too high = looks unrealistic. Research similar projects; aim for ₹1–5L for most student projects.",
-                            },
-                            {
-                                title: "Poor Video Quality",
-                                description: "Poor video quality. Doesn't need to be Hollywood. Just clear lighting, good audio, genuine enthusiasm. Phone videos often outperform produced videos because they feel authentic.",
-                            },
-                            {
-                                title: "Missing Updates",
-                                description: "Missing milestone updates. Not updating donors/backers can reduce trust and hurt future fundraising. Credibility and consistency accelerate success.",
-                            },
-                        ]}
+                        cards={commonMistakes}
                         autoScrollInterval={4500}
                         showPagination={true}
                     />
