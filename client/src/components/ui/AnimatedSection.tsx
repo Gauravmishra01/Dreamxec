@@ -46,7 +46,6 @@ const AnimatedSection = ({
 
   const getAnimationClasses = () => {
     const baseClasses = 'transition-all';
-    const durationClass = `duration-${duration}`;
     
     if (!isVisible) {
       switch (animation) {
@@ -65,7 +64,7 @@ const AnimatedSection = ({
       }
     }
 
-    return `${baseClasses} ${durationClass} opacity-100 translate-y-0 translate-x-0 scale-100`;
+    return `${baseClasses} opacity-100 translate-y-0 translate-x-0 scale-100`;
   };
 
   return (
@@ -83,3 +82,4 @@ const AnimatedSection = ({
 };
 
 export default AnimatedSection;
+
