@@ -1,9 +1,35 @@
 import { useNavigate } from 'react-router-dom';
 import { FooterContent } from '../sections/Footer/components/FooterContent';
+import Carousel from './ui/Carousel';
+import TestimonialCard from './ui/TestimonialCard';
+import AnimatedSection from './ui/AnimatedSection';
 
 const AboutUs = () => {
     const navigate = useNavigate();
     const role = localStorage.getItem('role'); // "STUDENT" | "DONOR" | null
+
+    const testimonials = [
+        {
+            quote: "DreamXec gave me the platform to turn my research idea into reality. The mentor support was invaluable!",
+            name: "Ananya Singh",
+            role: "Engineering Student, IIT Delhi"
+        },
+        {
+            quote: "I've funded 5 student projects and seen incredible outcomes. This platform makes impact investing accessible.",
+            name: "Rahul Mehta",
+            role: "Tech Entrepreneur & Donor"
+        },
+        {
+            quote: "From prototype to product in 6 months. DreamXec connected me with mentors who believed in my vision.",
+            name: "Karthik Reddy",
+            role: "Computer Science Student, BITS Pilani"
+        },
+        {
+            quote: "Supporting student innovation is the best investment I've made. Every rupee creates lasting impact.",
+            name: "Dr. Priya Sharma",
+            role: "Professor & Supporter"
+        }
+    ]
 
     return (
         <div className="min-h-screen  pt-20">
@@ -78,7 +104,8 @@ const AboutUs = () => {
 
 
                 {/* CORE VALUES */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <AnimatedSection animation="fade-in" delay={200}>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
                     <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy">
                         <h3 className="text-xl font-bold text-dreamxec-navy mb-3 font-display">
                             Belief in Potential
@@ -108,6 +135,33 @@ const AboutUs = () => {
                         </p>
                     </div>
                 </div>
+                </AnimatedSection>
+
+                {/* TESTIMONIALS */}
+                <AnimatedSection animation="slide-up" delay={300}>
+                    <section className="mb-24">
+                        <h2 className="text-3xl md:text-4xl font-bold text-dreamxec-navy font-display mb-8 text-center">
+                            Stories from Our Community
+                        </h2>
+                        <div className="pb-12">
+                            <Carousel
+                                slidesToShow={2}
+                                autoplaySpeed={5000}
+                                className="px-8"
+                            >
+                                {testimonials.map((testimonial, index) => (
+                                    <div key={index} className="px-2">
+                                        <TestimonialCard
+                                            quote={testimonial.quote}
+                                            name={testimonial.name}
+                                            role={testimonial.role}
+                                        />
+                                    </div>
+                                ))}
+                            </Carousel>
+                        </div>
+                    </section>
+                </AnimatedSection>
 
                 {/* HOW DREAMXEC IS DIFFERENT */}
                 <div className="max-w-5xl mx-auto mb-20 text-center">

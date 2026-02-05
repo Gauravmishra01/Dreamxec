@@ -1,7 +1,38 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import Carousel from '../../../components/ui/Carousel'
+import TestimonialCard from '../../../components/ui/TestimonialCard'
+import AnimatedSection from '../../../components/ui/AnimatedSection'
 
 const FundInnovation = () => {
+
+  const testimonials = [
+    {
+      quote: "Supporting student innovation through DreamXec has been incredibly rewarding. I've seen brilliant ideas come to life!",
+      name: "Dr. Priya Sharma",
+      role: "Tech Entrepreneur & Mentor"
+    },
+    {
+      quote: "Every rupee I invest here goes directly to empowering the next generation of innovators. It's transparent and impactful.",
+      name: "Rajesh Kumar",
+      role: "Angel Investor"
+    },
+    {
+      quote: "I funded three projects last year. Seeing their progress updates and final outcomes was worth every contribution.",
+      name: "Anita Desai",
+      role: "Corporate Donor"
+    },
+    {
+      quote: "DreamXec makes it easy to find projects aligned with my interests. The student updates keep me engaged throughout.",
+      name: "Vikram Patel",
+      role: "Alumni Supporter"
+    },
+    {
+      quote: "Supporting student research is an investment in India's future. DreamXec makes it simple and trustworthy.",
+      name: "Meera Reddy",
+      role: "Social Impact Investor"
+    }
+  ]
 
   const discoverMethods = [
     {
@@ -63,14 +94,42 @@ const FundInnovation = () => {
       <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
-            Your Support Powers India's Next Generation of Innovators
-          </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Discover projects transforming ideas into impact. Fund the innovations you believe in.
-          </p>
-        </section>
+        <AnimatedSection animation="fade-in">
+          <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
+            <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+              Your Support Powers India's Next Generation of Innovators
+            </h1>
+            <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              Discover projects transforming ideas into impact. Fund the innovations you believe in.
+            </p>
+          </section>
+        </AnimatedSection>
+
+        {/* Testimonials Carousel */}
+        <AnimatedSection animation="slide-up" delay={200}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-3xl md:text-5xl font-extrabold text-center">
+              What Supporters Say
+            </h2>
+            <div className="pb-12">
+              <Carousel
+                slidesToShow={3}
+                autoplaySpeed={4000}
+                className="px-8"
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="px-2">
+                    <TestimonialCard
+                      quote={testimonial.quote}
+                      name={testimonial.name}
+                      role={testimonial.role}
+                    />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* Intro */}
         <section className="max-w-6xl mx-auto  space-y-6">
@@ -80,50 +139,60 @@ const FundInnovation = () => {
         </section>
 
         {/* How to Discover Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            How to Discover Projects
-          </h2>
+        <AnimatedSection animation="fade-in" delay={300}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              How to Discover Projects
+            </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {discoverMethods.map((method, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                  {method.title}
-                </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                  {method.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {discoverMethods.map((method, index) => (
+                <AnimatedSection
+                  key={index}
+                  animation="slide-up"
+                  delay={400 + index * 100}
+                >
+                  <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-saffron transition-all duration-300 hover:scale-105">
+                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                      {method.title}
+                    </h3>
+                    <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                      {method.description}
+                    </p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* Trust & Transparency */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            Trust & Transparency
-          </h2>
+        <AnimatedSection animation="fade-in" delay={600}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              Trust & Transparency
+            </h2>
 
-          <div className="space-y-6">
-            {trustPoints.map((point, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                  {point.title}
-                </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                  {point.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="space-y-6">
+              {trustPoints.map((point, index) => (
+                <AnimatedSection
+                  key={index}
+                  animation="slide-up"
+                  delay={700 + index * 100}
+                >
+                  <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-green transition-all duration-300">
+                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                      {point.title}
+                    </h3>
+                    <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                      {point.description}
+                    </p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* CTA Section */}
         <section className="flex items-center justify-center gap-6 py-16">

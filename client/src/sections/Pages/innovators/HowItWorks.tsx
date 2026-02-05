@@ -1,7 +1,39 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import Carousel from '../../../components/ui/Carousel'
+import FeatureCard from '../../../components/ui/FeatureCard'
+import AnimatedSection from '../../../components/ui/AnimatedSection'
+import { Rocket, Users, Target, TrendingUp, Award } from 'lucide-react'
 
 const HowItWorksStudents = () => {
+
+    const features = [
+        {
+            icon: <Rocket className="w-full h-full" />,
+            title: "Launch Your Project",
+            description: "Get your innovation funded by supporters who believe in your vision and potential."
+        },
+        {
+            icon: <Users className="w-full h-full" />,
+            title: "Connect with Mentors",
+            description: "AI-powered matching system connects you with expert mentors in your field."
+        },
+        {
+            icon: <Target className="w-full h-full" />,
+            title: "Set Clear Goals",
+            description: "Define milestones and track progress with transparent updates to your backers."
+        },
+        {
+            icon: <TrendingUp className="w-full h-full" />,
+            title: "Build Momentum",
+            description: "Regular updates and community engagement keep your project moving forward."
+        },
+        {
+            icon: <Award className="w-full h-full" />,
+            title: "Deliver Impact",
+            description: "Complete your project and join the network of successful DreamXec innovators."
+        }
+    ]
 
     const steps = [
         {
@@ -40,31 +72,61 @@ const HowItWorksStudents = () => {
             <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
 
                 {/* Hero */}
-                <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-                    <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
-                        The Complete Guide to Launching Your Project on DreamXec
-                    </h1>
-                    <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-                        From idea to impact in 5 steps. Here's exactly how to navigate the DreamXec
-                        platform and turn your vision into reality.
-                    </p>
-                </section>
+                <AnimatedSection animation="fade-in" duration={800}>
+                    <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
+                        <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+                            The Complete Guide to Launching Your Project on DreamXec
+                        </h1>
+                        <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                            From idea to impact in 5 steps. Here's exactly how to navigate the DreamXec
+                            platform and turn your vision into reality.
+                        </p>
+                    </section>
+                </AnimatedSection>
+
+                {/* Features Carousel */}
+                <AnimatedSection animation="slide-up" delay={200}>
+                    <section className="max-w-7xl mx-auto px-4 space-y-12">
+                        <h2 className="text-dreamxec-berkeley-blue text-3xl md:text-5xl font-extrabold text-center">
+                            Key Features
+                        </h2>
+                        <div className="pb-12">
+                            <Carousel
+                                slidesToShow={3}
+                                autoplaySpeed={3500}
+                                className="px-8"
+                            >
+                                {features.map((feature, index) => (
+                                    <div key={index} className="px-2">
+                                        <FeatureCard
+                                            icon={feature.icon}
+                                            title={feature.title}
+                                            description={feature.description}
+                                        />
+                                    </div>
+                                ))}
+                            </Carousel>
+                        </div>
+                    </section>
+                </AnimatedSection>
 
                 {/* Overview */}
-                <section className="max-w-6xl mx-auto px-4 space-y-6 text-center">
-                    <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
-                        Overview
-                    </h1>
-                    <p className="text-dreamxec-navy text-base md:text-xl leading-relaxed">
-                        Launching a project on DreamXec is a structured journey designed to maximize
-                        your success. You're not just raising money—you're building a support system
-                        of mentors, backers, and community members who believe in your impact. This
-                        guide walks you through every stage: from project creation to mentor matching
-                        to campaign execution to post-funding delivery. Follow these steps, and
-                        you'll join the coveted 500+ innovators we will help succeed in their
-                        research journey!.
-                    </p>
-                </section>
+                <AnimatedSection animation="fade-in" delay={300}>
+                    <section className="max-w-6xl mx-auto px-4 space-y-6 text-center">
+                        <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+                            Overview
+                        </h1>
+                        <p className="text-dreamxec-navy text-base md:text-xl leading-relaxed">
+                            Launching a project on DreamXec is a structured journey designed to maximize
+                            your success. You're not just raising money—you're building a support system
+                            of mentors, backers, and community members who believe in your impact. This
+                            guide walks you through every stage: from project creation to mentor matching
+                            to campaign execution to post-funding delivery. Follow these steps, and
+                            you'll join the coveted 500+ innovators we will help succeed in their
+                            research journey!.
+                        </p>
+                    </section>
+                </AnimatedSection>
 
                 {/* Step-by-Step – Transparent / Glass Cards */}
                 <section className="max-w-7xl mx-auto px-4 text-center space-y-16">
@@ -74,19 +136,21 @@ const HowItWorksStudents = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
                         {steps.map((step, index) => (
-                            <div
+                            <AnimatedSection
                                 key={index}
-                                style={{ animationDelay: `${index * 120}ms` }}
-                                className="card-glass animate-fade-in p-8 text-left"
+                                animation="slide-up"
+                                delay={index * 150}
                             >
-                                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                                    {step.title}
-                                </h3>
+                                <div className="card-glass p-8 text-left hover:shadow-pastel-glow-saffron transition-all duration-300">
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
+                                        {step.title}
+                                    </h3>
 
-                                <p className="text-base md:text-lg lg:text-xl text-dreamxec-gray-600 font-semibold leading-relaxed">
-                                    {step.text}
-                                </p>
-                            </div>
+                                    <p className="text-base md:text-lg lg:text-xl text-dreamxec-gray-600 font-semibold leading-relaxed">
+                                        {step.text}
+                                    </p>
+                                </div>
+                            </AnimatedSection>
                         ))}
                     </div>
                 </section>

@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import AnimatedSection from '../../../components/ui/AnimatedSection'
 
 const PerfectStorm = () => {
 
@@ -46,51 +47,59 @@ const PerfectStorm = () => {
       <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
-            The Perfect Storm for Innovation
-          </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            India is at an inflection point. How student-led innovation will reshape the nation's future.
-          </p>
-        </section>
+        <AnimatedSection animation="fade-in">
+          <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
+            <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+              The Perfect Storm for Innovation
+            </h1>
+            <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              India is at an inflection point. How student-led innovation will reshape the nation's future.
+            </p>
+          </section>
+        </AnimatedSection>
 
         {/* Introduction */}
-        <section className="max-w-6xl mx-auto px-4">
-          <div className="max-w-6xl mx-auto space-y-6">
-            <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
-              India is at an inflection point. We have 40 million college students—the largest youth population of any country. We have technology. We have market problems crying for solutions. We have global demand for Indian innovation. And yet, fewer than 0.1% of our student innovators get funded to turn ideas into reality.
-            </p>
-            <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
-              This is the "Perfect Storm"—not a disaster, but a moment where multiple forces align to create unprecedented opportunity. DreamXec exists to harness that opportunity and unlock innovation at scale. This essay explores why now is the moment, and how student-led innovation will reshape India's future.
-            </p>
-          </div>
-        </section>
+        <AnimatedSection animation="slide-up" delay={200}>
+          <section className="max-w-6xl mx-auto px-4">
+            <div className="max-w-6xl mx-auto space-y-6">
+              <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
+                India is at an inflection point. We have 40 million college students—the largest youth population of any country. We have technology. We have market problems crying for solutions. We have global demand for Indian innovation. And yet, fewer than 0.1% of our student innovators get funded to turn ideas into reality.
+              </p>
+              <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
+                This is the "Perfect Storm"—not a disaster, but a moment where multiple forces align to create unprecedented opportunity. DreamXec exists to harness that opportunity and unlock innovation at scale. This essay explores why now is the moment, and how student-led innovation will reshape India's future.
+              </p>
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* Innovation Gap */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            India's Innovation Gap
-          </h2>
+        <AnimatedSection animation="fade-in" delay={300}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              India's Innovation Gap
+            </h2>
 
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div>
-              <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
-                The Data:
-              </h3>
-              <div className="space-y-4">
-                {innovationGapData.map((item, index) => (
-                  <div
-                    key={index}
-                    className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-                  >
-                    <p className="text-dreamxec-navy text-base md:text-lg">
-                      <span className="font-bold text-dreamxec-berkeley-blue">{item.stat}</span> {item.desc}
-                    </p>
-                  </div>
-                ))}
+            <div className="max-w-6xl mx-auto space-y-8">
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
+                  The Data:
+                </h3>
+                <div className="space-y-4">
+                  {innovationGapData.map((item, index) => (
+                    <AnimatedSection
+                      key={index}
+                      animation="slide-up"
+                      delay={400 + index * 100}
+                    >
+                      <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-saffron transition-all duration-300">
+                        <p className="text-dreamxec-navy text-base md:text-lg">
+                          <span className="font-bold text-dreamxec-berkeley-blue">{item.stat}</span> {item.desc}
+                        </p>
+                      </div>
+                    </AnimatedSection>
+                  ))}
+                </div>
               </div>
-            </div>
 
             <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
@@ -143,31 +152,35 @@ const PerfectStorm = () => {
               </div>
             </div>
           </div>
-        </section>
+        </AnimatedSection>
 
         {/* Why Now */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            Why Now
-          </h2>
+        <AnimatedSection animation="fade-in" delay={600}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              Why Now
+            </h2>
 
-          <div className="space-y-8">
-            {whyNowReasons.map((reason, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 max-w-6xl mx-auto"
-              >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                  {reason.title}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {reason.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="space-y-8">
+              {whyNowReasons.map((reason, index) => (
+                <AnimatedSection
+                  key={index}
+                  animation="slide-up"
+                  delay={700 + index * 120}
+                >
+                  <div className="card-glass p-8 max-w-6xl mx-auto hover:shadow-pastel-glow-saffron transition-all duration-300">
+                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
+                      {reason.title}
+                    </h3>
+                    <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
+                      {reason.description}
+                    </p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* Role of Students & Youth */}
         <section className="max-w-7xl mx-auto px-4 space-y-12">
