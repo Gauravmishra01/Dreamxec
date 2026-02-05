@@ -261,8 +261,8 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
 
 
         {/* Main Auth Card */}
-        <div className="w-full max-w-4xl px-4 sm:px-6 relative z-50 my-4 sm:my-6">
-          <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-8 lg:p-10 bg-white relative" style={{ zIndex: 1000 }}>
+        <div className="w-full max-w-4xl px-4 sm:px-6 relative z-50 my-4 sm:my-6 transition-all duration-500 ease-in-out">
+          <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-8 lg:p-10 bg-white relative hover:shadow-pastel-glow-saffron transition-all duration-300" style={{ zIndex: 1000 }}>
             <div className="card-tricolor-tag"></div>
 
             {/* Logo/Header */}

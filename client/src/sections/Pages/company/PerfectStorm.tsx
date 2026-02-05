@@ -151,7 +151,8 @@ const PerfectStorm = () => {
                 </div>
               </div>
             </div>
-          </div>
+            </div>
+          </section>
         </AnimatedSection>
 
         {/* Why Now */}

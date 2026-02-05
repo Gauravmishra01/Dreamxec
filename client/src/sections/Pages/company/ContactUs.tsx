@@ -1,6 +1,7 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
 import { Mail, Phone, MessageSquare, Linkedin, Twitter, Instagram, MapPin, FileText } from 'lucide-react'
+import AnimatedSection from '../../../components/ui/AnimatedSection'
 
 const ContactUs = () => {
 
@@ -47,45 +48,52 @@ const ContactUs = () => {
       <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
-            Get in Touch
-          </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Have questions? Want to partner with DreamXec? Need support with your project? We're here to help. Below are all the ways you can reach us—email, phone, social media, or in person.
-          </p>
-        </section>
+        <AnimatedSection animation="fade-in">
+          <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
+            <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+              Get in Touch
+            </h1>
+            <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              Have questions? Want to partner with DreamXec? Need support with your project? We're here to help. Below are all the ways you can reach us—email, phone, social media, or in person.
+            </p>
+          </section>
+        </AnimatedSection>
 
         {/* Contact Categories */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            How to Reach Us
-          </h2>
+        <AnimatedSection animation="fade-in" delay={200}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              How to Reach Us
+            </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {contactCategories.map((category, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <div className="flex items-start gap-4 mb-3">
-                  <Mail className="w-6 h-6 text-dreamxec-berkeley-blue flex-shrink-0 mt-1" />
-                  <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue">
-                    {category.title}
-                  </h3>
-                </div>
-                <p className="text-dreamxec-navy text-base md:text-lg font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
-                  {category.email}
-                </p>
-                {category.details && (
-                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                    {category.details}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {contactCategories.map((category, index) => (
+                <AnimatedSection
+                  key={index}
+                  animation="slide-up"
+                  delay={300 + index * 100}
+                >
+                  <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-saffron transition-all duration-300 hover:scale-105">
+                    <div className="flex items-start gap-4 mb-3">
+                      <Mail className="w-6 h-6 text-dreamxec-berkeley-blue flex-shrink-0 mt-1" />
+                      <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue">
+                        {category.title}
+                      </h3>
+                    </div>
+                    <p className="text-dreamxec-navy text-base md:text-lg font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
+                      {category.email}
+                    </p>
+                    {category.details && (
+                      <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                        {category.details}
+                      </p>
+                    )}
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* Email & Socials */}
         <section className="max-w-7xl mx-auto px-4 space-y-12">

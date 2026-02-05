@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import AnimatedSection from '../../../components/ui/AnimatedSection'
 
 const ProjectEligibility = () => {
 
@@ -166,87 +167,99 @@ const ProjectEligibility = () => {
       <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
-            What Projects Can We Fund? Full Eligibility Guide
-          </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            We support innovation in every field—from biotech to social impact. Here's what qualifies (and what doesn't).
-          </p>
-        </section>
+        <AnimatedSection animation="fade-in">
+          <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
+            <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+              What Projects Can We Fund? Full Eligibility Guide
+            </h1>
+            <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              We support innovation in every field—from biotech to social impact. Here's what qualifies (and what doesn't).
+            </p>
+          </section>
+        </AnimatedSection>
 
         {/* Eligible Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            Eligible Projects
-          </h2>
+        <AnimatedSection animation="fade-in" delay={200}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              Eligible Projects
+            </h2>
 
-          <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed text-center">
-            DreamXec funds student-led innovations across:
-          </p>
+            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed text-center">
+              DreamXec funds student-led innovations across:
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {eligibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
-              >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                  {cat.category}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {cat.items}
-                </p>
-              </div>
-            ))}
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {eligibleCategories.map((cat, index) => (
+                <AnimatedSection
+                  key={index}
+                  animation="slide-up"
+                  delay={300 + index * 100}
+                >
+                  <div className="card-glass p-8 text-left hover:shadow-pastel-glow-saffron transition-all duration-300">
+                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
+                      {cat.category}
+                    </h3>
+                    <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
+                      {cat.items}
+                    </p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
 
           {/* Eligibility Requirements */}
-          <div className="max-w-6xl mx-auto mt-12">
-            <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
-              Eligibility Requirements:
-            </h3>
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <ul className="space-y-3">
-                {eligibilityRequirements.map((req, index) => (
-                  <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
-                    <span className="text-xl font-bold flex-shrink-0">✅</span>
-                    <span>{req}</span>
-                  </li>
-                ))}
-              </ul>
+          <AnimatedSection animation="scale" delay={600}>
+            <div className="max-w-6xl mx-auto mt-12">
+              <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
+                Eligibility Requirements:
+              </h3>
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-pastel-glow-green transition-all duration-300">
+                <ul className="space-y-3">
+                  {eligibilityRequirements.map((req, index) => (
+                    <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
+                      <span className="text-xl font-bold flex-shrink-0">✅</span>
+                      <span>{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          </AnimatedSection>
         </section>
+        </AnimatedSection>
 
         {/* Ineligible Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
-            Ineligible Projects
-          </h2>
+        <AnimatedSection animation="fade-in" delay={700}>
+          <section className="max-w-7xl mx-auto px-4 space-y-12">
+            <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+              Ineligible Projects
+            </h2>
 
-          <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed text-center">
-            We cannot fund:
-          </p>
+            <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed text-center">
+              We cannot fund:
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {ineligibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 text-left"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
-                  ❌ {cat.title}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {cat.items}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {ineligibleCategories.map((cat, index) => (
+                <AnimatedSection
+                  key={index}
+                  animation="slide-up"
+                  delay={800 + index * 100}
+                >
+                  <div className="card-glass p-8 text-left hover:shadow-lg transition-all duration-300">
+                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
+                      ❌ {cat.title}
+                    </h3>
+                    <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
+                      {cat.items}
+                    </p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
 
         {/* Review & Approval Process */}
         <section className="max-w-7xl mx-auto px-4 space-y-12">
