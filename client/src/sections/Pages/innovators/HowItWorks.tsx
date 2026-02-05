@@ -141,8 +141,8 @@ const HowItWorksStudents = () => {
                                 animation="slide-up"
                                 delay={index * 150}
                             >
-                                <div className="card-glass p-8 text-left hover:shadow-pastel-glow-saffron transition-all duration-300">
-                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
+                                <div className="card-glass-modern p-8 text-left">
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-navy bg-clip-text text-transparent mb-4">
                                         {step.title}
                                     </h3>
 
@@ -162,27 +162,73 @@ const HowItWorksStudents = () => {
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-8">
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-2xl font-bold mb-4">DO</h3>
-                            <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                <li>✅ Be honest about your timeline and challenges</li>
-                                <li>✅ Post regular updates (bi-weekly minimum)</li>
-                                <li>✅ Respond to every backer comment within 24 hours</li>
-                                <li>✅ Use video updates (they increase backer engagement 5x)</li>
-                                <li>✅ Celebrate small wins publicly</li>
-                                <li>✅ Ask mentors for introductions or advice</li>
+                        <div className="card-soft-shadow p-8 hover:scale-[1.02] transition-all duration-300">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                                    <span className="text-2xl">✅</span>
+                                </div>
+                                <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">DO</h3>
+                            </div>
+                            <ul className="space-y-3 text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-500 mt-1">✅</span>
+                                    <span>Be honest about your timeline and challenges</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-500 mt-1">✅</span>
+                                    <span>Post regular updates (bi-weekly minimum)</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-500 mt-1">✅</span>
+                                    <span>Respond to every backer comment within 24 hours</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-500 mt-1">✅</span>
+                                    <span>Use video updates (they increase backer engagement 5x)</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-500 mt-1">✅</span>
+                                    <span>Celebrate small wins publicly</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-500 mt-1">✅</span>
+                                    <span>Ask mentors for introductions or advice</span>
+                                </li>
                             </ul>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-2xl font-bold mb-4">DON&apos;T</h3>
-                            <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                                <li>❌ Exaggerate your past experience or credentials</li>
-                                <li>❌ Go silent for weeks (backers lose trust)</li>
-                                <li>❌ Use funds for anything outside your stated scope</li>
-                                <li>❌ Ignore backer or mentor feedback</li>
-                                <li>❌ Promise unrealistic outcomes</li>
-                                <li>❌ Launch without a clear problem statement</li>
+                        <div className="card-soft-shadow p-8 hover:scale-[1.02] transition-all duration-300">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+                                    <span className="text-2xl">❌</span>
+                                </div>
+                                <h3 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">DON&apos;T</h3>
+                            </div>
+                            <ul className="space-y-3 text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-500 mt-1">❌</span>
+                                    <span>Exaggerate your past experience or credentials</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-500 mt-1">❌</span>
+                                    <span>Go silent for weeks (backers lose trust)</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-500 mt-1">❌</span>
+                                    <span>Use funds for anything outside your stated scope</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-500 mt-1">❌</span>
+                                    <span>Ignore backer or mentor feedback</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-500 mt-1">❌</span>
+                                    <span>Promise unrealistic outcomes</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-500 mt-1">❌</span>
+                                    <span>Launch without a clear problem statement</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -197,8 +243,8 @@ const HowItWorksStudents = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                        <div className="card-india-gradient p-8 hover:scale-[1.02] transition-all duration-300">
+                            <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-orange bg-clip-text text-transparent mb-4">
                                 Vague Project Description
                             </h3>
                             <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
@@ -208,8 +254,8 @@ const HowItWorksStudents = () => {
                             </p>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                        <div className="card-india-gradient p-8 hover:scale-[1.02] transition-all duration-300">
+                            <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-orange bg-clip-text text-transparent mb-4">
                                 Incorrect Funding Goal
                             </h3>
                             <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
@@ -219,8 +265,8 @@ const HowItWorksStudents = () => {
                             </p>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                        <div className="card-india-gradient p-8 hover:scale-[1.02] transition-all duration-300">
+                            <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-orange bg-clip-text text-transparent mb-4">
                                 Poor Video Quality
                             </h3>
                             <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
@@ -230,8 +276,8 @@ const HowItWorksStudents = () => {
                             </p>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-                            <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                        <div className="card-india-gradient p-8 hover:scale-[1.02] transition-all duration-300">
+                            <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-orange bg-clip-text text-transparent mb-4">
                                 Missing Updates
                             </h3>
                             <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">

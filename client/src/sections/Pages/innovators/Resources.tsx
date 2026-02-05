@@ -123,7 +123,7 @@ const ResourceCenter = () => {
               >
                 {partnerLogos.map((partner, index) => (
                   <div key={index} className="px-2">
-                    <div className="card-pastel-offwhite rounded-xl border-3 border-dreamxec-navy p-6 h-32 flex flex-col items-center justify-center hover:scale-105 transition-all duration-300">
+                    <div className="card-glass-modern p-6 h-32 flex flex-col items-center justify-center">
                       <span className="text-4xl mb-2">{partner.logo}</span>
                       <p className="text-dreamxec-navy font-semibold text-sm text-center">{partner.name}</p>
                     </div>
@@ -155,8 +155,8 @@ const ResourceCenter = () => {
                   animation="slide-up"
                   delay={400 + index * 100}
                 >
-                  <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 hover:shadow-pastel-glow-saffron transition-all duration-300 hover:scale-105">
-                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-2">
+                  <div className="card-premium p-6">
+                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-navy bg-clip-text text-transparent mb-2">
                       {category.title}
                     </h3>
                     <p className="text-sm md:text-base text-dreamxec-navy font-semibold mb-4">
@@ -164,8 +164,9 @@ const ResourceCenter = () => {
                     </p>
                     <ul className="space-y-2">
                       {category.resources.map((resource, idx) => (
-                        <li key={idx} className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                          • {resource}
+                        <li key={idx} className="text-dreamxec-navy text-sm md:text-base leading-relaxed flex items-start gap-2">
+                          <span className="text-dreamxec-orange mt-1">•</span>
+                          <span>{resource}</span>
                         </li>
                       ))}
                     </ul>
@@ -190,23 +191,24 @@ const ResourceCenter = () => {
                   animation="scale"
                   delay={700 + index * 80}
                 >
-                  <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:scale-105 hover:shadow-pastel-glow-green transition-all duration-300">
+                  <div className="card-soft-shadow p-6">
                     <div className="mb-4">
-                      <span className="inline-block bg-dreamxec-berkeley-blue text-white px-3 py-1 rounded-full text-xs md:text-sm font-bold">
+                      <span className="inline-block bg-gradient-to-r from-dreamxec-orange to-orange-600 text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold shadow-lg">
                         {resource.type}
                       </span>
                     </div>
 
-                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
+                    <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dreamxec-berkeley-blue to-dreamxec-navy bg-clip-text text-transparent mb-3">
                       {resource.title}
                     </h3>
 
-                    <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                    <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed mb-4">
                       {resource.description}
                     </p>
 
-                    <button className="mt-4 text-dreamxec-navy font-bold text-sm md:text-base hover:text-dreamxec-berkeley-blue transition-colors">
-                      Access Resource →
+                    <button className="mt-auto inline-flex items-center gap-2 text-dreamxec-orange font-bold text-sm md:text-base hover:gap-3 transition-all group">
+                      <span>Access Resource</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </button>
                   </div>
                 </AnimatedSection>
