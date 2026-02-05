@@ -42,10 +42,10 @@ const TestimonialCard = ({
           <img
             src={avatar}
             alt={name}
-            className="w-14 h-14 rounded-full border-2 border-white shadow-lg object-cover ring-2 ring-orange-100"
+            className="w-14 h-14 rounded-full border-2 border-white shadow-lg object-cover ring-2 ring-orange-300"
           />
         ) : (
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-dreamxec-orange to-orange-600 flex items-center justify-center shadow-lg ring-2 ring-orange-100">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-dreamxec-orange to-orange-600 flex items-center justify-center shadow-lg ring-2 ring-orange-300">
             <span className="text-white font-bold text-xl">
               {name.charAt(0)}
             </span>

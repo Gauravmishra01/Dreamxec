@@ -206,7 +206,10 @@ const ResourceCenter = () => {
                       {resource.description}
                     </p>
 
-                    <button className="mt-auto inline-flex items-center gap-2 text-dreamxec-orange font-bold text-sm md:text-base hover:gap-3 transition-all group">
+                    <button 
+                      className="mt-auto inline-flex items-center gap-2 text-dreamxec-orange font-bold text-sm md:text-base hover:gap-3 transition-all group"
+                      aria-label={`Access ${resource.title}`}
+                    >
                       <span>Access Resource</span>
                       <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </button>
