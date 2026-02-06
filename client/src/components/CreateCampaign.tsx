@@ -471,7 +471,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
               {/* YouTube Pitch */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">🎥 Pitch Video (Optional)</label>
+                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">🎥 Pitch Video</label>
                 <input
                   type="url"
                   value={youtubeUrl}
@@ -518,7 +518,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
               {/* FAQs */}
               <div className="space-y-3">
-                <label className="block text-sm font-semibold text-dreamxec-navy">FAQs (Optional)</label>
+                <label className="block text-sm font-semibold text-dreamxec-navy">FAQs</label>
                 {faqs.map((faq, idx) => (
                   <div key={idx} className="p-4 border-2 border-dreamxec-navy rounded-lg bg-white">
                     <div className="flex justify-between mb-2">
@@ -593,7 +593,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
               {/* Media Upload */}
               <div className="mb-5">
-                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Additional Media (Optional)</label>
+                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Additional Media *</label>
                 <div
                   className="border-2 border-dashed border-dreamxec-navy rounded-lg p-6 text-center cursor-pointer hover:bg-dreamxec-cream transition-all"
                   onClick={() => mediaInputRef.current?.click()}
@@ -664,7 +664,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                           </div>
                         </div>
                         <textarea
-                          placeholder="Description (optional)"
+                          placeholder="Description"
                           value={milestone.description || ''}
                           onChange={(e) => updateMilestone(idx, 'description', e.target.value)}
                           rows={2}
@@ -720,7 +720,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Pitch Deck Link (Optional)</label>
+                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Pitch Deck Link</label>
                   <input
                     type="url"
                     value={presentationDeckUrl}

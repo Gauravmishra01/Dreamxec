@@ -17,6 +17,10 @@ body {
 /* Replace your entire @layer components with this */
 @layer components {
 
+  input, textarea {
+  caret-color: #f97316 !important;
+}
+
   /* The scroller NO LONGER has a fixed height or overflow */
   .scroll-stack-scroller {
     position: relative;
