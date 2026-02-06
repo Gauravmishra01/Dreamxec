@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const PerfectStorm = () => {
 
@@ -78,7 +79,10 @@ const PerfectStorm = () => {
               <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
                 The Data:
               </h3>
-              <div className="space-y-4">
+              <CardCarousel
+                slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+                ariaLabel="Innovation gap statistics"
+              >
                 {innovationGapData.map((item, index) => (
                   <div
                     key={index}
@@ -89,7 +93,7 @@ const PerfectStorm = () => {
                     </p>
                   </div>
                 ))}
-              </div>
+              </CardCarousel>
             </div>
 
             <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
@@ -151,12 +155,15 @@ const PerfectStorm = () => {
             Why Now
           </h2>
 
-          <div className="space-y-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 1, desktop: 2 }}
+            ariaLabel="Why now is the perfect time for innovation"
+          >
             {whyNowReasons.map((reason, index) => (
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-8 max-w-6xl mx-auto"
+                className="card-glass animate-fade-in p-8"
               >
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
                   {reason.title}
@@ -166,7 +173,7 @@ const PerfectStorm = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* Role of Students & Youth */}
@@ -175,50 +182,55 @@ const PerfectStorm = () => {
             Role of Students & Youth
           </h2>
 
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Why Students?
-              </h3>
-              <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed mb-4">
-                Students are the ideal innovators for the next decade:
-              </p>
-              <ul className="space-y-3 text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                <li><span className="font-bold">Urgency:</span> They see problems through the lens of their own lives (mental health, education quality, job market uncertainty)</li>
-                <li><span className="font-bold">Creativity:</span> Unburdened by "how we've always done it," they invent new approaches</li>
-                <li><span className="font-bold">Speed:</span> Fewer resource constraints, less process overhead; they move fast</li>
-                <li><span className="font-bold">Global Mind:</span> Exposed to global trends while embedded in local context</li>
-              </ul>
-            </div>
+          <div className="max-w-6xl mx-auto">
+            <CardCarousel
+              slidesPerView={{ mobile: 1, tablet: 1, desktop: 2 }}
+              ariaLabel="Role of students and youth in innovation"
+            >
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  Why Students?
+                </h3>
+                <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed mb-4">
+                  Students are the ideal innovators for the next decade:
+                </p>
+                <ul className="space-y-3 text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                  <li><span className="font-bold">Urgency:</span> They see problems through the lens of their own lives (mental health, education quality, job market uncertainty)</li>
+                  <li><span className="font-bold">Creativity:</span> Unburdened by "how we've always done it," they invent new approaches</li>
+                  <li><span className="font-bold">Speed:</span> Fewer resource constraints, less process overhead; they move fast</li>
+                  <li><span className="font-bold">Global Mind:</span> Exposed to global trends while embedded in local context</li>
+                </ul>
+              </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Why Youth?
-              </h3>
-              <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                By 2030, millennials and Gen Z will drive 40%+ of India's GDP. The ideas they fund today become the businesses they build tomorrow. Their decisions on "which student innovations deserve support" shape what industries emerge. Student funding is investment in future India.
-              </p>
-            </div>
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  Why Youth?
+                </h3>
+                <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                  By 2030, millennials and Gen Z will drive 40%+ of India's GDP. The ideas they fund today become the businesses they build tomorrow. Their decisions on "which student innovations deserve support" shape what industries emerge. Student funding is investment in future India.
+                </p>
+              </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                What Happens When We Fund Students:
-              </h3>
-              <ul className="space-y-4 text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                <li><span className="font-bold">Immediate:</span> Ideas become projects. Projects become prototypes. Some prototypes become startups.</li>
-                <li><span className="font-bold">Medium-term (5 years):</span> Funded students become junior leaders at companies, or founders of high-growth startups. They mentor the next wave of student innovators. Virtuous cycle.</li>
-                <li><span className="font-bold">Long-term (10–20 years):</span> Cohort of 50,000+ innovators becomes C-suite executives, serial founders, social leaders, policymakers. They reshape industries because they learned to innovate early.</li>
-              </ul>
-            </div>
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  What Happens When We Fund Students:
+                </h3>
+                <ul className="space-y-4 text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                  <li><span className="font-bold">Immediate:</span> Ideas become projects. Projects become prototypes. Some prototypes become startups.</li>
+                  <li><span className="font-bold">Medium-term (5 years):</span> Funded students become junior leaders at companies, or founders of high-growth startups. They mentor the next wave of student innovators. Virtuous cycle.</li>
+                  <li><span className="font-bold">Long-term (10–20 years):</span> Cohort of 50,000+ innovators becomes C-suite executives, serial founders, social leaders, policymakers. They reshape industries because they learned to innovate early.</li>
+                </ul>
+              </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Statistical Reality:
-              </h3>
-              <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                VC-backed founders average age: 35. Student-funded founders average age: 22. If we can shift the founding age down by a little over 7 years, we get faster iteration, more founders, more chances at breakthrough innovation.
-              </p>
-            </div>
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  Statistical Reality:
+                </h3>
+                <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
+                  VC-backed founders average age: 35. Student-funded founders average age: 22. If we can shift the founding age down by a little over 7 years, we get faster iteration, more founders, more chances at breakthrough innovation.
+                </p>
+              </div>
+            </CardCarousel>
           </div>
         </section>
 
