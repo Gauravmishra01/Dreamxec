@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { subscribeToNewsletter } from '../../../services/newsletterService';
+import { FooterCarousel } from './FooterCarousel';
+import '../FooterCarousel.css';
 
 export const DesktopFooter = () => {
   const [email, setEmail] = useState('');
@@ -112,14 +114,8 @@ export const DesktopFooter = () => {
                 </a>
               </li> */}
             </ul>
-            <div className="space-y-6 pt-20">
-              <img
-                src='assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg'
-                alt="DreamXec Logo"
-                className="h-auto w-auto object-contain"
-              />
-            </div>
           </div>
+
 
           {/* Column 3: For Supporters */}
           <div className="space-y-4">
@@ -158,14 +154,8 @@ export const DesktopFooter = () => {
                 </a>
               </li>
             </ul>
-            <div className="space-y-6 pt-12">
-              <img
-                src='assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg'
-                alt="DreamXec Logo"
-                className="h-auto w-auto object-contain"
-              />
-            </div>
           </div>
+
 
           {/* Column 4: Company */}
           <div className="space-y-4">
@@ -204,19 +194,15 @@ export const DesktopFooter = () => {
                 </a>
               </li>
             </ul>
-            <div className="space-y-6 pt-12">
-              <img
-                src='assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg'
-                alt="DreamXec Logo"
-                className="h-auto w-auto object-contain"
-              />
-            </div>
           </div>
 
         </div>
 
+        {/* Footer Carousel - Illustration Cards */}
+        <FooterCarousel />
+
         {/* Sub-Footer: Final Trust Layer */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-8 items-center border-t border-dreamxec-orange/20">
           {/* Left: Copyright */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <p className="text-dreamxec-cream/70 text-sm">
