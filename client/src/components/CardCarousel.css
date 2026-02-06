@@ -11,6 +11,12 @@
   padding: 0 40px 50px 40px; /* Space for navigation arrows and pagination */
 }
 
+/* Make all slides the same height in each row */
+.card-carousel-swiper :global(.swiper-wrapper) {
+  display: flex;
+  align-items: stretch; /* All slides in a row have equal height */
+}
+
 /* Navigation Arrows */
 .card-carousel-button-prev,
 .card-carousel-button-next {
@@ -142,6 +148,8 @@
 .card-carousel-swiper :global(.swiper-slide) {
   transition: all 0.3s ease-in-out;
   height: auto;
+  display: flex; /* Enable flexbox for uniform heights */
+  flex-direction: column; /* Stack content vertically */
 }
 
 /* Focus Styles for Accessibility */
@@ -151,7 +159,10 @@
   outline-offset: 3px;
 }
 
-/* Ensure cards maintain their styling in carousel */
+/* Ensure cards maintain their styling in carousel and fill slide height */
 .card-carousel-swiper :global(.swiper-slide) > * {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Cards expand to fill available space */
 }
