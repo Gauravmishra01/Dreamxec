@@ -61,7 +61,7 @@ const FAQ = () => {
     }
   ]
 
-  const FAQGrid = ({ faqs, ariaLabel }) => (
+  const FAQGrid = ({ faqs, ariaLabel }: { faqs: Array<{ q: string; a: string }>; ariaLabel: string }) => (
     <CardCarousel
       slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
       ariaLabel={ariaLabel}
