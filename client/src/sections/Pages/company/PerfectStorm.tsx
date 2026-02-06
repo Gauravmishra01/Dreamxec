@@ -156,7 +156,7 @@ const PerfectStorm = () => {
           </h2>
 
           <CardCarousel
-            slidesPerView={{ mobile: 1, tablet: 1, desktop: 2 }}
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
             ariaLabel="Why now is the perfect time for innovation"
           >
             {whyNowReasons.map((reason, index) => (
