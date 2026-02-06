@@ -583,3 +583,497 @@ img {
   }
 }
 
+/* ===================================
+   Carousel Styles - Scoped to Card Sections Only
+   =================================== */
+
+/* Criteria Carousel */
+.criteria-carousel {
+  padding: 40px 10px 60px;
+}
+
+.criteria-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.criteria-carousel .swiper-button-next,
+.criteria-carousel .swiper-button-prev {
+  color: #000080;
+  background: rgba(255, 255, 255, 0.9);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #000080;
+  box-shadow: 0 4px 12px rgba(0, 0, 128, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.criteria-carousel .swiper-button-next:after,
+.criteria-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.criteria-carousel .swiper-button-next:hover,
+.criteria-carousel .swiper-button-prev:hover {
+  background: #FF7F00;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 127, 0, 0.4);
+}
+
+.criteria-carousel .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #000080;
+  opacity: 0.3;
+  transition: all 0.3s ease-in-out;
+}
+
+.criteria-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+}
+
+/* Whiteboard Carousel */
+.whiteboard-carousel {
+  padding: 40px 10px 60px;
+}
+
+.whiteboard-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.whiteboard-carousel .swiper-button-next,
+.whiteboard-carousel .swiper-button-prev {
+  color: #000080;
+  background: rgba(255, 255, 255, 0.95);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #000080;
+  box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.whiteboard-carousel .swiper-button-next:after,
+.whiteboard-carousel .swiper-button-prev:after {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.whiteboard-carousel .swiper-button-next:hover,
+.whiteboard-carousel .swiper-button-prev:hover {
+  background: #FF7F00;
+  color: white;
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000080, 0 8px 20px rgba(255, 127, 0, 0.35);
+}
+
+.whiteboard-carousel .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #000080;
+  opacity: 0.3;
+  border: 2px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.whiteboard-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+  border-color: #000080;
+}
+
+/* FAQ Carousel */
+.faq-carousel {
+  padding: 40px 10px 60px;
+}
+
+.faq-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.faq-carousel .swiper-button-next,
+.faq-carousel .swiper-button-prev {
+  color: #000080;
+  background: #FAFAF8;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #000080;
+  box-shadow: 4px 4px 0 #FF7F00;
+  transition: all 0.2s ease-in-out;
+}
+
+.faq-carousel .swiper-button-next:after,
+.faq-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.faq-carousel .swiper-button-next:hover,
+.faq-carousel .swiper-button-prev:hover {
+  background: #0B9C2C;
+  color: white;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #FF7F00;
+}
+
+.faq-carousel .swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background: #000080;
+  opacity: 0.4;
+  border: 2px solid #000080;
+  transition: all 0.3s ease-in-out;
+}
+
+.faq-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 36px;
+  border-radius: 7px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 128, 0.3);
+}
+
+/* Ensure smooth card height transitions */
+.swiper-slide > div {
+  width: 100%;
+}
+
+/* Touch feedback for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .criteria-carousel .swiper-button-next:active,
+  .criteria-carousel .swiper-button-prev:active,
+  .whiteboard-carousel .swiper-button-next:active,
+  .whiteboard-carousel .swiper-button-prev:active,
+  .faq-carousel .swiper-button-next:active,
+  .faq-carousel .swiper-button-prev:active {
+    transform: scale(0.95);
+  }
+}
+
+/* FAQ Page Carousel */
+.faq-page-carousel {
+  padding: 40px 10px 60px;
+}
+
+.faq-page-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.faq-page-carousel .swiper-button-next,
+.faq-page-carousel .swiper-button-prev {
+  color: #000080;
+  background: #FAFAF8;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #000080;
+  box-shadow: 4px 4px 0 #FF7F00;
+  transition: all 0.2s ease-in-out;
+}
+
+.faq-page-carousel .swiper-button-next:after,
+.faq-page-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.faq-page-carousel .swiper-button-next:hover,
+.faq-page-carousel .swiper-button-prev:hover {
+  background: #0B9C2C;
+  color: white;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #FF7F00;
+}
+
+.faq-page-carousel .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #000080;
+  opacity: 0.4;
+  transition: all 0.3s ease-in-out;
+}
+
+.faq-page-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+}
+
+/* Fund Innovation Carousel */
+.fund-innovation-carousel,
+.donor-stories-carousel,
+.how-it-works-carousel,
+.how-it-works-faq-carousel {
+  padding: 40px 10px 60px;
+}
+
+.fund-innovation-carousel .swiper-slide,
+.donor-stories-carousel .swiper-slide,
+.how-it-works-carousel .swiper-slide,
+.how-it-works-faq-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.fund-innovation-carousel .swiper-button-next,
+.fund-innovation-carousel .swiper-button-prev,
+.donor-stories-carousel .swiper-button-next,
+.donor-stories-carousel .swiper-button-prev,
+.how-it-works-carousel .swiper-button-next,
+.how-it-works-carousel .swiper-button-prev,
+.how-it-works-faq-carousel .swiper-button-next,
+.how-it-works-faq-carousel .swiper-button-prev {
+  color: #000080;
+  background: rgba(255, 255, 255, 0.95);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #000080;
+  box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.fund-innovation-carousel .swiper-button-next:after,
+.fund-innovation-carousel .swiper-button-prev:after,
+.donor-stories-carousel .swiper-button-next:after,
+.donor-stories-carousel .swiper-button-prev:after,
+.how-it-works-carousel .swiper-button-next:after,
+.how-it-works-carousel .swiper-button-prev:after,
+.how-it-works-faq-carousel .swiper-button-next:after,
+.how-it-works-faq-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.fund-innovation-carousel .swiper-button-next:hover,
+.fund-innovation-carousel .swiper-button-prev:hover,
+.donor-stories-carousel .swiper-button-next:hover,
+.donor-stories-carousel .swiper-button-prev:hover,
+.how-it-works-carousel .swiper-button-next:hover,
+.how-it-works-carousel .swiper-button-prev:hover,
+.how-it-works-faq-carousel .swiper-button-next:hover,
+.how-it-works-faq-carousel .swiper-button-prev:hover {
+  background: #FF7F00;
+  color: white;
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000080, 0 8px 20px rgba(255, 127, 0, 0.35);
+}
+
+.fund-innovation-carousel .swiper-pagination-bullet,
+.donor-stories-carousel .swiper-pagination-bullet,
+.how-it-works-carousel .swiper-pagination-bullet,
+.how-it-works-faq-carousel .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #000080;
+  opacity: 0.3;
+  transition: all 0.3s ease-in-out;
+}
+
+.fund-innovation-carousel .swiper-pagination-bullet-active,
+.donor-stories-carousel .swiper-pagination-bullet-active,
+.how-it-works-carousel .swiper-pagination-bullet-active,
+.how-it-works-faq-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+}
+
+/* Start Project, Eligibility, Corporate, Mentor, Contact, About Carousels */
+.start-project-carousel,
+.eligibility-carousel,
+.corporate-benefits-carousel,
+.mentor-benefits-carousel,
+.mentor-stories-carousel,
+.contact-carousel,
+.about-values-carousel {
+  padding: 40px 10px 60px;
+}
+
+.start-project-carousel .swiper-slide,
+.eligibility-carousel .swiper-slide,
+.corporate-benefits-carousel .swiper-slide,
+.mentor-benefits-carousel .swiper-slide,
+.mentor-stories-carousel .swiper-slide,
+.contact-carousel .swiper-slide,
+.about-values-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.start-project-carousel .swiper-button-next,
+.start-project-carousel .swiper-button-prev,
+.eligibility-carousel .swiper-button-next,
+.eligibility-carousel .swiper-button-prev,
+.corporate-benefits-carousel .swiper-button-next,
+.corporate-benefits-carousel .swiper-button-prev,
+.mentor-benefits-carousel .swiper-button-next,
+.mentor-benefits-carousel .swiper-button-prev,
+.mentor-stories-carousel .swiper-button-next,
+.mentor-stories-carousel .swiper-button-prev,
+.contact-carousel .swiper-button-next,
+.contact-carousel .swiper-button-prev,
+.about-values-carousel .swiper-button-next,
+.about-values-carousel .swiper-button-prev {
+  color: #000080;
+  background: rgba(255, 255, 255, 0.95);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #000080;
+  box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.start-project-carousel .swiper-button-next:after,
+.start-project-carousel .swiper-button-prev:after,
+.eligibility-carousel .swiper-button-next:after,
+.eligibility-carousel .swiper-button-prev:after,
+.corporate-benefits-carousel .swiper-button-next:after,
+.corporate-benefits-carousel .swiper-button-prev:after,
+.mentor-benefits-carousel .swiper-button-next:after,
+.mentor-benefits-carousel .swiper-button-prev:after,
+.mentor-stories-carousel .swiper-button-next:after,
+.mentor-stories-carousel .swiper-button-prev:after,
+.contact-carousel .swiper-button-next:after,
+.contact-carousel .swiper-button-prev:after,
+.about-values-carousel .swiper-button-next:after,
+.about-values-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.start-project-carousel .swiper-button-next:hover,
+.start-project-carousel .swiper-button-prev:hover,
+.eligibility-carousel .swiper-button-next:hover,
+.eligibility-carousel .swiper-button-prev:hover,
+.corporate-benefits-carousel .swiper-button-next:hover,
+.corporate-benefits-carousel .swiper-button-prev:hover,
+.mentor-benefits-carousel .swiper-button-next:hover,
+.mentor-benefits-carousel .swiper-button-prev:hover,
+.mentor-stories-carousel .swiper-button-next:hover,
+.mentor-stories-carousel .swiper-button-prev:hover,
+.contact-carousel .swiper-button-next:hover,
+.contact-carousel .swiper-button-prev:hover,
+.about-values-carousel .swiper-button-next:hover,
+.about-values-carousel .swiper-button-prev:hover {
+  background: #FF7F00;
+  color: white;
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000080, 0 8px 20px rgba(255, 127, 0, 0.35);
+}
+
+.start-project-carousel .swiper-pagination-bullet,
+.eligibility-carousel .swiper-pagination-bullet,
+.corporate-benefits-carousel .swiper-pagination-bullet,
+.mentor-benefits-carousel .swiper-pagination-bullet,
+.mentor-stories-carousel .swiper-pagination-bullet,
+.contact-carousel .swiper-pagination-bullet,
+.about-values-carousel .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #000080;
+  opacity: 0.3;
+  transition: all 0.3s ease-in-out;
+}
+
+.start-project-carousel .swiper-pagination-bullet-active,
+.eligibility-carousel .swiper-pagination-bullet-active,
+.corporate-benefits-carousel .swiper-pagination-bullet-active,
+.mentor-benefits-carousel .swiper-pagination-bullet-active,
+.mentor-stories-carousel .swiper-pagination-bullet-active,
+.contact-carousel .swiper-pagination-bullet-active,
+.about-values-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+}
+
+/* Uniform Card Heights */
+.swiper-slide > div {
+  width: 100%;
+  min-height: 280px; /* Ensures consistent minimum height across all cards */
+}
+
+/* Whiteboard cards specific height */
+.card-whiteboard {
+  min-height: 320px;
+}
+
+/* Glass cards specific height */
+.card-glass {
+  min-height: 280px;
+}
+
+/* Eligibility FAQ Carousel */
+.eligibility-faq-carousel {
+  padding: 0 60px 50px;
+}
+
+.eligibility-faq-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.eligibility-faq-carousel .swiper-slide > div {
+  width: 100%;
+  min-height: 280px;
+}
+
+/* Navigation Buttons */
+.eligibility-faq-carousel .swiper-button-next,
+.eligibility-faq-carousel .swiper-button-prev {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 127, 0, 0.9);
+  box-shadow: 0 4px 12px rgba(255, 127, 0, 0.3);
+  border: 3px solid #000080;
+  transition: all 0.3s ease-in-out;
+}
+
+.eligibility-faq-carousel .swiper-button-next:after,
+.eligibility-faq-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: 900;
+  color: #FFFFFF;
+}
+
+.eligibility-faq-carousel .swiper-button-next:hover,
+.eligibility-faq-carousel .swiper-button-prev:hover {
+  background: #000080;
+  box-shadow: 0 6px 20px rgba(0, 0, 128, 0.4);
+  transform: scale(1.1);
+}
+
+/* Pagination */
+.eligibility-faq-carousel .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #000080;
+  opacity: 0.3;
+  transition: all 0.3s ease-in-out;
+}
+
+.eligibility-faq-carousel .swiper-pagination-bullet-active {
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+}
+

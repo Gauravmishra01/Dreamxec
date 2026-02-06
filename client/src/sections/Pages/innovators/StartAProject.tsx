@@ -1,6 +1,11 @@
 import { Header } from "../../Header/index";
 import { Footer } from "../../Footer/index";
 import { RopeDivider } from "../../../components/RopeDivider";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const StartAProject = () => {
   const columns = [
@@ -147,24 +152,44 @@ const StartAProject = () => {
             How It Works
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={48}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 48,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 48,
+              },
+            }}
+            className="start-project-carousel"
+          >
             {columns.map((col, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${200 + index * 150}ms` }}
-                className="card-whiteboard animate-fade-in"
-              >
-                <div className="whiteboard-content pt-14">
-                  <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-2 p-2">
-                    {col.title}
-                  </h3>
-                  <p className="text-xs text-left md:text-sm lg:text-base text-slate-600 leading-relaxed p-2">
-                    {col.text}
-                  </p>
+              <SwiperSlide key={index}>
+                <div
+                  className="card-whiteboard transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl h-full"
+                >
+                  <div className="whiteboard-content pt-14">
+                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-2 p-2">
+                      {col.title}
+                    </h3>
+                    <p className="text-xs text-left md:text-sm lg:text-base text-slate-600 leading-relaxed p-2">
+                      {col.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </section>
 
         {/* CTA Section */}
@@ -198,37 +223,63 @@ const StartAProject = () => {
             What You Get
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Funding (₹5K–₹50L)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Access capital from passionate supporters. No interference in
-                the research process—you own the journey completely!.
-              </p>
-            </div>
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 32,
+              },
+            }}
+            className="start-project-carousel"
+          >
+            <SwiperSlide>
+              <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+                  Funding (₹5K–₹50L)
+                </h3>
+                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
+                  Access capital from passionate supporters. No interference in
+                  the research process—you own the journey completely!.
+                </p>
+              </div>
+            </SwiperSlide>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Mentorship (Expert Guidance)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Paired with 1,000+ mentors across engineering, business, social
-                impact, product with weekly guidance calls.
-              </p>
-            </div>
+            <SwiperSlide>
+              <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+                  Mentorship (Expert Guidance)
+                </h3>
+                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
+                  Paired with 1,000+ mentors across engineering, business, social
+                  impact, product with weekly guidance calls.
+                </p>
+              </div>
+            </SwiperSlide>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Exposure (Build Your Network)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Featured on platform homepage, media coverage for standout
-                projects, and LinkedIn visibility for your team.
-              </p>
-            </div>
-          </div>
+            <SwiperSlide>
+              <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+                  Exposure (Build Your Network)
+                </h3>
+                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
+                  Featured on platform homepage, media coverage for standout
+                  projects, and LinkedIn visibility for your team.
+                </p>
+              </div>
+            </SwiperSlide>
+          </Swiper>
         </section>
 
         {/* Eligibility Snapshot */}

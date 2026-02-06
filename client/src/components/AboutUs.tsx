@@ -1,5 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { FooterContent } from '../sections/Footer/components/FooterContent';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const AboutUs = () => {
     const navigate = useNavigate();
@@ -78,8 +83,29 @@ const AboutUs = () => {
 
 
                 {/* CORE VALUES */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                    <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy">
+                <Swiper
+                  modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+                  spaceBetween={32}
+                  slidesPerView={1}
+                  navigation
+                  pagination={{ clickable: true }}
+                  keyboard={{ enabled: true }}
+                  grabCursor={true}
+                  autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                  breakpoints={{
+                    768: {
+                      slidesPerView: 2,
+                      spaceBetween: 32,
+                    },
+                    1024: {
+                      slidesPerView: 3,
+                      spaceBetween: 32,
+                    },
+                  }}
+                  className="about-values-carousel mb-20"
+                >
+                  <SwiperSlide>
+                    <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                         <h3 className="text-xl font-bold text-dreamxec-navy mb-3 font-display">
                             Belief in Potential
                         </h3>
@@ -88,8 +114,10 @@ const AboutUs = () => {
                             college, or connections.
                         </p>
                     </div>
+                  </SwiperSlide>
 
-                    <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy">
+                  <SwiperSlide>
+                    <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                         <h3 className="text-xl font-bold text-dreamxec-navy mb-3 font-display">
                             Community Over Competition
                         </h3>
@@ -97,8 +125,10 @@ const AboutUs = () => {
                             Students, mentors, and backers grow together—collaboration beats rivalry.
                         </p>
                     </div>
+                  </SwiperSlide>
 
-                    <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy">
+                  <SwiperSlide>
+                    <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                         <h3 className="text-xl font-bold text-dreamxec-navy mb-3 font-display">
                             Impact First
                         </h3>
@@ -107,7 +137,8 @@ const AboutUs = () => {
                             startups launched, and problems solved.
                         </p>
                     </div>
-                </div>
+                  </SwiperSlide>
+                </Swiper>
 
                 {/* HOW DREAMXEC IS DIFFERENT */}
                 <div className="max-w-5xl mx-auto mb-20 text-center">

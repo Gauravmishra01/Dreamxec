@@ -1,3 +1,9 @@
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
 export const CriteriaGrid = () => {
   const criteria = [
     {
@@ -34,36 +40,57 @@ export const CriteriaGrid = () => {
 
   return (
     <div className="w-full px-4">
-
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-[10%] gap-8 max-w-6xl mx-auto">
-        <span className="col-span-1 md:col-span-2 text-center text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold mb-8">
+      <div className="mt-[10%] max-w-6xl mx-auto">
+        <div className="text-center text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold mb-8">
           <h2>Our Values and Principles</h2>
           <h4 className="text-dreamxec-gray-700 text-base md:text-lg font-sans font-semibold mt-2">
             We seek students and young professionals whose projects embody these principles:        
           </h4>
-        </span>
-        {criteria.map((item, index) => (
-          <div
-            key={index}
-            style={{ animationDelay: `${index * 100}ms` }}
-            className="card-glass animate-fade-in flex items-center p-6"
-          >
-            {/* Left Side: Text Content */}
-            <div className="w-2/3 pr-4">
-              <h2 className="text-2xl font-bold text-dreamxec-gray-250 mb-2">{item.title}</h2>
-              <p className="text-dreamxec-gray-600 text-sm font-semibold leading-relaxed">{item.text}</p>
-            </div>
+        </div>
+        
+        <Swiper
+          modules={[Navigation, Pagination, Keyboard, A11y]}
+          spaceBetween={32}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          keyboard={{ enabled: true }}
+          grabCursor={true}
+          breakpoints={{
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 32,
+            },
+            1024: {
+              slidesPerView: 2,
+              spaceBetween: 32,
+            },
+          }}
+          className="criteria-carousel"
+        >
+          {criteria.map((item, index) => (
+            <SwiperSlide key={index}>
+              <div
+                className="card-glass flex items-center p-6 h-full transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl"
+              >
+                {/* Left Side: Text Content */}
+                <div className="w-2/3 pr-4">
+                  <h2 className="text-2xl font-bold text-dreamxec-gray-250 mb-2">{item.title}</h2>
+                  <p className="text-dreamxec-gray-600 text-sm font-semibold leading-relaxed">{item.text}</p>
+                </div>
 
-            {/* Right Side: SVG Icon */}
-            <div className="w-1/3 flex justify-center items-center">
-              <img
-                src={item.icon}
-                alt={`${item.title} Icon`}
-                className="h-30 w-30 opacity-100"
-              />
-            </div>
-          </div>
-        ))}
+                {/* Right Side: SVG Icon */}
+                <div className="w-1/3 flex justify-center items-center">
+                  <img
+                    src={item.icon}
+                    alt={`${item.title} Icon`}
+                    className="h-30 w-30 opacity-100"
+                  />
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );

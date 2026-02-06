@@ -1,6 +1,11 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
 import { Mail, Phone, MessageSquare, Linkedin, Twitter, Instagram, MapPin, FileText } from 'lucide-react'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const ContactUs = () => {
 
@@ -62,29 +67,46 @@ const ContactUs = () => {
             How to Reach Us
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+            }}
+            className="contact-carousel"
+          >
             {contactCategories.map((category, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
-              >
-                <div className="flex items-start gap-4 mb-3">
-                  <Mail className="w-6 h-6 text-dreamxec-berkeley-blue flex-shrink-0 mt-1" />
-                  <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue">
-                    {category.title}
-                  </h3>
-                </div>
-                <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
-                  {category.email}
-                </p>
-                {category.details && (
-                  <p className="text-dreamxec-navy text-sm sm:text-base md:text-lg leading-relaxed">
-                    {category.details}
+              <SwiperSlide key={index}>
+                <div
+                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                >
+                  <div className="flex items-start gap-4 mb-3">
+                    <Mail className="w-6 h-6 text-dreamxec-berkeley-blue flex-shrink-0 mt-1" />
+                    <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue">
+                      {category.title}
+                    </h3>
+                  </div>
+                  <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl font-mono bg-dreamxec-cream px-3 py-2 rounded mb-3">
+                    {category.email}
                   </p>
-                )}
-              </div>
+                  {category.details && (
+                    <p className="text-dreamxec-navy text-sm sm:text-base md:text-lg leading-relaxed">
+                      {category.details}
+                    </p>
+                  )}
+                </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </section>
 
         {/* Email & Socials */}

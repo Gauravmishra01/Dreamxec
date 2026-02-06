@@ -1,5 +1,9 @@
 import { href, useNavigate } from 'react-router-dom';
-
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export const PartnersSection = () => {
   const navigate = useNavigate();
@@ -54,34 +58,56 @@ export const PartnersSection = () => {
           </p>
         </div>
 
-        {/* Partners Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {partners.map((partner, index) => (
-            <div
-              key={partner.name}
-              className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 text-center hover:scale-105 transition-all duration-300 group"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="card-tricolor-tag"></div>
+        {/* FAQ Carousel */}
+        <div className="mb-12">
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 32,
+              },
+            }}
+            className="faq-carousel"
+          >
+            {partners.map((partner, index) => (
+              <SwiperSlide key={partner.name}>
+                <div
+                  className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 text-center transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl group h-full"
+                >
+                  <div className="card-tricolor-tag"></div>
 
-              {/* Partner Logo */}
-              <div className="bg-white rounded-lg border-2 border-dreamxec-navy p-4 mb-4 group-hover:shadow-lg transition-shadow">
-                <img
-                  src={partner.logo}
-                  alt={`${partner.name} logo`}
-                  className="w-full h-full object-contain"
-                />
-              </div>
+                  {/* Partner Logo */}
+                  <div className="bg-white rounded-lg border-2 border-dreamxec-navy p-4 mb-4 group-hover:shadow-lg transition-shadow">
+                    <img
+                      src={partner.logo}
+                      alt={`${partner.name} logo`}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
-              {/* Partner Info */}
-              <h3 className="text-xl font-bold text-dreamxec-navy font-display mb-2">
-                {partner.name}
-              </h3>
-              <p className="text-dreamxec-orange font-semibold font-sans text-sm bg-dreamxec-cream px-3 py-1 rounded-full inline-block">
-                {partner.category}
-              </p>
-            </div>
-          ))}
+                  {/* Partner Info */}
+                  <h3 className="text-xl font-bold text-dreamxec-navy font-display mb-2">
+                    {partner.name}
+                  </h3>
+                  <p className="text-dreamxec-orange font-semibold font-sans text-sm bg-dreamxec-cream px-3 py-1 rounded-full inline-block">
+                    {partner.category}
+                  </p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
 
         {/* Call to Action */}

@@ -1,5 +1,10 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const ProjectEligibility = () => {
 
@@ -185,22 +190,38 @@ const ProjectEligibility = () => {
             DreamXec funds student-led innovations across:
           </p>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+           <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+            }}
+            className="eligibility-carousel"
+          >
             {eligibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300"
-              >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
-                  {cat.category}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {cat.items}
-                </p>
-              </div>
+              <SwiperSlide key={index}>
+                <div
+                  className="card-glass p-6 md:p-8 text-left hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                >
+                  <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
+                    {cat.category}
+                  </h3>
+                  <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
+                    {cat.items}
+                  </p>
+                </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
 
           {/* Eligibility Requirements */}
           <div className="max-w-7xl mx-auto mt-12">
@@ -230,22 +251,38 @@ const ProjectEligibility = () => {
             We cannot fund:
           </p>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+           <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+            }}
+            className="eligibility-carousel"
+          >
             {ineligibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-               className="card-glass animate-fade-in p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
-                  ❌ {cat.title}
-                </h3>
-                <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
-                  {cat.items}
-                </p>
-              </div>
+              <SwiperSlide key={index}>
+                <div
+                 className="card-glass p-6 md:p-8 text-left hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                >
+                  <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
+                    ❌ {cat.title}
+                  </h3>
+                  <p className="text-base md:text-lg text-dreamxec-gray-600 font-semibold leading-relaxed">
+                    {cat.items}
+                  </p>
+                </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </section>
 
         {/* Review & Approval Process */}
@@ -384,26 +421,46 @@ const ProjectEligibility = () => {
               </p>
             </div>
 
-            {/* FAQ Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
+            {/* FAQ Carousel */}
+            <Swiper
+              modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+              spaceBetween={32}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              keyboard={{ enabled: true }}
+              grabCursor={true}
+              autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 32,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 32,
+                },
+              }}
+              className="eligibility-faq-carousel mb-12"
+            >
               {FAQ.map((item, index) => (
-                <div
-                  key={index}
-                  className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:scale-105 hover:shadow-lg transition-all duration-300"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="card-tricolor-tag"></div>
+                <SwiperSlide key={index}>
+                  <div
+                    className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:scale-[1.02] hover:shadow-lg transition-all duration-300 h-full"
+                  >
+                    <div className="card-tricolor-tag"></div>
 
-                  <h3 className="text-lg font-bold text-dreamxec-navy font-display mb-3">
-                    Q: {item.q}
-                  </h3>
+                    <h3 className="text-lg font-bold text-dreamxec-navy font-display mb-3">
+                      Q: {item.q}
+                    </h3>
 
-                  <p className="text-dreamxec-orange font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
-                    A: {item.a}
-                  </p>
-                </div>
+                    <p className="text-dreamxec-orange font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
+                      A: {item.a}
+                    </p>
+                  </div>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
 
           </div>
         </section>

@@ -1,5 +1,10 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const CorporateCSRPartnerships = () => {
 
@@ -164,26 +169,43 @@ const CorporateCSRPartnerships = () => {
             Corporate Benefits
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+            }}
+            className="corporate-benefits-carousel"
+          >
             {corporateBenefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                  {benefit.category}:
-                </h3>
-                <ul className="space-y-3">
-                  {benefit.points.map((point, idx) => (
-                    <li key={idx} className="flex gap-3 text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                      <span className="text-lg font-bold flex-shrink-0">*</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <SwiperSlide key={index}>
+                <div
+                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                >
+                  <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                    {benefit.category}:
+                  </h3>
+                  <ul className="space-y-3">
+                    {benefit.points.map((point, idx) => (
+                      <li key={idx} className="flex gap-3 text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                        <span className="text-lg font-bold flex-shrink-0">*</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </section>
 
         {/* CTA Section */}
