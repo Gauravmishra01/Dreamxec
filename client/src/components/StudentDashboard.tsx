@@ -496,27 +496,31 @@ export default function StudentDashboard({
 
           {/* President Sub Navigation */}
           {selectedTab === "president" && isClubPresident && (
-            <div className="flex items-center gap-3 border-b-2 border-blue-900 pb-4">
-              {[
-                ["dashboard", "Overview"],
-                ["members", "Members"],
-                ["campaigns", "Campaigns"],
-                ["upload", "Upload"],
-                ["manual", "Add Member"],
-              ].map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => setPresidentTab(key as any)}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all
-          ${presidentTab === key
-                      ? "bg-blue-900 text-white"
-                      : "bg-white text-blue-900 border-2 border-blue-900/20 hover:bg-orange-50"
-                    }`}
-                >
-                  {label}
-                </button>
-              ))}
+            <div className="border-b-2 border-blue-900 pb-4">
+              <div className="flex items-center gap-3 flex-wrap">
+                {[
+                  ["dashboard", "Overview"],
+                  ["campaigns", "Campaigns"],
+                  ["members", "Members"],
+                  ["manual", "Add Member"],
+                  ["upload", "Upload Members CSV"],
+                ].map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setPresidentTab(key as any)}
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all
+           ${presidentTab === key
+                        ? "bg-blue-900 text-white"
+                        : "bg-white text-blue-900 border-2 border-blue-900/20 hover:bg-orange-50"
+                      }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
+
+
           )}
 
 
@@ -799,10 +803,10 @@ export default function StudentDashboard({
           {selectedTab === "president" && isClubPresident && (
             <div className="space-y-6">
               {presidentTab === "dashboard" && <PresidentDashboard />}
-              {presidentTab === "members" && <PresidentMembers />}
-              {presidentTab === "campaigns" && <PresidentCampaigns />}
+              {presidentTab === "campaigns" && user?.clubIds?.[0] && (<PresidentCampaigns clubId={user.clubIds[0]} />)}
+              {presidentTab === "members" && <PresidentMembers clubId={user?.clubIds?.[0] || ""} currentUserId={user?.id || ""} />}
+              {presidentTab === "manual" && <AddMemberManually clubId={user?.clubIds?.[0] || ""} />}
               {presidentTab === "upload" && <UploadMembers />}
-              {presidentTab === "manual" && <AddMemberManually />}
             </div>
           )}
 

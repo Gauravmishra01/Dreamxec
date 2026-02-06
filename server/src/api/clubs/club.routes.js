@@ -1,29 +1,90 @@
 const express = require('express');
 const multer = require('multer');
 
-const { protect, restrictTo } = require('../../middleware/auth.middleware');
+const { protect } = require('../../middleware/auth.middleware');
 const {
   uploadMembers,
   getClubMembers,
   addSingleMember,
+  removeClubMember,
+  getApprovedClubCampaigns,
+  getPendingClubCampaigns,
+  getRejectedClubCampaigns,
+  changeClubPresident
 } = require('./club.controller');
 
 const router = express.Router();
 
-// use memory storage (we parse CSV in-memory)
+// Multer: in-memory CSV upload
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB file limit
+  limits: { fileSize: 5 * 1024 * 1024 } // 5 MB
 });
 
-// Upload file (CSV) or send JSON array in body
-// Only president (STUDENT_PRESIDENT) or ADMIN can upload member lists
-router.post('/:clubId/upload-members', protect, restrictTo('STUDENT_PRESIDENT', 'ADMIN'), upload.single('membersFile'), uploadMembers);
+/* -------------------------------------------------------
+   Member Management
+------------------------------------------------------- */
 
-// Add single member via JSON (body) - president/admin only
-router.post('/:clubId/add-member', protect, restrictTo('STUDENT_PRESIDENT', 'ADMIN'), addSingleMember);
+// Bulk upload members (CSV / JSON)
+router.post(
+  '/:clubId/upload-members',
+  protect,
+  upload.single('membersFile'),
+  uploadMembers
+);
 
-// Get members (admin/president) or public? keep protected here
-router.get('/:clubId/members', protect, restrictTo('STUDENT_PRESIDENT', 'ADMIN'), getClubMembers);
+// Add single member
+router.post(
+  '/:clubId/add-member',
+  protect,
+  addSingleMember
+);
+
+// Get all members of a club
+router.get(
+  '/:clubId/members',
+  protect,
+  getClubMembers
+);
+
+// Remove a member
+router.delete(
+  '/:clubId/members/:memberId',
+  protect,
+  removeClubMember
+);
+
+// Change Club President
+router.post(
+  '/:clubId/change-president',
+  protect,
+  changeClubPresident
+);
+
+
+/* -------------------------------------------------------
+   Campaign Visibility (President / Admin)
+------------------------------------------------------- */
+
+// Approved campaigns
+router.get(
+  '/:clubId/campaigns/approved',
+  protect,
+  getApprovedClubCampaigns
+);
+
+// Pending campaigns
+router.get(
+  '/:clubId/campaigns/pending',
+  protect,
+  getPendingClubCampaigns
+);
+
+// Rejected campaigns
+router.get(
+  '/:clubId/campaigns/rejected',
+  protect,
+  getRejectedClubCampaigns
+);
 
 module.exports = router;

@@ -36,6 +36,9 @@ const otpRoutes = require("./src/api/otp/otp.routes");
 const studentVerificationRoutes = require("./src/api/studentVerification/studentVerification.routes");
 const healthRoutes = require("./src/routes/health.routes");
 const adminRedisRoutes = require("./src/api/admin/adminRedis.routes");
+const clubRoutes = require('./src/api/clubs/club.routes');
+
+
 
 // Passport config
 require('./src/config/passport');
@@ -74,6 +77,18 @@ app.use(
     },
   })
 );
+// --------------------------------------------
+// 5️⃣ JSON BODY PARSER (EVERYTHING ELSE)
+// --------------------------------------------
+app.use(express.json());
+
+
+/* -------------------------------------------------------
+   CLUB ROUTES 
+------------------------------------------------------- */
+app.use('/api/clubs', clubRoutes);
+
+
 
 // --------------------------------------------
 // 3️⃣ PASSPORT
@@ -90,10 +105,6 @@ app.use(passport.session());
 //   express.raw({ type: 'application/json' })
 // );
 
-// --------------------------------------------
-// 5️⃣ JSON BODY PARSER (EVERYTHING ELSE)
-// --------------------------------------------
-app.use(express.json());
 
 // --------------------------------------------
 // HEALTH / REDIS
