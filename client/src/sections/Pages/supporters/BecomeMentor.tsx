@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const BecomeMentor = () => {
 
@@ -121,7 +122,10 @@ const BecomeMentor = () => {
             Mentor Benefits
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+            ariaLabel="Mentor benefits carousel"
+          >
             {mentorBenefits.map((benefit, index) => (
               <div
                 key={index}
@@ -140,7 +144,7 @@ const BecomeMentor = () => {
                 </ul>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* Time Commitment */}
@@ -149,30 +153,35 @@ const BecomeMentor = () => {
             Time Commitment
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Per Mentee: 1 Hour/Week
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                <li>– Weekly 30–60 min calls (choose your schedule)</li>
-                <li>– Async communication via platform (Slack-like chat)</li>
-                <li>– Optional: project reviews, introduction facilitation</li>
-                <li>– Duration: 8–12 weeks per project</li>
-              </ul>
-            </div>
+          <div className="max-w-6xl mx-auto">
+            <CardCarousel
+              slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+              ariaLabel="Time commitment options carousel"
+            >
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  Per Mentee: 1 Hour/Week
+                </h3>
+                <ul className="space-y-2 text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                  <li>– Weekly 30–60 min calls (choose your schedule)</li>
+                  <li>– Async communication via platform (Slack-like chat)</li>
+                  <li>– Optional: project reviews, introduction facilitation</li>
+                  <li>– Duration: 8–12 weeks per project</li>
+                </ul>
+              </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                For Multiple Mentees
-              </h3>
-              <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed mb-4">
-                You choose your capacity. Mentors work with 1–5 students simultaneously. Average: 2–3 mentees, which is 2–3 hours/week.
-              </p>
-              <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                Seasonal Option: Some mentors prefer intensive mentorship (10 hours/week for 4 weeks) rather than ongoing. Flexible models available.
-              </p>
-            </div>
+              <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  For Multiple Mentees
+                </h3>
+                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed mb-4">
+                  You choose your capacity. Mentors work with 1–5 students simultaneously. Average: 2–3 mentees, which is 2–3 hours/week.
+                </p>
+                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                  Seasonal Option: Some mentors prefer intensive mentorship (10 hours/week for 4 weeks) rather than ongoing. Flexible models available.
+                </p>
+              </div>
+            </CardCarousel>
           </div>
         </section>
 
@@ -182,7 +191,10 @@ const BecomeMentor = () => {
             Mentor Stories
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Mentor success stories carousel"
+          >
             {mentorStories.map((story, index) => (
               <div
                 key={index}
@@ -202,7 +214,7 @@ const BecomeMentor = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* CTA Section */}
