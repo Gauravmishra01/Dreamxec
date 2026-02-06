@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const FAQ = () => {
 
@@ -60,8 +61,11 @@ const FAQ = () => {
     }
   ]
 
-  const FAQGrid = ({ faqs }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  const FAQGrid = ({ faqs, ariaLabel }) => (
+    <CardCarousel
+      slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+      ariaLabel={ariaLabel}
+    >
       {faqs.map((item, index) => (
         <div
           key={index}
@@ -79,7 +83,7 @@ const FAQ = () => {
           </p>
         </div>
       ))}
-    </div>
+    </CardCarousel>
   )
 
   return (
@@ -111,7 +115,7 @@ const FAQ = () => {
             For Students
           </h2>
 
-          <FAQGrid faqs={studentFAQs} />
+          <FAQGrid faqs={studentFAQs} ariaLabel="Student FAQs" />
         </section>
 
         {/* Donor FAQs */}
@@ -120,7 +124,7 @@ const FAQ = () => {
             For Supporters & Donors
           </h2>
 
-          <FAQGrid faqs={donorFAQs} />
+          <FAQGrid faqs={donorFAQs} ariaLabel="Supporter and Donor FAQs" />
         </section>
 
         {/* Corporate FAQs */}
@@ -129,7 +133,7 @@ const FAQ = () => {
             For Corporate Partners
           </h2>
 
-          <FAQGrid faqs={corporateFAQs} />
+          <FAQGrid faqs={corporateFAQs} ariaLabel="Corporate Partner FAQs" />
         </section>
 
 
