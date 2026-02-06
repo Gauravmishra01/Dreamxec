@@ -2,6 +2,18 @@
 
 import type { Milestone } from "../components/CampaignDetails";
 
+
+/* =========================================================
+   Club Types
+========================================================= */
+
+export interface Club {
+  id: string;
+  name: string;
+  college: string;
+  verified: boolean;
+}
+
 /* =========================================================
    Campaign Sub-Types
 ========================================================= */
@@ -54,7 +66,11 @@ export interface User {
 export interface Campaign {
   id: string;
   title: string;
-  clubName: string;
+  club: {
+    id: string;
+    name: string;
+    college: string;
+  };
   description: string;
 
   goalAmount: number;

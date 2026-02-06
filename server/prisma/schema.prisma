@@ -160,6 +160,10 @@ model UserProject {
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  clubId String? @db.ObjectId
+  club   Club?   @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+
   // Bank account for payout
   bankAccountId String?      @db.ObjectId
   bankAccount   BankAccount? @relation(fields: [bankAccountId], references: [id])
@@ -338,7 +342,8 @@ model Club {
   presidentUser   User?   @relation("ClubPresident", fields: [presidentUserId], references: [id])
   users           User[]   @relation("UserClubRelation", fields: [userIds], references: [id])
   userIds         String[] @db.ObjectId
-  members   ClubMember[]
+  members         ClubMember[]
+  campaigns       UserProject[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 

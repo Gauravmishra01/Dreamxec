@@ -1,21 +1,18 @@
+const prisma = require('../config/prisma');
 const AppError = require('../utils/AppError');
 
-// A. Allow campaign creation only for:
-// - Admin
-// - Verified Club President
-// - Verified Club Member
+/* ======================================================
+   A. Ensure Club Verified
+====================================================== */
 const ensureClubVerified = (req, res, next) => {
   const user = req.user;
   if (!user) return next(new AppError('You must be logged in', 401));
 
-  // Admin bypass
   if (user.role === 'ADMIN') return next();
 
-  // Club president (must be verified)
-  if (user.isClubPresident && user.clubVerified) return next();
-
-  // Club member (must be verified)
-  if (user.isClubMember && user.clubVerified) return next();
+  if ((user.isClubPresident || user.isClubMember) && user.clubVerified) {
+    return next();
+  }
 
   return next(
     new AppError(
@@ -25,71 +22,77 @@ const ensureClubVerified = (req, res, next) => {
   );
 };
 
-// B. Check if user has active DreamXec Membership
-// const ensureMembershipActive = (req, res, next) => {
-//   const user = req.user;
-
-//   if (!user) return next(new AppError('You must be logged in', 401));
-
-//   // Admins bypass membership
-//   if (user.role === 'ADMIN') return next();
-
-//   // Checking membership flag set after Razorpay verification
-//   if (user.membershipActive) return next();
-
-//   return next(new AppError('Activate membership to create campaigns', 403));
-// };
-
-// ---------------------------------------------------------
-// 🚀 C. NEW: Strict Campaign Eligibility Check (The Missing Function)
-// ---------------------------------------------------------
-const validateCampaignEligibility = (req, res, next) => {
+/* ======================================================
+   B. Resolve Campaign Club
+====================================================== */
+const resolveCampaignClub = async (req, res, next) => {
+  const { clubId } = req.body;
   const user = req.user;
 
-  
-
-  // 1. Sanity Check
-  if (!user) {
-    return next(new AppError('You must be logged in to create a campaign.', 401));
-  }
-
-  // 2. Admin Bypass
   if (user.role === 'ADMIN') {
+    req.validatedClubId = clubId || null;
     return next();
   }
 
-  // 3. Check Student Verification
+  if (!clubId) {
+    return next(new AppError('clubId is required to create a campaign', 400));
+  }
+
+  const club = await prisma.club.findUnique({
+    where: { id: clubId },
+    select: { id: true, userIds: true },
+  });
+
+  if (!club) {
+    return next(new AppError('Club not found', 404));
+  }
+
+  if (!club.userIds.includes(user.id)) {
+    return next(new AppError('You are not a member of this club', 403));
+  }
+
+  req.validatedClubId = club.id;
+  next();
+};
+
+/* ======================================================
+   C. Validate Campaign Eligibility
+====================================================== */
+const validateCampaignEligibility = (req, res, next) => {
+  const user = req.user;
+
+  if (!user) {
+    return next(new AppError('You must be logged in.', 401));
+  }
+
+  if (user.role === 'ADMIN') return next();
+
   if (!user.studentVerified) {
     return next(
       new AppError(
-        'Campaign creation blocked: You must complete Student Verification first.',
+        'Campaign creation blocked: Complete student verification.',
         403
       )
     );
   }
 
-  // 4. Check Club Association
   if (!user.clubIds || user.clubIds.length === 0) {
     return next(new AppError('You are not associated with any club.', 403));
   }
 
-  // 5. Check Club Verification Status
-  // (Relies on user.clubVerified being synced with the Club entity)
   if (!user.clubVerified) {
     return next(
       new AppError(
-        'Campaign creation blocked: Your club is currently PENDING verification. Please wait for admin approval.',
+        'Campaign creation blocked: Club not verified yet.',
         403
       )
     );
   }
 
-  // 6. Strict Role Validation
-  // Must be a President OR a regular Member
   if (!user.isClubPresident && !user.isClubMember) {
     return next(
       new AppError(
-        'Campaign creation blocked: You do not have the required permissions (President or Member).',
+        'Campaign creation blocked: Insufficient permissions.',
         403
       )
     );
@@ -100,6 +103,6 @@ const validateCampaignEligibility = (req, res, next) => {
 
 module.exports = {
   ensureClubVerified,
-  // ensureMembershipActive,
-  validateCampaignEligibility, // 🟢 Exporting the new function
+  resolveCampaignClub,
+  validateCampaignEligibility,
 };

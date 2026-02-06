@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import type { Campaign, User } from '../types';
@@ -63,6 +63,73 @@ const FAQItem = ({
     </div>
   );
 };
+
+interface CleanDescriptionProps {
+  description: string;
+}
+
+function CleanDescription({ description }: CleanDescriptionProps) {
+  // Parse and clean the description intelligently
+  const cleanText = useMemo(() => {
+    if (!description?.trim()) return <NoDescription />;
+
+    // Remove weird characters, multiple spaces, extra newlines
+    let cleaned = description
+      .replace(/\s+/g, ' ') // Multiple spaces to single
+      .replace(/[\r\n]+/g, '\n') // Normalize newlines
+      .trim();
+
+    // Split into paragraphs intelligently
+    const paragraphs = cleaned
+      .split(/(?<=[.!?])\s+/)
+      .map(p => p.trim())
+      .filter(p => p.length > 10) // Filter very short fragments
+      .reduce((acc: string[], sentence, index) => {
+        // Group sentences into readable paragraphs (3-5 sentences each)
+        const lastPara = acc[acc.length - 1];
+        if (!lastPara || (lastPara.split(/[.!?]/).length + 1) < 4) {
+          acc[acc.length - 1] = lastPara ? `${lastPara} ${sentence}` : sentence;
+        } else {
+          acc.push(sentence);
+        }
+        return acc;
+      }, [''])
+      .filter(p => p.length > 20); // Remove tiny paragraphs
+
+    return paragraphs.length > 0 ? (
+      paragraphs.map((paragraph, index) => (
+        <p
+          key={index}
+          className="text-dreamxec-navy/95 font-sans text-lg leading-relaxed mb-6 first:mb-8 last:mb-0 
+                   max-w-4xl text-balance hyphens-auto indent-6 first:indent-0 
+                   bg-gradient-to-r from-transparent via-white to-transparent p-4 -mx-4 sm:-mx-6 rounded-xl"
+        >
+          {paragraph}
+        </p>
+      ))
+    ) : (
+      <NoDescription />
+    );
+  }, [description]);
+
+  return <>{cleanText}</>;
+}
+
+// Fallback for empty descriptions
+function NoDescription() {
+  return (
+    <div className="text-center py-12 px-4">
+      <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-dreamxec-navy/10 to-dreamxec-orange/10 rounded-3xl flex items-center justify-center">
+        <svg className="w-12 h-12 text-dreamxec-navy/30" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332-.477-4.5-1.253" />
+        </svg>
+      </div>
+      <h3 className="text-xl font-bold text-dreamxec-navy/70 mb-2 font-display">No description available</h3>
+      <p className="text-dreamxec-navy/50 max-w-md mx-auto">Campaign details will be updated soon.</p>
+    </div>
+  );
+}
+
 
 
 const getYoutubeId = (url?: string) => {
@@ -420,33 +487,28 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
 
             {/* Campaign Title & Info */}
-            <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-4 md:p-6">
+            <div className="card-pastel-offwhite rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden">
               <div className="card-tricolor-tag"></div>
 
-              {/* Mobile: Stack layout, Desktop: Horizontal layout */}
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mt-4">
+              <div className="p-5 sm:p-6 lg:p-8">
+                {/* Title Row */}
+                <div className="flex items-start gap-4 mb-5">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dreamxec-navy font-display leading-tight flex-1">
+                    {campaign.title}
+                  </h1>
 
-                {/* Content Section */}
-                <div className="flex-1">
-                  {/* Title with responsive font sizing using golden ratio scale */}
-                  <div className="flex items-start gap-3 mb-3">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dreamxec-navy font-display leading-tight flex-1">
-                      {campaign.title}
-                    </h1>
-
-                    {/* Wishlist button - positioned top-right on mobile, inline on desktop */}
+                  <div className="flex items-center gap-2">
                     {isDonor && (
                       <button
                         onClick={handleWishlistToggle}
                         disabled={wishlistLoading}
-                        className={`flex-shrink-0 p-1.5 sm:p-2 rounded-full transition-all hover:scale-110 active:scale-95 ${isWishlisted
-                          ? 'text-red-500'
-                          : 'text-gray-300 hover:text-red-400'
+                        className={`p-2.5 rounded-full transition-all hover:scale-110 ${isWishlisted
+                          ? 'text-red-500 bg-red-50'
+                          : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
                           }`}
-                        aria-label={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
                       >
                         <svg
-                          className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
+                          className="w-5 h-5 sm:w-6 sm:h-6"
                           fill={isWishlisted ? "currentColor" : "none"}
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -460,39 +522,44 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                         </svg>
                       </button>
                     )}
-                  </div>
 
-                  {/* Meta information - stack on mobile, horizontal on larger screens */}
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-dreamxec-navy opacity-80">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                      </svg>
-                      <span className="font-sans text-sm sm:text-base truncate">{campaign.clubName}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                      </svg>
-                      <span className="font-sans text-sm sm:text-base">{campaign.category}</span>
-                    </div>
+                    <span
+                      className={`px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm ${campaign.status === 'approved'
+                        ? 'bg-green-100 text-green-700 border-2 border-green-300'
+                        : campaign.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-300'
+                          : 'bg-red-100 text-red-700 border-2 border-red-300'
+                        }`}
+                    >
+                      {campaign.status.toUpperCase()}
+                    </span>
                   </div>
                 </div>
 
-                {/* Status Badge - full width on mobile, auto width on desktop */}
-                <div
-                  className={`px-4 py-2 rounded-lg border-3 font-bold font-display text-center text-sm sm:text-base whitespace-nowrap md:self-start ${campaign.status === 'approved'
-                    ? 'bg-dreamxec-green text-white border-dreamxec-navy'
-                    : campaign.status === 'pending'
-                      ? 'bg-yellow-400 text-dreamxec-navy border-dreamxec-navy'
-                      : 'bg-red-500 text-white border-dreamxec-navy'
-                    }`}
-                >
-                  {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                {/* Meta Info - Cleaner Inline Style */}
+                <div className="flex flex-wrap items-center gap-5 text-sm sm:text-base text-dreamxec-navy/70">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🏛️</span>
+                    <span className="font-medium">{campaign.club?.college}</span>
+                  </div>
+
+                  <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block"></div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">👥</span>
+                    <span className="font-medium">{campaign.club?.name}</span>
+                  </div>
+
+                  <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block"></div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🏷️</span>
+                    <span className="font-medium">{campaign.category}</span>
+                  </div>
                 </div>
               </div>
             </div>
+
 
             {/* Tabs */}
             <div className="mb-6 border-b-4 border-dreamxec-navy">
@@ -545,52 +612,21 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             {/* About Tab */}
 
             {activeTab === 'about' && (
-              <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6">
+              <div className="card-pastel-offwhite rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card p-6 sm:p-8">
                 <div className="card-tricolor-tag"></div>
 
-                {/* Hero Title - Golden ratio scaling */}
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dreamxec-navy mb-6 font-display leading-tight mt-4 text-left">
+                {/* Hero Title */}
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dreamxec-navy mb-8 font-display leading-tight">
                   About This Campaign
                 </h2>
 
-                {/* Justified paragraphs with golden ratio spacing */}
-                <div className="space-y-6 prose prose-dreamxec-navy max-w-none">
-                  {(() => {
-                    let paragraphs = campaign.description
-                      .split('\n\n')
-                      .filter(p => p.trim().length > 0)
-                      .map(p => p.replace(/\n/g, ' ').trim());
-
-                    if (paragraphs.length === 1) {
-                      paragraphs = campaign.description
-                        .split('\n')
-                        .filter(p => p.trim().length > 0)
-                        .map(p => p.trim());
-                    }
-
-                    if (paragraphs.length === 1) {
-                      const sentences = paragraphs[0].split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 0);
-                      paragraphs = [];
-                      for (let i = 0; i < sentences.length; i += 4) {
-                        paragraphs.push(sentences.slice(i, i + 4).join(' '));
-                      }
-                    }
-
-                    return paragraphs.map((paragraph, index) => (
-                      <p
-                        key={index}
-                        className="text-dreamxec-navy/90 font-sans text-base sm:text-lg lg:text-xl 
-                     leading-relaxed sm:leading-loose first:font-medium 
-                     max-w-4xl text-justify hyphens-auto
-                     indent-8 sm:indent-12 first:indent-0"
-                      >
-                        {paragraph}
-                      </p>
-                    ));
-                  })()}
+                {/* Clean, Professional Description */}
+                <div className="prose prose-dreamxec prose-lg max-w-5xl mx-auto">
+                  <CleanDescription description={campaign.description} />
                 </div>
               </div>
             )}
+
 
             {/* ================= YOUTUBE VIDEO TAB ================= */}
 

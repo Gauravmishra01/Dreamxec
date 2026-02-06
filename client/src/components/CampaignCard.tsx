@@ -13,65 +13,63 @@ export default function CampaignCard({ campaign, href }: CampaignCardProps) {
   );
 
   return (
-    <a
-      href={href}
-      className="block focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/40 rounded-xl h-full"
-    >
-      <div className="card-pastel-offwhite rounded-xl border-5 border-dreamxec-navy shadow-pastel-card overflow-hidden group hover:scale-105 transition-transform duration-300 relative h-full flex flex-col">
+    <a href={href} className="block focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/50 rounded-xl h-full">
+      <div className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden group hover:shadow-xl hover:border-dreamxec-orange/70 transition-all duration-300 h-full flex flex-col">
         
         <div className="card-tricolor-tag"></div>
 
-        {/* Campaign Image - Fixed aspect ratio container */}
-        <div className="relative w-full aspect-video mt-4 overflow-hidden ">
+        {/* Image */}
+        <div className="relative w-full aspect-video mt-4 overflow-hidden">
           <img
             src={campaign.imageUrl}
             alt={campaign.title}
-            className="absolute bg-dreamxec-gray-800 inset-0 w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 border-b-4 border-dreamxec-navy"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 border-b-4 border-dreamxec-navy"
             loading="lazy"
           />
         </div>
 
-        {/* Campaign Content - Grows to fill remaining space */}
-        <div className="p-4 sm:p-5 flex-1 flex flex-col">
-          <div className="mb-4 flex-shrink-0">
-            <h3 className="text-lg sm:text-xl font-bold text-dreamxec-navy mb-2 line-clamp-2 group-hover:text-dreamxec-orange transition-colors font-display min-h-[3.5rem]">
+        {/* Content */}
+        <div className="p-5 sm:p-6 flex-1 flex flex-col">
+          {/* Header */}
+          <div className="mb-6">
+            <h3 className="text-xl sm:text-2xl font-bold text-dreamxec-navy mb-3 line-clamp-2 leading-tight font-display">
               {campaign.title}
             </h3>
-            <p className="text-sm sm:text-base text-dreamxec-navy opacity-80 font-sans font-semibold line-clamp-1">
-              {campaign.clubName}
-            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-2 text-sm text-dreamxec-navy/70 font-medium">
+              <span>{campaign.club?.college || 'DreamXec Academy'}</span>
+              <span className="text-dreamxec-orange">•</span>
+              <span>{campaign.club?.name || 'DreamXec Club'}</span>
+            </div>
           </div>
 
-          <div className="space-y-3 mt-auto">
-            <div className="flex justify-between items-center gap-2">
-              <span className="text-base sm:text-lg font-bold text-dreamxec-navy font-display truncate">
+          {/* Progress Section */}
+          <div className="mt-auto space-y-4">
+            <div className="flex justify-between items-baseline mb-3">
+              <span className="text-2xl font-bold text-dreamxec-navy">
                 ₹{campaign.currentAmount.toLocaleString()}
               </span>
-              <span className="text-sm sm:text-base text-dreamxec-navy opacity-70 font-sans whitespace-nowrap">
+              <span className="text-sm text-dreamxec-navy/60">
                 of ₹{campaign.goalAmount.toLocaleString()}
               </span>
             </div>
 
-            <div className="relative">
-              <div className="w-full bg-dreamxec-cream rounded-full h-3 overflow-hidden border-3 border-dreamxec-navy">
-                <div
-                  className="h-full rounded-full transition-all duration-500 bg-tricolor-horizontal"
-                  style={{ width: `${progressPercentage}%` }}
-                  role="progressbar"
-                  aria-valuenow={progressPercentage}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                />
-              </div>
+            <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden border-2 border-dreamxec-navy/50">
+              <div
+                className="h-full bg-gradient-to-r from-dreamxec-green to-emerald-600 rounded-full transition-all duration-700"
+                style={{ width: `${progressPercentage}%` }}
+                role="progressbar"
+                aria-valuenow={progressPercentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              />
             </div>
 
-            <div className="flex items-center justify-between gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-dreamxec-green text-white rounded-lg border-3 border-dreamxec-navy">
-                <span className="font-bold font-display text-xs sm:text-sm whitespace-nowrap">
-                  {progressPercentage.toFixed(0)}% funded
-                </span>
+            <div className="flex items-center justify-between">
+              <div className="px-3 py-1.5 bg-dreamxec-green text-white rounded-lg font-semibold text-sm border border-dreamxec-navy/30">
+                {progressPercentage.toFixed(0)}% funded
               </div>
-              <StarDecoration className="w-5 h-5 flex-shrink-0" color="#FF7F00" />
+              <StarDecoration className="w-5 h-5 text-dreamxec-orange" color="#FF7F00" />
             </div>
           </div>
         </div>

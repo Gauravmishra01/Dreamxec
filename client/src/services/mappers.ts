@@ -6,7 +6,7 @@ import type { UserProject } from './userProjectService';
 import type { DonorProject } from './donorProjectService';
 
 /* =========================================================
-   Shared Types (Campaign-only)
+   Shared Types
 ========================================================= */
 
 export type Milestone = {
@@ -80,7 +80,7 @@ export const mapFrontendStatus = (
 
 /* =========================================================
    UserProject (Backend) → Campaign (Frontend)
-   ✅ Milestones live ONLY here
+   ✅ Single source of truth = Club Relation
 ========================================================= */
 
 export const mapUserProjectToCampaign = (
@@ -93,34 +93,33 @@ export const mapUserProjectToCampaign = (
     title: userProject.title,
     description: userProject.description,
 
-    clubName: userProject.companyName,
+    // ✅ CLUB (FINAL, CORRECT)
+    club: userProject.club? {
+      id: userProject.club.id,
+      name: userProject.club.name,
+      college: userProject.club.college,
+    }
+  : null,
 
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
 
     status: mapBackendStatus(userProject.status),
-
     createdBy: userProject.userId,
 
     imageUrl: userProject.imageUrl,
     campaignMedia: userProject.campaignMedia || [],
-
     presentationDeckUrl: userProject.presentationDeckUrl || null,
 
-    category: "Technology",
-
+    category: 'Technology',
     createdAt: new Date(userProject.createdAt),
 
     rejectionReason: userProject.rejectionReason,
 
-    /* ✅ NEW FIELDS */
-
-    campaignType: userProject.campaignType || "INDIVIDUAL",
-
+    /* Campaign Extras */
+    campaignType: userProject.campaignType || 'INDIVIDUAL',
     teamMembers: userProject.teamMembers || [],
-
     faqs: userProject.faqs || [],
-
     youtubeUrl: userProject.youtubeUrl || undefined,
 
     milestones,
@@ -129,7 +128,6 @@ export const mapUserProjectToCampaign = (
 
 /* =========================================================
    DonorProject (Backend) → Project (Frontend)
-   ❌ NO milestones here
 ========================================================= */
 
 export const mapDonorProjectToProject = (
@@ -155,6 +153,7 @@ export const mapDonorProjectToProject = (
 
 /* =========================================================
    Campaign (Frontend) → CreateUserProjectData (Backend)
+   🚀 clubId is sent directly (NO names)
 ========================================================= */
 
 export const mapCampaignToUserProjectData = (
@@ -163,8 +162,7 @@ export const mapCampaignToUserProjectData = (
   return {
     title: campaign.title || '',
     description: campaign.description || '',
-    companyName: campaign.clubName || '',
-    skillsRequired: [],
+    clubId: campaign.club?.id,
     goalAmount: campaign.goalAmount || 0,
     milestones: campaign.milestones || [],
   };

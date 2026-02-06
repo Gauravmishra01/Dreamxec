@@ -8,7 +8,7 @@ import  apiRequest from "../services/api";
 export type Campaign = {
   id: string;
   title: string;
-  clubName: string;
+  clubId: string;
   description: string;
   currentAmount: number;
   goalAmount: number;

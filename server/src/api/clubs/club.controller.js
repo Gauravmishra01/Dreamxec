@@ -2,7 +2,7 @@ const { parse } = require('csv-parse/sync');
 const prisma = require('../../config/prisma');
 const { validateMembersPayload } = require('./club.validation');
 const AppError = require('../../utils/AppError');
-
+const catchAsync = require('../../utils/catchAsync');
 /* -------------------------------------------------------
    Helper: Upsert Club Member
 ------------------------------------------------------- */
@@ -156,6 +156,8 @@ exports.uploadMembers = async (req, res, next) => {
     next(err);
   }
 };
+
+
 
 /* -------------------------------------------------------
    Add Single Member
@@ -630,5 +632,34 @@ exports.getRejectedClubCampaigns = async (req, res, next) => {
   }
 };
 
+/* -------------------------------------------------------
+   Get My Clubs
+------------------------------------------------------- */
+exports.getMyClubs = catchAsync(async (req, res) => {
+  const user = req.user;
+
+  if (!user.clubIds || user.clubIds.length === 0) {
+    return res.status(200).json({
+      status: 'success',
+      data: { clubs: [] },
+    });
+  }
+
+  const clubs = await prisma.club.findMany({
+    where: {
+      id: { in: user.clubIds },
+    },
+    select: {
+      id: true,
+      name: true,
+      college: true,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: { clubs },
+  });
+});
 
 /* ------------------ */

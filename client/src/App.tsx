@@ -324,148 +324,142 @@ function AppContent() {
   // Circular spinner removed - LoadingAnimation component handles all loading states
 
   const handleCreateCampaign = async (data: {
+  title: string;
+  description: string;
+
+  /* RENAMED */
+  // collegeName: string;
+  clubId: string;
+
+  goalAmount: number;
+
+  bannerFile: File | null;
+  mediaFiles: File[];
+
+  presentationDeckUrl: string;
+
+  campaignType: "INDIVIDUAL" | "TEAM";
+
+  teamMembers?: {
+    name: string;
+    role: string;
+    image?: File | null;
+  }[];
+
+  faqs?: {
+    question: string;
+    answer: string;
+  }[];
+
+  youtubeUrl?: string;
+
+  milestones: {
     title: string;
-    description: string;
-    clubName: string;
-    // skillsRequired?: string[];
-    goalAmount: number;
+    timeline: string;
+    budget: string | number;
+    description?: string;
+  }[];
+}) => {
+  showLoader();
 
-    bannerFile: File | null;
-    mediaFiles: File[];
+  try {
+    console.log("🚀 Creating Campaign...");
 
-    presentationDeckUrl: string;
+    const formData = new FormData();
 
-    /* NEW */
-    campaignType: "INDIVIDUAL" | "TEAM";
+    /* ---------------- BASIC ---------------- */
 
-    teamMembers?: {
-      name: string;
-      role: string;
-      image?: File | null; // FE image file
-    }[];
+    formData.append("title", data.title);
+    formData.append("description", data.description);
 
-    faqs?: {
-      question: string;
-      answer: string;
-    }[];
+    // 🔑 companyName now stores COLLEGE NAME (legacy field)
+    // formData.append("companyName", data.collegeName);
 
-    youtubeUrl?: string;
+    // 🔑 IMPORTANT: club ownership
+    formData.append("clubId", data.clubId);
 
-    milestones: {
-      title: string;
-      timeline: string;
-      budget: string | number;
-      description?: string;
-    }[];
-  }) => {
+    formData.append("goalAmount", data.goalAmount.toString());
 
-    showLoader();
+    if (data.presentationDeckUrl) {
+      formData.append("presentationDeckUrl", data.presentationDeckUrl);
+    }
 
-    try {
-      console.log("🚀 Creating Campaign...");
+    /* ---------------- TYPE ---------------- */
 
-      const formData = new FormData();
+    formData.append("campaignType", data.campaignType);
 
-      /* ---------------- BASIC ---------------- */
+    /* ---------------- YOUTUBE ---------------- */
 
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-      formData.append("companyName", data.clubName);
-      formData.append("goalAmount", data.goalAmount.toString());
+    if (data.youtubeUrl) {
+      formData.append("youtubeUrl", data.youtubeUrl);
+    }
 
-      formData.append(
-        "presentationDeckUrl",
-        data.presentationDeckUrl || ""
-      );
+    /* ---------------- FAQS ---------------- */
 
-      /* ---------------- TYPE ---------------- */
+    if (data.faqs?.length) {
+      formData.append("faqs", JSON.stringify(data.faqs));
+    }
 
-      formData.append("campaignType", data.campaignType);
+    /* ---------------- MILESTONES ---------------- */
 
-      /* ---------------- YOUTUBE ---------------- */
+    const cleanMilestones = data.milestones.map(m => ({
+      ...m,
+      budget: Number(m.budget),
+    }));
 
-      if (data.youtubeUrl) {
-        formData.append("youtubeUrl", data.youtubeUrl);
-      }
+    formData.append("milestones", JSON.stringify(cleanMilestones));
 
-      /* ---------------- FAQS ---------------- */
+    /* ---------------- TEAM ---------------- */
 
-      if (data.faqs?.length) {
-        formData.append("faqs", JSON.stringify(data.faqs));
-      }
-
-      /* ---------------- MILESTONES ---------------- */
-
-      const cleanMilestones = data.milestones.map(m => ({
-        ...m,
-        budget: Number(m.budget),
+    if (data.campaignType === "TEAM" && data.teamMembers?.length) {
+      const teamData = data.teamMembers.map(m => ({
+        name: m.name,
+        role: m.role,
       }));
 
-      formData.append(
-        "milestones",
-        JSON.stringify(cleanMilestones)
+      formData.append("teamMembers", JSON.stringify(teamData));
+
+      data.teamMembers.forEach(member => {
+        if (member.image) {
+          formData.append("teamImages", member.image);
+        }
+      });
+    }
+
+    /* ---------------- FILES ---------------- */
+
+    if (data.bannerFile) {
+      formData.append("bannerFile", data.bannerFile);
+    }
+
+    if (data.mediaFiles?.length) {
+      data.mediaFiles.forEach(file => {
+        formData.append("mediaFiles", file);
+      });
+    }
+
+    /* ---------------- API CALL ---------------- */
+
+    const response = await createUserProject(formData);
+
+    if (response.data?.userProject) {
+      const newCampaign = mapUserProjectToCampaign(
+        response.data.userProject
       );
 
-      /* ---------------- TEAM ---------------- */
-
-      if (
-        data.campaignType === "TEAM" &&
-        data.teamMembers?.length
-      ) {
-        // Send team data WITHOUT images
-        const teamData = data.teamMembers.map(m => ({
-          name: m.name,
-          role: m.role,
-        }));
-
-        formData.append(
-          "teamMembers",
-          JSON.stringify(teamData)
-        );
-
-        // Send images separately
-        data.teamMembers.forEach(member => {
-          if (member.image) {
-            formData.append("teamImages", member.image);
-          }
-        });
-      }
-
-      /* ---------------- FILES ---------------- */
-
-      if (data.bannerFile) {
-        formData.append("bannerFile", data.bannerFile);
-      }
-
-      if (data.mediaFiles?.length) {
-        data.mediaFiles.forEach(file => {
-          formData.append("mediaFiles", file);
-        });
-      }
-
-      /* ---------------- API CALL ---------------- */
-
-      const response = await createUserProject(formData);
-
-      if (response.data?.userProject) {
-        const newCampaign = mapUserProjectToCampaign(
-          response.data.userProject
-        );
-
-        setCampaigns(prev => [...prev, newCampaign]);
-
-        console.log("✅ Campaign created:", newCampaign);
-      } else {
-        throw new Error("Invalid response");
-      }
-
-    } catch (error) {
-      console.error("❌ Campaign creation failed:", error);
-      throw error;
-    } finally {
-      hideLoader();
+      setCampaigns(prev => [...prev, newCampaign]);
+      console.log("✅ Campaign created:", newCampaign);
+    } else {
+      throw new Error("Invalid response");
     }
-  };
+  } catch (error) {
+    console.error("❌ Campaign creation failed:", error);
+    throw error;
+  } finally {
+    hideLoader();
+  }
+};
+
 
 
   const handleApproveCampaign = async (id: string) => {
