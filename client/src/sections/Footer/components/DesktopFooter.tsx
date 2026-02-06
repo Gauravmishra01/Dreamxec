@@ -202,7 +202,7 @@ export const DesktopFooter = () => {
         <FooterCarousel />
 
         {/* Sub-Footer: Final Trust Layer */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-8 items-center border-t border-dreamxec-orange/20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-8 items-center">
           {/* Left: Copyright */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <p className="text-dreamxec-cream/70 text-sm">

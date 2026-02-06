@@ -1,7 +1,5 @@
-import { useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Keyboard, A11y } from 'swiper/modules';
-import type { Swiper as SwiperType } from 'swiper';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -28,25 +26,6 @@ const footerCards = [
 ];
 
 export const FooterCarousel = () => {
-  const swiperRef = useRef<SwiperType | null>(null);
-
-  useEffect(() => {
-    // Setup keyboard navigation
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!swiperRef.current) return;
-      
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        swiperRef.current.slidePrev();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        swiperRef.current.slideNext();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   return (
     <div 
@@ -87,9 +66,6 @@ export const FooterCarousel = () => {
             slidesPerView: 3,
             spaceBetween: 24,
           },
-        }}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
         }}
         className="footer-carousel-swiper"
         a11y={{
