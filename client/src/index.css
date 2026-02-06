@@ -587,9 +587,64 @@ img {
    Carousel Styles - Scoped to Card Sections Only
    =================================== */
 
+/* Global Swiper Smooth Animations */
+.swiper {
+  overflow: visible !important;
+}
+
+.swiper-wrapper {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Smooth slide transitions for all carousels */
+.swiper-slide {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out !important;
+}
+
+/* Mobile responsive padding for carousels */
+@media (max-width: 768px) {
+  .criteria-carousel,
+  .whiteboard-carousel,
+  .faq-carousel,
+  .faq-page-carousel,
+  .fund-innovation-carousel,
+  .donor-stories-carousel,
+  .how-it-works-carousel,
+  .how-it-works-faq-carousel,
+  .start-project-carousel,
+  .eligibility-carousel,
+  .corporate-benefits-carousel,
+  .mentor-benefits-carousel,
+  .mentor-stories-carousel,
+  .contact-carousel,
+  .about-values-carousel {
+    padding: 40px 50px 60px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .criteria-carousel,
+  .whiteboard-carousel,
+  .faq-carousel,
+  .faq-page-carousel,
+  .fund-innovation-carousel,
+  .donor-stories-carousel,
+  .how-it-works-carousel,
+  .how-it-works-faq-carousel,
+  .start-project-carousel,
+  .eligibility-carousel,
+  .corporate-benefits-carousel,
+  .mentor-benefits-carousel,
+  .mentor-stories-carousel,
+  .contact-carousel,
+  .about-values-carousel {
+    padding: 40px 35px 60px !important;
+  }
+}
+
 /* Criteria Carousel */
 .criteria-carousel {
-  padding: 40px 10px 60px;
+  padding: 40px 70px 60px;
 }
 
 .criteria-carousel .swiper-slide {
@@ -607,6 +662,14 @@ img {
   border: 2px solid #000080;
   box-shadow: 0 4px 12px rgba(0, 0, 128, 0.2);
   transition: all 0.3s ease-in-out;
+}
+
+.criteria-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.criteria-carousel .swiper-button-next {
+  right: 0;
 }
 
 .criteria-carousel .swiper-button-next:after,
@@ -640,7 +703,7 @@ img {
 
 /* Whiteboard Carousel */
 .whiteboard-carousel {
-  padding: 40px 10px 60px;
+  padding: 40px 70px 60px;
 }
 
 .whiteboard-carousel .swiper-slide {
@@ -658,6 +721,14 @@ img {
   border: 3px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
+}
+
+.whiteboard-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.whiteboard-carousel .swiper-button-next {
+  right: 0;
 }
 
 .whiteboard-carousel .swiper-button-next:after,
@@ -693,7 +764,7 @@ img {
 
 /* FAQ Carousel */
 .faq-carousel {
-  padding: 40px 10px 60px;
+  padding: 40px 70px 60px;
 }
 
 .faq-carousel .swiper-slide {
@@ -711,6 +782,14 @@ img {
   border: 4px solid #000080;
   box-shadow: 4px 4px 0 #FF7F00;
   transition: all 0.2s ease-in-out;
+}
+
+.faq-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.faq-carousel .swiper-button-next {
+  right: 0;
 }
 
 .faq-carousel .swiper-button-next:after,
@@ -763,7 +842,7 @@ img {
 
 /* FAQ Page Carousel */
 .faq-page-carousel {
-  padding: 40px 10px 60px;
+  padding: 40px 70px 60px;
 }
 
 .faq-page-carousel .swiper-slide {
@@ -781,6 +860,14 @@ img {
   border: 4px solid #000080;
   box-shadow: 4px 4px 0 #FF7F00;
   transition: all 0.2s ease-in-out;
+}
+
+.faq-page-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.faq-page-carousel .swiper-button-next {
+  right: 0;
 }
 
 .faq-page-carousel .swiper-button-next:after,
@@ -817,7 +904,7 @@ img {
 .donor-stories-carousel,
 .how-it-works-carousel,
 .how-it-works-faq-carousel {
-  padding: 40px 10px 60px;
+  padding: 40px 70px 60px;
 }
 
 .fund-innovation-carousel .swiper-slide,
@@ -844,6 +931,20 @@ img {
   border: 4px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
+}
+
+.fund-innovation-carousel .swiper-button-prev,
+.donor-stories-carousel .swiper-button-prev,
+.how-it-works-carousel .swiper-button-prev,
+.how-it-works-faq-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.fund-innovation-carousel .swiper-button-next,
+.donor-stories-carousel .swiper-button-next,
+.how-it-works-carousel .swiper-button-next,
+.how-it-works-faq-carousel .swiper-button-next {
+  right: 0;
 }
 
 .fund-innovation-carousel .swiper-button-next:after,
@@ -901,7 +1002,7 @@ img {
 .mentor-stories-carousel,
 .contact-carousel,
 .about-values-carousel {
-  padding: 40px 10px 60px;
+  padding: 40px 70px 60px;
 }
 
 .start-project-carousel .swiper-slide,
@@ -937,6 +1038,26 @@ img {
   border: 4px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
+}
+
+.start-project-carousel .swiper-button-prev,
+.eligibility-carousel .swiper-button-prev,
+.corporate-benefits-carousel .swiper-button-prev,
+.mentor-benefits-carousel .swiper-button-prev,
+.mentor-stories-carousel .swiper-button-prev,
+.contact-carousel .swiper-button-prev,
+.about-values-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.start-project-carousel .swiper-button-next,
+.eligibility-carousel .swiper-button-next,
+.corporate-benefits-carousel .swiper-button-next,
+.mentor-benefits-carousel .swiper-button-next,
+.mentor-stories-carousel .swiper-button-next,
+.contact-carousel .swiper-button-next,
+.about-values-carousel .swiper-button-next {
+  right: 0;
 }
 
 .start-project-carousel .swiper-button-next:after,

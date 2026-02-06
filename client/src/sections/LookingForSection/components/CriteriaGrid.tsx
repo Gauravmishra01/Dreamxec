@@ -49,13 +49,15 @@ export const CriteriaGrid = () => {
         </div>
         
         <Swiper
-          modules={[Navigation, Pagination, Keyboard, A11y]}
+          modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
           spaceBetween={32}
           slidesPerView={1}
+          speed={800}
           navigation
           pagination={{ clickable: true }}
           keyboard={{ enabled: true }}
           grabCursor={true}
+          autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
           breakpoints={{
             768: {
               slidesPerView: 2,

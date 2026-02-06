@@ -64,6 +64,7 @@ export const PartnersSection = () => {
             modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
             spaceBetween={32}
             slidesPerView={1}
+            speed={800}
             navigation
             pagination={{ clickable: true }}
             keyboard={{ enabled: true }}
