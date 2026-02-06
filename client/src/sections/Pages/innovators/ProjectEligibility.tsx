@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const ProjectEligibility = () => {
 
@@ -185,7 +186,10 @@ const ProjectEligibility = () => {
             DreamXec funds student-led innovations across:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Eligible project categories"
+          >
             {eligibleCategories.map((cat, index) => (
               <div
                 key={index}
@@ -200,7 +204,7 @@ const ProjectEligibility = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
 
           {/* Eligibility Requirements */}
           <div className="max-w-6xl mx-auto mt-12">
@@ -230,7 +234,10 @@ const ProjectEligibility = () => {
             We cannot fund:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Ineligible project categories"
+          >
             {ineligibleCategories.map((cat, index) => (
               <div
                 key={index}
@@ -245,7 +252,7 @@ const ProjectEligibility = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* Review & Approval Process */}
@@ -254,7 +261,10 @@ const ProjectEligibility = () => {
             Review & Approval Process
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Review and approval process steps"
+          >
             {reviewProcess.map((item, index) => (
               <div
                 key={index}
@@ -269,7 +279,7 @@ const ProjectEligibility = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
 
           <div className="max-w-6xl mx-auto">
             <div className="card-glass p-8 text-left">
@@ -306,7 +316,10 @@ const ProjectEligibility = () => {
             Content Rules
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+            ariaLabel="Content rules for project submissions"
+          >
             <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
               <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Videos:
@@ -339,7 +352,7 @@ const ProjectEligibility = () => {
                 ))}
               </ul>
             </div>
-          </div>
+          </CardCarousel>
         </section>
 
         {/* Legal & Compliance */}
@@ -348,7 +361,10 @@ const ProjectEligibility = () => {
             Legal & Compliance Note
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Legal and compliance information"
+          >
             {legalItems.map((item, index) => (
               <div
                 key={index}
@@ -362,7 +378,7 @@ const ProjectEligibility = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* FAQ Section */}
@@ -385,7 +401,10 @@ const ProjectEligibility = () => {
             </div>
 
             {/* FAQ Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <CardCarousel
+              slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+              ariaLabel="Frequently asked questions about project eligibility"
+            >
               {FAQ.map((item, index) => (
                 <div
                   key={index}
@@ -403,7 +422,7 @@ const ProjectEligibility = () => {
                   </p>
                 </div>
               ))}
-            </div>
+            </CardCarousel>
 
           </div>
         </section>
