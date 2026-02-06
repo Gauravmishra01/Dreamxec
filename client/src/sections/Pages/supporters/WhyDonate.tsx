@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const WhyDonate = () => {
 
@@ -81,7 +82,14 @@ const WhyDonate = () => {
             Donor Stories
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            ariaLabel="Donor stories carousel"
+            slidesPerView={{
+              mobile: 1,
+              tablet: 2,
+              desktop: 2
+            }}
+          >
             {stories.map((story, index) => (
               <div
                 key={index}
@@ -101,7 +109,7 @@ const WhyDonate = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* CTA Section */}
