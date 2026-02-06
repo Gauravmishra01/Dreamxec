@@ -1,6 +1,6 @@
-const { z } = require("zod");
+import { z } from "zod";
 
-exports.clubVerificationSchema = z.object({
+export const clubVerificationSchema = z.object({
   body: z.object({
     // -----------------------
     // EXISTING FIELDS (UNCHANGED)

@@ -1,7 +1,6 @@
-const { z, email } = require("zod");
+import { z, email } from "zod";
 
-// 1) Create Razorpay Order (guest + logged-in)
-exports.createOrderSchema = z.object({
+export const createOrderSchema = z.object({
   body: z.object({
     amount: z.number().positive("Amount must be a positive number"),
     email:z.email().required(),
@@ -20,16 +19,14 @@ exports.createOrderSchema = z.object({
   ),
 });
 
-// 2) Logged-in direct donation (optional)
-exports.makeDonationDirectSchema = z.object({
+export const makeDonationDirectSchema = z.object({
   body: z.object({
     amount: z.number().positive("Amount must be a positive number"),
     projectId: z.string().min(1, "Project ID is required"),
   }),
 });
 
-// 3) Razorpay client-side payment verification (optional)
-exports.verifyPaymentSchema = z.object({
+export const verifyPaymentSchema = z.object({
   body: z.object({
     razorpayOrderId: z.string().min(1),
     razorpayPaymentId: z.string().min(1),

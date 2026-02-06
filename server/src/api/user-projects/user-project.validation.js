@@ -1,4 +1,4 @@
-const { z } = require("zod");
+import { z } from "zod";
 
 /* =====================================================
    CONSTANTS (ANTI-ABUSE LIMITS)
@@ -61,11 +61,7 @@ const faqSchema = z.object({
   answer: z.string().min(5).max(500),
 });
 
-/* =====================================================
-   CREATE PROJECT
-===================================================== */
-
-exports.createUserProjectSchema = z.object({
+export const createUserProjectSchema = z.object({
   body: z
     .object({
       /* ------------------ */

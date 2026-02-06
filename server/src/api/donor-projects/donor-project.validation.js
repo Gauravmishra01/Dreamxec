@@ -1,6 +1,6 @@
-const { z } = require('zod');
+import { z } from 'zod';
 
-exports.createDonorProjectSchema = z.object({
+export const createDonorProjectSchema = z.object({
   body: z.object({
     title: z.string().min(5, 'Title must be at least 5 characters').max(200, 'Title too long'),
     description: z.string().min(20, 'Description must be at least 20 characters'),
@@ -12,7 +12,7 @@ exports.createDonorProjectSchema = z.object({
   }),
 });
 
-exports.updateDonorProjectSchema = z.object({
+export const updateDonorProjectSchema = z.object({
   body: z.object({
     title: z.string().min(5, 'Title must be at least 5 characters').max(200, 'Title too long').optional(),
     description: z.string().min(20, 'Description must be at least 20 characters').optional(),

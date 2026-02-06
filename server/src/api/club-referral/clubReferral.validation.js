@@ -1,4 +1,4 @@
-const { z } = require("zod");
+import { z } from "zod";
 
 // Helper to auto-prepend https:// if missing
 const sanitizeUrl = (val) => {
@@ -8,7 +8,7 @@ const sanitizeUrl = (val) => {
   return val;
 };
 
-exports.clubReferralSchema = z.object({
+export const clubReferralSchema = z.object({
   body: z.object({
     clubName: z.string().min(1, "Club Name is required"),
     collegeName: z.string().min(1, "College Name is required"),
