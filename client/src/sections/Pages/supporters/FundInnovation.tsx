@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const FundInnovation = () => {
 
@@ -85,7 +86,10 @@ const FundInnovation = () => {
             How to Discover Projects
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Methods to discover projects"
+          >
             {discoverMethods.map((method, index) => (
               <div
                 key={index}
@@ -99,7 +103,7 @@ const FundInnovation = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* Trust & Transparency */}
@@ -108,7 +112,10 @@ const FundInnovation = () => {
             Trust & Transparency
           </h2>
 
-          <div className="space-y-6">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 1, desktop: 1 }}
+            ariaLabel="Trust and transparency points"
+          >
             {trustPoints.map((point, index) => (
               <div
                 key={index}
@@ -122,7 +129,7 @@ const FundInnovation = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* CTA Section */}
