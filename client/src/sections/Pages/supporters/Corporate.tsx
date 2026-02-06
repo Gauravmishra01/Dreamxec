@@ -167,7 +167,7 @@ const CorporateCSRPartnerships = () => {
 
           <CardCarousel
             ariaLabel="Corporate benefits and advantages"
-            slidesPerView={2}
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
           >
             {corporateBenefits.map((benefit, index) => (
               <div
