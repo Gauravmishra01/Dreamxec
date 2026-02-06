@@ -1,5 +1,6 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const CorporateCSRPartnerships = () => {
 
@@ -164,7 +165,10 @@ const CorporateCSRPartnerships = () => {
             Corporate Benefits
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <CardCarousel
+            ariaLabel="Corporate benefits and advantages"
+            slidesPerView={2}
+          >
             {corporateBenefits.map((benefit, index) => (
               <div
                 key={index}
@@ -183,7 +187,7 @@ const CorporateCSRPartnerships = () => {
                 </ul>
               </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
         {/* CTA Section */}
