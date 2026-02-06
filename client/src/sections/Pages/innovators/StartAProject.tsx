@@ -1,6 +1,7 @@
 import { Header } from '../../Header/index'
 import { Footer } from '../../Footer/index'
 import { RopeDivider } from '../../../components/RopeDivider'
+import { CardCarousel } from '../../../components/CardCarousel'
 
 const StartAProject = () => {
 
@@ -107,7 +108,11 @@ const StartAProject = () => {
           </p>
 
           {/* Feature Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+            ariaLabel="Feature cards"
+            className="mt-12"
+          >
             {[
               {
                 title: "Get Funded",
@@ -134,7 +139,7 @@ const StartAProject = () => {
                 </p>
               </div>
             ))}
-          </div>
+          </CardCarousel>
 
           {/* Closing Line */}
           <p className="text-dreamxec-navy text-lg md:text-xl font-semibold text-center max-w-3xl mx-auto mt-12">
@@ -202,37 +207,34 @@ const StartAProject = () => {
             What You Get
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Funding (₹5K–₹50L)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Access capital from passionate supporters. No interference in the research
-                process—you own the journey completely!.
-              </p>
-            </div>
-
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Mentorship (Expert Guidance)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Paired with 1,000+ mentors across engineering, business, social impact,
-                product with weekly guidance calls.
-              </p>
-            </div>
-
-            <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                Exposure (Build Your Network)
-              </h3>
-              <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                Featured on platform homepage, media coverage for standout projects,
-                and LinkedIn visibility for your team.
-              </p>
-            </div>
-          </div>
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+            ariaLabel="What you get cards"
+          >
+            {[
+              {
+                title: "Funding (₹5K–₹50L)",
+                desc: "Access capital from passionate supporters. No interference in the research process—you own the journey completely!."
+              },
+              {
+                title: "Mentorship (Expert Guidance)",
+                desc: "Paired with 1,000+ mentors across engineering, business, social impact, product with weekly guidance calls."
+              },
+              {
+                title: "Exposure (Build Your Network)",
+                desc: "Featured on platform homepage, media coverage for standout projects, and LinkedIn visibility for your team."
+              }
+            ].map((item, index) => (
+              <div key={index} className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </CardCarousel>
         </section>
 
 
@@ -242,67 +244,81 @@ const StartAProject = () => {
             Eligibility Snapshot
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Who Can Apply */}
-            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-8">
-              <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Who Can Apply
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg">
-                <li>• Currently enrolled in an Indian college/university</li>
-                <li>• Team of 1–6 members (mix of backgrounds welcome)</li>
-                <li>• Project in ideation, prototype, or execution stage</li>
-                <li>• Any field: tech, biotech, defence, education, environment, art, social sciences etc.</li>
-              </ul>
-            </div>
-
-            {/* What Doesn't Qualify */}
-            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-8">
-              <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
-                What Doesn&apos;t Qualify
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg">
-                <li>• Personal expenses</li>
-                <li>• Projects violating laws or ethical standards</li>
-              </ul>
-            </div>
-          </div>
+          <CardCarousel
+            slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+            ariaLabel="Eligibility snapshot cards"
+          >
+            {[
+              {
+                title: "Who Can Apply",
+                items: [
+                  "Currently enrolled in an Indian college/university",
+                  "Team of 1–6 members (mix of backgrounds welcome)",
+                  "Project in ideation, prototype, or execution stage",
+                  "Any field: tech, biotech, defence, education, environment, art, social sciences etc."
+                ]
+              },
+              {
+                title: "What Doesn't Qualify",
+                items: [
+                  "Personal expenses",
+                  "Projects violating laws or ethical standards"
+                ]
+              }
+            ].map((item, index) => (
+              <div key={index} className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-8">
+                <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
+                  {item.title}
+                </h3>
+                <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg">
+                  {item.items.map((text, idx) => (
+                    <li key={idx}>• {text}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </CardCarousel>
         </section>
 
 
         {/* Success Metrics – CriteriaGrid Theme */}
         <section className="w-full px-4 py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto">
 
             {/* Section Header */}
-            <div className="col-span-1 md:col-span-2 text-center mb-12">
+            <div className="text-center mb-12">
               <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold tracking-tight">
                 What does "success" look like for us?
               </h2>
             </div>
 
-            {[
-              "Fund over 500 student-led projects by 2026",
-              "Raise a minimum of ₹10 crore in total funding",
-              "Engage more than 1,000 industry and academic mentors",
-              "Achieve at least a 70% success rate for projects reaching their funding goals",
-              "Build strong collaborations between academia, industry, and government to enhance employability and job creation",
-              "Enable 50,000+ students to access real-world opportunities through funded projects, mentorship, and industry collaborations"
-            ].map((item, index) => (
-              <div
-                key={index}
-                style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in flex items-start gap-4 p-6"
-              >
-                {/* Trophy Bullet */}
-                <span className="text-2xl mt-1">🏆</span>
+            <CardCarousel
+              slidesPerView={{ mobile: 1, tablet: 2, desktop: 2 }}
+              ariaLabel="Success metrics cards"
+            >
+              {[
+                "Fund over 500 student-led projects by 2026",
+                "Raise a minimum of ₹10 crore in total funding",
+                "Engage more than 1,000 industry and academic mentors",
+                "Achieve at least a 70% success rate for projects reaching their funding goals",
+                "Build strong collaborations between academia, industry, and government to enhance employability and job creation",
+                "Enable 50,000+ students to access real-world opportunities through funded projects, mentorship, and industry collaborations"
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  style={{ animationDelay: `${index * 120}ms` }}
+                  className="card-glass animate-fade-in flex items-start gap-4 p-6"
+                >
+                  {/* Trophy Bullet */}
+                  <span className="text-2xl mt-1">🏆</span>
 
-                {/* Text */}
-                <p className="text-xl font-semibold text-dreamxec-gray-250 leading-relaxed">
-                  {item}
-                </p>
-              </div>
-            ))}
+                  {/* Text */}
+                  <p className="text-xl font-semibold text-dreamxec-gray-250 leading-relaxed">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </CardCarousel>
 
           </div>
         </section>
@@ -330,7 +346,11 @@ const StartAProject = () => {
             </div>
 
             {/* FAQ Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <CardCarousel
+              slidesPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+              ariaLabel="FAQ cards"
+              className="mb-12"
+            >
               {FAQ.map((item, index) => (
                 <div
                   key={index}
@@ -348,7 +368,7 @@ const StartAProject = () => {
                   </p>
                 </div>
               ))}
-            </div>
+            </CardCarousel>
 
           </div>
         </section>

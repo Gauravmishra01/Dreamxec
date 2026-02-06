@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { subscribeToNewsletter } from '../../../services/newsletterService';
-import { FooterCarousel } from './FooterCarousel';
-import '../FooterCarousel.css';
 
 export const DesktopFooter = () => {
   const [email, setEmail] = useState('');
@@ -197,9 +195,6 @@ export const DesktopFooter = () => {
           </div>
 
         </div>
-
-        {/* Footer Carousel - Illustration Cards */}
-        <FooterCarousel />
 
         {/* Sub-Footer: Final Trust Layer */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-8 items-center">

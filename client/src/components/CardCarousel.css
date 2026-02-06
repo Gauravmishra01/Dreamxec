@@ -1,0 +1,157 @@
+/* Card Carousel - Scoped Styles for Page Card Sections */
+
+.card-carousel-container {
+  position: relative;
+  margin: 2rem 0;
+}
+
+/* Swiper Container */
+.card-carousel-swiper {
+  width: 100%;
+  padding: 0 40px 50px 40px; /* Space for navigation arrows and pagination */
+}
+
+/* Navigation Arrows */
+.card-carousel-button-prev,
+.card-carousel-button-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 50, 85, 0.9); /* Navy color from theme */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-carousel-button-prev {
+  left: 0;
+}
+
+.card-carousel-button-next {
+  right: 0;
+}
+
+.card-carousel-button-prev:hover,
+.card-carousel-button-next:hover,
+.card-carousel-button-prev:focus,
+.card-carousel-button-next:focus {
+  background-color: rgba(255, 165, 0, 0.95); /* Orange color from theme */
+  box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.card-carousel-button-prev:disabled,
+.card-carousel-button-next:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background-color: rgba(0, 50, 85, 0.4);
+}
+
+/* Swiper default disabled state override */
+.card-carousel-button-prev.swiper-button-disabled,
+.card-carousel-button-next.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background-color: rgba(0, 50, 85, 0.4);
+}
+
+/* Pagination Dots */
+.card-carousel-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+/* Pagination Bullets */
+.card-carousel-pagination :global(.swiper-pagination-bullet) {
+  width: 12px;
+  height: 12px;
+  background-color: rgba(0, 50, 85, 0.3); /* Navy with transparency */
+  border: 2px solid rgba(0, 50, 85, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.card-carousel-pagination :global(.swiper-pagination-bullet:hover),
+.card-carousel-pagination :global(.swiper-pagination-bullet:focus) {
+  background-color: rgba(255, 165, 0, 0.6); /* Orange */
+  border-color: rgba(255, 165, 0, 0.8);
+  transform: scale(1.2);
+  outline: 2px solid rgba(255, 165, 0, 0.8);
+  outline-offset: 2px;
+}
+
+/* Active Pagination Bullet */
+.card-carousel-pagination :global(.swiper-pagination-bullet-active),
+.card-carousel-pagination-bullet-active {
+  background-color: #FFA500; /* Orange color from theme */
+  border-color: #FFA500;
+  width: 36px;
+  border-radius: 6px;
+  transform: scale(1);
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+  .card-carousel-swiper {
+    padding: 0 35px 40px 35px;
+  }
+
+  .card-carousel-button-prev,
+  .card-carousel-button-next {
+    width: 36px;
+    height: 36px;
+  }
+
+  .card-carousel-button-prev svg,
+  .card-carousel-button-next svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-carousel-swiper {
+    padding: 0 28px 36px 28px;
+  }
+
+  .card-carousel-button-prev {
+    left: -4px;
+  }
+
+  .card-carousel-button-next {
+    right: -4px;
+  }
+}
+
+/* Smooth Transitions */
+.card-carousel-swiper :global(.swiper-slide) {
+  transition: all 0.3s ease-in-out;
+  height: auto;
+}
+
+/* Focus Styles for Accessibility */
+.card-carousel-button-prev:focus-visible,
+.card-carousel-button-next:focus-visible {
+  outline: 3px solid #FFA500;
+  outline-offset: 3px;
+}
+
+/* Ensure cards maintain their styling in carousel */
+.card-carousel-swiper :global(.swiper-slide) > * {
+  height: 100%;
+}
