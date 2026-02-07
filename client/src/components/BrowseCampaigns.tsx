@@ -33,6 +33,7 @@ interface BrowseCampaignsProps {
 type SortOption = 'recent' | 'goal' | 'progress';
 
 export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCampaignsProps) {
+  console.log(campaigns)
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 

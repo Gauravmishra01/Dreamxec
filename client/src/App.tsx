@@ -304,6 +304,8 @@ function AppContent() {
     loadUserApplications();
   }, [user?.role, user?.id]);
 
+  console.log(campaigns)
+
   const approvedCampaigns = campaigns.filter((c) => c.status === 'approved');
   const pendingCampaigns = campaigns.filter((c) => c.status === 'pending');
   const userCampaigns = campaigns.filter((c) => c.createdBy === user?.id);
