@@ -1,4 +1,4 @@
-import { z } from "zod";
+const { z } = await import("zod");
 
 // Helper to auto-prepend https:// if missing
 const sanitizeUrl = (val) => {

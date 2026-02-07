@@ -1,4 +1,4 @@
-import { z } from "zod";
+const { z } = await import("zod");
 
 /* =====================================================
    CONSTANTS (ANTI-ABUSE LIMITS)

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+const { z } = await import("zod");
 
 export const applyToDonorProjectSchema = z.object({
   body: z.object({

@@ -1,4 +1,4 @@
-import { z } from "zod";
+const { z } = await import("zod");
 
 const memberSchema = z.object({
   email: z.string().email(),
