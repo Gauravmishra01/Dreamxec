@@ -54,40 +54,40 @@ const Careers = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold">
             Build the Future of Student Innovation
           </h1>
-          <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
             Join DreamXec. Help us unlock potential for 1 million Indian students.
           </p>
         </section>
 
         {/* Culture & Values */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Culture & Values
           </h2>
 
-          <div className="max-w-6xl mx-auto mb-8">
+          <div className="max-w-7xl mx-auto mb-8">
             <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
               DreamXec Culture: We're mission-driven, not just profit-driven. Everyone here believes student innovation will reshape India. That belief shows up in how we work:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {cultureValues.map((value, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {value.title}
                 </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                 <p className="text-dreamxec-navy text-sm sm:text-base md:text-lg leading-relaxed">
                   {value.desc}
                 </p>
               </div>
@@ -96,21 +96,21 @@ const Careers = () => {
         </section>
 
         {/* Why Work at DreamXec */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Why Work at DreamXec
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {whyWork.map((item, index) => (
               <div
                 key={index}
-                className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {item.title}
                 </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                <p className="text-dreamxec-navy text-sm sm:text-base md:text-lg leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -119,20 +119,20 @@ const Careers = () => {
         </section>
 
         {/* Open Roles */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Open Roles
           </h2>
 
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto mb-8">
               We're currently hiring for:
             </p>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card mb-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 mb-8">
               <ul className="space-y-3">
                 {openRoles.map((role, index) => (
-                  <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
+                  <li key={index} className="flex gap-3 text-dreamxec-navy text-base sm:text-lg md:text-xl">
                     <span className="text-lg font-bold flex-shrink-0">–</span>
                     <span>{role}</span>
                   </li>
@@ -140,8 +140,8 @@ const Careers = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
-              <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+              <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed">
                 All roles are open to remote candidates (India-based). We hire for potential + mission alignment over just experience.
               </p>
             </div>
@@ -149,13 +149,13 @@ const Careers = () => {
         </section>
 
         {/* Internship Info */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Internship Program
           </h2>
 
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed mb-6">
                 DreamXec Internships: 3–6 month programs for students/recent grads. Roles in Engineering, Product, Community, Partnerships, Content, Design.
               </p>
@@ -163,7 +163,7 @@ const Careers = () => {
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
                 What You Get:
               </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
+              <ul className="space-y-2 text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed">
                 {internshipBenefits.map((benefit, index) => (
                   <li key={index} className="flex gap-3">
                     <span className="font-bold flex-shrink-0">–</span>
@@ -173,11 +173,11 @@ const Careers = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                 Application
               </h3>
-              <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
+              <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed">
                 <span className="font-mono bg-dreamxec-cream px-2 py-1 rounded">careers@dreamxec.com</span> (CV + cover letter)
               </p>
             </div>
@@ -185,7 +185,7 @@ const Careers = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           {/* <a href="/careers/open-roles">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">

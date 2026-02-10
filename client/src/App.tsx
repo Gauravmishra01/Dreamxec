@@ -29,6 +29,10 @@ import PresidentLayout from "./components/president/PresidentLayout";
 import AdminClubReferrals from './components/admin/AdminClubReferrals';
 import AdminClubVerifications from './components/admin/AdminClubVerifications';
 import AuthCallback from './components/AuthCallback';
+import {
+  getDonorApplications,
+  updateApplicationStatus
+} from "./services/applicationService";
 
 
 // Import API services
@@ -42,6 +46,7 @@ import StartAProject from './sections/Pages/innovators/StartAProject';
 import HowItWorksStudents from './sections/Pages/innovators/HowItWorks';
 import ProjectEligibility from './sections/Pages/innovators/ProjectEligibility';
 import ResourceCenter from './sections/Pages/innovators/Resources';
+import SuccessStories from './sections/Pages/innovators/SuccessStories';
 import FundInnovation from './sections/Pages/supporters/FundInnovation';
 import HowItWorksDonors from './sections/Pages/supporters/HowItWorksD';
 import WhyDonate from './sections/Pages/supporters/WhyDonate';
@@ -52,6 +57,7 @@ import PerfectStorm from './sections/Pages/company/PerfectStorm';
 import Careers from './sections/Pages/company/Careers';
 import ContactUs from './sections/Pages/company/ContactUs';
 import FAQ from './sections/Pages/company/FAQ';
+import PressMedia from './sections/Pages/company/PressMedia';
 import AboutUs from './components/AboutUs';
 import TermsAndConditions from './sections/Pages/legal/TermsAndConditions';
 import VerifyPresident from './components/VerifyPresident';
@@ -304,6 +310,8 @@ function AppContent() {
     loadUserApplications();
   }, [user?.role, user?.id]);
 
+  console.log(campaigns)
+
   const approvedCampaigns = campaigns.filter((c) => c.status === 'approved');
   const pendingCampaigns = campaigns.filter((c) => c.status === 'pending');
   const userCampaigns = campaigns.filter((c) => c.createdBy === user?.id);
@@ -326,8 +334,11 @@ function AppContent() {
   const handleCreateCampaign = async (data: {
     title: string;
     description: string;
-    clubName: string;
-    // skillsRequired?: string[];
+
+    /* RENAMED */
+    // collegeName: string;
+    clubId: string;
+
     goalAmount: number;
 
     bannerFile: File | null;
@@ -335,13 +346,12 @@ function AppContent() {
 
     presentationDeckUrl: string;
 
-    /* NEW */
     campaignType: "INDIVIDUAL" | "TEAM";
 
     teamMembers?: {
       name: string;
       role: string;
-      image?: File | null; // FE image file
+      image?: File | null;
     }[];
 
     faqs?: {
@@ -358,7 +368,6 @@ function AppContent() {
       description?: string;
     }[];
   }) => {
-
     showLoader();
 
     try {
@@ -370,13 +379,18 @@ function AppContent() {
 
       formData.append("title", data.title);
       formData.append("description", data.description);
-      formData.append("companyName", data.clubName);
+
+      // 🔑 companyName now stores COLLEGE NAME (legacy field)
+      // formData.append("companyName", data.collegeName);
+
+      // 🔑 IMPORTANT: club ownership
+      formData.append("clubId", data.clubId);
+
       formData.append("goalAmount", data.goalAmount.toString());
 
-      formData.append(
-        "presentationDeckUrl",
-        data.presentationDeckUrl || ""
-      );
+      if (data.presentationDeckUrl) {
+        formData.append("presentationDeckUrl", data.presentationDeckUrl);
+      }
 
       /* ---------------- TYPE ---------------- */
 
@@ -401,29 +415,18 @@ function AppContent() {
         budget: Number(m.budget),
       }));
 
-      formData.append(
-        "milestones",
-        JSON.stringify(cleanMilestones)
-      );
+      formData.append("milestones", JSON.stringify(cleanMilestones));
 
       /* ---------------- TEAM ---------------- */
 
-      if (
-        data.campaignType === "TEAM" &&
-        data.teamMembers?.length
-      ) {
-        // Send team data WITHOUT images
+      if (data.campaignType === "TEAM" && data.teamMembers?.length) {
         const teamData = data.teamMembers.map(m => ({
           name: m.name,
           role: m.role,
         }));
 
-        formData.append(
-          "teamMembers",
-          JSON.stringify(teamData)
-        );
+        formData.append("teamMembers", JSON.stringify(teamData));
 
-        // Send images separately
         data.teamMembers.forEach(member => {
           if (member.image) {
             formData.append("teamImages", member.image);
@@ -453,12 +456,10 @@ function AppContent() {
         );
 
         setCampaigns(prev => [...prev, newCampaign]);
-
         console.log("✅ Campaign created:", newCampaign);
       } else {
         throw new Error("Invalid response");
       }
-
     } catch (error) {
       console.error("❌ Campaign creation failed:", error);
       throw error;
@@ -466,6 +467,7 @@ function AppContent() {
       hideLoader();
     }
   };
+
 
 
   const handleApproveCampaign = async (id: string) => {
@@ -1234,8 +1236,8 @@ function AppContent() {
                                         projectsCount={donorProjects.length}
                                         onCreateProject={() => navigate('/donor/create')}
                                         onViewProjects={() => navigate('/donor/projects')}
-                                        getDonorApplications={async () => []}
-                                        updateApplicationStatus={async () => { }}
+                                        getDonorApplications={getDonorApplications}
+                                        updateApplicationStatus={updateApplicationStatus}
                                         getDonationSummary={async () => ({})}
                                       />
                                     </>
@@ -1294,6 +1296,7 @@ function AppContent() {
                                       />
                                       <DonorProjects
                                         projects={donorProjects}
+                                        onCreateProject={() => navigate('/donor/create')}
                                         onBack={() => navigate('/donor/dashboard')}
                                         onUpdateApplicationStatus={handleUpdateApplicationStatus}
                                       />
@@ -1384,7 +1387,7 @@ function AppContent() {
                               <Route path="/president/members" element={<PresidentLayout><PresidentMembers clubId={user?.clubIds?.[0] || ''} currentUserId={user?.id || ''} /></PresidentLayout>} />
                               <Route path="/president/campaigns" element={<PresidentLayout><PresidentCampaigns clubId={user?.clubIds?.[0] || ''} /></PresidentLayout>} />
                               <Route path="/president/upload-members" element={<PresidentLayout><UploadMembers /></PresidentLayout>} />
-                              <Route path="/president/add-member" element={<PresidentLayout><AddMemberManually clubId={user?.clubIds?.[0] || ''}  /></PresidentLayout>} />
+                              <Route path="/president/add-member" element={<PresidentLayout><AddMemberManually clubId={user?.clubIds?.[0] || ''} /></PresidentLayout>} />
                             </Routes>
 
                             {/* Footer Routes */}
@@ -1406,6 +1409,8 @@ function AppContent() {
                               <Route path="/careers" element={<Careers />} />
                               <Route path="/contact" element={<ContactUs />} />
                               <Route path="/faq" element={<FAQ />} />
+                              <Route path="/success-stories" element={<SuccessStories />} />
+                              <Route path="/press" element={<PressMedia />} />
                               <Route path="/terms-And-Conditions" element={<TermsAndConditions />} />
                               {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                */}
@@ -1425,6 +1430,8 @@ function AppContent() {
                               <Route path="/careers" element={<Careers />} />
                               <Route path="/contact" element={<ContactUs />} />
                               <Route path="/faq" element={<FAQ />} />
+                              <Route path="/success-stories" element={<SuccessStories />} />
+                              <Route path="/press" element={<PressMedia />} />
 
                             </Routes >
                           </div >

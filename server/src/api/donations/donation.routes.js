@@ -13,5 +13,11 @@ router.post('/webhook', donationController.razorpayWebhook);
 router.get('/my', protect, donationController.getMyDonations);                    
 router.get('/project/:projectId', protect, donationController.getProjectDonations);
 router.get('/summary', protect, donationController.getDonationSummary);           // 🔥 REMOVE restrictTo('DONOR')
+router.get(
+  "/me/eligibility",
+  protect,
+  restrictTo("DONOR"),
+  donationController.getMyEligibility
+);
 
 module.exports = router;

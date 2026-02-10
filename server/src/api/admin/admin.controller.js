@@ -1,4 +1,4 @@
-const prisma = require('../../config/prisma');
+const prisma = require('../../config/prisma.js');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const csv = require('csv-parser');

@@ -5,11 +5,14 @@ const uploadToCloudinary = require('../../utils/uploadToCloudinary');
 const { publishEvent } = require('../../services/eventPublisher.service');
 const EVENTS = require('../../config/events');
 
+
 /* ======================================================
    CREATE USER PROJECT (WITH MILESTONES)
 ====================================================== */
 exports.createUserProject = catchAsync(async (req, res, next) => {
 
+
+  
   /* =============================
      AUTH CHECK
   ============================== */
@@ -34,7 +37,15 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
     goalAmount,
     presentationDeckUrl,
     milestones,
+    clubId,
   } = req.body;
+
+  /* =============================
+   CLUB VALIDATION
+============================== */
+  const validatedClubId = req.validatedClubId;
+
+
 
   /* =============================
      PARSE TEAM MEMBERS
@@ -211,7 +222,7 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
 
         imageUrl: uploads.imageUrl || null,
         campaignMedia: uploads.campaignMedia || [],
-
+        clubId: req.validatedClubId,
         userId: req.user.id,
         status: "PENDING",
       },
@@ -338,6 +349,7 @@ exports.getUserProject = catchAsync(async (req, res, next) => {
   const userProject = await prisma.userProject.findUnique({
     where: { id: req.params.id },
     include: {
+      club: { select: { id: true, name: true, college: true } },
       milestones: true,
       user: { select: { id: true, name: true } },
       donations: {
@@ -364,6 +376,7 @@ exports.getPublicUserProjects = catchAsync(async (req, res) => {
   const userProjects = await prisma.userProject.findMany({
     where: { status: 'APPROVED' },
     include: {
+      club: { select: { id: true, name: true, college: true } },
       milestones: true,
       user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },
@@ -382,6 +395,7 @@ exports.getMyUserProjects = catchAsync(async (req, res) => {
   const userProjects = await prisma.userProject.findMany({
     where: { userId: req.user.id },
     include: {
+      club: { select: { id: true, name: true, college: true } },
       milestones: true,
       user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },

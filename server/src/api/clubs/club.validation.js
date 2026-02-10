@@ -1,18 +1,18 @@
-import { z } from "zod";
+const zod = require("zod");
 
-const memberSchema = z.object({
-  email: z.string().email(),
-  name: z.string().max(200).nullable().optional().or(z.literal("")),
-  phone: z
+const memberSchema = zod.object({
+  email: zod.string().email(),
+  name: zod.string().max(200).nullable().optional().or(zod.literal("")),
+  phone: zod
     .string()
     .regex(/^[0-9+\-\s()]{6,20}$/)
     .nullable()
     .optional()
-    .or(z.literal("")),
+    .or(zod.literal("")),
 });
 
-export const validateMembersPayload = (members) => {
-  const schema = z
+const validateMembersPayload = (members) => {
+  const schema = zod
     .array(memberSchema)
     .min(1)
     .max(2000);
@@ -26,4 +26,8 @@ export const validateMembersPayload = (members) => {
       error: err.errors, // Zod standardized error format
     };
   }
+};
+
+module.exports = {
+  validateMembersPayload,
 };

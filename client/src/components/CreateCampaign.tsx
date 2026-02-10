@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { StarDecoration } from './icons/StarDecoration';
 import YouTube from "react-youtube";
 import toast from 'react-hot-toast';
-
+import apiRequest from '../services/api';
+import { getMyClubs, type MyClub } from '../services/clubService';
 
 // Icons
 const ArrowLeftIcon = ({ className }: { className?: string }) => (
@@ -37,7 +38,8 @@ interface CreateCampaignProps {
   onSubmit: (data: {
     title: string;
     description: string;
-    clubName: string;
+    clubId: string;        // 🆕 REQUIRED
+    // collegeName: string;   // 🆕 RENAMED
     goalAmount: number;
     bannerFile: File | null;
     mediaFiles: File[];
@@ -51,12 +53,20 @@ interface CreateCampaignProps {
 }
 
 type Milestone = { title: string; timeline: string; budget: string; description?: string };
+type ClubOption = {
+  id: string;
+  name: string;
+  college: string;
+};
 
 export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps) {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [clubName, setClubName] = useState('');
+  // const [collegeName, setCollegeName] = useState('');
+  const [clubs, setClubs] = useState<ClubOption[]>([]);
+  const [clubId, setClubId] = useState('');
+
   const [goalAmount, setGoalAmount] = useState('');
   const [presentationDeckUrl, setPresentationDeckUrl] = useState('');
   const [campaignType, setCampaignType] = useState<"INDIVIDUAL" | "TEAM">("INDIVIDUAL");
@@ -86,6 +96,26 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
     };
   }, [bannerPreview, mediaPreviews]);
 
+  useEffect(() => {
+    const fetchClubs = async () => {
+      try {
+        const res = await apiRequest('/clubs/my', { method: 'GET' });
+
+        console.log('🔥 /clubs/my RAW RESPONSE:', res);
+
+        const data = res.data as { clubs: ClubOption[] };
+        setClubs(data.clubs);
+      } catch (err) {
+        console.error('❌ clubs fetch failed:', err);
+        toast.error('Failed to load clubs');
+      }
+    };
+
+    fetchClubs();
+  }, []);
+
+
+
   const getVideoId = useCallback((url: string): string => {
     if (!url) return '';
     const cleanUrl = url.split('?')[0];
@@ -113,7 +143,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
         const goalNum = parseFloat(goalAmount);
         return title.trim() &&
           description.trim() &&
-          clubName.trim() &&
+          clubId.trim() &&
           goalAmount && !isNaN(goalNum) && goalNum > 0; // ✅ FIXED
       case 2:
         return true; // Step 2 has no required fields
@@ -180,7 +210,8 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
       step === 1 &&
       (!title.trim() ||
         !description.trim() ||
-        !clubName.trim() ||
+        !goalAmount.trim() ||
+        !clubId.trim() ||
         !parseFloat(goalAmount))
     ) {
       toast.error('Please fill all basic information');
@@ -199,7 +230,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
             parseFloat(m.budget) > 0
         ))
     ) {
-      toast.error('Please complete all milestones');
+      toast.error('Please complete all milestones and upload a banner image. Ensure total milestone budget does not exceed campaign goal.');
       return;
     }
 
@@ -215,9 +246,15 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
     setSubmitError('');
     try {
       await onSubmit({
-        title, description, clubName,
+        title, description,
         goalAmount: parseFloat(goalAmount),
-        bannerFile, mediaFiles, presentationDeckUrl, campaignType, youtubeUrl,
+        clubId,
+        // collegeName,
+        bannerFile,
+        mediaFiles,
+        presentationDeckUrl,
+        campaignType,
+        youtubeUrl,
         faqs: faqs.filter(f => f.question.trim() && f.answer.trim()),
         teamMembers: campaignType === 'TEAM' ? teamMembers.filter(m => m.name.trim() && m.role.trim()) : undefined,
         milestones,
@@ -332,15 +369,35 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Club Name *</label>
+                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">
+                    Select Club *
+                  </label>
+
+                  <select
+                    value={clubId}
+                    onChange={(e) => setClubId(e.target.value)}
+                    className={inputCls}
+                  >
+                    <option value="">Select your club</option>
+                    {clubs.map((club) => (
+                      <option key={club.id} value={club.id}>
+                        {club.name} — {club.college}
+                      </option>
+                    ))}
+                  </select>
+
+                </div>
+
+                {/* <div>
+                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">College Name *</label>
                   <input
                     type="text"
-                    value={clubName}
-                    onChange={(e) => setClubName(e.target.value)}
-                    placeholder="e.g., Robotics Club IIT Delhi"
+                    value={collegeName}
+                    onChange={(e) => setCollegeName(e.target.value)}
+                    placeholder="e.g., IIT Delhi"
                     className={inputCls}
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="mt-4">
@@ -711,7 +768,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                   <h3 className="text-sm font-bold text-dreamxec-navy mb-3">Campaign Summary</h3>
                   <div className="space-y-2 text-sm">
                     <div><span className="font-semibold">Title:</span> {title || <span className="text-gray-400 italic">Not set</span>}</div>
-                    <div><span className="font-semibold">Club:</span> {clubName || <span className="text-gray-400 italic">Not set</span>}</div>
+                    {/* <div><span className="font-semibold">Club:</span> {clubId || <span className="text-gray-400 italic">Not set</span>}</div> */}
                     <div><span className="font-semibold">Goal:</span> ₹{parseFloat(goalAmount || '0').toLocaleString()}</div>
                     <div><span className="font-semibold">Type:</span> {campaignType}</div>
                     <div><span className="font-semibold">Milestones:</span> {milestones.length}</div>
@@ -739,7 +796,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                 {submitError}
               </div>
             )}
-            
+
 
             {/* Navigation */}
             {/* Navigation - FIXED */}

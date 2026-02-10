@@ -1,6 +1,6 @@
-const { z } = require('zod');
+const zod = require("zod");
 
-exports.createProjectSchema = z.object({
+export const createProjectSchema = z.object({
   body: z.object({
     title: z.string().min(5),
     detail: z.string().min(20),
@@ -9,7 +9,7 @@ exports.createProjectSchema = z.object({
   }),
 });
 
-exports.updateProjectSchema = z.object({
+export const updateProjectSchema = z.object({
   body: z.object({
     title: z.string().min(5).optional(),
     detail: z.string().min(20).optional(),
@@ -18,7 +18,7 @@ exports.updateProjectSchema = z.object({
   }),
 });
 
-exports.verifyProjectSchema = z.object({
+export const verifyProjectSchema = z.object({
     body: z.object({
         status: z.enum(['APPROVED', 'REJECTED']),
         reason: z.string().optional(),

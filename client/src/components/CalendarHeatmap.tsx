@@ -7,7 +7,7 @@ export default function DonationHeatmap({ donations = [] }) {
   /* =========================
      RANGE TOGGLE
   ========================== */
-  const [range, setRange] = useState(3); // months
+  const [range, setRange] = useState(12); // months
 
   const today = new Date();
   const startDate = new Date();

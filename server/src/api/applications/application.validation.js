@@ -1,18 +1,23 @@
-const { z } = require('zod');
+const zod = require("zod");
 
-exports.applyToDonorProjectSchema = z.object({
-  body: z.object({
-    donorProjectId: z.string().min(1, 'Donor project ID is required'),
-    coverLetter: z.string().min(50, 'Cover letter must be at least 50 characters'),
-    skills: z.array(z.string()).optional(),
+const applyToDonorProjectSchema = zod.object({
+  body: zod.object({
+    donorProjectId: zod.string().min(1, 'Donor project ID is required'),
+    coverLetter: zod.string().min(50, 'Cover letter must be at least 50 characters'),
+    skills: zod.array(zod.string()).optional(),
   }),
 });
 
-exports.updateApplicationStatusSchema = z.object({
-  body: z.object({
-    status: z.enum(['ACCEPTED', 'REJECTED'], {
+const updateApplicationStatusSchema = zod.object({
+  body: zod.object({
+    status: zod.enum(['ACCEPTED', 'REJECTED'], {
       errorMap: () => ({ message: 'Status must be ACCEPTED or REJECTED' }),
     }),
-    rejectionReason: z.string().optional(),
+    rejectionReason: zod.string().optional(),
   }),
 });
+
+module.exports = {
+  applyToDonorProjectSchema,
+  updateApplicationStatusSchema,
+};

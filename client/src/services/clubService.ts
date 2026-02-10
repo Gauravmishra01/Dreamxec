@@ -4,7 +4,11 @@ import axios from "axios";
 /* =========================================================
    TYPES
 ========================================================= */
-
+export interface MyClub {
+  id: string;
+  name: string;
+  college: string;
+}
 export interface ClubMember {
     id: string;
     clubId: string;
@@ -72,6 +76,12 @@ export interface ClubCampaign {
 /* =========================================================
    MEMBER MANAGEMENT
 ========================================================= */
+
+
+export const getMyClubs = async (): Promise<MyClub[]> => {
+  const res = await apiRequest("/clubs/my", { method: "GET" });
+  return res.data as MyClub[]; // backend returns { data: [...] }
+};
 
 // GET CLUB MEMBERS
 export const getClubMembers = async (

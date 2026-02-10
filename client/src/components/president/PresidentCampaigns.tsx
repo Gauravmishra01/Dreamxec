@@ -5,6 +5,7 @@ import {
   getRejectedClubCampaigns,
   type ClubCampaign,
 } from "../../services/clubService";
+import type { Campaign } from '../../types';
 
 interface PresidentCampaignsProps {
   clubId: string;

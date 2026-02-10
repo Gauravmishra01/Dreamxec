@@ -10,6 +10,7 @@ import PresidentMembers from "./president/PresidentMembers";
 import PresidentCampaigns from "./president/PresidentCampaigns";
 import UploadMembers from "./president/UploadMembers";
 import AddMemberManually from "./president/AddMemberManually";
+import { getMyClubs, type MyClub } from '../services/clubService';
 
 
 
@@ -229,7 +230,7 @@ export default function StudentDashboard({
   const filteredCampaigns = campaigns.filter(campaign => {
     const matchesSearch = searchQuery === '' ||
       campaign.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      campaign.clubName?.toLowerCase().includes(searchQuery.toLowerCase());
+      campaign.club?.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = filterStatus === 'ALL' || campaign.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -756,7 +757,18 @@ export default function StudentDashboard({
                               <h3 className="text-base font-semibold text-blue-900">{campaign.title}</h3>
                               {getStatusBadge(campaign.status)}
                             </div>
-                            <p className="text-sm text-blue-900/60">{campaign.clubName}</p>
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <h3 className="text-base font-semibold text-blue-900">{campaign.title}</h3>
+                                  {getStatusBadge(campaign.status)}
+                                </div>
+                                <p className="text-sm text-blue-900/60">
+                                  {campaign.club?.name}
+                                  {campaign.club?.college && ` — ${campaign.club.college}`}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
 

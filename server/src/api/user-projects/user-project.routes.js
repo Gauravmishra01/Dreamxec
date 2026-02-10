@@ -18,7 +18,7 @@ const {
 } = require('./user-project.validation');
 
 // 🟢 Import the new middleware
-const { validateCampaignEligibility } = require('../../middleware/club.middleware');
+const { validateCampaignEligibility, resolveCampaignClub } = require('../../middleware/club.middleware');
 
 const multer = require('multer');
 
@@ -50,12 +50,13 @@ router.get('/my', restrictTo('USER', 'STUDENT_PRESIDENT'), getMyUserProjects);
 router.post(
   '/',
   restrictTo('USER', 'STUDENT_PRESIDENT'),           // 1. Must be a User
-  validateCampaignEligibility,  // 2. 🛡️ Strict Flow Check (Student -> Club -> Verified)
- upload.fields([
-  { name: "bannerFile", maxCount: 1 },
-  { name: "mediaFiles", maxCount: 10 },
-  { name: "teamImages", maxCount: 20 }, // 🟢 NEW
-]),
+  upload.fields([
+    { name: "bannerFile", maxCount: 1 },
+    { name: "mediaFiles", maxCount: 10 },
+    { name: "teamImages", maxCount: 20 }, // 🟢 NEW
+  ]),
+  validateCampaignEligibility,
+  resolveCampaignClub,
   validate(createUserProjectSchema),
   createUserProject
 );
@@ -73,7 +74,7 @@ router.put(
 router.delete(
   '/:id',
   restrictTo('USER', 'STUDENT_PRESIDENT'),
-  validateCampaignEligibility, 
+  validateCampaignEligibility,
   deleteUserProject
 );
 

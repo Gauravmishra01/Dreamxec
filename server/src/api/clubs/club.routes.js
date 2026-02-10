@@ -10,7 +10,8 @@ const {
   getApprovedClubCampaigns,
   getPendingClubCampaigns,
   getRejectedClubCampaigns,
-  changeClubPresident
+  changeClubPresident,
+  getMyClubs
 } = require('./club.controller');
 
 const router = express.Router();
@@ -32,6 +33,8 @@ router.post(
   upload.single('membersFile'),
   uploadMembers
 );
+// Get all clubs for the logged-in user
+router.get('/my', protect, getMyClubs);
 
 // Add single member
 router.post(

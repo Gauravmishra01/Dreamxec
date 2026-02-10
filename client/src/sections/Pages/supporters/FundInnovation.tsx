@@ -1,28 +1,43 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const FundInnovation = () => {
 
   const discoverMethods = [
     {
+      icon: "📂",
       title: "Browse by Category",
-      description: "AI/ML, Robotics, Biotech, Social Impact, Education Tech, Healthcare, Environment, Arts & Design, and more."
+      description: "AI/ML, Robotics, Biotech, Social Impact, Education Tech, Healthcare, Environment, Arts & Design, and more.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/3.svg"
     },
     {
+      icon: "🔍",
       title: "Search by Keywords",
-      description: "Looking for \"water conservation projects\" or \"mental health innovations\"? Use our search to find projects aligned with your interests."
+      description: "Looking for \"water conservation projects\" or \"mental health innovations\"? Use our search to find projects aligned with your interests.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg"
     },
     {
+      icon: "⚙️",
       title: "Filter by Stage",
-      description: "Ideation (earliest stage), Prototype (proof of concept), Execution (ready to go). Choose the risk level you're comfortable with."
+      description: "Ideation (earliest stage), Prototype (proof of concept), Execution (ready to go). Choose the risk level you're comfortable with.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
     },
     {
+      icon: "❤️",
       title: "Follow Favorite Creators",
-      description: "Love a team's previous project? Follow them. You'll be notified the moment they launch their next idea."
+      description: "Love a team's previous project? Follow them. You'll be notified the moment they launch their next idea.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
     },
     {
+      icon: "📚",
       title: "Browse Collections",
-      description: "\"Women-Led Innovations,\" \"Social Impact,\" \"Climate Tech\"—curated collections based on impact theme or creator background."
+      description: "\"Women-Led Innovations,\" \"Social Impact,\" \"Climate Tech\"—curated collections based on impact theme or creator background.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
     }
   ]
 
@@ -60,11 +75,11 @@ const FundInnovation = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             Your Support Powers India's Next Generation of Innovators
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -73,38 +88,67 @@ const FundInnovation = () => {
         </section>
 
         {/* Intro */}
-        <section className="max-w-6xl mx-auto  space-y-6">
-          <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-7xl mx-auto">
-            Every great innovation starts as a student's dream in a dorm room, hostel, or family home. DreamXec connects those dreamers with supporters like you—people who believe in potential before the world knows about it. When you fund a project on DreamXec, you're not just giving money. You're giving belief, validation, and a platform for that student to change their trajectory. Join 1.4 Billion Indians in supporting India's leap into the future.
-          </p>
-        </section>
+        <section className="max-w-6xl mx-auto flex justify-center items-center text-center px-4">
+  <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed max-w-4xl">
+    Every great innovation starts as a student's dream in a dorm room, hostel, or family home. DreamXec connects those dreamers with supporters like you—people who believe in potential before the world knows about it. When you fund a project on DreamXec, you're not just giving money. You're giving belief, validation, and a platform for that student to change their trajectory. Join 1.4 Billion Indians in supporting India's leap into the future.
+  </p>
+</section>
+
 
         {/* How to Discover Projects */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             How to Discover Projects
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            speed={800}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+            }}
+            className="fund-innovation-carousel"
+          >
             {discoverMethods.map((method, index) => (
-              <div
-                key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
-              >
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
-                  {method.title}
-                </h3>
-                <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                  {method.description}
-                </p>
-              </div>
+              <SwiperSlide key={index}>
+                <div
+                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
+                >
+                  <div className="flex justify-center mb-4">
+                    <img 
+                      src={method.vector} 
+                      alt="" 
+                      className="w-20 h-20 md:w-20 md:h-20 object-contain"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl md:text-3xl">{method.icon}</span>
+                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                      {method.title}
+                    </h3>
+                  </div>
+                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">
+                    {method.description}
+                  </p>
+                </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </section>
 
         {/* Trust & Transparency */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Trust & Transparency
           </h2>
 
@@ -112,7 +156,7 @@ const FundInnovation = () => {
             {trustPoints.map((point, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {point.title}
@@ -126,8 +170,8 @@ const FundInnovation = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
-          <a href="/discover-projects">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
+          <a href="/campaigns">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
                 🔍 Discover Projects Now
@@ -135,7 +179,7 @@ const FundInnovation = () => {
             </div>
           </a>
 
-          <a href="/impact-stories">
+          <a href="/success-stories">
             <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-bold">
                 See Impact You've Created

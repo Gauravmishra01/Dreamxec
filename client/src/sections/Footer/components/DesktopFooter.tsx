@@ -38,9 +38,9 @@ export const DesktopFooter = () => {
           {/* Column 1: DreamXec Brand & Mission */}
           <div className="space-y-6">
             <img
-              src="/assets/dx-logo-2.png"
+              src="/assets/dx-logo-white.png"
               alt="DreamXec Logo"
-              className="h-12 w-auto object-contain"
+              className="h-auto w-auto object-contain"
             />
             <h3 className="text-dreamxec-orange text-xl font-bold">
               Research Karega India Toh Badhega India
@@ -272,7 +272,7 @@ export const DesktopFooter = () => {
           {/* Left: Copyright */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <p className="text-dreamxec-cream/70 text-sm">
-              © 2025 DreamXec Investment Consultancy Pvt. LTD. All Rights
+              © 2025 DreamXec. All Rights
               Reserved.
             </p>
           </div>

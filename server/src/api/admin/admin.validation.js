@@ -1,10 +1,14 @@
-const { z } = require('zod');
+const zod = require("zod");
 
-exports.verifyProjectSchema = z.object({
-  body: z.object({
-    status: z.enum(['APPROVED', 'REJECTED'], {
+const verifyProjectSchema = zod.object({
+  body: zod.object({
+    status: zod.enum(['APPROVED', 'REJECTED'], {
       errorMap: () => ({ message: 'Status must be either APPROVED or REJECTED' }),
     }),
-    reason: z.string().optional(),
+    reason: zod.string().optional(),
   }),
 });
+
+module.exports = {
+  verifyProjectSchema,
+};

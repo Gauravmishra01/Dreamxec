@@ -10,6 +10,7 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
+const { getDonorEligibility } = require('../../utils/donorEligibility');
 
 // STEP 1: Create Razorpay Order (UNCHANGED - PERFECT ✅)
 exports.createOrder = catchAsync(async (req, res) => {
@@ -329,3 +330,18 @@ exports.getProjectDonations = async (req, res, next) => {
 
   res.json({ success: true, donations });
 };
+
+
+
+// GET /api/donations/me/eligibility
+exports.getMyEligibility = catchAsync(async (req, res) => {
+  const eligibility = await getDonorEligibility({
+    userId: req.user?.id,
+    donorId: req.user?.role === 'DONOR' ? req.user.id : null,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: eligibility,
+  });
+});

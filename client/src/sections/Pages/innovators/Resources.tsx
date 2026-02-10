@@ -80,11 +80,11 @@ const ResourceCenter = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             Think, Learn, Apply & Build: Your Resource Library
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -93,24 +93,24 @@ const ResourceCenter = () => {
         </section>
 
         {/* Intro */}
-        <section className="max-w-6xl mx-auto space-y-6">
+        <section className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8">
           <p className="text-dreamxec-navy text-base md:text-xl font-semibold leading-relaxed max-w-7xl mx-auto">
             Launching a project can feel overwhelming. That's why DreamXec built a resource library—guides, templates, videos, webinars, mentor insights, and community stories. Whether you're writing your first pitch, navigating investor questions, or managing post-funding execution, you'll find practical resources here. Browse by category, watch videos, download templates, and learn from 460+ projects that came before you.
           </p>
         </section>
 
         {/* Categories */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Browse by Category
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {categories.map((category, index) => (
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 animate-fade-in"
+                className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 animate-fade-in hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-2">
                   {category.title}
@@ -131,16 +131,16 @@ const ResourceCenter = () => {
         </section>
 
         {/* Resource Cards */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Featured Resources
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {resourceCards.map((resource, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:scale-105 transition-all duration-300"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:scale-105 hover:shadow-lg transition-all duration-300"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="mb-4">

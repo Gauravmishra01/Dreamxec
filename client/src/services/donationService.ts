@@ -3,6 +3,16 @@ import apiRequest, { type ApiResponse } from './api';
 /* =======================
    TYPES - FIXED!
 ======================= */
+export interface DonorEligibility {
+  totalDonated: number;
+  perProjectCost: number;
+  allowedProjects: number;
+  createdProjects: number;
+  remainingProjects: number;
+  canCreateOpportunity: boolean;
+}
+
+
 
 // Donation response (unchanged)
 export interface Donation {
@@ -160,3 +170,12 @@ export const getDonationSummary = async (): Promise<
     method: 'GET',
   });
 };
+
+export const getMyDonorEligibility = async (): Promise<
+  ApiResponse<DonorEligibility>
+> => {
+  return apiRequest('/donations/me/eligibility', {
+    method: 'GET',
+  });
+};
+

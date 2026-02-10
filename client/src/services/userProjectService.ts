@@ -16,7 +16,7 @@ export interface Milestone {
 export interface TeamMember {
   name: string;
   role: string;
-  image?: string; // Cloudinary URL from backend
+  image?: string; // Cloudinary URL
 }
 
 export interface FAQ {
@@ -30,42 +30,36 @@ export interface FAQ {
 
 export interface UserProject {
   id: string;
-
-  /* BASIC */
   title: string;
   description: string;
-  companyName: string;
 
-  skillsRequired: string[];
+  clubId: string | null;
+  club?: {
+    id: string;
+    name: string;
+    college: string;
+  };
 
   goalAmount: number;
   amountRaised: number;
 
-  /* MEDIA */
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: string;
+
+  campaignType?: "INDIVIDUAL" | "TEAM";
+  teamMembers?: any[];
+  faqs?: any[];
+  youtubeUrl?: string;
+
   imageUrl?: string;
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
-  /* NEW FIELDS */
-  campaignType?: "INDIVIDUAL" | "TEAM";
-  teamMembers?: TeamMember[];
-  faqs?: FAQ[];
-  youtubeUrl?: string;
-
-  /* STATUS */
-  status: "PENDING" | "APPROVED" | "REJECTED";
   rejectionReason?: string;
 
-  /* OWNER */
-  userId: string;
-  bankAccountId?: string | null;
-
-  createdAt: string;
-  updatedAt: string;
-
-  /* TIMELINE */
-  milestones: Milestone[];
+  milestones?: any[];
 }
+
 
 /* =========================================================
    CREATE PAYLOAD
@@ -74,16 +68,18 @@ export interface UserProject {
 export interface CreateUserProjectData {
   title: string;
   description: string;
-  companyName: string;
+
+  /** UI field → mapped to companyName */
+  collegeName: string;
+
+  /** 🔑 REQUIRED */
+  clubId: string;
 
   skillsRequired: string[];
   goalAmount: number;
 
-  imageUrl?: string;
-  campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
-  /* NEW */
   campaignType?: "INDIVIDUAL" | "TEAM";
   teamMembers?: TeamMember[];
   faqs?: FAQ[];
@@ -99,13 +95,20 @@ export interface CreateUserProjectData {
 export interface UpdateUserProjectData {
   title?: string;
   description?: string;
-  companyName?: string;
+
+  /** UI field */
+  collegeName?: string;
+
+  clubId?: string;
+  club? :{
+    id: string;
+    name: string;
+    college: string;
+  }
 
   skillsRequired?: string[];
   goalAmount?: number;
 
-  imageUrl?: string;
-  campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
   campaignType?: "INDIVIDUAL" | "TEAM";
@@ -124,34 +127,27 @@ export interface UpdateUserProjectData {
 export const getPublicUserProjects = async (): Promise<
   ApiResponse<{ userProjects: UserProject[] }>
 > => {
-  return apiRequest("/user-projects/public", {
-    method: "GET",
-  });
+  return apiRequest("/user-projects/public", { method: "GET" });
 };
 
 // SINGLE CAMPAIGN
 export const getUserProject = async (
   id: string
 ): Promise<ApiResponse<{ userProject: UserProject }>> => {
-  return apiRequest(`/user-projects/${id}`, {
-    method: "GET",
-  });
+  return apiRequest(`/user-projects/${id}`, { method: "GET" });
 };
 
 // MY CAMPAIGNS
 export const getMyUserProjects = async (): Promise<
   ApiResponse<{ userProjects: UserProject[] }>
 > => {
-  return apiRequest("/user-projects/my", {
-    method: "GET",
-  });
+  return apiRequest("/user-projects/my", { method: "GET" });
 };
 
 // CREATE CAMPAIGN
 export const createUserProject = async (
   data: FormData | CreateUserProjectData
 ): Promise<ApiResponse<{ userProject: UserProject }>> => {
-
   if (data instanceof FormData) {
     const token = localStorage.getItem("token");
 
@@ -169,10 +165,13 @@ export const createUserProject = async (
     return response.data;
   }
 
-  // JSON fallback
+  // JSON fallback (rare)
   return apiRequest("/user-projects", {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      companyName: data.collegeName,
+    }),
   });
 };
 
@@ -183,7 +182,10 @@ export const updateUserProject = async (
 ): Promise<ApiResponse<{ userProject: UserProject }>> => {
   return apiRequest(`/user-projects/${id}`, {
     method: "PUT",
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      ...(data.collegeName && { companyName: data.collegeName }),
+    }),
   });
 };
 

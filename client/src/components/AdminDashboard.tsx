@@ -770,7 +770,7 @@ const CampaignDetailModal = ({ campaign, onClose }: { campaign: Campaign; onClos
                 {campaign.title}
               </h2>
               <p className="text-lg sm:text-xl text-dreamxec-navy opacity-80 font-sans">
-                By {campaign.clubName}
+                By {campaign.club?.name} - {campaign.club?.college}
               </p>
             </div>
             <button
@@ -1174,7 +1174,7 @@ export default function AdminDashboard({
                                 {campaign.title}
                               </p>
                               <p className="text-base sm:text-lg text-dreamxec-navy opacity-80 mb-1 font-sans">
-                                {campaign.clubName}
+                                {campaign.club?.name} - {campaign.club?.college}
                               </p>
                               <p className="text-sm sm:text-base text-dreamxec-navy opacity-70 line-clamp-2 font-sans">
                                 {campaign.description}
@@ -1296,7 +1296,7 @@ export default function AdminDashboard({
                           </div>
                         </td>
                         <td className="py-4 px-4 text-dreamxec-navy font-bold text-base sm:text-lg font-display hidden md:table-cell">
-                          {campaign.clubName}
+                          {campaign.club?.name || 'N/A'} - {campaign.club?.college || 'Unknown University'}
                         </td>
                         <td className="py-4 px-4 text-dreamxec-navy text-base font-sans hidden lg:table-cell">
                           {campaign.createdAt instanceof Date ? campaign.createdAt.toLocaleDateString() : new Date(campaign.createdAt).toLocaleDateString()}

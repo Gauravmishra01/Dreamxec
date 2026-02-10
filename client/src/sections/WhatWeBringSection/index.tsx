@@ -1,5 +1,10 @@
 import { SectionHeader } from "../../components/SectionHeader";
 import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 // Data for the three columns
 const columns = [
@@ -24,33 +29,53 @@ export const WhatWeBringSection = () => {
         {/* Main Headline */}
         <h1
           className="text-center text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold mb-8"
-          style={{ animationDelay: "100ms" }}
         >
           Why 95% of Student Projects Die in College Labs
         </h1>
 
-        {/* 3-Column Layout with Whiteboard Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12">
+        {/* Carousel with Whiteboard Cards */}
+        <Swiper
+          modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+          spaceBetween={48}
+          slidesPerView={1}
+          speed={800}
+          navigation
+          pagination={{ clickable: true }}
+          keyboard={{ enabled: true }}
+          grabCursor={true}
+          autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+          breakpoints={{
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 48,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 48,
+            },
+          }}
+          className="whiteboard-carousel"
+        >
           {columns.map((col, index) => (
-            <div
-              key={index}
-              style={{ animationDelay: `${200 + index * 150}ms` }}
-              className="card-whiteboard animate-fade-in" // This is now just the container
-            >
-              {/* This new div holds the content */}
-              <div className="whiteboard-content mt-8">
-                <div className=" p-2">
-                  <h3 className="text-xl md:text-2xl font-bold text-slate-800 text-wrap">
-                    {col.title}
-                  </h3>
-                  <p className="text-xs md:text-sm lg:text-base text-slate-600 leading-relaxed ">
-                    {col.text}
-                  </p>
+            <SwiperSlide key={index}>
+              <div
+                className="card-whiteboard"
+              >
+                {/* This new div holds the content */}
+                <div className="whiteboard-content mt-8">
+                  <div className=" p-2">
+                    <h3 className="text-xl md:text-2xl font-bold text-slate-800 text-wrap">
+                      {col.title}
+                    </h3>
+                    <p className="text-xs md:text-sm lg:text-base text-slate-600 leading-relaxed ">
+                      {col.text}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
     </div>
   );
