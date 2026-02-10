@@ -44,18 +44,18 @@ const HowItWorksDonors = () => {
     ]
 
     const impactMetrics = [
-        { title: "Career Outcomes", description: "Jobs, internships, or higher education admissions." },
-        { title: "Innovation Impact", description: "Patents filed, research published, startups launched." },
-        { title: "Social Impact", description: "Communities helped and problems solved." },
-        { title: "Learning Gains", description: "Skills gained, confidence built, growth achieved." }
+        { icon: "🎯", title: "Career Outcomes", description: "Jobs, internships, or higher education admissions.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg" },
+        { icon: "💡", title: "Innovation Impact", description: "Patents filed, research published, startups launched.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg" },
+        { icon: "🌍", title: "Social Impact", description: "Communities helped and problems solved.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg" },
+        { icon: "📚", title: "Learning Gains", description: "Skills gained, confidence built, growth achieved.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg" }
     ]
 
     const FAQ = [
-        { q: "What's the minimum pledge amount?", a: "₹100. Small amounts collectively create big impact." },
-        { q: "Can I change my pledge or get a refund?", a: "No. Since this is a donation, refunds are not possible." },
-        { q: "What if a project fails?", a: "Research can fail. If misuse is suspected, DreamXec investigates and takes strict action." },
-        { q: "Can I contribute anonymously?", a: "Yes. Enable Anonymous Backer during checkout." },
-        { q: "How often do projects succeed?", a: "Success includes learning, iteration, and outcomes — not just final products." }
+        { icon: "💰", q: "What's the minimum pledge amount?", a: "₹100. Small amounts collectively create big impact." },
+        { icon: "🔄", q: "Can I change my pledge or get a refund?", a: "No. Since this is a donation, refunds are not possible." },
+        { icon: "⚠️", q: "What if a project fails?", a: "Research can fail. If misuse is suspected, DreamXec investigates and takes strict action." },
+        { icon: "👤", q: "Can I contribute anonymously?", a: "Yes. Enable Anonymous Backer during checkout." },
+        { icon: "🏆", q: "How often do projects succeed?", a: "Success includes learning, iteration, and outcomes — not just final products." }
     ]
 
     return (
@@ -177,14 +177,24 @@ const HowItWorksDonors = () => {
                       {impactMetrics.map((metric, index) => (
                         <SwiperSlide key={index}>
                           <div
-                            className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                            className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex items-center gap-4"
                           >
-                            <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                              {metric.title}
-                            </h4>
-                            <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed">
-                              {metric.description}
-                            </p>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-3">
+                                <span className="text-2xl md:text-3xl">{metric.icon}</span>
+                                <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                                  {metric.title}
+                                </h4>
+                              </div>
+                              <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed font-medium">
+                                {metric.description}
+                              </p>
+                            </div>
+                            <img 
+                              src={metric.vector} 
+                              alt="" 
+                              className="w-20 h-20 md:w-36 md:h-36 object-contain flex-shrink-0"
+                            />
                           </div>
                         </SwiperSlide>
                       ))}
@@ -224,10 +234,13 @@ const HowItWorksDonors = () => {
                             <div
                               className="card-pastel-offwhite p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
                             >
-                              <h3 className="text-lg md:text-xl font-bold mb-2 text-dreamxec-navy">
-                                Q: {item.q}
-                              </h3>
-                              <p className="text-base md:text-lg text-dreamxec-gray leading-relaxed">
+                              <div className="flex items-center gap-2 mb-3">
+                                {/* <span className="text-2xl">{item.icon}</span> */}
+                                <h3 className="text-lg md:text-xl font-bold text-dreamxec-navy">
+                                  Q: {item.q}
+                                </h3>
+                              </div>
+                              <p className="text-base md:text-lg text-dreamxec-gray leading-relaxed font-medium bg-dreamxec-cream px-4 py-3 rounded-lg">
                                 A: {item.a}
                               </p>
                             </div>

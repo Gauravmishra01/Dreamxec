@@ -694,6 +694,12 @@ img {
   transition: all 0.3s ease-in-out;
 }
 
+.criteria-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .criteria-carousel .swiper-pagination-bullet-active {
   background: #FF7F00;
   opacity: 1;
@@ -752,6 +758,12 @@ img {
   opacity: 0.3;
   border: 2px solid transparent;
   transition: all 0.3s ease-in-out;
+}
+
+.whiteboard-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
 }
 
 .whiteboard-carousel .swiper-pagination-bullet-active {
@@ -813,6 +825,12 @@ img {
   opacity: 0.4;
   border: 2px solid #000080;
   transition: all 0.3s ease-in-out;
+}
+
+.faq-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
 }
 
 .faq-carousel .swiper-pagination-bullet-active {
@@ -890,6 +908,12 @@ img {
   background: #000080;
   opacity: 0.4;
   transition: all 0.3s ease-in-out;
+}
+
+.faq-page-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
 }
 
 .faq-page-carousel .swiper-pagination-bullet-active {
@@ -982,6 +1006,15 @@ img {
   background: #000080;
   opacity: 0.3;
   transition: all 0.3s ease-in-out;
+}
+
+.fund-innovation-carousel .swiper-pagination,
+.donor-stories-carousel .swiper-pagination,
+.how-it-works-carousel .swiper-pagination,
+.how-it-works-faq-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
 }
 
 .fund-innovation-carousel .swiper-pagination-bullet-active,
@@ -1112,6 +1145,18 @@ img {
   transition: all 0.3s ease-in-out;
 }
 
+.start-project-carousel .swiper-pagination,
+.eligibility-carousel .swiper-pagination,
+.corporate-benefits-carousel .swiper-pagination,
+.mentor-benefits-carousel .swiper-pagination,
+.mentor-stories-carousel .swiper-pagination,
+.contact-carousel .swiper-pagination,
+.about-values-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .start-project-carousel .swiper-pagination-bullet-active,
 .eligibility-carousel .swiper-pagination-bullet-active,
 .corporate-benefits-carousel .swiper-pagination-bullet-active,
@@ -1189,6 +1234,12 @@ img {
   background: #000080;
   opacity: 0.3;
   transition: all 0.3s ease-in-out;
+}
+
+.eligibility-faq-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
 }
 
 .eligibility-faq-carousel .swiper-pagination-bullet-active {

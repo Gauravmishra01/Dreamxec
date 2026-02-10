@@ -10,29 +10,39 @@ const WhyDonate = () => {
 
   const reasons = [
     {
+      icon: "🎓",
       title: "For Students",
-      description: "A DreamXec pledge is more than money—it's validation. When a 20-year-old sees 100 people believe in their idea enough to fund it, something shifts. Confidence soars. The impossible suddenly seems doable. Many of our backed students tell us: \"Getting DreamXec funding was my turning point. I stopped doubting myself and started building.\""
+      description: "A DreamXec pledge is more than money—it's validation. When a 20-year-old sees 100 people believe in their idea enough to fund it, something shifts. Confidence soars. The impossible suddenly seems doable. Many of our backed students tell us: \"Getting DreamXec funding was my turning point. I stopped doubting myself and started building.\"",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
     },
     {
+      icon: "🇮🇳",
       title: "For India",
-      description: "Student innovation is India's secret superpower. We have 40M college students, yet only 0.1% get funded. Imagine if that number was 1%. Or 5%. The inventions, startups, jobs, and social impact would be transformative. Your support accelerates that shift."
+      description: "Student innovation is India's secret superpower. We have 40M college students, yet only 0.1% get funded. Imagine if that number was 1%. Or 5%. The inventions, startups, jobs, and social impact would be transformative. Your support accelerates that shift.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
     },
     {
+      icon: "⚙️",
       title: "For Systemic Change",
-      description: "Every successful student project proves the model works. Investors see it. The government sees it. colleges see it. More funding flows to innovation. More teachers encourage students. More colleges build maker spaces. One donation creates a ripple effect."
+      description: "Every successful student project proves the model works. Investors see it. The government sees it. colleges see it. More funding flows to innovation. More teachers encourage students. More colleges build maker spaces. One donation creates a ripple effect.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
     }
   ]
 
   const stories = [
     {
+      icon: "💼",
       name: "Sandeep",
       title: "45, Corporate Executive",
-      story: "I backed 12 projects over 2 years. One was an AI app for farmers. Another was a water sensor for rural areas. Seeing those 20-year-old founders execute with confidence—it reminded me why I love India's potential. Three of them reached out later for job interviews. Two are now in my team. Best ROI I've ever made."
+      story: "I backed 12 projects over 2 years. One was an AI app for farmers. Another was a water sensor for rural areas. Seeing those 20-year-old founders execute with confidence—it reminded me why I love India's potential. Three of them reached out later for job interviews. Two are now in my team. Best ROI I've ever made.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg"
     },
     {
+      icon: "👨‍🏫",
       name: "Priya & Raj",
       title: "Retired Teachers",
-      story: "We give ₹5,000 each month to random projects. We love reading the updates, seeing young minds solve real problems. Our grandchildren know about 'Grandpa's fund' and want to launch projects themselves. We've created a family legacy of supporting innovation."
+      story: "We give ₹5,000 each month to random projects. We love reading the updates, seeing young minds solve real problems. Our grandchildren know about 'Grandpa's fund' and want to launch projects themselves. We've created a family legacy of supporting innovation.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/3.svg"
     }
   ]
 
@@ -65,16 +75,29 @@ const WhyDonate = () => {
             Why Your Support Matters
           </h2>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             {reasons.map((reason, index) => (
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-glass animate-fade-in p-6 md:p-8 max-w-7xl mx-auto hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
               >
-                <p className="text-dreamxec-navy text-base md:text-2xl  leading-relaxed max-w-7xl mx-auto">
-                  <span className="text-dreamxec-berkeley-blue font-semibold">{reason.title}:</span> {reason.description}
-                </p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-3xl md:text-4xl">{reason.icon}</span>
+                    <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                      {reason.title}
+                    </h3>
+                  </div>
+                  <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed font-medium">
+                    {reason.description}
+                  </p>
+                </div>
+                <img 
+                  src={reason.vector} 
+                  alt="" 
+                  className="w-20 h-20 md:w-28 md:h-28 object-contain flex-shrink-0 hidden sm:block"
+                />
               </div>
             ))}
           </div>
@@ -107,20 +130,32 @@ const WhyDonate = () => {
             {stories.map((story, index) => (
               <SwiperSlide key={index}>
                 <div
-                   className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                   className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
-                  <div className="mb-6">
-                    <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue">
-                      {story.name}
-                    </h3>
-                    <p className="text-dreamxec-navy text-sm md:text-base font-semibold mt-1">
-                      {story.title}
-                    </p>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl md:text-4xl">{story.icon}</span>
+                      <div>
+                        <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                          {story.name}
+                        </h3>
+                        <p className="text-dreamxec-navy text-sm md:text-base font-semibold">
+                          {story.title}
+                        </p>
+                      </div>
+                    </div>
+                    <img 
+                      src={story.vector} 
+                      alt="" 
+                      className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                    />
                   </div>
 
-                  <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                    {story.story}
-                  </p>
+                  <div className="bg-dreamxec-cream px-4 py-4 rounded-lg flex-1">
+                    <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed font-medium italic">
+                      "{story.story}"
+                    </p>
+                  </div>
                 </div>
               </SwiperSlide>
             ))}
@@ -132,18 +167,18 @@ const WhyDonate = () => {
           <a href="/discover-projects">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
-                🚀 Start Supporting Projects
+                🚀 Start Supporting Campaign
               </h2>
             </div>
           </a>
 
-          <a href="/monthly-giving">
+          {/* <a href="/monthly-giving">
             <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-bold">
                 Schedule Monthly Giving
               </h2>
             </div>
-          </a>
+          </a> */}
         </section>
 
       </main>

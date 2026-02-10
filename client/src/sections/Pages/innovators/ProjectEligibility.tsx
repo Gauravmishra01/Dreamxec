@@ -288,7 +288,7 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Review & Approval Process */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Review & Approval Process
           </h2>
@@ -310,7 +310,7 @@ const ProjectEligibility = () => {
             ))}
           </div>
 
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <div className="card-glass p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-gray-250 mb-4">
                 Appeal Process
@@ -322,7 +322,7 @@ const ProjectEligibility = () => {
           </div>
 
           {/* Review Checklist */}
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
               What We Check:
             </h3>
@@ -340,41 +340,65 @@ const ProjectEligibility = () => {
         </section>
 
         {/* Content Rules */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Content Rules
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Videos:
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-sm md:text-lg leading-relaxed">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">🎬</span>
+                <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue">
+                  Videos
+                </h3>
+              </div>
+              <ul className="space-y-2">
                 {videoRules.map((rule, index) => (
-                  <li key={index}>{rule}</li>
+                  <li key={index} className="flex gap-3 items-start">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-dreamxec-orange text-white text-sm font-bold flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                    <span className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">{rule}</span>
+                  </li>
                 ))}
               </ul>
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Description:
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-sm md:text-lg leading-relaxed">
+            <div className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">📝</span>
+                <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue">
+                  Description
+                </h3>
+              </div>
+              <ul className="space-y-2">
                 {descriptionRules.map((rule, index) => (
-                  <li key={index}>{rule}</li>
+                  <li key={index} className="flex gap-3 items-start">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-dreamxec-green text-white text-sm font-bold flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                    <span className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">{rule}</span>
+                  </li>
                 ))}
               </ul>
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Updates:
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-sm md:text-lg leading-relaxed">
+            <div className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">📢</span>
+                <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue">
+                  Updates
+                </h3>
+              </div>
+              <ul className="space-y-2">
                 {updatesRules.map((rule, index) => (
-                  <li key={index}>{rule}</li>
+                  <li key={index} className="flex gap-3 items-start">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-dreamxec-berkeley-blue text-white text-sm font-bold flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                    <span className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">{rule}</span>
+                  </li>
                 ))}
               </ul>
             </div>

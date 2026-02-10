@@ -97,7 +97,17 @@ const StartAProject = () => {
         {/* Divider */}
         <RopeDivider />
         {/* What is DreamXec */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+          <img
+            src="/assets/doodles/sparkle.svg"
+            alt=""
+            className="absolute -top-8 left-6 w-10 h-10 opacity-70 pointer-events-none hidden sm:block"
+          />
+          <img
+            src="/assets/doodles/lightbulb.svg"
+            alt=""
+            className="absolute top-10 right-4 w-12 h-12 opacity-70 pointer-events-none hidden md:block"
+          />
           <h2 className="text-dreamxec-berkeley-blue text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
             What is DreamXec for Innovators?
           </h2>
@@ -116,24 +126,34 @@ const StartAProject = () => {
               {
                 title: "Get Funded",
                 desc: "Access capital without needing VC backing",
+                vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
               },
               {
                 title: "Get Mentored",
                 desc: "Learn directly from industry & academic experts",
+                vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
               },
               {
                 title: "Create Impact",
                 desc: "Turn ideas into real-world solutions",
+                vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
               },
             ].map((item, index) => (
               <div
                 key={index}
-                className="card-glass p-6 md:p-8 text-center space-y-3 hover:scale-105 transition-transform duration-300"
+                className="card-glass p-4 md:p-6 text-center space-y-3 hover:scale-105 transition-transform duration-300"
               >
                 <h3 className="text-xl font-bold text-dreamxec-berkeley-blue">
                   {item.title}
                 </h3>
                 <p className="text-dreamxec-navy text-base">{item.desc}</p>
+                <div className="flex justify-center pt-2">
+                  <img 
+                    src={item.vector} 
+                    alt="" 
+                    className="w-24 h-24 opacity-50"
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -158,9 +178,9 @@ const StartAProject = () => {
             slidesPerView={1}
             speed={800}
             navigation
-            pagination={{ clickable: true }}
+            pagination={{ clickable: false }}
             keyboard={{ enabled: true }}
-            grabCursor={true}
+            grabCursor={false}
             autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
             breakpoints={{
               768: {
@@ -177,7 +197,7 @@ const StartAProject = () => {
             {columns.map((col, index) => (
               <SwiperSlide key={index}>
                 <div
-                  className="card-whiteboard transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl h-full"
+                  className="card-whiteboard h-full"
                 >
                   <div className="whiteboard-content pt-14">
                     <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-2 p-2">
@@ -321,7 +341,17 @@ const StartAProject = () => {
         </section>
 
         {/* Success Metrics – CriteriaGrid Theme */}
-        <section className="w-full px-4 sm:px-6 lg:px-8 py-16">
+        <section className="relative w-full px-4 sm:px-6 lg:px-8 py-16">
+          <img
+            src="/assets/doodles/star.svg"
+            alt=""
+            className="absolute -top-6 left-4 w-10 h-10 opacity-70 pointer-events-none hidden sm:block"
+          />
+          <img
+            src="/assets/doodles/handshake.svg"
+            alt=""
+            className="absolute top-6 right-6 w-12 h-12 opacity-70 pointer-events-none hidden md:block"
+          />
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-12">
@@ -331,47 +361,65 @@ const StartAProject = () => {
             </div>
 
             {/* Success Items */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-6">
               {[
                 {
                   icon: "🚀",
                   text: "Fund over 500 student-led projects by 2026",
+                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
                 },
                 {
                   icon: "💰",
                   text: "Raise a minimum of ₹10 crore in total funding",
+                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
                 },
                 {
                   icon: "🧠",
                   text: "Engage more than 1,000 industry and academic mentors",
+                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
                 },
                 {
                   icon: "📈",
                   text: "Achieve at least a 70% success rate for projects reaching their funding goals",
+                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg"
                 },
                 {
                   icon: "🤝",
                   text: "Build strong collaborations between academia, industry, and government to enhance employability and job creation",
+                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/18.svg"
                 },
                 {
                   icon: "🎓",
                   text: "Enable 50,000+ students to access real-world opportunities through funded projects, mentorship, and industry collaborations",
+                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/2.svg"
                 },
               ].map((item, index) => (
                 <div
                   key={index}
                   style={{ animationDelay: `${index * 120}ms` }}
-                  className="card-glass animate-fade-in flex items-start gap-5 p-6 md:p-8 hover:shadow-lg transition-shadow duration-300"
+                  className="card-glass animate-fade-in p-3 hover:shadow-lg transition-shadow duration-300 min-h-[120px]"
                 >
-                  {/* Icon Badge */}
-                  <div className="w-12 h-12 rounded-full bg-dreamxec-berkeley-blue/10 flex items-center justify-center shrink-0">
-                    <span className="text-2xl">{item.icon}</span>
+                  {/* Top content with icon and text */}
+                  <div className="flex items-start gap-3 mb-3">
+                    {/* Icon Badge */}
+                    <div className="w-8 h-8 rounded-full bg-dreamxec-berkeley-blue/10 flex items-center justify-center shrink-0">
+                      <span className="text-sm">{item.icon}</span>
+                    </div>
+
+                    {/* Text */}
+                    <p className="text-sm md:text-base font-semibold text-dreamxec-gray-250 leading-relaxed">
+                      {item.text}
+                    </p>
                   </div>
 
-                  {/* Text */}
-                  <p className="text-lg md:text-xl font-semibold text-dreamxec-gray-250 leading-relaxed">
-                    {item.text}
-                  </p>
+                  {/* Bottom image */}
+                  <div className="flex justify-center">
+                    <img 
+                      src={item.vector} 
+                      alt="" 
+                      className="w-48 h-48 opacity-40"
+                    />
+                  </div>
                 </div>
               ))}
             </div>

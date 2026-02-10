@@ -59,7 +59,7 @@ export const WhatWeBringSection = () => {
           {columns.map((col, index) => (
             <SwiperSlide key={index}>
               <div
-                className="card-whiteboard transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl"
+                className="card-whiteboard"
               >
                 {/* This new div holds the content */}
                 <div className="whiteboard-content mt-8">

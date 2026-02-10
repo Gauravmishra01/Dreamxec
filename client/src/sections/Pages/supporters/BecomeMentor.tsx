@@ -9,20 +9,21 @@ import 'swiper/css/pagination';
 const BecomeMentor = () => {
 
   const mentorTypes = [
-    "Engineers & technical leaders",
-    "Entrepreneurs & startup founders",
-    "Doctors & healthcare professionals",
-    "Designers & product managers",
-    "Writers & communication experts",
-    "Business & finance professionals",
-    "Social impact leaders & nonprofit founders",
-    "Teachers & academic researchers",
-    "Artists & creative professionals",
-    "Domain specialists of any kind"
+    { icon: "👨‍💻", text: "Engineers & technical leaders" },
+    { icon: "🚀", text: "Entrepreneurs & startup founders" },
+    { icon: "👨‍⚕️", text: "Doctors & healthcare professionals" },
+    { icon: "🎨", text: "Designers & product managers" },
+    { icon: "✍️", text: "Writers & communication experts" },
+    { icon: "💼", text: "Business & finance professionals" },
+    { icon: "🌍", text: "Social impact leaders & nonprofit founders" },
+    { icon: "👩‍🏫", text: "Teachers & academic researchers" },
+    { icon: "🎭", text: "Artists & creative professionals" },
+    { icon: "🏆", text: "Domain specialists of any kind" }
   ]
 
   const mentorBenefits = [
     {
+      icon: "❤️",
       category: "Personal",
       points: [
         "Help a student change their life trajectory",
@@ -30,9 +31,11 @@ const BecomeMentor = () => {
         "Give back without major time commitment (1 hour/week)",
         "Build your mentorship reputation",
         "Access to network of 1,000+ mentors on platform"
-      ]
+      ],
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
     },
     {
+      icon: "💼",
       category: "Professional",
       points: [
         "Find talent for your team (intern/hire pathways)",
@@ -41,29 +44,36 @@ const BecomeMentor = () => {
         "LinkedIn visibility (mentor badge, public profile)",
         "Media features (great mentor stories get coverage)",
         "Tax benefits (if through registered organization)"
-      ]
+      ],
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg"
     },
     {
+      icon: "🧠",
       category: "Intellectual",
       points: [
         "Stay sharp by solving student problems",
         "Co-publish research with student projects",
         "Explore ideas outside your day job",
         "Creative stimulation"
-      ]
+      ],
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
     }
   ]
 
   const mentorStories = [
     {
+      icon: "👨‍💻",
       name: "Arvind",
       title: "Senior Engineer at Google",
-      story: "I mentor 2–3 DreamXec projects every year. It takes ~2 hours/week, and honestly? I learn as much as I teach. These 22-year-olds think about problems differently. One mentee's startup idea made me rethink our team's approach to a product. I now have 3 interns from DreamXec projects in my team. Best talent pipeline I've found."
+      story: "I mentor 2–3 DreamXec projects every year. It takes ~2 hours/week, and honestly? I learn as much as I teach. These 22-year-olds think about problems differently. One mentee's startup idea made me rethink our team's approach to a product. I now have 3 interns from DreamXec projects in my team. Best talent pipeline I've found.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
     },
     {
+      icon: "👩‍⚕️",
       name: "Dr. Priya",
       title: "Doctor & Social Entrepreneur",
-      story: "I mentor healthcare innovation projects. It's deeply meaningful—these students are solving real problems in rural health. I've helped 5 projects get funding. Watching them impact thousands of lives? That's why I became a doctor. Now DreamXec lets me multiply that impact by mentoring others."
+      story: "I mentor healthcare innovation projects. It's deeply meaningful—these students are solving real problems in rural health. I've helped 5 projects get funding. Watching them impact thousands of lives? That's why I became a doctor. Now DreamXec lets me multiply that impact by mentoring others.",
+      vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/3.svg"
     }
   ]
 
@@ -102,14 +112,14 @@ const BecomeMentor = () => {
             </p>
 
             <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card mb-8 hover:shadow-lg transition-shadow duration-300">
-              <ul className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {mentorTypes.map((type, index) => (
-                  <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
-                    <span className="text-lg font-bold flex-shrink-0">–</span>
-                    <span>{type}</span>
-                  </li>
+                  <div key={index} className="flex items-center gap-3 text-dreamxec-navy text-base md:text-lg p-2 rounded-lg hover:bg-dreamxec-cream transition-colors duration-200">
+                    <span className="text-xl md:text-2xl">{type.icon}</span>
+                    <span className="font-medium">{type.text}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
             <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
@@ -151,16 +161,28 @@ const BecomeMentor = () => {
             {mentorBenefits.map((benefit, index) => (
               <SwiperSlide key={index}>
                 <div
-                   className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                   className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
-                  <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                    {benefit.category}:
-                  </h3>
-                  <ul className="space-y-3">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl md:text-3xl">{benefit.icon}</span>
+                      <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                        {benefit.category}
+                      </h3>
+                    </div>
+                    <img 
+                      src={benefit.vector} 
+                      alt="" 
+                      className="w-14 h-14 md:w-16 md:h-16 object-contain"
+                    />
+                  </div>
+                  <ul className="space-y-2 flex-1">
                     {benefit.points.map((point, idx) => (
-                      <li key={idx} className="flex gap-2 text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                        <span className="text-lg font-bold flex-shrink-0">–</span>
-                        <span>{point}</span>
+                      <li key={idx} className="flex gap-3 items-start">
+                        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-dreamxec-orange text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <span className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">{point}</span>
                       </li>
                     ))}
                   </ul>
@@ -177,28 +199,64 @@ const BecomeMentor = () => {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 max-w-7xl mx-auto">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Per Mentee: 1 Hour/Week
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                <li>– Weekly 30–60 min calls (choose your schedule)</li>
-                <li>– Async communication via platform (Slack-like chat)</li>
-                <li>– Optional: project reviews, introduction facilitation</li>
-                <li>– Duration: 8–12 weeks per project</li>
-              </ul>
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-start gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">⏱️</span>
+                  <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                    Per Mentee: 1 Hour/Week
+                  </h3>
+                </div>
+                <ul className="space-y-2">
+                  <li className="flex gap-3 items-start text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-dreamxec-green text-white text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+                    <span className="font-medium">Weekly 30–60 min calls (choose your schedule)</span>
+                  </li>
+                  <li className="flex gap-3 items-start text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-dreamxec-green text-white text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+                    <span className="font-medium">Async communication via platform (Slack-like chat)</span>
+                  </li>
+                  <li className="flex gap-3 items-start text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-dreamxec-green text-white text-xs font-bold flex items-center justify-center mt-0.5">3</span>
+                    <span className="font-medium">Optional: project reviews, introduction facilitation</span>
+                  </li>
+                  <li className="flex gap-3 items-start text-dreamxec-navy text-sm md:text-base leading-relaxed">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-dreamxec-green text-white text-xs font-bold flex items-center justify-center mt-0.5">4</span>
+                    <span className="font-medium">Duration: 8–12 weeks per project</span>
+                  </li>
+                </ul>
+              </div>
+              <img 
+                src="/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg" 
+                alt="" 
+                className="w-16 h-16 md:w-20 md:h-20 object-contain flex-shrink-0 hidden sm:block"
+              />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-4">
-                For Multiple Mentees
-              </h3>
-              <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed mb-4">
-                You choose your capacity. Mentors work with 1–5 students simultaneously. Average: 2–3 mentees, which is 2–3 hours/week.
-              </p>
-              <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed">
-                Seasonal Option: Some mentors prefer intensive mentorship (10 hours/week for 4 weeks) rather than ongoing. Flexible models available.
-              </p>
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-start gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">👥</span>
+                  <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                    For Multiple Mentees
+                  </h3>
+                </div>
+                <div className="bg-dreamxec-cream px-4 py-3 rounded-lg mb-3">
+                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">
+                    You choose your capacity. Mentors work with 1–5 students simultaneously. Average: 2–3 mentees, which is 2–3 hours/week.
+                  </p>
+                </div>
+                <div className="bg-dreamxec-cream px-4 py-3 rounded-lg">
+                  <p className="text-dreamxec-navy text-sm md:text-base leading-relaxed font-medium">
+                    <span className="font-bold text-dreamxec-berkeley-blue">Seasonal Option:</span> Some mentors prefer intensive mentorship (10 hours/week for 4 weeks) rather than ongoing. Flexible models available.
+                  </p>
+                </div>
+              </div>
+              <img 
+                src="/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg" 
+                alt="" 
+                className="w-16 h-16 md:w-20 md:h-20 object-contain flex-shrink-0 hidden sm:block"
+              />
             </div>
           </div>
         </section>
@@ -230,23 +288,35 @@ const BecomeMentor = () => {
             {mentorStories.map((story, index) => (
               <SwiperSlide key={index}>
                 <div
-                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
-                  <div className="mb-6">
-                    <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue">
-                      {story.name}
-                    </h3>
-                    <p className="text-dreamxec-navy text-sm md:text-base font-medium mt-1">
-                      {story.title}
-                    </p>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl md:text-4xl">{story.icon}</span>
+                      <div>
+                        <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                          {story.name}
+                        </h3>
+                        <p className="text-dreamxec-navy text-sm md:text-base font-semibold">
+                          {story.title}
+                        </p>
+                      </div>
+                    </div>
+                    <img 
+                      src={story.vector} 
+                      alt="" 
+                      className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                    />
                   </div>
 
-                  <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed">
-                  {story.story}
-                </p>
-              </div>
-            </SwiperSlide>
-          ))}
+                  <div className="bg-dreamxec-cream px-4 py-4 rounded-lg flex-1">
+                    <p className="text-dreamxec-navy text-base md:text-lg leading-relaxed font-medium italic">
+                      "{story.story}"
+                    </p>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
         </Swiper>
         </section>
 
