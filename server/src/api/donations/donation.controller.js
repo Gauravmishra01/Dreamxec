@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const prisma = require("../../config/prisma");
 const AppError = require("../../utils/AppError");
 const catchAsync = require("../../utils/catchAsync");
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -148,12 +150,82 @@ exports.razorpayWebhook = async (req, res) => {
 
         if (donations.count > 0 && payment.notes?.projectId) {
           const project = await tx.userProject.update({
-            where: { id: payment.notes.projectId },
-            data: {
-              amountRaised: { increment: amount }
-            },
+             where: { id: payment.notes.projectId },
+             data: {
+               amountRaised: { increment: amount }
+             },
+             include: { user: true } // Fetch project owner
           });
           console.log("🎉 Project updated! New total: ₹", project.amountRaised);
+          
+          // --- EMAIL EVENTS ---
+          
+          // 1. To Donor (DONATION_SUCCESS)
+          // We need to find the specific donation to get donor details (email/name)
+          const donationRecord = await tx.donation.findUnique({
+              where: { razorpayOrderId: orderId },
+              include: { 
+                  donor: true, 
+                  user: true 
+              }
+          });
+          
+          const donorEmail = donationRecord.donor?.email || donationRecord.user?.email || payment.email;
+          const donorName = donationRecord.donor?.name || donationRecord.user?.name || 'Valued Donor';
+          
+          if (donorEmail) {
+            await publishEvent(EVENTS.DONATION_SUCCESS, {
+                email: donorEmail, // Functionality relies on resolving this in orchestrator or just sending direct
+                amount: amount,
+                currency: "INR", // Assuming INR based on Razorpay
+                transactionId: payment.id,
+                campaignTitle: project.title,
+                donorName: donorName
+            });
+          }
+
+          // 2. To Project Owner (DONATION_RECEIVED)
+          if (project.user?.email) {
+              await publishEvent(EVENTS.DONATION_RECEIVED, {
+                  email: project.user.email,
+                  amount: amount,
+                  currency: "INR",
+                  donorName: donationRecord.anonymous ? 'Anonymous' : donorName,
+                  campaignTitle: project.title
+              });
+          }
+
+          // 3. Campaign Milestones & Completion
+          if (project.goalAmount > 0) {
+             const prevAmount = project.amountRaised - amount;
+             const prevPercent = (prevAmount / project.goalAmount) * 100;
+             const newPercent = (project.amountRaised / project.goalAmount) * 100;
+
+             const milestones = [25, 50, 75, 100];
+             
+             for (const milestone of milestones) {
+                 if (prevPercent < milestone && newPercent >= milestone) {
+                     // 100% -> Completed
+                     if (milestone === 100 && project.user?.email) {
+                         await publishEvent(EVENTS.CAMPAIGN_COMPLETED, {
+                             email: project.user.email,
+                             campaignTitle: project.title,
+                             totalRaised: project.amountRaised,
+                             currency: "INR"
+                         });
+                     } 
+                     
+                     // Any milestone -> Milestone Alert
+                     if (project.user?.email) {
+                        await publishEvent(EVENTS.CAMPAIGN_MILESTONE, {
+                            email: project.user.email,
+                            percentage: milestone,
+                            campaignTitle: project.title
+                        });
+                     }
+                 }
+             }
+          }
         }
       });
       console.log("✅ WEBHOOK SUCCESS!");

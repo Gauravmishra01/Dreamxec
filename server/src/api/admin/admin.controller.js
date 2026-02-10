@@ -4,6 +4,8 @@ const AppError = require('../../utils/AppError');
 const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 // ADMIN: Get all projects (both user and donor projects)
 exports.getAllProjects = catchAsync(async (req, res, next) => {
@@ -69,19 +71,16 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
 
   // Send email notification to project owner
   if (userProject.user && userProject.user.email) {
-    let rejectionDetails = 'Please review your project details and resubmit if needed.';
-    if (reason) {
-      rejectionDetails = `Reason: ${reason}\n\nPlease review the feedback, update your project, and resubmit.`;
-    }
-    const approvalMessage = 'Congratulations! Your project is now live and accepting donations.';
-    
-    const message = `Dear ${userProject.user.name},\n\nYour project "${userProject.title}" has been ${status.toLowerCase()}.\n\n${status === 'APPROVED' ? approvalMessage : rejectionDetails}\n\nBest regards,\nThe Platform Team`;
+    const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
     
     try {
-      await sendEmail({
+      await publishEvent(eventName, {
         email: userProject.user.email,
-        subject: `Your Project "${userProject.title}" has been ${status}`,
-        message
+        name: userProject.user.name,
+        campaignTitle: userProject.title,
+        status: status,
+        reason: reason || null,
+        campaignUrl: `${process.env.CLIENT_URL}/projects/${userProject.id}`
       });
     } catch (err) {
       console.error('Email sending error:', err);
@@ -126,19 +125,16 @@ exports.verifyDonorProject = catchAsync(async (req, res, next) => {
 
   // Send email notification to donor
   if (donorProject.donor && donorProject.donor.email) {
-    let rejectionDetails = 'Please review your project details and resubmit if needed.';
-    if (reason) {
-      rejectionDetails = `Reason: ${reason}\n\nPlease review the feedback, update your project, and resubmit.`;
-    }
-    const approvalMessage = 'Congratulations! Your project is now live.';
-    
-    const message = `Dear ${donorProject.donor.name},\n\nYour project "${donorProject.title}" has been ${status.toLowerCase()}.\n\n${status === 'APPROVED' ? approvalMessage : rejectionDetails}\n\nBest regards,\nThe Platform Team`;
-    
+    const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
+
     try {
-      await sendEmail({
+      await publishEvent(eventName, {
         email: donorProject.donor.email,
-        subject: `Your Project "${donorProject.title}" has been ${status}`,
-        message
+        name: donorProject.donor.name,
+        campaignTitle: donorProject.title,
+        status: status,
+        reason: reason || null,
+        campaignUrl: `${process.env.CLIENT_URL}/projects/${donorProject.id}`
       });
     } catch (err) {
       console.error('Email sending error:', err);
@@ -261,14 +257,17 @@ exports.verifyClub = catchAsync(async (req, res, next) => {
   }
 
   // send email
+  // send email
   try {
-    await sendEmail({
-      email: request.user.email,
-      subject: `Your club verification was ${status}`,
-      message: status === 'APPROVED'
-        ? `Congratulations! You are now verified as: ${request.position}`
-        : `Your verification request was rejected.\nReason: ${reason}`
-    });
+    if (request.user && request.user.email) {
+        await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
+            email: request.user.email,
+            clubName: request.clubName || 'Your Club',
+            status: status,
+            reason: reason || null,
+            dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+        });
+    }
   } catch (err) {
     console.error(err);
   }

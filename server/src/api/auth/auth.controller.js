@@ -1,10 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const EVENTS=require('../../config/events');
 const { promisify } = require('util');
 const prisma = require('../../config/prisma');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const sendEmail = require('../../services/email.service');
+const { publishEvent } = require('../../services/eventPublisher.service');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -135,16 +137,13 @@ await prisma.donation.updateMany({
 
 
   // Send verification email
-  const verificationURL = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
-  const message = `Hi ${name},\n\nPlease click on the following link to verify your email address:\n${verificationURL}\n\nThis link will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`;
-
   try {
-    await sendEmail({
+  
+    await publishEvent(EVENTS.EMAIL_VERIFICATION, {
       email: newAccount.email,
-      subject: 'Email Verification - Project X',
-      message,
+      name: newAccount.name,
+      verificationUrl: `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`,
     });
-
     res.status(201).json({
       status: 'success',
       message: 'Registration successful! Please check your email to verify your account.',
@@ -218,6 +217,11 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
           verificationTokenExpiry: null
         },
       });
+      await publishEvent(EVENTS.USER_WELCOME, {
+        email: account.email,
+        name: account.name,
+        dashboardUrl:`${process.env.CLIENT_URL}/dashboard`
+      });
     } else {
       await prisma.donor.update({
         where: { id: account.id },
@@ -226,6 +230,11 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
           verificationToken: null,
           verificationTokenExpiry: null
         },
+      });
+      await publishEvent(EVENTS.USER_WELCOME, {
+        email: account.email,
+        name: account.name,
+        dashboardUrl:`${process.env.CLIENT_URL}/dashboard`
       });
     }
 
@@ -409,15 +418,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   const resetURL = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
-  const message = `Hi ${account.name},\n\nYou requested a password reset. Click the link below to reset your password:\n${resetURL}\n\nThis link will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`;
 
   try {
-    await sendEmail({
+    await publishEvent(EVENTS.PASSWORD_RESET_REQUEST, {
       email: account.email,
-      subject: 'Password Reset Request - Project X',
-      message,
+      name: account.name,
+      resetUrl: resetURL,
     });
-
     res.status(200).json({
       status: 'success',
       message: 'Password reset link sent to your email!',
