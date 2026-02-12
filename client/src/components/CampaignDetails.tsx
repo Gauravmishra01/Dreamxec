@@ -8,6 +8,7 @@ import { FooterContent } from '../sections/Footer/components/FooterContent';
 import { getUserProject } from '../services/userProjectService';
 import { mapUserProjectToCampaign } from '../services/mappers';
 import MobileDonateCTA from './MobileDonateCTA';
+import DonateModal from './DonateModal';
 import { addRecentCampaign } from '../lib/recentCampaigns';
 import DiscoverySection from './DiscoverySection';
 import YouTube from "react-youtube";
@@ -146,7 +147,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   type CampaignTab = 'about' | 'video' | 'media' | 'presentation' | 'faqs';
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
   const showMobileCTA = campaign?.status === 'approved';
-  
+
   const refreshCampaign = async () => {
     const res = await getUserProject(id!);
     const mapped = mapUserProjectToCampaign(res.data.userProject);
@@ -979,90 +980,16 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
       </div>
 
       {/* Donation Modal */}
-      {showDonateModal && (
-        <div
-          className="fixed inset-0 z-[9999] flex justify-center items-center p-3 sm:p-4"
-          style={{ backgroundColor: 'rgba(0, 0, 128, 0.8)' }}
-          onClick={() => setShowDonateModal(false)}
-        >
-          <div
-            className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card max-w-md w-full mx-3 sm:mx-4 p-4 sm:p-5 md:p-8 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="card-tricolor-tag"></div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4 break-words">
-              Support This Campaign
-            </h2>
-
-            <form onSubmit={handleDonateSubmit} className="space-y-3 sm:space-y-4 md:space-y-6">
-              {/* Amount field */}
-              <div>
-                <label className="block text-sm sm:text-base md:text-lg font-bold text-dreamxec-navy mb-1.5 sm:mb-2 md:mb-3 font-display">
-                  Donation Amount (₹)
-                </label>
-                <input
-                  type="number"
-                  value={donationAmount}
-                  onChange={(e) => setDonationAmount(e.target.value)}
-                  placeholder="Enter amount"
-                  min="1"
-                  step="1"
-                  required
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
-                />
-              </div>
-
-              {/* Email field for guests */}
-              {!currentUser && (
-                <div>
-                  <label className="block text-sm sm:text-base md:text-lg font-bold text-dreamxec-navy mb-1.5 sm:mb-2 md:mb-3 font-display">
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
-                    required
-                    placeholder="Enter email"
-                  />
-                </div>
-              )}
-
-              {/* Quick amounts */}
-              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
-                {[100, 500, 1000, 5000].map((amount) => (
-                  <button
-                    key={amount}
-                    type="button"
-                    onClick={() => setDonationAmount(amount.toString())}
-                    className="px-2 sm:px-3 py-1.5 sm:py-2 bg-dreamxec-cream text-dreamxec-navy rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-orange font-bold font-display hover:bg-dreamxec-orange hover:text-white transition-all text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    ₹{amount}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex gap-2 sm:gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowDonateModal(false)}
-                  className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gray-300 text-dreamxec-navy rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform text-xs sm:text-sm md:text-base"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={!donationAmount || (!currentUser && !email)}
-                  className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
-                >
-                  Donate Now
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <DonateModal
+        show={showDonateModal}
+        onClose={() => setShowDonateModal(false)}
+        donationAmount={donationAmount}
+        setDonationAmount={setDonationAmount}
+        onSubmit={handleDonateSubmit}
+        currentUser={currentUser}
+        email={email}
+        setEmail={setEmail}
+      />
 
       <MobileDonateCTA
         visible={showMobileCTA}
