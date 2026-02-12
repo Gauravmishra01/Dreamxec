@@ -149,12 +149,18 @@ export default function DonorProjects({
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
+  };
+
+  const getTimelineDisplay = (timeline: string | { startDate: Date | string; endDate: Date | string } | null) => {
+    if (!timeline) return 'Not specified';
+    if (typeof timeline === 'string') return timeline;
+    return `${formatDate(timeline.startDate)} - ${formatDate(timeline.endDate)}`;
   };
 
   return (
@@ -344,8 +350,7 @@ export default function DonorProjects({
                   {/* Timeline */}
                   <div className="mb-4 text-dreamxec-navy font-sans text-xs sm:text-sm flex items-center gap-2">
                     <p className="break-words">
-                      <strong>Timeline:</strong> {formatDate(project.timeline.startDate)} -{' '}
-                      {formatDate(project.timeline.endDate)}
+                      <strong>Timeline:</strong> {getTimelineDisplay(project.timeline)}
                     </p>
                     <Tooltip text="Project duration from start to end date">
                       <InfoIcon className="w-3 h-3 text-dreamxec-navy cursor-help flex-shrink-0" />

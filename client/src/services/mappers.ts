@@ -62,7 +62,7 @@ export const mapFrontendRole = (
 
 export const mapBackendStatus = (
   backendStatus: 'PENDING' | 'APPROVED' | 'REJECTED'
-): 'pending' | 'approved' | 'rejected' => {
+): 'pending' | 'approved' | 'rejected' | 'PENDING' | 'APPROVED' | 'REJECTED' => {
   return backendStatus.toLowerCase() as
     | 'pending'
     | 'approved'
@@ -103,9 +103,10 @@ export const mapUserProjectToCampaign = (
 
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
+    amountRaised: userProject.amountRaised || 0,
 
     status: mapBackendStatus(userProject.status),
-    createdAt: new Date(userProject.createdAt),
+    createdAt: userProject.createdAt,
 
     campaignType: userProject.campaignType || "INDIVIDUAL",
     teamMembers: userProject.teamMembers || [],
@@ -133,10 +134,11 @@ export const mapDonorProjectToProject = (
     id: donorProject.id,
     title: donorProject.title,
     companyName: donorProject.organization,
+    organization: donorProject.organization,
     description: donorProject.description,
     skillsRequired: donorProject.skillsRequired,
     createdBy: donorProject.donorId,
-    createdAt: new Date(donorProject.createdAt),
+    createdAt: donorProject.createdAt,
     interestedUsers: [],
     status: mapBackendStatus(donorProject.status),
     rejectionReason: donorProject.rejectionReason,

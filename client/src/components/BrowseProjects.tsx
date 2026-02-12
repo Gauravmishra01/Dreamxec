@@ -86,12 +86,18 @@ export default function BrowseProjects({
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
+  };
+
+  const getTimelineDisplay = (timeline: string | { startDate: Date | string; endDate: Date | string } | null) => {
+    if (!timeline) return 'Not specified';
+    if (typeof timeline === 'string') return timeline;
+    return `${formatDate(timeline.startDate)} - ${formatDate(timeline.endDate)}`;
   };
 
   const hasApplied = (projectId: string) => {
@@ -193,13 +199,13 @@ export default function BrowseProjects({
                       <strong>📅 Timeline:</strong>
                     </p>
                     <p className="text-dreamxec-navy font-sans text-sm">
-                      {formatDate(project.timeline.startDate)} - {formatDate(project.timeline.endDate)}
+                      {getTimelineDisplay(project.timeline)}
                     </p>
                   </div>
 
                   {/* Applications count */}
                   <div className="mb-4 text-dreamxec-navy font-sans text-sm opacity-70">
-                    <p>👥 {project.interestedUsers.length} student(s) applied</p>
+                    <p>👥 {project.interestedUsers?.length ?? 0} student(s) applied</p>
                   </div>
 
                   {/* Apply button */}
@@ -306,7 +312,7 @@ export default function BrowseProjects({
                   <strong>Skills Required:</strong> {selectedProject.skillsRequired.join(', ')}
                 </p>
                 <p className="text-dreamxec-navy font-sans text-xs sm:text-sm">
-                  <strong>Timeline:</strong> {formatDate(selectedProject.timeline.startDate)} - {formatDate(selectedProject.timeline.endDate)}
+                  <strong>Timeline:</strong> {getTimelineDisplay(selectedProject.timeline)}
                 </p>
               </div>
 

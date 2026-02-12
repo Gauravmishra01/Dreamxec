@@ -6,7 +6,7 @@ export type UserRole = "student" | "admin" | "DONOR" | "donor" | "STUDENT_PRESID
 
 export type AccountStatus = "ACTIVE" | "BLOCKED" | "SUSPENDED" | "UNDER_REVIEW";
 
-export type ProjectStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED" | "PAUSED" | "FROZEN";
+export type ProjectStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED" | "PAUSED" | "FROZEN" | "pending" | "approved" | "rejected" | "completed" | "paused" | "frozen";
 
 export interface PaginationMeta {
   total: number;
@@ -95,14 +95,17 @@ export interface Campaign {
   };
 
   goalAmount: number;
-  amountRaised: number; // Changed from currentAmount to match DB
+  amountRaised?: number; // DB field name
+  currentAmount: number; // Alias used by components
+
+  category?: string; // Campaign category
 
   // STATUS UPDATE
   status: ProjectStatus;
   rejectionReason?: string;
 
-  createdAt: string; // Date string from JSON
-  updatedAt: string;
+  createdAt: string | Date; // Date string from JSON or Date object
+  updatedAt?: string;
 
   campaignType?: "INDIVIDUAL" | "TEAM";
   teamMembers?: TeamMember[];
@@ -125,6 +128,7 @@ export interface Project {
   title: string;
   description: string;
   organization?: string; // mapped from organizationName
+  companyName?: string; // Alias for organization used by components
 
   donor?: {
     id: string;
@@ -133,17 +137,20 @@ export interface Project {
     organizationName: string;
   };
 
-  skillsRequired: string[];
-  timeline: string | null; // DB is string, not object
+  createdBy?: string; // Donor ID who created the project
+  interestedUsers?: Array<{ id: string; name: string; email: string }>; // Users who applied
 
-  totalBudget: number;
-  allocatedFunds: number;
+  skillsRequired: string[];
+  timeline: string | { startDate: Date | string; endDate: Date | string } | null; // DB string or parsed object
+
+  totalBudget?: number;
+  allocatedFunds?: number;
 
   status: ProjectStatus;
   rejectionReason?: string;
 
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string | Date;
+  updatedAt?: string;
 }
 
 export interface ProjectApplication {

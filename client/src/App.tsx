@@ -67,7 +67,7 @@ import LoadingAnimation from './components/LoadingAnimation';
 import AdminUsers from './components/AdminUser';
 import AdminClubs from './components/AdminClubs';
 import AdminFinancials from './components/AdminFinancials';
-import AdminMilestones from './components/Adminmilestone';
+import AdminMilestones from './components/AdminMilestone';
 import AdminStudentVerifications from './components/AdminStudentVerification';
 import AdminAuditLogs from './components/AdminAuditLogs';
 import AdminDonors from './components/AdminDonors';
