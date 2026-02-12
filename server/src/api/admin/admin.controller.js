@@ -4,6 +4,8 @@ const AppError = require('../../utils/AppError');
 const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 // All the admin stats required
 exports.getDashboardStats = catchAsync(async (req, res, next) => {
@@ -213,31 +215,18 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
     data: updateData
   });
 
-  // Log Audit
-  await prisma.auditlog.create({
-    data: {
-      action: `PROJECT_${status}`,
-      entityType: 'UserProject',
-      entityId: userProject.id,
-      performedby: req.user.id,
-      details: { reason }
-    }
-  });
-
   // Send email notification to project owner
-  // Send Email
-  if (userProject.user?.email) {
-    const messages = {
-      APPROVED: 'Congratulations! Your project is now live.',
-      REJECTED: `Your project was rejected. Reason: ${reason}`,
-      PAUSED: 'Your project has been paused by the admin team.'
-    };
-
+  if (userProject.user && userProject.user.email) {
+    const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
+    
     try {
-      await sendEmail({
+      await publishEvent(eventName, {
         email: userProject.user.email,
-        subject: `Project Update: ${userProject.title}`,
-        message: `Dear ${userProject.user.name},\n\n${messages[status]}\n\nBest,\nDreamXec Team`
+        name: userProject.user.name,
+        campaignTitle: userProject.title,
+        status: status,
+        reason: reason || null,
+        campaignUrl: `${process.env.CLIENT_URL}/projects/${userProject.id}`
       });
     } catch (err) {
       console.error('Email error:', err);
@@ -280,24 +269,18 @@ exports.verifyDonorProject = catchAsync(async (req, res, next) => {
     data: updateData
   });
 
-  // log audit 
-  await prisma.auditlog.create({
-    data: {
-      action: `DONOR_PROJECT_${status}`,
-      entityType: 'DonorProject',
-      entityId: donorProject.id,
-      performedBy: req.user.id,
-      details: { reason }
-    }
-  });
-
   // Send email notification to donor
-  if (donorProject.donor?.email) {
+  if (donorProject.donor && donorProject.donor.email) {
+    const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
+
     try {
-      await sendEmail({
+      await publishEvent(eventName, {
         email: donorProject.donor.email,
-        subject: `Project Update: ${donorProject.title}`,
-        message: `Your project has been ${status}. ${reason ? `Reason: ${reason}` : ''}`
+        name: donorProject.donor.name,
+        campaignTitle: donorProject.title,
+        status: status,
+        reason: reason || null,
+        campaignUrl: `${process.env.CLIENT_URL}/projects/${donorProject.id}`
       });
     } catch (err) {
       console.error('Email error:', err);
@@ -510,14 +493,17 @@ exports.verifyClub = catchAsync(async (req, res, next) => {
   }
 
   // send email
+  // send email
   try {
-    await sendEmail({
-      email: request.user.email,
-      subject: `Your club verification was ${status}`,
-      message: status === 'APPROVED'
-        ? `Congratulations! You are now verified as: ${request.position}`
-        : `Your verification request was rejected.\nReason: ${reason}`
-    });
+    if (request.user && request.user.email) {
+        await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
+            email: request.user.email,
+            clubName: request.clubName || 'Your Club',
+            status: status,
+            reason: reason || null,
+            dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+        });
+    }
   } catch (err) {
     console.error(err);
   }

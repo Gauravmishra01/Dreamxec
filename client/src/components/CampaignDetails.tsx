@@ -47,8 +47,8 @@ const FAQItem = ({
         onClick={() => setOpen(!open)}
         className="w-full flex justify-between items-center px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 text-left font-bold text-dreamxec-navy font-display text-xs sm:text-sm md:text-base"
       >
-        <span className="pr-2 leading-tight">{faq.question}</span>
-        <span className={`transition-transform flex-shrink-0 text-xs ${open ? "rotate-180" : ""}`}>
+        <span className="pr-2 break-words">{faq.question}</span>
+        <span className={`transition-transform flex-shrink-0 text-xs sm:text-sm ${open ? "rotate-180" : ""}`}>
           ▼
         </span>
       </button>
@@ -106,7 +106,7 @@ function CleanDescription({ description }: CleanDescriptionProps) {
     );
   }, [description]);
 
-  return <>{cleanText}</>;
+  return <div className="w-full overflow-hidden">{cleanText}</div>;
 }
 
 function NoDescription() {
@@ -268,9 +268,9 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
       <div className="min-h-screen bg-dreamxec-cream">
         <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
 
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center px-4">
-            <p className="text-lg sm:text-xl text-dreamxec-navy">Loading campaign...</p>
+        <div className="flex items-center justify-center min-h-[60vh] px-4">
+          <div className="text-center">
+            <p className="text-base sm:text-lg md:text-xl text-dreamxec-navy">Loading campaign...</p>
           </div>
         </div>
       </div>
@@ -281,14 +281,14 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     return (
       <div className="min-h-screen bg-dreamxec-cream">
         <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
-        <div className="flex items-center justify-center min-h-[60vh] px-4">
-          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-4 sm:border-5 border-dreamxec-navy shadow-pastel-card p-6 sm:p-12 text-center max-w-md w-full">
+        <div className="flex items-center justify-center min-h-[60vh] px-3 sm:px-4">
+          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
             <div className="card-tricolor-tag"></div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 font-display">Error</h2>
-            <p className="text-sm sm:text-base text-dreamxec-navy font-sans mb-4 sm:mb-6">{error}</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-2 sm:mb-3 md:mb-4 font-display">Error</h2>
+            <p className="text-xs sm:text-sm md:text-base text-dreamxec-navy font-sans mb-3 sm:mb-4 md:mb-6 break-words">{error}</p>
             <button
               onClick={() => navigate('/campaigns')}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-sm sm:text-base"
+              className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-xs sm:text-sm md:text-base"
             >
               Browse Campaigns
             </button>
@@ -302,18 +302,18 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     return (
       <div className="min-h-screen bg-dreamxec-cream">
         <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
-        <div className="flex items-center justify-center min-h-[60vh] px-4">
-          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-4 sm:border-5 border-dreamxec-navy shadow-pastel-card p-6 sm:p-12 text-center max-w-md w-full">
+        <div className="flex items-center justify-center min-h-[60vh] px-3 sm:px-4">
+          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
             <div className="card-tricolor-tag"></div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 font-display">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-2 sm:mb-3 md:mb-4 font-display">
               Campaign Not Found
             </h2>
-            <p className="text-sm sm:text-base text-dreamxec-navy font-sans mb-4 sm:mb-6">
+            <p className="text-xs sm:text-sm md:text-base text-dreamxec-navy font-sans mb-3 sm:mb-4 md:mb-6 break-words">
               The campaign you're looking for doesn't exist or has been removed.
             </p>
             <button
               onClick={() => navigate('/campaigns')}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-sm sm:text-base"
+              className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-xs sm:text-sm md:text-base"
             >
               Browse Campaigns
             </button>
@@ -403,54 +403,54 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   };
 
   return (
-    <div className="min-h-screen bg-dreamxec-cream relative overflow-hidden">
+    <div className="min-h-screen bg-dreamxec-cream relative overflow-x-hidden">
       <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
 
-      {/* Decorative elements - hidden on mobile */}
-      <div className="hidden sm:block absolute top-20 left-10 z-0 opacity-20 pointer-events-none">
+      {/* Decorative elements - hidden on mobile and small tablets */}
+      <div className="hidden lg:block absolute top-20 left-10 z-0 opacity-20 pointer-events-none">
         <StarDecoration className="w-16 h-16" color="#FF7F00" />
       </div>
-      <div className="hidden sm:block absolute top-40 right-20 z-0 opacity-20 pointer-events-none">
+      <div className="hidden lg:block absolute top-40 right-20 z-0 opacity-20 pointer-events-none">
         <StarDecoration className="w-12 h-12" color="#0B9C2C" />
       </div>
-      <div className="hidden sm:block absolute bottom-32 left-1/4 z-0 opacity-15 pointer-events-none">
+      <div className="hidden lg:block absolute bottom-32 left-1/4 z-0 opacity-15 pointer-events-none">
         <StarDecoration className="w-20 h-20" color="#000080" />
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-5 md:px-6 lg:px-4 py-3 sm:py-4 md:py-8 pb-20 sm:pb-24 md:pb-16">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8 pb-20 sm:pb-24 lg:pb-16">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
           className="mb-3 sm:mb-4 md:mb-6 flex items-center gap-1.5 sm:gap-2 text-dreamxec-navy font-bold font-display hover:text-dreamxec-orange transition-colors text-xs sm:text-sm md:text-base"
         >
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          <span className="truncate">Back</span>
         </button>
 
-        <div className="grid lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mb-6 sm:mb-8 md:mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mb-6 sm:mb-8 md:mb-12 lg:mb-16">
           {/* Left Column - Campaign Image & Details */}
-          <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6 w-full overflow-hidden">
             {/* Campaign Image */}
-            <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-5 border-dreamxec-navy shadow-pastel-card overflow-hidden">
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
               <div className="card-tricolor-tag"></div>
               <img
                 src={campaign.imageUrl}
                 alt={campaign.title}
-                className="w-full h-auto object-contain bg-dreamxec-black md:h-96"
+                className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover bg-dreamxec-black"
               />
             </div>
 
             {/* Campaign Title & Info */}
-            <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-2xl border-2 sm:border-3 md:border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden">
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl md:rounded-2xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
               <div className="card-tricolor-tag"></div>
 
-              <div className="p-4 sm:p-5 md:p-6 lg:p-8">
+              <div className="p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
                 {/* Title Row */}
-                <div className="flex items-start gap-2 sm:gap-3 md:gap-4 mb-2.5 sm:mb-3 md:mb-5">
-                  <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy font-display leading-tight flex-1">
+                <div className="flex items-start gap-2 sm:gap-3 md:gap-4 mb-2 sm:mb-3 md:mb-5">
+                  <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy font-display leading-tight flex-1 break-words min-w-0">
                     {campaign.title}
                   </h1>
 
@@ -481,7 +481,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     )}
 
                     <span
-                      className={`px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded sm:rounded-md md:rounded-lg font-bold text-[10px] sm:text-xs ${campaign.status === 'APPROVED'
+                      className={`px-2 sm:px-2.5 md:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-xs whitespace-nowrap ${campaign.status === 'approved'
                         ? 'bg-green-100 text-green-700 border-2 border-green-300'
                         : campaign.status === 'PENDING'
                           ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-300'
@@ -495,32 +495,32 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-5 text-[10px] sm:text-xs md:text-sm lg:text-base text-dreamxec-navy/70">
-                  <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
-                    <span className="text-sm sm:text-base md:text-lg">🏛️</span>
-                    <span className="font-medium truncate max-w-[100px] sm:max-w-[120px] md:max-w-none">{campaign.club?.college}</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 min-w-0">
+                    <span className="text-sm sm:text-base md:text-lg flex-shrink-0">🏛️</span>
+                    <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">{campaign.club?.college}</span>
                   </div>
 
-                  <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block"></div>
+                  <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block flex-shrink-0"></div>
 
-                  <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
-                    <span className="text-sm sm:text-base md:text-lg">👥</span>
-                    <span className="font-medium truncate max-w-[100px] sm:max-w-[120px] md:max-w-none">{campaign.club?.name}</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 min-w-0">
+                    <span className="text-sm sm:text-base md:text-lg flex-shrink-0">👥</span>
+                    <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">{campaign.club?.name}</span>
                   </div>
 
-                  <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block"></div>
+                  <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block flex-shrink-0"></div>
 
                   <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
-                    <span className="text-sm sm:text-base md:text-lg">🏷️</span>
-                    <span className="font-medium">{campaign.campaignType || 'INDIVIDUAL'}</span>
+                    <span className="text-sm sm:text-base md:text-lg flex-shrink-0">🏷️</span>
+                    <span className="font-medium whitespace-nowrap">{campaign.category}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Tabs */}
-            <div className="mb-3 sm:mb-4 md:mb-6 border-b-2 sm:border-b-3 md:border-b-4 border-dreamxec-navy overflow-x-auto scrollbar-hide">
+            <div className="mb-3 sm:mb-4 md:mb-6 border-b-3 sm:border-b-4 border-dreamxec-navy overflow-x-auto -mx-3 sm:-mx-0 px-3 sm:px-0 scrollbar-hide">
               <div className="flex gap-1 sm:gap-2 md:gap-4 lg:gap-6 min-w-max">
-                {(['about', 'video', 'media', 'presentation', 'faqs'] as const).map((tab: CampaignTab, index) => {
+                {(['about', 'video', 'media', 'presentation', 'faqs'] as const).map((tab: CampaignTab) => {
                   const isActive = activeTab === tab;
 
                   return (
@@ -528,10 +528,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                       key={tab}
                       onClick={() => setActiveTab(tab)}
                       className={`
-                        relative pb-2 sm:pb-2.5 md:pb-3 px-2 sm:px-3 md:px-4
-                        min-w-[60px] sm:min-w-[70px] md:min-w-[88px] lg:min-w-[100px]
+                        relative pb-2 sm:pb-3 px-2 sm:px-3 md:px-4
+                        min-w-[60px] sm:min-w-[80px] md:min-w-[100px]
                         min-h-[36px] sm:min-h-[40px] md:min-h-[48px] flex items-center justify-center
-                        text-[11px] sm:text-xs md:text-sm lg:text-base xl:text-lg
+                        text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg
                         font-bold font-display capitalize
                         whitespace-nowrap
                         transition-all duration-300 ease-out
@@ -547,7 +547,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
                       {isActive && (
                         <span
-                          className="absolute left-0 bottom-0 w-full h-[2.5px] sm:h-[3px] md:h-[4px] bg-dreamxec-orange rounded-full animate-in duration-300"
+                          className="absolute left-0 bottom-0 w-full h-[2px] sm:h-[3px] md:h-[4px] bg-dreamxec-orange rounded-full animate-in duration-300"
                         />
                       )}
 
@@ -560,14 +560,14 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* About Tab */}
             {activeTab === 'about' && (
-              <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-2xl border-2 sm:border-3 md:border-4 border-dreamxec-navy shadow-pastel-card p-4 sm:p-5 md:p-6 lg:p-8">
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl md:rounded-2xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 lg:p-8 w-full overflow-hidden">
                 <div className="card-tricolor-tag"></div>
 
-                <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 lg:mb-8 font-display leading-tight">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 lg:mb-8 font-display leading-tight break-words">
                   About This Campaign
                 </h2>
 
-                <div className="prose prose-dreamxec prose-sm sm:prose-base md:prose-lg max-w-5xl mx-auto">
+                <div className="prose prose-dreamxec prose-sm sm:prose-base md:prose-lg w-full max-w-full">
                   <CleanDescription description={campaign.description} />
                 </div>
               </div>
@@ -575,14 +575,14 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* YouTube Video Tab */}
             {activeTab === "video" && campaign.youtubeUrl && (
-              <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-5 md:p-6">
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
                 <div className="card-tricolor-tag"></div>
 
-                <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4 break-words">
                   Campaign Video
                 </h2>
 
-                <div className="rounded-md sm:rounded-lg md:rounded-xl overflow-hidden border-2 sm:border-3 md:border-4 border-dreamxec-navy shadow-lg">
+                <div className="rounded-lg sm:rounded-xl overflow-hidden border-3 sm:border-4 border-dreamxec-navy shadow-lg w-full">
                   <YouTube
                     videoId={getYoutubeId(campaign.youtubeUrl) || ""}
                     className="w-full"
@@ -605,29 +605,29 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* Media Gallery */}
             {activeTab === 'media' && (
-              <div className="card-pastel-offwhite border-2 sm:border-3 md:border-5 border-dreamxec-navy rounded-md sm:rounded-lg md:rounded-xl shadow-pastel-card p-4 sm:p-5 md:p-6">
-                <h3 className="text-base sm:text-lg md:text-2xl font-bold mb-2.5 sm:mb-3 md:mb-4 text-dreamxec-navy">
+              <div className="card-pastel-offwhite border-3 sm:border-4 md:border-5 border-dreamxec-navy rounded-lg sm:rounded-xl shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4 text-dreamxec-navy break-words">
                   Campaign Media
                 </h3>
 
                 {campaign?.campaignMedia && campaign.campaignMedia.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
                     {campaign.campaignMedia.map((url, index) => (
                       <div
                         key={index}
-                        className="rounded-md sm:rounded-lg overflow-hidden border-2 sm:border-3 border-dreamxec-navy bg-white"
+                        className="rounded-md sm:rounded-lg overflow-hidden border-2 sm:border-3 border-dreamxec-navy bg-white aspect-square"
                       >
                         {isVideo(url) ? (
                           <video
                             src={url}
                             controls
-                            className="w-full h-24 sm:h-32 md:h-48 object-cover"
+                            className="w-full h-full object-cover"
                           />
                         ) : (
                           <img
                             src={url}
                             alt={`Campaign media ${index + 1}`}
-                            className="w-full h-24 sm:h-32 md:h-48 object-cover"
+                            className="w-full h-full object-cover"
                             loading="lazy"
                           />
                         )}
@@ -635,7 +635,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     ))}
                   </div>
                 ) : (
-                  <p className="text-dreamxec-navy/70 text-xs sm:text-sm">
+                  <p className="text-dreamxec-navy/70 text-xs sm:text-sm md:text-base">
                     No media uploaded for this campaign yet.
                   </p>
                 )}
@@ -644,10 +644,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* Pitch Deck */}
             {activeTab === 'presentation' && (
-              <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-5 md:p-6 lg:p-6">
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
                 <div className="card-tricolor-tag"></div>
 
-                <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display leading-tight mt-1.5 sm:mt-2 md:mt-4 text-left">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display leading-tight mt-1 sm:mt-2 md:mt-4 text-left break-words">
                   Presentation Deck
                 </h2>
 
@@ -666,36 +666,36 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                         />
                       </div>
                     ) : (
-                      <div className="p-3 sm:p-4 md:p-6 bg-dreamxec-cream rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-4 border-dreamxec-navy text-center">
-                        <svg className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mx-auto mb-2.5 sm:mb-3 md:mb-4 text-dreamxec-navy/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="p-3 sm:p-4 md:p-6 bg-dreamxec-cream rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy text-center">
+                        <svg className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 text-dreamxec-navy/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <p className="text-dreamxec-navy/80 mb-2.5 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium">
+                        <p className="text-dreamxec-navy/80 mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium break-words">
                           Preview not available for this file type
                         </p>
                         <a
                           href={campaign.presentationDeckUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 sm:gap-2 md:gap-3 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-navy text-white rounded-md sm:rounded-lg md:rounded-xl font-bold font-display text-xs sm:text-sm md:text-base lg:text-lg hover:bg-dreamxec-orange transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                          className="inline-flex items-center gap-1.5 sm:gap-2 md:gap-3 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-navy text-white rounded-lg sm:rounded-xl font-bold font-display text-xs sm:text-sm md:text-base lg:text-lg hover:bg-dreamxec-orange transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
-                          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
-                          Open Presentation
+                          <span className="whitespace-nowrap">Open Presentation</span>
                         </a>
                       </div>
                     );
                   })()
                 ) : (
-                  <div className="p-4 sm:p-6 md:p-8 lg:p-12 text-center bg-dreamxec-cream/50 rounded-md sm:rounded-lg md:rounded-xl border-2 border-dreamxec-navy/30">
+                  <div className="p-4 sm:p-6 md:p-8 lg:p-12 text-center bg-dreamxec-cream/50 rounded-lg sm:rounded-xl border-2 border-dreamxec-navy/30">
                     <svg className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 md:mb-6 text-dreamxec-navy/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <h3 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-dreamxec-navy/70 mb-1.5 sm:mb-2 md:mb-3 font-display">
+                    <h3 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-dreamxec-navy/70 mb-1.5 sm:mb-2 md:mb-3 font-display break-words">
                       No Presentation Available
                     </h3>
-                    <p className="text-dreamxec-navy/60 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl max-w-md mx-auto leading-relaxed">
+                    <p className="text-dreamxec-navy/60 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl max-w-md mx-auto leading-relaxed break-words px-2">
                       This campaign hasn't uploaded a presentation deck yet.
                     </p>
                   </div>
@@ -705,14 +705,14 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* FAQ Tab */}
             {activeTab === 'faqs' && campaign.faqs?.length > 0 && (
-              <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-5 md:p-6">
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
                 <div className="card-tricolor-tag"></div>
 
-                <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1.5 sm:mt-2 md:mt-4">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4 break-words">
                   Campaign FAQs
                 </h2>
 
-                <div className="space-y-2.5 sm:space-y-3 md:space-y-4">
+                <div className="space-y-2 sm:space-y-3 md:space-y-4">
                   {campaign.faqs.map((faq, index) => (
                     <FAQItem key={index} faq={faq} />
                   ))}
@@ -721,21 +721,21 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             )}
 
             {/* Timeline */}
-            <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-4 border-dreamxec-navy shadow-lg p-4 sm:p-5 md:p-6 lg:p-8">
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8 w-full overflow-hidden">
               <div className="card-tricolor-tag"></div>
 
-              <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 lg:mb-8 font-display leading-tight">
+              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 lg:mb-8 font-display leading-tight break-words">
                 Campaign Timeline & Fund Allocation
               </h2>
 
               {campaign.milestones && campaign.milestones.length > 0 ? (
                 <div className="space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8">
                   {campaign.milestones.map((milestone, index) => (
-                    <div key={index} className="group relative flex items-start gap-2.5 sm:gap-3 md:gap-4 lg:gap-6 p-3 sm:p-4 md:p-5 lg:p-6 bg-white/60 border border-dreamxec-navy/10 rounded-md sm:rounded-lg hover:border-dreamxec-orange/30 hover:shadow-md transition-all duration-300">
+                    <div key={index} className="group relative flex items-start gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 p-2.5 sm:p-3 md:p-4 lg:p-5 xl:p-6 bg-white/60 border border-dreamxec-navy/10 rounded-lg hover:border-dreamxec-orange/30 hover:shadow-md transition-all duration-300">
 
                       {/* Step indicator */}
-                      <div className="flex-shrink-0 pt-0.5">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 xl:w-11 xl:h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-dreamxec-orange to-dreamxec-saffron border-2 border-white shadow-sm group-hover:scale-[1.05] transition-transform duration-300 font-bold text-[10px] sm:text-xs md:text-sm lg:text-base text-white">
+                      <div className="flex-shrink-0 pt-0.5 sm:pt-1">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 xl:w-11 xl:h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-dreamxec-orange to-dreamxec-saffron border-2 border-white shadow-sm group-hover:scale-[1.05] transition-transform duration-300 font-bold text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg text-white">
                           {index + 1}
                         </div>
                       </div>
@@ -744,27 +744,27 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                       <div className="flex-1 min-w-0">
                         {/* Header */}
                         <div className="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-2 md:gap-3 mb-1.5 sm:mb-2 md:mb-3 lg:mb-4">
-                          <h3 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-semibold text-dreamxec-navy font-display leading-tight flex-1 pr-1">
+                          <h3 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-semibold text-dreamxec-navy font-display leading-tight flex-1 pr-2 break-words min-w-0">
                             {milestone.title}
                           </h3>
-                          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-medium bg-dreamxec-orange/90 text-white whitespace-nowrap shadow-sm self-start">
+                          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 rounded-full text-[10px] sm:text-xs md:text-sm lg:text-base font-medium bg-dreamxec-orange/90 text-white whitespace-nowrap shadow-sm self-start">
                             {milestone.timeline}
                           </span>
                         </div>
 
                         {/* Description */}
                         {milestone.description && (
-                          <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dreamxec-navy/75 leading-relaxed mb-2 sm:mb-3 md:mb-4 lg:mb-5 max-w-2xl line-clamp-3">
+                          <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dreamxec-navy/75 leading-relaxed mb-2 sm:mb-3 md:mb-4 lg:mb-5 line-clamp-3 sm:line-clamp-2 break-words">
                             {milestone.description}
                           </p>
                         )}
 
                         {/* Budget */}
-                        <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-dreamxec-navy/10">
-                          <span className="text-[10px] sm:text-xs md:text-sm lg:text-base font-medium text-dreamxec-navy/80 tracking-wide">
+                        <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-dreamxec-navy/10 gap-2">
+                          <span className="text-[10px] sm:text-xs md:text-sm lg:text-base font-medium text-dreamxec-navy/80 tracking-wide truncate">
                             Budget Allocation
                           </span>
-                          <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-dreamxec-green">
+                          <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-dreamxec-green whitespace-nowrap">
                             ₹{milestone.budget.toLocaleString()}
                           </span>
                         </div>
@@ -773,55 +773,55 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   ))}
 
                   {/* Total */}
-                  <div className="pt-3 sm:pt-4 md:pt-6 lg:pt-8 pb-2.5 sm:pb-3 md:pb-4 lg:pb-6 px-3 sm:px-4 md:px-5 lg:px-8 border-t-2 border-dreamxec-navy bg-gradient-to-r from-white to-dreamxec-cream/50 rounded-md sm:rounded-lg md:rounded-xl shadow-sm">
+                  <div className="pt-3 sm:pt-4 md:pt-6 lg:pt-8 pb-2 sm:pb-3 md:pb-4 lg:pb-6 px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8 border-t-2 border-dreamxec-navy bg-gradient-to-r from-white to-dreamxec-cream/50 rounded-lg sm:rounded-xl shadow-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 md:gap-3">
-                      <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-dreamxec-navy font-display">
+                      <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-dreamxec-navy font-display break-words">
                         Total Planned Allocation
                       </span>
-                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-dreamxec-green to-emerald-700 text-transparent bg-clip-text">
+                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-dreamxec-green to-emerald-700 text-transparent bg-clip-text whitespace-nowrap">
                         ₹{campaign.milestones.reduce((sum, m) => sum + m.budget, 0).toLocaleString()}
                       </span>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="p-4 sm:p-6 md:p-8 lg:p-12 text-center border-2 border-dreamxec-navy/20 bg-dreamxec-cream/30 rounded-md sm:rounded-lg md:rounded-xl">
-                  <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 mx-auto mb-2.5 sm:mb-3 md:mb-4 text-dreamxec-navy/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 text-center border-2 border-dreamxec-navy/20 bg-dreamxec-cream/30 rounded-lg sm:rounded-xl">
+                  <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 mx-auto mb-2 sm:mb-3 md:mb-4 text-dreamxec-navy/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-dreamxec-navy mb-1 sm:mb-1.5 md:mb-2 font-display">
+                  <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-dreamxec-navy mb-1 sm:mb-1.5 md:mb-2 font-display break-words">
                     Timeline Coming Soon
                   </h3>
-                  <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dreamxec-navy/70 max-w-sm mx-auto">
+                  <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dreamxec-navy/70 max-w-sm mx-auto break-words px-2">
                     Milestones will appear here after campaign approval
                   </p>
                 </div>
               )}
 
-              <p className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 text-[10px] sm:text-xs md:text-sm text-dreamxec-navy/60 font-medium max-w-xl leading-relaxed pt-2.5 sm:pt-3 md:pt-4 border-t border-dreamxec-navy/10">
+              <p className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 text-[10px] sm:text-xs md:text-sm text-dreamxec-navy/60 font-medium leading-relaxed pt-2 sm:pt-3 md:pt-4 border-t border-dreamxec-navy/10 break-words">
                 * Timeline shows phased fund utilization across execution milestones
               </p>
             </div>
           </div>
 
           {/* Right Column - Funding Card */}
-          <div className="lg:col-span-1">
-            <div className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-5 md:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] overflow-y-auto">
+          <div className="lg:col-span-1 w-full">
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] overflow-y-auto w-full">
               <div className="card-tricolor-tag"></div>
 
               {/* Funding Amount */}
-              <div className="mt-1.5 sm:mt-2 md:mt-4 mb-3 sm:mb-4 md:mb-6">
-                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-dreamxec-navy mb-1 sm:mb-1.5 md:mb-2 font-display">
-                  ₹{campaign.amountRaised.toLocaleString()}
+              <div className="mt-1 sm:mt-2 md:mt-4 mb-3 sm:mb-4 md:mb-6">
+                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-dreamxec-navy mb-1 sm:mb-1.5 md:mb-2 font-display break-words">
+                  ₹{campaign.currentAmount.toLocaleString()}
                 </p>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-dreamxec-navy opacity-70 font-sans">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-dreamxec-navy opacity-70 font-sans break-words">
                   raised of ₹{campaign.goalAmount.toLocaleString()} goal
                 </p>
               </div>
 
               {/* Progress Bar */}
               <div className="mb-3 sm:mb-4 md:mb-6">
-                <div className="w-full h-4 sm:h-5 md:h-6 bg-dreamxec-cream rounded-full border-2 sm:border-3 md:border-4 border-dreamxec-navy overflow-hidden shadow-inner">
+                <div className="w-full h-4 sm:h-5 md:h-6 bg-dreamxec-cream rounded-full border-3 sm:border-4 border-dreamxec-navy overflow-hidden shadow-inner">
                   <div
                     className="h-full bg-gradient-to-r from-dreamxec-green to-dreamxec-saffron transition-all duration-500 flex items-center justify-center"
                     style={{ width: `${progressPercentage}%` }}
@@ -834,12 +834,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-1 gap-2.5 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
+              <div className="grid grid-cols-1 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
                 <div className="p-2.5 sm:p-3 md:p-4 bg-dreamxec-cream rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-orange text-center">
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-dreamxec-navy font-display">
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-dreamxec-navy font-display break-words">
                     ₹{remainingAmount.toLocaleString()}
                   </p>
-                  <p className="text-xs sm:text-sm text-dreamxec-navy opacity-70 font-sans">Remaining</p>
+                  <p className="text-[10px] sm:text-xs md:text-sm text-dreamxec-navy opacity-70 font-sans">Remaining</p>
                 </div>
               </div>
 
@@ -847,19 +847,19 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               {campaign.status === 'APPROVED' && (
                 <button
                   onClick={handleDonate}
-                  className="w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-2 sm:border-3 md:border-4 border-dreamxec-navy font-bold font-display text-sm sm:text-base md:text-lg lg:text-xl hover:scale-105 transition-transform shadow-pastel-green flex items-center justify-center gap-2"
+                  className="w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display text-sm sm:text-base md:text-lg lg:text-xl hover:scale-105 transition-transform shadow-pastel-green flex items-center justify-center gap-1.5 sm:gap-2"
                 >
-                  Support This Campaign
+                  <span className="truncate">Support This Campaign</span>
                 </button>
               )}
 
               {/* Share */}
-              <div className="mt-3 sm:mt-4 md:mt-6 pt-3 sm:pt-4 md:pt-6 border-t-2 sm:border-t-3 md:border-t-4 border-dreamxec-navy">
-                <p className="text-xs sm:text-sm font-bold text-dreamxec-navy mb-2 sm:mb-2.5 md:mb-3 font-display flex items-center gap-1 sm:gap-1.5 md:gap-2">
-                  <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mt-3 sm:mt-4 md:mt-6 pt-3 sm:pt-4 md:pt-6 border-t-3 sm:border-t-4 border-dreamxec-navy">
+                <p className="text-[10px] sm:text-xs md:text-sm font-bold text-dreamxec-navy mb-1.5 sm:mb-2 md:mb-3 font-display flex items-center gap-1 sm:gap-1.5 md:gap-2">
+                  <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
-                  Share this campaign
+                  <span className="truncate">Share this campaign</span>
                 </p>
 
                 <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
@@ -871,6 +871,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                       window.open(url, "_blank", "noopener,noreferrer");
                     }}
                     className="flex-1 p-1.5 sm:p-2 md:p-3 bg-[#0A66C2] text-white rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-105 transition-transform"
+                    aria-label="Share on LinkedIn"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -887,6 +888,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank")}
                     className="p-1.5 sm:p-2 md:p-3 bg-blue-600 text-white rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-110 hover:-rotate-3 transition-all shadow-lg"
                     title="Share on Facebook"
+                    aria-label="Share on Facebook"
                   >
                     <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -905,12 +907,13 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     }
                     className="p-1.5 sm:p-2 md:p-3 bg-black text-white flex items-center justify-center rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-110 hover:rotate-3 transition-all shadow-lg"
                     title="Share on Twitter"
+                    aria-label="Share on Twitter"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#ffffff"
                       viewBox="0 0 16 16"
-                      className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                      className="w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4"
                     >
                       <path d="M12.6 0.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867 -5.07 -4.425 5.07H0.316l5.733 -6.57L0 0.75h5.063l3.495 4.633L12.601 0.75Z" />
                     </svg>
@@ -921,6 +924,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent("Check out this amazing campaign!")}%20${encodeURIComponent(window.location.href)}`, "_blank")}
                     className="p-1.5 sm:p-2 md:p-3 bg-green-600 text-white rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-110 hover:-rotate-3 transition-all shadow-lg"
                     title="Share on WhatsApp"
+                    aria-label="Share on WhatsApp"
                   >
                     <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
@@ -933,18 +937,18 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             {/* Team Members */}
             {campaign.campaignType === "TEAM" &&
               campaign.teamMembers?.length > 0 && (
-                <div className="card-pastel-offwhite mt-3 sm:mt-4 md:mt-8 rounded-md sm:rounded-lg md:rounded-xl border-2 sm:border-3 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-5 md:p-6">
+                <div className="card-pastel-offwhite mt-3 sm:mt-4 md:mt-6 lg:mt-8 rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
                   <div className="card-tricolor-tag"></div>
 
-                  <h2 className="text-base sm:text-lg md:text-2xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display break-words">
                     Meet the Team
                   </h2>
 
-                  <div className="space-y-2.5 sm:space-y-3 md:space-y-4">
+                  <div className="space-y-2 sm:space-y-3 md:space-y-4">
                     {campaign.teamMembers.map((member, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-2.5 sm:gap-3 md:gap-4 bg-white border-2 sm:border-3 border-dreamxec-navy rounded-md sm:rounded-lg md:rounded-xl p-2.5 sm:p-3 md:p-3"
+                        className="flex items-center gap-2 sm:gap-3 md:gap-4 bg-white border-2 sm:border-3 border-dreamxec-navy rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3"
                       >
                         <img
                           src={member.image || "https://via.placeholder.com/100"}
@@ -982,17 +986,17 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
           onClick={() => setShowDonateModal(false)}
         >
           <div
-            className="card-pastel-offwhite rounded-md sm:rounded-lg md:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card max-w-md w-full p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto"
+            className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card max-w-md w-full mx-3 sm:mx-4 p-4 sm:p-5 md:p-8 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="card-tricolor-tag"></div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1.5 sm:mt-2 md:mt-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4 break-words">
               Support This Campaign
             </h2>
 
-            <form onSubmit={handleDonateSubmit}>
+            <form onSubmit={handleDonateSubmit} className="space-y-3 sm:space-y-4 md:space-y-6">
               {/* Amount field */}
-              <div className="mb-3 sm:mb-4 md:mb-6">
+              <div>
                 <label className="block text-sm sm:text-base md:text-lg font-bold text-dreamxec-navy mb-1.5 sm:mb-2 md:mb-3 font-display">
                   Donation Amount (₹)
                 </label>
@@ -1004,13 +1008,13 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   min="1"
                   step="1"
                   required
-                  className="w-full px-3 sm:px-3.5 md:px-4 py-2 sm:py-2.5 md:py-3 border-2 sm:border-3 md:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
                 />
               </div>
 
               {/* Email field for guests */}
               {!currentUser && (
-                <div className="mb-3 sm:mb-4 md:mb-6">
+                <div>
                   <label className="block text-sm sm:text-base md:text-lg font-bold text-dreamxec-navy mb-1.5 sm:mb-2 md:mb-3 font-display">
                     Email:
                   </label>
@@ -1018,7 +1022,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3 sm:px-3.5 md:px-4 py-2 sm:py-2.5 md:py-3 border-2 sm:border-3 md:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
                     required
                     placeholder="Enter email"
                   />
@@ -1026,31 +1030,31 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               )}
 
               {/* Quick amounts */}
-              <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mb-3 sm:mb-4 md:mb-6">
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                 {[100, 500, 1000, 5000].map((amount) => (
                   <button
                     key={amount}
                     type="button"
                     onClick={() => setDonationAmount(amount.toString())}
-                    className="px-2 sm:px-2.5 md:px-3 py-1.5 sm:py-2 bg-dreamxec-cream text-dreamxec-navy rounded sm:rounded-md md:rounded-lg border-2 sm:border-3 border-dreamxec-orange font-bold font-display hover:bg-dreamxec-orange hover:text-white transition-all text-[10px] sm:text-xs md:text-sm"
+                    className="px-2 sm:px-3 py-1.5 sm:py-2 bg-dreamxec-cream text-dreamxec-navy rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-orange font-bold font-display hover:bg-dreamxec-orange hover:text-white transition-all text-xs sm:text-sm whitespace-nowrap"
                   >
                     ₹{amount}
                   </button>
                 ))}
               </div>
 
-              <div className="flex gap-2 sm:gap-2.5 md:gap-3">
+              <div className="flex gap-2 sm:gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowDonateModal(false)}
-                  className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gray-300 text-dreamxec-navy rounded-md sm:rounded-lg border-2 sm:border-3 md:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform text-xs sm:text-sm md:text-base"
+                  className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gray-300 text-dreamxec-navy rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform text-xs sm:text-sm md:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!donationAmount || (!currentUser && !email)}
-                  className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-2 sm:border-3 md:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
+                  className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
                 >
                   Donate Now
                 </button>

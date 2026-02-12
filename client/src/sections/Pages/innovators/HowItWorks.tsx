@@ -37,22 +37,22 @@ const HowItWorksStudents = () => {
 
             <Header />
 
-            <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+            <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
                 {/* Hero */}
-                <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-                    <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-center space-y-6">
+                    <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold animate-fade-in">
                         The Complete Guide to Launching Your Project on DreamXec
                     </h1>
-                    <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
                         From idea to impact in 5 steps. Here's exactly how to navigate the DreamXec
                         platform and turn your vision into reality.
                     </p>
                 </section>
 
                 {/* Overview */}
-                <section className="max-w-6xl mx-auto px-4 space-y-6 text-center">
-                    <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-center">
+                    <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
                         Overview
                     </h1>
                     <p className="text-dreamxec-navy text-base md:text-xl leading-relaxed">
@@ -67,17 +67,17 @@ const HowItWorksStudents = () => {
                 </section>
 
                 {/* Step-by-Step – Transparent / Glass Cards */}
-                <section className="max-w-7xl mx-auto px-4 text-center space-y-16">
-                    <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
+                    <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
                         Step-by-Step Guide
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
+                    <div className="grid grid-cols-1 gap-6 md:gap-8 max-w-5xl mx-auto">
                         {steps.map((step, index) => (
                             <div
                                 key={index}
                                 style={{ animationDelay: `${index * 120}ms` }}
-                                className="card-glass animate-fade-in p-8 text-left"
+                                className="card-glass animate-fade-in p-6 md:p-8 text-left hover:shadow-lg transition-shadow duration-300"
                             >
                                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-gray-250 mb-4">
                                     {step.title}
@@ -92,13 +92,13 @@ const HowItWorksStudents = () => {
                 </section>
 
                 {/* Do's & Don'ts */}
-                <section className="max-w-7xl mx-auto px-4 space-y-12">
-                    <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                    <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
                         Do&apos;s & Don&apos;ts
                     </h2>
 
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                        <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-2xl font-bold mb-4">DO</h3>
                             <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
                                 <li>✅ Be honest about your timeline and challenges</li>
@@ -110,7 +110,7 @@ const HowItWorksStudents = () => {
                             </ul>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                        <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-2xl font-bold mb-4">DON&apos;T</h3>
                             <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
                                 <li>❌ Exaggerate your past experience or credentials</li>
@@ -125,15 +125,15 @@ const HowItWorksStudents = () => {
                 </section>
 
                 {/* Common Mistakes */}
-                <section className="max-w-7xl mx-auto px-4 space-y-12">
+                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
 
-                    <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+                    <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
                         Common Mistakes
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                        <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                                 Vague Project Description
                             </h3>
@@ -181,7 +181,7 @@ const HowItWorksStudents = () => {
                 </section>
 
                 {/* CTA – Pill Style */}
-                <section className="flex items-center justify-center gap-6 py-16">
+                <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
                     <a href="/create-project">
                         <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
                             <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">

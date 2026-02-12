@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StarDecoration } from './icons/StarDecoration';
+// import apiRequest from '../services/api';
+import { getMyDonorEligibility } from '../services/donationService';
+
+const MIN_DONATION = 2000;
 
 interface CreateProjectProps {
   onBack: () => void;
@@ -13,6 +17,7 @@ interface CreateProjectProps {
   }) => Promise<void>;
 }
 
+
 export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) {
   const [formData, setFormData] = useState({
     title: '',
@@ -22,24 +27,72 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
     startDate: '',
     endDate: '',
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [eligibility, setEligibility] = useState<{
+    canCreateOpportunity: boolean;
+    totalDonated: number;
+    allowedProjects: number;
+    createdProjects: number;
+    remainingProjects: number;
+    perProjectCost: number;
+  } | null>(null);
+
+  const [loadingEligibility, setLoadingEligibility] = useState(true);
+
+  /* --------------------------------------------------
+     FETCH ELIGIBILITY
+  -------------------------------------------------- */
+  useEffect(() => {
+    const fetchEligibility = async () => {
+      try {
+        const res = await getMyDonorEligibility();
+
+        setEligibility({
+          canCreateOpportunity: res.data.canCreateOpportunity,
+          totalDonated: res.data.totalDonated,
+          allowedProjects: res.data.allowedProjects,
+          createdProjects: res.data.createdProjects,
+          remainingProjects: res.data.remainingProjects,
+          perProjectCost: res.data.perProjectCost,
+        });
+      } catch (err) {
+        console.error('Eligibility check failed', err);
+      } finally {
+        setLoadingEligibility(false);
+      }
+    };
+
+    fetchEligibility();
+  }, []);
+
+
+ const progress = eligibility
+  ? Math.min(
+      (eligibility.createdProjects / eligibility.allowedProjects) * 100,
+      100
+    )
+  : 0;
+
+  /* --------------------------------------------------
+     FORM HANDLERS
+  -------------------------------------------------- */
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
-    const validateForm = (): boolean => {
+  const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim() || formData.title.length < 5) {
+    if (formData.title.trim().length < 5) {
       newErrors.title = 'Title must be at least 5 characters';
     }
 
@@ -47,7 +100,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
       newErrors.companyName = 'Company name is required';
     }
 
-    if (!formData.description.trim() || formData.description.length < 20) {
+    if (formData.description.trim().length < 20) {
       newErrors.description = 'Description must be at least 20 characters';
     }
 
@@ -61,7 +114,10 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
 
     if (!formData.endDate) {
       newErrors.endDate = 'End date is required';
-    } else if (formData.startDate && new Date(formData.endDate) <= new Date(formData.startDate)) {
+    } else if (
+      formData.startDate &&
+      new Date(formData.endDate) <= new Date(formData.startDate)
+    ) {
       newErrors.endDate = 'End date must be after start date';
     }
 
@@ -72,17 +128,15 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!eligibility || eligibility.remainingProjects <= 0) return;
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
-      // Parse skills from comma-separated string
       const skills = formData.skillsInput
         .split(',')
-        .map((skill) => skill.trim())
-        .filter((skill) => skill.length > 0);
+        .map((s) => s.trim())
+        .filter(Boolean);
 
       await onSubmit({
         title: formData.title,
@@ -92,227 +146,310 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
         startDate: new Date(formData.startDate),
         endDate: new Date(formData.endDate),
       });
-
-      // Reset form on success
-      setFormData({
-        title: '',
-        companyName: '',
-        description: '',
-        skillsInput: '',
-        startDate: '',
-        endDate: '',
-      });
-    } catch (error) {
-      console.error('Failed to create project:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      alert(`Failed to create project: ${errorMessage}\n\nPlease check the console for more details.`);
+    } catch (err) {
+      alert('Failed to create project. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  /* --------------------------------------------------
+     RENDER
+  -------------------------------------------------- */
   return (
     <div className="min-h-screen bg-dreamxec-cream relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <StarDecoration className="absolute top-20 left-10 w-12 h-12 text-dreamxec-saffron opacity-20 animate-spin-slow" />
-        <StarDecoration className="absolute top-40 right-20 w-16 h-16 text-dreamxec-green opacity-15 animate-bounce-slow" />
-        <StarDecoration className="absolute bottom-32 left-1/4 w-10 h-10 text-dreamxec-orange opacity-25" />
-        
-        <img
-          src="https://c.animaapp.com/mhd6hm18SGcCN3/assets/image-28.svg"
-          alt="Decorative"
-          className="absolute top-10 right-10 w-24 h-24 opacity-10 animate-float"
-        />
-        <img
-          src="https://c.animaapp.com/mhd6hm18SGcCN3/assets/image-30.svg"
-          alt="Decorative"
-          className="absolute bottom-10 left-10 w-32 h-32 opacity-10 animate-float-delayed"
-        />
+      {/* Decorative Stars - DreamXec Style */}
+      <div className="absolute top-20 left-10 opacity-30">
+        <StarDecoration />
+      </div>
+      <div className="absolute bottom-40 right-20 opacity-20 rotate-12">
+        <StarDecoration />
+      </div>
+      <div className="absolute top-1/2 right-10 opacity-25">
+        <StarDecoration />
       </div>
 
-      {/* Main content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-12">
-        {/* Back button */}
+        {/* Back Button - Enhanced */}
         <button
           onClick={onBack}
-          className="mb-8 flex items-center gap-2 text-dreamxec-navy font-bold font-sans text-lg hover:text-dreamxec-orange transition-colors"
+          className="mb-6 flex items-center gap-2 px-6 py-3 bg-white border-4 border-dreamxec-navy 
+                     shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+                     hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150
+                     text-dreamxec-navy font-bold text-lg rounded-xl"
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Dashboard
+          ← Back to Dashboard
         </button>
 
         {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold text-dreamxec-navy font-display mb-4">
+        <div className="mb-8 text-center">
+          <h1 className="text-5xl md:text-6xl font-black text-dreamxec-navy mb-3 
+                         [text-shadow:_4px_4px_0_rgb(255_183_3)] tracking-tight">
             Create New Project 🚀
           </h1>
-          <p className="text-xl text-dreamxec-navy font-sans opacity-80">
-            Post your project and connect with talented students
+          <p className="text-lg md:text-xl text-dreamxec-navy/80 font-bold">
+            Opportunities are reviewed before going live
           </p>
         </div>
 
-        {/* Form */}
-        <div className="card-pastel-offwhite rounded-2xl border-5 border-dreamxec-navy p-8 md:p-12 shadow-pastel-card">
-          <div className="card-tricolor-tag"></div>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Project Title */}
-            <div>
-              <label htmlFor="title" className="block text-dreamxec-navy font-bold font-sans text-lg mb-2">
-                Project Title * <span className="text-sm font-normal opacity-70">(min. 5 characters)</span>
-              </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="e.g., Mobile App Development for E-commerce"
-                minLength={5}
-                className={`w-full px-4 py-3 border-4 ${
-                  errors.title ? 'border-red-500' : 'border-dreamxec-navy'
-                } rounded-xl font-sans text-dreamxec-navy text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all`}
-              />
-              {errors.title && (
-                <p className="mt-2 text-red-500 font-sans text-sm">{errors.title}</p>
-              )}
-            </div>
-
-            {/* Company Name */}
-            <div>
-              <label htmlFor="companyName" className="block text-dreamxec-navy font-bold font-sans text-lg mb-2">
-                Company Name *
-              </label>
-              <input
-                type="text"
-                id="companyName"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleChange}
-                placeholder="e.g., Tech Solutions Inc."
-                className={`w-full px-4 py-3 border-4 ${
-                  errors.companyName ? 'border-red-500' : 'border-dreamxec-navy'
-                } rounded-xl font-sans text-dreamxec-navy text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all`}
-              />
-              {errors.companyName && (
-                <p className="mt-2 text-red-500 font-sans text-sm">{errors.companyName}</p>
-              )}
-            </div>
-
-            {/* Description */}
-            <div>
-              <label htmlFor="description" className="block text-dreamxec-navy font-bold font-sans text-lg mb-2">
-                Project Description * <span className="text-sm font-normal opacity-70">(min. 20 characters)</span>
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Describe your project, goals, and what you're looking for in collaborators..."
-                rows={6}
-                minLength={20}
-                className={`w-full px-4 py-3 border-4 ${
-                  errors.description ? 'border-red-500' : 'border-dreamxec-navy'
-                } rounded-xl font-sans text-dreamxec-navy text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all resize-none`}
-              />
-              {errors.description && (
-                <p className="mt-2 text-red-500 font-sans text-sm">{errors.description}</p>
-              )}
-              <p className="mt-1 text-sm text-dreamxec-navy opacity-60 font-sans">
-                {formData.description.length}/20 characters minimum
+        {/* ---------------- ELIGIBILITY CARD ---------------- */}
+        <div className="mb-8 rounded-2xl border-4 border-dreamxec-navy bg-white p-6 
+                        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          {loadingEligibility ? (
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 border-4 border-dreamxec-navy border-t-transparent 
+                              rounded-full animate-spin"></div>
+              <p className="font-black text-dreamxec-navy text-lg">
+                Checking eligibility…
               </p>
             </div>
-
-            {/* Skills Required */}
-            <div>
-              <label htmlFor="skillsInput" className="block text-dreamxec-navy font-bold font-sans text-lg mb-2">
-                Skills Required *
-              </label>
-              <input
-                type="text"
-                id="skillsInput"
-                name="skillsInput"
-                value={formData.skillsInput}
-                onChange={handleChange}
-                placeholder="e.g., React, Node.js, MongoDB, UI/UX Design (comma-separated)"
-                className={`w-full px-4 py-3 border-4 ${
-                  errors.skillsInput ? 'border-red-500' : 'border-dreamxec-navy'
-                } rounded-xl font-sans text-dreamxec-navy text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all`}
-              />
-              <p className="mt-2 text-dreamxec-navy/60 font-sans text-sm">
-                Separate skills with commas
+          ) : eligibility?.canCreateOpportunity ? (
+            <div className="flex items-center gap-3 p-4 bg-dreamxec-green/10 
+                            border-3 border-dreamxec-green rounded-xl">
+              <span className="text-3xl">✅</span>
+              <p className="font-black text-dreamxec-green text-xl">
+                You are eligible to create a project
               </p>
-              {errors.skillsInput && (
-                <p className="mt-2 text-red-500 font-sans text-sm">{errors.skillsInput}</p>
-              )}
             </div>
+          ) : (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">🔒</span>
+                <p className="font-black text-dreamxec-navy text-lg">
+                  ₹{eligibility.perProjectCost.toLocaleString('en-IN')} donation unlocks 1 project.
+                </p>
+              </div>
 
-            {/* Timeline */}
-            <div className="grid md:grid-cols-2 gap-6">
+              {/* Progress Bar - Neobrutalist Style */}
+              <div className="relative w-full h-8 bg-dreamxec-cream border-4 border-dreamxec-navy 
+                              rounded-full overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-3">
+                <div
+                  className="h-full bg-dreamxec-green transition-all duration-500 ease-out
+                             border-r-4 border-dreamxec-navy relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(0,0,0,0.1)_10px,rgba(0,0,0,0.1)_20px)]"></div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <p className="text-base font-bold text-dreamxec-navy">
+                  ₹{(eligibility?.totalDonated || 0).toLocaleString('en-IN')} / ₹{MIN_DONATION.toLocaleString('en-IN')} donated
+                </p>
+                <p className="text-base font-black text-dreamxec-navy">
+                  {progress.toFixed(0)}%
+                </p>
+                <p className="text-sm font-bold text-dreamxec-navy/70">
+                  Projects used: {eligibility.createdProjects} / {eligibility.allowedProjects}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ---------------- FORM ---------------- */}
+        <form
+          onSubmit={handleSubmit}
+          className={`space-y-6 rounded-2xl border-4 border-dreamxec-navy bg-white p-8 
+                      shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ${!eligibility?.canCreateOpportunity
+              ? 'opacity-50 pointer-events-none grayscale'
+              : ''
+            }`}
+        >
+          {/* Project Title */}
+          <div className="space-y-2">
+            <label className="block text-sm font-black text-dreamxec-navy uppercase tracking-wide">
+              Project Title *
+            </label>
+            <input
+              name="title"
+              placeholder="e.g., Build AI-Powered Marketing Tool"
+              value={formData.title}
+              onChange={handleChange}
+              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                         placeholder:text-dreamxec-navy/40 bg-white
+                         shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                         focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+                         focus:translate-x-[-2px] focus:translate-y-[-2px]
+                         transition-all duration-150 outline-none
+                         ${errors.title ? 'border-red-500' : 'border-dreamxec-navy'}`}
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm font-bold flex items-center gap-1">
+                ⚠️ {errors.title}
+              </p>
+            )}
+          </div>
+
+          {/* Company Name */}
+          <div className="space-y-2">
+            <label className="block text-sm font-black text-dreamxec-navy uppercase tracking-wide">
+              Company Name *
+            </label>
+            <input
+              name="companyName"
+              placeholder="e.g., DreamXec Labs"
+              value={formData.companyName}
+              onChange={handleChange}
+              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                         placeholder:text-dreamxec-navy/40 bg-white
+                         shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                         focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+                         focus:translate-x-[-2px] focus:translate-y-[-2px]
+                         transition-all duration-150 outline-none
+                         ${errors.companyName ? 'border-red-500' : 'border-dreamxec-navy'}`}
+            />
+            {errors.companyName && (
+              <p className="text-red-500 text-sm font-bold flex items-center gap-1">
+                ⚠️ {errors.companyName}
+              </p>
+            )}
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <label className="block text-sm font-black text-dreamxec-navy uppercase tracking-wide">
+              Project Description *
+            </label>
+            <textarea
+              name="description"
+              placeholder="Describe your project, goals, and what makes it exciting..."
+              rows={5}
+              value={formData.description}
+              onChange={handleChange}
+              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                         placeholder:text-dreamxec-navy/40 bg-white resize-none
+                         shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                         focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+                         focus:translate-x-[-2px] focus:translate-y-[-2px]
+                         transition-all duration-150 outline-none
+                         ${errors.description ? 'border-red-500' : 'border-dreamxec-navy'}`}
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm font-bold flex items-center gap-1">
+                ⚠️ {errors.description}
+              </p>
+            )}
+          </div>
+
+          {/* Skills Required */}
+          <div className="space-y-2">
+            <label className="block text-sm font-black text-dreamxec-navy uppercase tracking-wide">
+              Skills Required *
+            </label>
+            <input
+              name="skillsInput"
+              placeholder="e.g., React, Node.js, Python, UI/UX Design"
+              value={formData.skillsInput}
+              onChange={handleChange}
+              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                         placeholder:text-dreamxec-navy/40 bg-white
+                         shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                         focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+                         focus:translate-x-[-2px] focus:translate-y-[-2px]
+                         transition-all duration-150 outline-none
+                         ${errors.skillsInput ? 'border-red-500' : 'border-dreamxec-navy'}`}
+            />
+            <p className="text-xs text-dreamxec-navy/60 font-bold">
+              💡 Separate skills with commas
+            </p>
+            {errors.skillsInput && (
+              <p className="text-red-500 text-sm font-bold flex items-center gap-1">
+                ⚠️ {errors.skillsInput}
+              </p>
+            )}
+          </div>
+
+          {/* Date Range */}
+          <div className="space-y-2">
+            <label className="block text-sm font-black text-dreamxec-navy uppercase tracking-wide mb-3">
+              Project Duration *
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Start Date */}
-              <div>
-                <label htmlFor="startDate" className="block text-dreamxec-navy font-bold font-sans text-lg mb-2">
-                  Start Date *
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-dreamxec-navy/70">
+                  Start Date
                 </label>
                 <input
                   type="date"
-                  id="startDate"
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border-4 ${
-                    errors.startDate ? 'border-red-500' : 'border-dreamxec-navy'
-                  } rounded-xl font-sans text-dreamxec-navy text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all`}
+                  className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                             bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                             focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+                             focus:translate-x-[-2px] focus:translate-y-[-2px]
+                             transition-all duration-150 outline-none
+                             ${errors.startDate ? 'border-red-500' : 'border-dreamxec-navy'}`}
                 />
                 {errors.startDate && (
-                  <p className="mt-2 text-red-500 font-sans text-sm">{errors.startDate}</p>
+                  <p className="text-red-500 text-xs font-bold">
+                    {errors.startDate}
+                  </p>
                 )}
               </div>
 
               {/* End Date */}
-              <div>
-                <label htmlFor="endDate" className="block text-dreamxec-navy font-bold font-sans text-lg mb-2">
-                  End Date *
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-dreamxec-navy/70">
+                  End Date
                 </label>
                 <input
                   type="date"
-                  id="endDate"
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border-4 ${
-                    errors.endDate ? 'border-red-500' : 'border-dreamxec-navy'
-                  } rounded-xl font-sans text-dreamxec-navy text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all`}
+                  className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                             bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                             focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+                             focus:translate-x-[-2px] focus:translate-y-[-2px]
+                             transition-all duration-150 outline-none
+                             ${errors.endDate ? 'border-red-500' : 'border-dreamxec-navy'}`}
                 />
                 {errors.endDate && (
-                  <p className="mt-2 text-red-500 font-sans text-sm">{errors.endDate}</p>
+                  <p className="text-red-500 text-xs font-bold">
+                    {errors.endDate}
+                  </p>
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Submit buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <button
-                type="button"
-                onClick={onBack}
-                className="flex-1 px-6 py-4 bg-dreamxec-cream border-4 border-dreamxec-navy rounded-xl font-bold text-dreamxec-navy text-lg font-display hover:bg-dreamxec-beige transition-all shadow-pastel-card"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 px-6 py-4 bg-dreamxec-green border-4 border-dreamxec-navy rounded-xl font-bold text-white text-lg font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-saffron disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                {isSubmitting ? 'Creating Project...' : 'Create Project'}
-              </button>
-            </div>
-          </form>
-        </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isSubmitting || !eligibility?.canCreateOpportunity}
+            className="w-full bg-dreamxec-green text-white py-5 px-8 rounded-xl font-black text-xl
+                       border-4 border-dreamxec-navy shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                       hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                       hover:translate-x-[4px] hover:translate-y-[4px]
+                       active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+                       active:translate-x-[6px] active:translate-y-[6px]
+                       disabled:opacity-50 disabled:cursor-not-allowed
+                       disabled:hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                       disabled:hover:translate-x-0 disabled:hover:translate-y-0
+                       transition-all duration-150 uppercase tracking-wide"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-3">
+                <div className="w-6 h-6 border-4 border-white border-t-transparent 
+                                rounded-full animate-spin"></div>
+                Creating Project...
+              </span>
+            ) : (
+              '🚀 Create Project'
+            )}
+          </button>
+
+          {/* Info Footer */}
+          <div className="mt-6 p-4 bg-dreamxec-cream border-3 border-dreamxec-navy/30 
+                          rounded-xl text-center">
+            <p className="text-sm text-dreamxec-navy/70 font-bold">
+              💡 Your project will be reviewed by our team within 24-48 hours
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );

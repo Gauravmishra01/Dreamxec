@@ -1,6 +1,8 @@
 const prisma = require('../config/prisma');
 const AppError = require('../utils/AppError');
 
+// clubId is already validated in resolveCampaignClub middleware
+// DO NOT re-check membership here
 /* ======================================================
    A. Ensure Club Verified
 ====================================================== */
@@ -29,31 +31,43 @@ const resolveCampaignClub = async (req, res, next) => {
   const { clubId } = req.body;
   const user = req.user;
 
-  if (user.role === 'ADMIN') {
-    req.validatedClubId = clubId || null;
-    return next();
-  }
-
   if (!clubId) {
     return next(new AppError('clubId is required to create a campaign', 400));
   }
 
   const club = await prisma.club.findUnique({
     where: { id: clubId },
-    select: { id: true, userIds: true },
+    select: { id: true },
   });
 
   if (!club) {
     return next(new AppError('Club not found', 404));
   }
 
-  if (!club.userIds.includes(user.id)) {
-    return next(new AppError('You are not a member of this club', 403));
+  // ✅ ADMIN can always proceed
+  if (user.role === 'ADMIN') {
+    req.validatedClubId = club.id;
+    return next();
   }
 
-  req.validatedClubId = club.id;
-  next();
+  // ✅ CLUB PRESIDENT can proceed
+  if (user.isClubPresident) {
+    req.validatedClubId = club.id;
+    return next();
+  }
+
+  // ✅ CLUB MEMBER can proceed
+  if (user.isClubMember) {
+    req.validatedClubId = club.id;
+    return next();
+  }
+
+  return next(
+    new AppError('You are not authorized to create a campaign for this club', 403)
+  );
 };
+
+
 
 /* ======================================================
    C. Validate Campaign Eligibility

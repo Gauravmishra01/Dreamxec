@@ -1,20 +1,55 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRecentCampaigns } from '../lib/recentCampaigns';
 import type { Campaign } from '../types';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function RecentlyViewedCarousel() {
   const [items, setItems] = useState<Campaign[]>([]);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
   const navigate = useNavigate();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setItems(getRecentCampaigns());
   }, []);
 
+  useEffect(() => {
+    checkScroll();
+  }, [items]);
+
+  const checkScroll = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    setCanScrollLeft(container.scrollLeft > 0);
+    setCanScrollRight(
+      container.scrollLeft < container.scrollWidth - container.clientWidth - 1
+    );
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const scrollAmount = 300;
+    const targetScroll = direction === 'left' 
+      ? container.scrollLeft - scrollAmount 
+      : container.scrollLeft + scrollAmount;
+
+    container.scrollTo({
+      left: targetScroll,
+      behavior: 'smooth'
+    });
+
+    setTimeout(checkScroll, 300);
+  };
+
   if (items.length < 2) return null;
 
   return (
-    <section className="mt-14">
+    <section className="mt-14 relative">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-2xl font-bold text-dreamxec-navy font-display">
@@ -25,8 +60,37 @@ export default function RecentlyViewedCarousel() {
         </span>
       </div>
 
-      {/* Carousel */}
-      <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
+      {/* Carousel Container with Navigation Buttons */}
+      <div className="relative px-12">
+        {/* Left Navigation Button */}
+        {canScrollLeft && (
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* Right Navigation Button */}
+        {canScrollRight && (
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* Carousel */}
+        <div 
+          ref={scrollContainerRef}
+          onScroll={checkScroll}
+          className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide scroll-smooth"
+          style={{ scrollBehavior: 'smooth' }}
+        >
         {items.map(campaign => {
           const progress = Math.min(
             (campaign.currentAmount / campaign.goalAmount) * 100,
@@ -46,6 +110,7 @@ export default function RecentlyViewedCarousel() {
                 shadow-pastel-card
                 cursor-pointer
                 transition-all
+                duration-500
                 hover:-translate-y-1
                 hover:shadow-lg
               "
@@ -97,6 +162,7 @@ export default function RecentlyViewedCarousel() {
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

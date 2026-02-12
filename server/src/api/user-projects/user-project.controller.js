@@ -2,6 +2,8 @@ const prisma = require('../../config/prisma');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const uploadToCloudinary = require('../../utils/uploadToCloudinary');
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 
 /* ======================================================
@@ -41,30 +43,8 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
   /* =============================
    CLUB VALIDATION
 ============================== */
-  let validatedClubId = null;
+  const validatedClubId = req.validatedClubId;
 
-  if (clubId) {
-    const club = await prisma.club.findUnique({
-      where: { id: clubId },
-      select: {
-        id: true,
-        userIds: true,
-      },
-    });
-
-    if (!club) {
-      return next(new AppError("Club not found", 404));
-    }
-
-    // User must belong to the club
-    if (!club.userIds.includes(req.user.id)) {
-      return next(
-        new AppError("You are not a member of this club", 403)
-      );
-    }
-
-    validatedClubId = club.id;
-  }
 
 
   /* =============================
@@ -264,6 +244,14 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     data: { userProject: project },
+  });
+
+  // Publish Event
+  await publishEvent(EVENTS.CAMPAIGN_CREATED, {
+    email: req.user.email,
+    name: req.user.name,
+    campaignTitle: project.title,
+    campaignUrl: `${process.env.CLIENT_URL}/projects/${project.id}` // Assuming URL structure
   });
 });
 

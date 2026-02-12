@@ -63,7 +63,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [collegeName, setCollegeName] = useState('');
+  // const [collegeName, setCollegeName] = useState('');
   const [clubs, setClubs] = useState<ClubOption[]>([]);
   const [clubId, setClubId] = useState('');
 
@@ -143,7 +143,6 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
         const goalNum = parseFloat(goalAmount);
         return title.trim() &&
           description.trim() &&
-          collegeName.trim() &&
           clubId.trim() &&
           goalAmount && !isNaN(goalNum) && goalNum > 0; // ✅ FIXED
       case 2:
@@ -211,7 +210,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
       step === 1 &&
       (!title.trim() ||
         !description.trim() ||
-        !collegeName.trim() ||
+        !goalAmount.trim() ||
         !clubId.trim() ||
         !parseFloat(goalAmount))
     ) {
@@ -231,7 +230,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
             parseFloat(m.budget) > 0
         ))
     ) {
-      toast.error('Please complete all milestones');
+      toast.error('Please complete all milestones and upload a banner image. Ensure total milestone budget does not exceed campaign goal.');
       return;
     }
 
@@ -769,7 +768,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                   <h3 className="text-sm font-bold text-dreamxec-navy mb-3">Campaign Summary</h3>
                   <div className="space-y-2 text-sm">
                     <div><span className="font-semibold">Title:</span> {title || <span className="text-gray-400 italic">Not set</span>}</div>
-                    <div><span className="font-semibold">College:</span> {collegeName || <span className="text-gray-400 italic">Not set</span>}</div>
+                    {/* <div><span className="font-semibold">Club:</span> {clubId || <span className="text-gray-400 italic">Not set</span>}</div> */}
                     <div><span className="font-semibold">Goal:</span> ₹{parseFloat(goalAmount || '0').toLocaleString()}</div>
                     <div><span className="font-semibold">Type:</span> {campaignType}</div>
                     <div><span className="font-semibold">Milestones:</span> {milestones.length}</div>

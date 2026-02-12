@@ -1,6 +1,11 @@
 import { Header } from '../../Header'
 import { FooterContent } from '../../Footer/components/FooterContent'
 import useScrollReveal from '../../../hooks/useScrollReveal'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const HowItWorksDonors = () => {
 
@@ -39,18 +44,18 @@ const HowItWorksDonors = () => {
     ]
 
     const impactMetrics = [
-        { title: "Career Outcomes", description: "Jobs, internships, or higher education admissions." },
-        { title: "Innovation Impact", description: "Patents filed, research published, startups launched." },
-        { title: "Social Impact", description: "Communities helped and problems solved." },
-        { title: "Learning Gains", description: "Skills gained, confidence built, growth achieved." }
+        { icon: "🎯", title: "Career Outcomes", description: "Jobs, internships, or higher education admissions.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg" },
+        { icon: "💡", title: "Innovation Impact", description: "Patents filed, research published, startups launched.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/8.svg" },
+        { icon: "🌍", title: "Social Impact", description: "Communities helped and problems solved.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg" },
+        { icon: "📚", title: "Learning Gains", description: "Skills gained, confidence built, growth achieved.", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg" }
     ]
 
     const FAQ = [
-        { q: "What's the minimum pledge amount?", a: "₹100. Small amounts collectively create big impact." },
-        { q: "Can I change my pledge or get a refund?", a: "No. Since this is a donation, refunds are not possible." },
-        { q: "What if a project fails?", a: "Research can fail. If misuse is suspected, DreamXec investigates and takes strict action." },
-        { q: "Can I contribute anonymously?", a: "Yes. Enable Anonymous Backer during checkout." },
-        { q: "How often do projects succeed?", a: "Success includes learning, iteration, and outcomes — not just final products." }
+        { icon: "💰", q: "What's the minimum pledge amount?", a: "₹100. Small amounts collectively create big impact." },
+        { icon: "🔄", q: "Can I change my pledge or get a refund?", a: "No. Since this is a donation, refunds are not possible." },
+        { icon: "⚠️", q: "What if a project fails?", a: "Research can fail. If misuse is suspected, DreamXec investigates and takes strict action." },
+        { icon: "👤", q: "Can I contribute anonymously?", a: "Yes. Enable Anonymous Backer during checkout." },
+        { icon: "🏆", q: "How often do projects succeed?", a: "Success includes learning, iteration, and outcomes — not just final products." }
     ]
 
     return (
@@ -64,14 +69,14 @@ const HowItWorksDonors = () => {
 
             <Header />
 
-            <main className="space-y-24 py-20 w-full">
+           <main className="space-y-20 py-12 w-full">
 
                 {/* -------------------- Hero -------------------- */}
-                <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-                    <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-center space-y-6">
+                    <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold animate-fade-in">
                         Support Innovation in 4 Simple Steps
                     </h1>
-                    <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                     <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
                         From discovering a project to seeing real-world impact — here’s exactly how DreamXec works.
                     </p>
                 </section>
@@ -79,19 +84,19 @@ const HowItWorksDonors = () => {
                 {/* -------------------- Funding Flow -------------------- */}
                 <section
                     ref={fundingFlow.ref}
-                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''
+                    className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''
                         }`}
                 >
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Funding Flow
                     </h2>
 
-                    <div className="grid grid-cols-1 gap-8">
+                    <div className="grid grid-cols-1 gap-6 md:gap-8 max-w-5xl mx-auto">
                         {steps.map((step, index) => (
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
+                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
               reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
@@ -108,10 +113,10 @@ const HowItWorksDonors = () => {
                 {/* -------------------- Transparency -------------------- */}
                 <section
                     ref={transparency.ref}
-                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${transparency.isVisible ? 'reveal-visible' : ''
+                    className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 reveal ${transparency.isVisible ? 'reveal-visible' : ''
                         }`}
                 >
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Money Usage Transparency
                     </h2>
 
@@ -120,7 +125,7 @@ const HowItWorksDonors = () => {
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
+                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
               reveal ${transparency.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <div className="flex justify-between items-center">
@@ -144,52 +149,104 @@ const HowItWorksDonors = () => {
                 {/* -------------------- Impact -------------------- */}
                 <section
                     ref={impact.ref}
-                    className={`max-w-7xl mx-auto px-4 space-y-12 reveal ${impact.isVisible ? 'reveal-visible' : ''
+                    className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 reveal ${impact.isVisible ? 'reveal-visible' : ''
                         }`}
                 >
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-dreamxec-berkeley-blue">
                         Impact Tracking
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                        {impactMetrics.map((metric, index) => (
-                            <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card
-              reveal ${impact.isVisible ? 'reveal-visible' : ''}`}
-                            >
-                                <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                                    {metric.title}
+                    <Swiper
+                      modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+                      spaceBetween={32}
+                      slidesPerView={1}
+                      speed={800}
+                      navigation
+                      pagination={{ clickable: true }}
+                      keyboard={{ enabled: true }}
+                      grabCursor={true}
+                      autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                      breakpoints={{
+                        768: {
+                          slidesPerView: 2,
+                          spaceBetween: 32,
+                        },
+                      }}
+                      className="how-it-works-carousel"
+                    >
+                      {impactMetrics.map((metric, index) => (
+                        <SwiperSlide key={index}>
+                          <div
+                            className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex items-center gap-4"
+                          >
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-3">
+                                <span className="text-2xl md:text-3xl">{metric.icon}</span>
+                                <h4 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
+                                  {metric.title}
                                 </h4>
-                                <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed">
-                                    {metric.description}
-                                </p>
+                              </div>
+                              <p className="text-dreamxec-navy text-lg md:text-xl leading-relaxed font-medium">
+                                {metric.description}
+                              </p>
                             </div>
-                        ))}
-                    </div>
+                            <img 
+                              src={metric.vector} 
+                              alt="" 
+                              className="w-20 h-20 md:w-36 md:h-36 object-contain flex-shrink-0"
+                            />
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
                 </section>
 
                 {/* -------------------- FAQ -------------------- */}
                 <section
                     ref={faq.ref}
-                    className={`px-4 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
+                    className={`px-4 sm:px-6 lg:px-8 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
                 >
-                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="max-w-7xl mx-auto">
+                      <Swiper
+                        modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+                        spaceBetween={32}
+                        slidesPerView={1}
+                        speed={800}
+                        navigation
+                        pagination={{ clickable: true }}
+                        keyboard={{ enabled: true }}
+                        grabCursor={true}
+                        autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                        breakpoints={{
+                          640: {
+                            slidesPerView: 2,
+                            spaceBetween: 32,
+                          },
+                          1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 32,
+                          },
+                        }}
+                        className="how-it-works-faq-carousel"
+                      >
                         {FAQ.map((item, index) => (
+                          <SwiperSlide key={index}>
                             <div
-                                key={index}
-                                style={{ transitionDelay: `${index * 120}ms` }}
-                                className="card-pastel-offwhite p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                              className="card-pastel-offwhite p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
                             >
-                                <h3 className="text-lg md:text-xl font-bold mb-2 text-dreamxec-navy">
-                                    Q: {item.q}
+                              <div className="flex items-center gap-2 mb-3">
+                                {/* <span className="text-2xl">{item.icon}</span> */}
+                                <h3 className="text-lg md:text-xl font-bold text-dreamxec-navy">
+                                  Q: {item.q}
                                 </h3>
-                                <p className="text-base md:text-lg text-dreamxec-gray leading-relaxed">
-                                    A: {item.a}
-                                </p>
+                              </div>
+                              <p className="text-base md:text-lg text-dreamxec-gray leading-relaxed font-medium bg-dreamxec-cream px-4 py-3 rounded-lg">
+                                A: {item.a}
+                              </p>
                             </div>
+                          </SwiperSlide>
                         ))}
+                      </Swiper>
                     </div>
                 </section>
 

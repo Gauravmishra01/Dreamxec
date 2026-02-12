@@ -1,4 +1,6 @@
 const prisma = require("../../config/prisma");
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 exports.listVerifications = async (req, res) => {
   const { status, skip = 0, take = 50 } = req.query;
@@ -94,6 +96,20 @@ exports.approveVerification = async (req, res) => {
       message: "Verification approved and student upgraded to president",
       data: result,
     });
+
+    // Publish Event (Non-blocking)
+    try {
+        if (result.presidentEmail) {
+            await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
+                email: result.presidentEmail,
+                clubName: result.name || 'Your Club',
+                status: 'APPROVED',
+                dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+            });
+        }
+    } catch (err) {
+        console.error("Event Publish Error:", err);
+    }
   } catch (error) {
     console.error("Approve Verification Error:", error);
     res.status(500).json({

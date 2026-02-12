@@ -2,32 +2,87 @@ const prisma = require('../../config/prisma');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 
-// DONOR: Create a donor project
-exports.createDonorProject = catchAsync(async (req, res, next) => {
-  const { title, description, organization, skillsRequired, timeline, totalBudget, imageUrl } = req.body;
+const {
+  getDonorEligibility,
+} = require('../../utils/donorEligibility');
 
-  const donorProject = await prisma.donorProject.create({
-    data: {
-      title,
-      description,
-      organization: organization || null,
-      skillsRequired: skillsRequired || [],
-      timeline: timeline || null,
-      totalBudget,
-      imageUrl: imageUrl || null,
-      donorId: req.user.id,
-      status: 'PENDING', // Requires admin verification
-    },
+exports.createDonorProject = catchAsync(async (req, res, next) => {
+  const {
+    title,
+    description,
+    organization,
+    skillsRequired,
+    timeline,
+    totalBudget,
+    imageUrl,
+  } = req.body;
+
+  const donorId = req.user.id;
+
+  // 1️⃣ Get eligibility (read-only)
+  const eligibility = await getDonorEligibility(donorId);
+
+  if (!eligibility.canCreateOpportunity) {
+    return next(
+      new AppError(
+        eligibility.allowedProjects === 0
+          ? `You must donate at least ₹${eligibility.perProjectCost} to create your first opportunity.`
+          : `Project limit reached (${eligibility.createdProjects}/${eligibility.allowedProjects}). Donate ₹${eligibility.perProjectCost} more to unlock another.`,
+        403
+      )
+    );
+  }
+
+  // 2️⃣ ATOMIC CREATE (Mongo-safe)
+  const result = await prisma.$runCommandRaw({
+    insert: 'DonorProject',
+    documents: [
+      {
+        title,
+        description,
+        organization: organization || null,
+        skillsRequired: skillsRequired || [],
+        timeline: timeline || null,
+        totalBudget,
+        imageUrl: imageUrl || null,
+        donorId,
+        status: 'PENDING',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ],
   });
 
-  res.status(201).json({ 
-    status: 'success', 
-    message: 'Donor project created successfully. Awaiting admin approval.',
-    data: { donorProject } 
+  // 3️⃣ HARD SAFETY CHECK (paranoia = good)
+  const updatedEligibility = await getDonorEligibility(donorId);
+
+  if (updatedEligibility.createdProjects > updatedEligibility.allowedProjects) {
+    // rollback (extremely rare but correct)
+    await prisma.donorProject.deleteMany({
+      where: {
+        donorId,
+        status: 'PENDING',
+      },
+      take: 1,
+    });
+
+    return next(
+      new AppError(
+        'Project creation limit exceeded. Please try again.',
+        409
+      )
+    );
+  }
+
+  res.status(201).json({
+    status: 'success',
+    message: `Opportunity created (${updatedEligibility.createdProjects}/${updatedEligibility.allowedProjects})`,
   });
 });
 
-// DONOR: Update their own donor project
+/* ======================================================
+   DONOR: UPDATE OWN PROJECT (SAFE)
+====================================================== */
 exports.updateDonorProject = catchAsync(async (req, res, next) => {
   const donorProject = await prisma.donorProject.findUnique({
     where: { id: req.params.id },
@@ -38,26 +93,52 @@ exports.updateDonorProject = catchAsync(async (req, res, next) => {
   }
 
   if (donorProject.donorId !== req.user.id) {
-    return next(
-      new AppError('You are not authorized to edit this project', 403)
-    );
+    return next(new AppError('You are not authorized to edit this project', 403));
   }
 
-  if (donorProject.status !== 'PENDING' && donorProject.status !== 'REJECTED') {
+  if (!['PENDING', 'REJECTED'].includes(donorProject.status)) {
     return next(
       new AppError('Only PENDING or REJECTED projects can be updated.', 400)
     );
   }
 
-  const updatedDonorProject = await prisma.donorProject.update({
-    where: { id: req.params.id },
-    data: req.body,
+  // 🔒 WHITELIST FIELDS (CRITICAL SECURITY FIX)
+  const allowedFields = [
+    'title',
+    'description',
+    'organization',
+    'skillsRequired',
+    'timeline',
+    'totalBudget',
+    'imageUrl',
+  ];
+
+  const updateData = {};
+  allowedFields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      updateData[field] = req.body[field];
+    }
   });
 
-  res.status(200).json({ status: 'success', data: { donorProject: updatedDonorProject } });
+  // If rejected & edited → resubmit for approval
+  if (donorProject.status === 'REJECTED') {
+    updateData.status = 'PENDING';
+  }
+
+  const updatedDonorProject = await prisma.donorProject.update({
+    where: { id: req.params.id },
+    data: updateData,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: { donorProject: updatedDonorProject },
+  });
 });
 
-// DONOR: Delete their own donor project
+/* ======================================================
+   DONOR: DELETE OWN PROJECT
+====================================================== */
 exports.deleteDonorProject = catchAsync(async (req, res, next) => {
   const donorProject = await prisma.donorProject.findUnique({
     where: { id: req.params.id },
@@ -73,7 +154,7 @@ exports.deleteDonorProject = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (donorProject.status !== 'PENDING' && donorProject.status !== 'REJECTED') {
+  if (!['PENDING', 'REJECTED'].includes(donorProject.status)) {
     return next(
       new AppError('Only PENDING or REJECTED projects can be deleted.', 400)
     );
@@ -84,60 +165,65 @@ exports.deleteDonorProject = catchAsync(async (req, res, next) => {
   res.status(204).json({ status: 'success', data: null });
 });
 
-// PUBLIC: Get a single donor project's details
+/* ======================================================
+   PUBLIC: GET SINGLE PROJECT
+====================================================== */
 exports.getDonorProject = catchAsync(async (req, res, next) => {
   const donorProject = await prisma.donorProject.findUnique({
     where: { id: req.params.id },
-    include: { donor: { select: { id: true, name: true, organizationName: true } } },
+    include: {
+      donor: { select: { id: true, name: true, organizationName: true } },
+    },
   });
 
   if (!donorProject) {
     return next(new AppError('Donor project not found', 404));
   }
 
-  // Only show APPROVED projects to public (unless owner is viewing)
-  // Note: req.user will be undefined for unauthenticated requests
   if (donorProject.status !== 'APPROVED') {
-    // Allow owner and admin to view their own pending/rejected projects
-    if (!req.user || (req.user.id !== donorProject.donorId && req.user.role !== 'ADMIN')) {
+    if (
+      !req.user ||
+      (req.user.id !== donorProject.donorId && req.user.role !== 'ADMIN')
+    ) {
       return next(new AppError('Donor project not found', 404));
     }
   }
 
-  res.status(200).json({ status: 'success', data: { donorProject } });
+  res.status(200).json({
+    status: 'success',
+    data: { donorProject },
+  });
 });
 
-// PUBLIC: Get all approved donor projects
+/* ======================================================
+   PUBLIC: GET ALL APPROVED PROJECTS
+====================================================== */
 exports.getPublicDonorProjects = catchAsync(async (req, res, next) => {
   const donorProjects = await prisma.donorProject.findMany({
     where: { status: 'APPROVED' },
-    include: { 
-      donor: { select: { id: true, name: true, organizationName: true } }
+    include: {
+      donor: { select: { id: true, name: true, organizationName: true } },
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 
-  res.status(200).json({ 
-    status: 'success', 
+  res.status(200).json({
+    status: 'success',
     results: donorProjects.length,
-    data: { donorProjects } 
+    data: { donorProjects },
   });
 });
 
-// DONOR: Get all of their own donor projects
+/* ======================================================
+   DONOR: GET OWN PROJECTS
+====================================================== */
 exports.getMyDonorProjects = catchAsync(async (req, res, next) => {
   const donorProjects = await prisma.donorProject.findMany({
-    where: {
-      donorId: req.user.id,
-    },
+    where: { donorId: req.user.id },
     include: {
-      donor: {
-        select: { name: true, id: true, organizationName: true },
-      },
+      donor: { select: { id: true, name: true, organizationName: true } },
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: { createdAt: 'desc' },
   });
 
   res.status(200).json({

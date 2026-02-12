@@ -48,11 +48,11 @@ const AlumniGivingPrograms = () => {
 
       <Header />
 
-      <main className="space-y-24 relative self-start box-border caret-transparent w-full py-20">
+       <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
 
         {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 text-center space-y-6">
-          <h1 className="text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h1 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
             Give Back to Students Walking in Your Footsteps
           </h1>
           <p className="text-dreamxec-navy text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
@@ -61,8 +61,8 @@ const AlumniGivingPrograms = () => {
         </section>
 
         {/* Why Alumni Giving */}
-        <section className="max-w-6xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Why Alumni Giving
           </h2>
 
@@ -71,7 +71,7 @@ const AlumniGivingPrograms = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel animate-fade-in p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card max-w-6xl mx-auto"
+                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card max-w-7xl mx-auto hover:shadow-lg transition-shadow duration-300"
               >
                 <p className="text-dreamxec-navy text-base md:text-xl font-medium leading-relaxed max-w-7xl mx-auto">
                   <span className="text-dreamxec-berkeley-blue font-bold">{reason.title}:</span> {reason.description}
@@ -82,16 +82,16 @@ const AlumniGivingPrograms = () => {
         </section>
 
         {/* Program Types */}
-        <section className="max-w-7xl mx-auto px-4 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-4xl md:text-6xl font-extrabold text-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
             Program Types
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {programTypes.map((program, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card"
+                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {program.title}
@@ -105,7 +105,7 @@ const AlumniGivingPrograms = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="flex items-center justify-center gap-6 py-16">
+        <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="/alumni-named-fund">
             <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">

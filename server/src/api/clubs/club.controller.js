@@ -2,6 +2,9 @@ const { parse } = require('csv-parse/sync');
 const prisma = require('../../config/prisma');
 const { validateMembersPayload } = require('./club.validation');
 const AppError = require('../../utils/AppError');
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
+
 const catchAsync = require('../../utils/catchAsync');
 /* -------------------------------------------------------
    Helper: Upsert Club Member
@@ -117,6 +120,20 @@ exports.uploadMembers = async (req, res, next) => {
         if (result.action === 'created') summary.created += 1;
         if (result.action === 'updated') summary.updated += 1;
 
+        // Publish Event
+        if (result.action === 'created' || result.action === 'updated') {
+             try {
+                await publishEvent(EVENTS.CLUB_JOINED, {
+                    email: m.email,
+                    name: m.name,
+                    clubName: club.name,
+                    clubEmail: club.email || 'N/A' 
+                });
+             } catch (e) {
+                 console.error("Failed to publish CLUB_JOINED event", e);
+             }
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: m.email }
         });
@@ -216,6 +233,15 @@ exports.addSingleMember = async (req, res, next) => {
         }
       });
     }
+
+    // Publish Event
+    const club = await prisma.club.findUnique({ where: { id: clubId } });
+    await publishEvent(EVENTS.CLUB_JOINED, {
+        email: value[0].email,
+        name: value[0].name,
+        clubName: club ? club.name : 'Unknown Club',
+        clubEmail: club ? (club.email || 'N/A') : 'N/A'
+    });
 
     res.json({ status: 'success', data: result.action });
   } catch (err) {
