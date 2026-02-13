@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { VerificationModal } from './VerificationModal';
 import { RestrictionModal } from './RestictionModal';
 import type { Campaign, User } from '../types';
@@ -11,7 +11,6 @@ import PresidentCampaigns from "./president/PresidentCampaigns";
 import UploadMembers from "./president/UploadMembers";
 import AddMemberManually from "./president/AddMemberManually";
 import { getMyClubs, type MyClub } from '../services/clubService';
-
 
 
 // --- Icons (same as before) ---
@@ -184,13 +183,26 @@ export default function StudentDashboard({
   const isPartOfClub = isClubPresident || isClubMember;
   const canCreateCampaign = studentVerified && isPartOfClub;
 
-  // Calculate stats
-  const totalRaised = campaigns
-    .filter((c) => c.status === 'approved')
-    .reduce((sum, c) => sum + c.currentAmount, 0);
-  const approvedCount = campaigns.filter((c) => c.status === 'approved').length;
-  const pendingCount = campaigns.filter((c) => c.status === 'pending').length;
-  const rejectedCount = campaigns.filter((c) => c.status === 'rejected').length;
+  // ✅ Production-safe analytics
+  const analytics = useMemo(() => {
+    const normalized = campaigns.map(c => ({
+      status: c.status?.toLowerCase(),
+      currentAmount: Number(c.currentAmount || 0),
+      goalAmount: Number(c.goalAmount || 0),
+    }));
+
+    const approved = normalized.filter(c => c.status === "approved");
+    const pending = normalized.filter(c => c.status === "pending");
+    const rejected = normalized.filter(c => c.status === "rejected");
+
+    return {
+      totalRaised: approved.reduce((sum, c) => sum + c.currentAmount, 0),
+      approvedCount: approved.length,
+      pendingCount: pending.length,
+      rejectedCount: rejected.length,
+    };
+  }, [campaigns]);
+
 
   // Calculate growth percentage (mock data)
   const growthPercentage = 0;
@@ -267,6 +279,12 @@ export default function StudentDashboard({
       alert("You must be part of a club (Member or President) to create a campaign.");
     }
   };
+
+  useEffect(() => {
+    console.log("Analytics:", analytics);
+  }, [analytics]);
+
+  console.log("StudentDashboard received campaigns:", campaigns);
 
   return (
     <div className="min-h-screen bg-orange-50 flex overflow-hidden">
@@ -480,7 +498,7 @@ export default function StudentDashboard({
                 aria-label="Notifications"
               >
                 <BellIcon className="w-5 h-5 text-blue-900" />
-                {pendingCount > 0 && (
+                {analytics.pendingCount > 0 && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full ring-2 ring-white"></span>
                 )}
               </button>
@@ -558,7 +576,9 @@ export default function StudentDashboard({
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-blue-900/60 uppercase tracking-wider">Total Raised</p>
-                      <p className="text-2xl font-bold text-blue-900 mt-2">₹{(totalRaised / 1000).toFixed(1)}K</p>
+                      <p className="text-2xl font-bold text-blue-900 mt-2">₹{analytics.totalRaised > 0
+                        ? (analytics.totalRaised / 1000).toFixed(1)
+                        : "0"}K</p>
                       <div className="flex items-center gap-1 mt-2">
                         <ArrowUpIcon className="w-3 h-3 text-green-600" />
                         <span className="text-xs font-semibold text-green-600">+{growthPercentage}%</span>
@@ -576,7 +596,7 @@ export default function StudentDashboard({
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-blue-900/60 uppercase tracking-wider">Active</p>
-                      <p className="text-2xl font-bold text-blue-900 mt-2">{approvedCount}</p>
+                      <p className="text-2xl font-bold text-blue-900 mt-2">{analytics.approvedCount}</p>
                       <p className="text-xs text-blue-900/50 mt-2">Running campaigns</p>
                     </div>
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-blue-400 rounded-xl flex items-center justify-center">
@@ -590,7 +610,7 @@ export default function StudentDashboard({
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-xs font-medium text-blue-900/60 uppercase tracking-wider">Pending</p>
-                      <p className="text-2xl font-bold text-blue-900 mt-2">{pendingCount}</p>
+                      <p className="text-2xl font-bold text-blue-900 mt-2">{analytics.pendingCount}</p>
                       <p className="text-xs text-blue-900/50 mt-2">Under review</p>
                     </div>
                     <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-400 rounded-xl flex items-center justify-center">
@@ -745,7 +765,14 @@ export default function StudentDashboard({
               ) : (
                 <div className="space-y-4">
                   {filteredCampaigns.map((campaign) => {
-                    const progress = (campaign.currentAmount / campaign.goalAmount) * 100;
+                    const progress =
+                      campaign.goalAmount > 0
+                        ? Math.min(
+                          (Number(campaign.currentAmount || 0) /
+                            Number(campaign.goalAmount || 1)) * 100,
+                          100
+                        )
+                        : 0;
                     return (
                       <div
                         key={campaign.id}
@@ -831,10 +858,6 @@ export default function StudentDashboard({
         isOpen={isVerificationModalOpen}
         onClose={() => setIsVerificationModalOpen(false)}
       />
-
-
-
-
       <RestrictionModal
         isOpen={isPresidentRestrictionOpen}
         onClose={() => setIsPresidentRestrictionOpen(false)}

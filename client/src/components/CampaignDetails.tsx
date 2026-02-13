@@ -16,6 +16,8 @@ import {
   createRazorpayOrderGuest,
   verifyPayment,
 } from "../services/donationService";
+import CommentSection from "./comments/CommentSection";
+
 
 
 interface CampaignDetailsProps {
@@ -143,10 +145,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [donationAmount, setDonationAmount] = useState('');
   const [email, setEmail] = useState("")
   const [showDonateModal, setShowDonateModal] = useState(false);
-  type CampaignTab = 'about' | 'video' | 'media' | 'presentation' | 'faqs';
+  type CampaignTab = 'about' | 'video' | 'media' | 'presentation' | 'faqs' | 'comments';
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
   const showMobileCTA = campaign?.status === 'approved';
-  
+
   const refreshCampaign = async () => {
     const res = await getUserProject(id!);
     const mapped = mapUserProjectToCampaign(res.data.userProject);
@@ -266,7 +268,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   if (loading) {
     return (
       <div className="min-h-screen bg-dreamxec-cream">
-        <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
+        {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
 
         <div className="flex items-center justify-center min-h-[60vh] px-4">
           <div className="text-center">
@@ -280,7 +282,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   if (error) {
     return (
       <div className="min-h-screen bg-dreamxec-cream">
-        <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
+        {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
         <div className="flex items-center justify-center min-h-[60vh] px-3 sm:px-4">
           <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
             <div className="card-tricolor-tag"></div>
@@ -301,7 +303,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   if (!campaign) {
     return (
       <div className="min-h-screen bg-dreamxec-cream">
-        <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
+        {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
         <div className="flex items-center justify-center min-h-[60vh] px-3 sm:px-4">
           <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
             <div className="card-tricolor-tag"></div>
@@ -404,7 +406,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
   return (
     <div className="min-h-screen bg-dreamxec-cream relative overflow-x-hidden">
-      <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} />
+      {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
 
       {/* Decorative elements - hidden on mobile and small tablets */}
       <div className="hidden lg:block absolute top-20 left-10 z-0 opacity-20 pointer-events-none">
@@ -520,7 +522,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             {/* Tabs */}
             <div className="mb-3 sm:mb-4 md:mb-6 border-b-3 sm:border-b-4 border-dreamxec-navy overflow-x-auto -mx-3 sm:-mx-0 px-3 sm:px-0 scrollbar-hide">
               <div className="flex gap-1 sm:gap-2 md:gap-4 lg:gap-6 min-w-max">
-                {(['about', 'video', 'media', 'presentation', 'faqs'] as const).map((tab: CampaignTab) => {
+                {(['about', 'video', 'media', 'presentation', 'faqs', 'comments'] as const).map((tab: CampaignTab) => {
                   const isActive = activeTab === tab;
 
                   return (
@@ -703,6 +705,19 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               </div>
             )}
 
+            {activeTab === 'comments' && (
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
+                <div className="card-tricolor-tag"></div>
+
+                <CommentSection
+                  campaignId={campaign.id}
+                  campaignOwnerId={campaign.userId}
+                  currentUser={currentUser}
+                  onLogin={onLogin}
+                />
+              </div>
+            )}
+
             {/* FAQ Tab */}
             {activeTab === 'faqs' && campaign.faqs?.length > 0 && (
               <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
@@ -803,6 +818,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               </p>
             </div>
           </div>
+
 
           {/* Right Column - Funding Card */}
           <div className="lg:col-span-1 w-full">

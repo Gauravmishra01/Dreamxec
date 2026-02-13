@@ -56,7 +56,7 @@ export interface UserProject {
   presentationDeckUrl?: string | null;
 
   rejectionReason?: string;
-
+  userId: string;
   milestones?: any[];
 }
 
@@ -100,7 +100,7 @@ export interface UpdateUserProjectData {
   collegeName?: string;
 
   clubId?: string;
-  club? :{
+  club?: {
     id: string;
     name: string;
     college: string;

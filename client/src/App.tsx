@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import toast, { Toast, Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import FloatingDoodles from './components/FloatingDoodles';
 import { Header } from './sections/Header';
@@ -63,10 +63,21 @@ import TermsAndConditions from './sections/Pages/legal/TermsAndConditions';
 import VerifyPresident from './components/VerifyPresident';
 import { LoaderProvider, useLoader } from './context/LoaderContext';
 import LoadingAnimation from './components/LoadingAnimation';
+import apiRequest from './services/api';
 
+
+type UserProjectsResponse = {
+  status: string;
+  data: {
+    projects: Campaign[];
+  };
+};
 // Main App Content Component
 function AppContent() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [userCampaigns, setUserCampaigns] = useState<Campaign[]>([]);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(false);
+
   const [user, setUser] = useState<User | null>(null);
   const [_isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -310,14 +321,77 @@ function AppContent() {
     loadUserApplications();
   }, [user?.role, user?.id]);
 
-  console.log(campaigns)
+  // ✅ Campaign filters (STATUS SAFE + CREATEDBY SAFE)
 
-  const approvedCampaigns = campaigns.filter((c) => c.status === 'approved');
-  const pendingCampaigns = campaigns.filter((c) => c.status === 'pending');
-  const userCampaigns = campaigns.filter((c) => c.createdBy === user?.id);
-  const donorProjects = projects.filter((p) => p.createdBy === user?.id);
-  const approvedProjects = projects.filter((p) => p.status === 'approved');
-  const pendingProjects = projects.filter((p) => p.status === 'pending');
+  const approvedCampaigns = campaigns.filter(
+    (c) => c.status?.toLowerCase() === "approved"
+  );
+
+  const pendingCampaigns = campaigns.filter(
+    (c) => c.status?.toLowerCase() === "pending"
+  );
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchUserCampaigns = async () => {
+      try {
+        setLoadingCampaigns(true);
+
+        const res = await apiRequest<UserProjectsResponse>(
+          "/user-projects/my",
+          { method: "GET" }
+        );
+
+        const projects = res?.data?.data?.projects;
+
+        if (!Array.isArray(projects)) {
+          console.error(
+            "Invalid /user-projects response shape:",
+            res?.data
+          );
+          setUserCampaigns([]);
+          return;
+        }
+
+        setUserCampaigns(projects);
+      } catch (error) {
+        console.error("Failed to fetch user campaigns", error);
+        setUserCampaigns([]);
+      } finally {
+        setLoadingCampaigns(false);
+      }
+    };
+
+    fetchUserCampaigns();
+  }, [user?.id]);
+
+
+  // ✅ Project filters (same fixes applied)
+
+  const donorProjects = projects.filter((p) => {
+    if (!p.createdBy || !user?.id) return false;
+
+    if (typeof p.createdBy === "string") {
+      return p.createdBy === user.id;
+    }
+
+    if (typeof p.createdBy === "object" && "id" in p.createdBy) {
+      return p.createdBy.id === user.id;
+    }
+
+    return false;
+  });
+
+  const approvedProjects = projects.filter(
+    (p) => p.status?.toLowerCase() === "approved"
+  );
+
+  const pendingProjects = projects.filter(
+    (p) => p.status?.toLowerCase() === "pending"
+  );
+
+
 
   // if (loading) {
   //   return (
@@ -482,8 +556,9 @@ function AppContent() {
       console.log('✅ Campaign approved successfully');
     } catch (error) {
       console.error('Failed to approve campaign:', error);
-      hideLoader()
       alert('Failed to approve campaign. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -499,8 +574,9 @@ function AppContent() {
       console.log('❌ Campaign rejected successfully');
     } catch (error) {
       console.error('Failed to reject campaign:', error);
-      hideLoader();
       alert('Failed to reject campaign. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -516,8 +592,9 @@ function AppContent() {
       console.log('✅ Donor project approved successfully');
     } catch (error) {
       console.error('Failed to approve donor project:', error);
-      hideLoader();
       alert('Failed to approve donor project. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -533,8 +610,9 @@ function AppContent() {
       console.log('❌ Donor project rejected successfully');
     } catch (error) {
       console.error('Failed to reject donor project:', error);
-      hideLoader();
       alert('Failed to reject donor project. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -573,9 +651,9 @@ function AppContent() {
       }
     } catch (error) {
       console.error('Login failed:', error);
-      hideLoader();
       throw error;
     } finally {
+      hideLoader();
       setIsSubmitting(false);
     }
   };
@@ -631,9 +709,9 @@ function AppContent() {
       }
     } catch (error) {
       console.error('Signup failed:', error);
-      hideLoader();
       throw error;
     } finally {
+      hideLoader();
       setIsSubmitting(false);
     }
   };
@@ -646,21 +724,25 @@ function AppContent() {
       initiateGoogleAuth(backendRole);
     } catch (error) {
       console.error('Google auth error:', error);
-      hideLoader()
-      setIsSubmitting(false);
       throw new Error('Google authentication failed');
+    } finally {
+      hideLoader();
+      setIsSubmitting(false);
     }
   };
 
   const handleLinkedInAuth = async (role: 'student' | 'donor') => {
     showLoader();
+    setIsSubmitting(true);
     try {
       const backendRole = role === 'student' ? 'USER' : 'DONOR';
       initiateLinkedInAuth(backendRole);
     } catch (error) {
       console.error('LinkedIn auth error:', error);
-      hideLoader();
       throw new Error('LinkedIn authentication failed');
+    } finally {
+      hideLoader();
+      setIsSubmitting(false);
     }
   };
 
@@ -747,7 +829,7 @@ function AppContent() {
               }),
             }
           );
-
+          hideLoader();
           toast.success("🎉 Donation successful!");
         },
         theme: { color: "#0B9C2C" },
@@ -939,6 +1021,11 @@ function AppContent() {
                                 path="/campaign/:id"
                                 element={
                                   <>
+                                  <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
 
                                     <CampaignDetails
                                       currentUser={user}
@@ -1032,7 +1119,7 @@ function AppContent() {
                                           <button
                                             onClick={() => navigate("/auth")}
                                             className="mt-8 px-8 py-3 bg-dreamxec-orange text-white font-bold rounded-xl
-                     hover:bg-dreamxec-saffron transition-colors shadow-lg"
+                                              hover:bg-dreamxec-saffron transition-colors shadow-lg"
                                           >
                                             Log in
                                           </button>
@@ -1319,7 +1406,7 @@ function AppContent() {
                               <Route
                                 path="/projects"
                                 element={
-                                  user?.role === 'student' ? (
+                                  user?.role === 'student' || user?.role === 'STUDENT_PRESIDENT' ? (
                                     <>
                                       <Header
                                         currentUser={user}
@@ -1390,11 +1477,8 @@ function AppContent() {
                               <Route path="/president/add-member" element={<PresidentLayout><AddMemberManually clubId={user?.clubIds?.[0] || ''} /></PresidentLayout>} />
                             </Routes>
 
-                            {/* Footer Routes */}
+                            {/* Footer / content page routes */}
                             <Routes>
-                              <Route path="/start-project" element={<StartAProject />} />
-
-
                               <Route path="/start-project" element={<StartAProject />} />
                               <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
                               <Route path="/eligibility" element={<ProjectEligibility />} />

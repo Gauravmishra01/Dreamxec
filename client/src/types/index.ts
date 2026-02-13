@@ -95,7 +95,8 @@ export interface Campaign {
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
-  createdBy?: string;
+  createdBy?: string | { id: string };
+
   userId?: string;
 
   rejectionReason?: string;
@@ -121,7 +122,7 @@ export interface Project {
     endDate: Date;
   };
 
-  createdBy: string;
+  createdBy: string | { id: string };
   createdAt: Date;
 
   interestedUsers: ProjectApplication[];

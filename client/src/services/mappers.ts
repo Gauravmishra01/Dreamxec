@@ -95,15 +95,15 @@ export const mapUserProjectToCampaign = (
     clubId: userProject.clubId,
     club: userProject.club
       ? {
-          id: userProject.club.id,
-          name: userProject.club.name,
-          college: userProject.club.college,
-        }
+        id: userProject.club.id,
+        name: userProject.club.name,
+        college: userProject.club.college,
+      }
       : undefined,
 
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
-
+    userId: userProject.userId,
     status: mapBackendStatus(userProject.status),
     createdAt: new Date(userProject.createdAt),
 

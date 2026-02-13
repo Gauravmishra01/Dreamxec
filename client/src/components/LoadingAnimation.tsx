@@ -129,7 +129,7 @@ export const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
       <div className="flex flex-col items-center justify-center throb-effect">
         {/* Logo Container */}
         <div className="mb-8 relative slide-up">
-          <div className="flex items-center justify-center  w-40 h-40 md:w-56 md:h-56">
+          <div className="flex items-center justify-center  w-auto h-auto md:w-56 md:h-56">
             <Logo />
           </div>
         </div>

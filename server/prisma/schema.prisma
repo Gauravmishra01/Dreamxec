@@ -69,6 +69,7 @@ model User {
   clubVerified         Boolean @default(false)
   studentVerified      Boolean @default(false)
   donations            Donation[]
+  comments CampaignComment[] @relation("UserComments")
 
   subscriptionStatus String    @default("NONE") // NEW
   subscriptionId     String? // NEW
@@ -120,6 +121,10 @@ model Donor {
   donations     Donation[]
   donorProjects DonorProject[]
   wishlist      Wishlist[]
+  comments CampaignComment[] @relation("DonorComments")
+
+
+
 
   @@index([googleId])
   @@index([linkedinId])
@@ -159,6 +164,9 @@ model UserProject {
   // Relation to user (creator)
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments CampaignComment[] @relation("ProjectComments")
+
+
 
   clubId String? @db.ObjectId
   club   Club?   @relation(fields: [clubId], references: [id], onDelete: Cascade)
@@ -480,6 +488,39 @@ model Wishlist {
 // -----------------------------
 // Additional notes: keep your existing models and relations unchanged.
 // -----------------------------
+//----------------------------------
+// Campaign Comments (User OR Donor)
+//----------------------------------
+model CampaignComment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  campaignId String   @db.ObjectId
+  campaign   UserProject @relation("ProjectComments", fields: [campaignId], references: [id], onDelete: Cascade)
+
+  // Polymorphic identity (exactly one must be set)
+  userId     String?  @db.ObjectId
+  user       User?    @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+
+  donorId    String?  @db.ObjectId
+  donor      Donor?   @relation("DonorComments", fields: [donorId], references: [id], onDelete: Cascade)
+
+  parentId   String?  @db.ObjectId
+
+  content    String
+  isDeleted  Boolean  @default(false)
+  isFlagged  Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([userId])
+  @@index([donorId])
+  @@index([parentId])
+}
+
+
+
 
 // -----------------------------
 // STUDENT VERIFICATION MODEL

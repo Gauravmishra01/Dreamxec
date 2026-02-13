@@ -1,0 +1,14 @@
+---
+description: Do not trust file names; verify contents to understand purpose and behavior
+alwaysApply: true
+---
+
+# Don't Trust File Naming
+
+File names in this project are **not reliable** indicators of what's inside.
+
+- **Never assume** a file's purpose, exports, or behavior from its path or filename alone.
+- **Always read or inspect** the actual file contents before relying on it (e.g., for imports, refactors, or documentation).
+- When the user or code refers to a file, **resolve by content** (search/read) rather than by name.
+
+Apply this when navigating the codebase, answering questions, or making changes.
