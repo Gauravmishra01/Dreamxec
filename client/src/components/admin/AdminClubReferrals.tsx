@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import ReferralDetailsModal from './ReferralDetailsModal';
+import { Header } from '../../sections/Header';
 
 const API = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api' });
 API.interceptors.request.use(cfg => {
@@ -42,7 +43,9 @@ export default function AdminClubReferrals() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <>
+      <Header />
+      <div className="bg-white rounded-xl shadow p-6 max-w-7xl mx-auto mt-6">
       <h2 className="text-2xl font-bold mb-4">Club Referrals</h2>
       {loading ? <p>Loading…</p> : (
         <table className="w-full">
@@ -68,7 +71,8 @@ export default function AdminClubReferrals() {
 
       {selected && <ReferralDetailsModal referral={selected} onClose={() => setSelected(null)} onApprove={approve} onReject={reject} />}
       {rejectionId && <RejectionPrompt onSubmit={(reason) => reject(rejectionId, reason)} onClose={() => setRejectionId(null)} />}
-    </div>
+      </div>
+    </>
   );
 }
 

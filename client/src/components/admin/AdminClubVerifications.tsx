@@ -6,6 +6,7 @@ import {
 } from '../../services/adminService';
 import VerificationDetailModal from './VerificationDetailModal';
 import { StarDecoration } from '../icons/StarDecoration';
+import { Header } from '../../sections/Header';
 
 // --- Icons (Matching Dashboard Style) ---
 const CheckCircleIcon = ({ className }: { className?: string }) => (
@@ -77,7 +78,9 @@ export default function AdminClubVerifications() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-orange-50/30">
+    <>
+      <Header />
+      <div className="min-h-screen relative overflow-hidden bg-orange-50/30">
 
       {/* --- Decorative Background --- */}
       <div className="absolute top-20 left-10 z-0 opacity-20 pointer-events-none">
@@ -231,6 +234,7 @@ export default function AdminClubVerifications() {
           onReject={reject}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 }
