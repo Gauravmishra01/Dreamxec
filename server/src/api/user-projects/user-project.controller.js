@@ -276,6 +276,18 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
       new AppError('Only PENDING or REJECTED projects can be updated', 400)
     );
 
+  if (userProject.status === 'REJECTED') {
+    const currentCount = userProject.reapprovalCount || 0;
+    if (currentCount >= 3) {
+      return next(new AppError('Maximum reapproval attempts (3) reached. Please contact support.', 403));
+    }
+    
+    // Auto-increment and reset status
+    req.body.reapprovalCount = currentCount + 1;
+    req.body.status = 'PENDING';
+    req.body.rejectionReason = null; // Clear previous rejection reason
+  }
+
   const updateData = { ...req.body };
 
   if (!('presentationDeckUrl' in req.body)) {
@@ -407,5 +419,45 @@ exports.getMyUserProjects = catchAsync(async (req, res) => {
     status: 'success',
     results: userProjects.length,
     data: { userProjects },
+  });
+});
+
+/* ======================================================
+   GET STUDENT ANALYTICS
+====================================================== */
+exports.getStudentAnalytics = catchAsync(async (req, res, next) => {
+  const projects = await prisma.userProject.findMany({
+    where: { userId: req.user.id },
+    select: {
+      status: true,
+      currentAmount: true,
+      donations: { select: { amount: true } }
+    }
+  });
+
+  const analytics = {
+    total: projects.length,
+    approvedCount: 0,
+    pendingCount: 0,
+    rejectedCount: 0,
+    totalRaised: 0
+  };
+
+  projects.forEach(p => {
+    // Status counting (case-insensitive safety)
+    const status = p.status ? p.status.toUpperCase() : 'PENDING';
+    if (status === 'APPROVED') analytics.approvedCount++;
+    else if (status === 'PENDING') analytics.pendingCount++;
+    else if (status === 'REJECTED') analytics.rejectedCount++;
+
+    // Calculate funds raised
+    // Use currentAmount or calculate from donations
+    const raised = p.currentAmount || p.donations?.reduce((sum, d) => sum + d.amount, 0) || 0;
+    analytics.totalRaised += raised;
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: { analytics }
   });
 });

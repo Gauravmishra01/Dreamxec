@@ -56,6 +56,7 @@ export interface UserProject {
   presentationDeckUrl?: string | null;
 
   rejectionReason?: string;
+  reapprovalCount?: number;
   userId: string;
   milestones?: any[];
 }
@@ -142,6 +143,13 @@ export const getMyUserProjects = async (): Promise<
   ApiResponse<{ userProjects: UserProject[] }>
 > => {
   return apiRequest("/user-projects/my", { method: "GET" });
+};
+
+// STUDENT ANALYTICS
+export const getStudentAnalytics = async (): Promise<
+  ApiResponse<{ analytics: { total: number; approved: number; pending: number; rejected: number; fundsRaised: number } }>
+> => {
+  return apiRequest("/user-projects/analytics", { method: "GET" });
 };
 
 // CREATE CAMPAIGN

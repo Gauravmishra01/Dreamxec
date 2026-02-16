@@ -7,6 +7,7 @@ import { Main } from './components/Main';
 import BrowseCampaigns from './components/BrowseCampaigns';
 import StudentDashboard from './components/StudentDashboard';
 import CreateCampaign from './components/CreateCampaign';
+import EditCampaign from './components/EditCampaign';
 import CreateCampaignDemo from './components/CreateCampaignDemo';
 import AdminDashboard from './components/AdminDashboard';
 import AuthPage from './components/AuthPage';
@@ -67,8 +68,10 @@ import apiRequest from './services/api';
 
 
 type UserProjectsResponse = {
+  userProjects: any;
   status: string;
   data: {
+    userProjects: any;
     projects: Campaign[];
   };
 };
@@ -343,8 +346,8 @@ function AppContent() {
           { method: "GET" }
         );
 
-        const projects = res?.data?.data?.projects;
-
+        const projects = res?.data?.userProjects;
+        console.log(projects)
         if (!Array.isArray(projects)) {
           console.error(
             "Invalid /user-projects response shape:",
@@ -1021,7 +1024,7 @@ function AppContent() {
                                 path="/campaign/:id"
                                 element={
                                   <>
-                                  <Header
+                                    <Header
                                       currentUser={user}
                                       onLogin={handleLoginClick}
                                       onLogout={handleLogout}
@@ -1099,7 +1102,7 @@ function AppContent() {
                                         onCreateCampaign={() => navigate('/create')}
                                         onViewCampaign={(id) => navigate(`/campaign/${id}`)}
                                         isClubPresident={user?.role === 'STUDENT_PRESIDENT'}
-                                        isClubMember={false}
+                                        isClubMember={user.isClubMember}
                                         clubVerified={user?.role === 'STUDENT_PRESIDENT'}
                                         user={user}
                                         studentVerified={user.studentVerified}
@@ -1174,6 +1177,9 @@ function AppContent() {
                                   </>
                                 }
                               />
+
+                              {/* Edit Campaign */}
+                              <Route path="/campaign/:id/edit" element={<EditCampaign />} />
 
                               {/* Admin Dashboard */}
                               <Route
