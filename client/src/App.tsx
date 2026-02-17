@@ -29,6 +29,8 @@ import AddMemberManually from "./components/president/AddMemberManually";
 import PresidentLayout from "./components/president/PresidentLayout";
 import AdminClubReferrals from './components/admin/AdminClubReferrals';
 import AdminClubVerifications from './components/admin/AdminClubVerifications';
+import ClubDiscovery from "./components/ClubDiscovery";
+import ClubDetails from "./components/ClubDetails";
 import AuthCallback from './components/AuthCallback';
 import {
   getDonorApplications,
@@ -307,7 +309,7 @@ function AppContent() {
         try {
           console.log('📝 Loading user applications for student:', user.name);
           const response = await getMyApplications();
-          if (response.status === 'success' && response.data?.applications) {
+          if (response.success === true && response.data?.applications) {
             const appliedProjectIds = response.data.applications.map((app: any) => app.donorProjectId);
             setUserApplications(appliedProjectIds);
           } else {
@@ -1218,6 +1220,7 @@ function AppContent() {
                                 }
                               />
 
+
                               <Route path="/admin/referrals" element={<AdminClubReferrals />} />
                               <Route path="/admin/club-referrals" element={<AdminClubReferrals />} />
 
@@ -1246,14 +1249,14 @@ function AppContent() {
                                 path="/login"
                                 element={
                                   <AuthPage
-                                    onLogin={handleLogin}
-                                    onSignup={handleSignup}
-                                    onGoogleAuth={handleGoogleAuth}
-                                    onLinkedInAuth={handleLinkedInAuth}
-                                    onForgotPassword={handleForgotPassword}
-                                    currentUser={user}
-                                    onHeaderLogin={handleLoginClick}
-                                    onLogout={handleLogout}
+                                  onLogin={handleLogin}
+                                  onSignup={handleSignup}
+                                  onGoogleAuth={handleGoogleAuth}
+                                  onLinkedInAuth={handleLinkedInAuth}
+                                  onForgotPassword={handleForgotPassword}
+                                  currentUser={user}
+                                  onHeaderLogin={handleLoginClick}
+                                  onLogout={handleLogout}
                                   />
                                 }
                               />
@@ -1266,10 +1269,10 @@ function AppContent() {
                                 path="/check-email"
                                 element={
                                   <CheckEmail
-                                    email={signupEmail}
-                                    onBackToLogin={() => {
-                                      setShowCheckEmail(false);
-                                      navigate('/auth');
+                                  email={signupEmail}
+                                  onBackToLogin={() => {
+                                    setShowCheckEmail(false);
+                                    navigate('/auth');
                                     }}
                                   />
                                 }
@@ -1280,7 +1283,7 @@ function AppContent() {
                                 path="/verify-email/:token"
                                 element={
                                   <EmailVerification
-                                    onVerificationSuccess={handleEmailVerificationSuccess}
+                                  onVerificationSuccess={handleEmailVerificationSuccess}
                                   />
                                 }
                               />
@@ -1291,9 +1294,9 @@ function AppContent() {
                                 element={
                                   user ? (
                                     <UserProfile
-                                      user={user}
-                                      onUpdateBankDetails={handleUpdateBankDetails}
-                                      onBack={() => navigate(-1)}
+                                    user={user}
+                                    onUpdateBankDetails={handleUpdateBankDetails}
+                                    onBack={() => navigate(-1)}
                                     />
                                   ) : (
                                     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
@@ -1345,6 +1348,33 @@ function AppContent() {
                                       </div>
                                     </div>
                                   )
+                                }
+                              />
+                                <Route
+                                path="/clubs"
+                                element={
+                                  <>
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
+                                    <ClubDiscovery />
+                                  </>
+                                }
+                              />
+
+                              <Route
+                                path="/clubs/:slug"
+                                element={
+                                  <>
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
+                                    <ClubDetails />
+                                  </>
                                 }
                               />
 

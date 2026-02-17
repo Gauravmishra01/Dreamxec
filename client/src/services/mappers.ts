@@ -98,6 +98,7 @@ export const mapUserProjectToCampaign = (
         id: userProject.club.id,
         name: userProject.club.name,
         college: userProject.club.college,
+        slug: userProject.club.slug,
       }
       : undefined,
 

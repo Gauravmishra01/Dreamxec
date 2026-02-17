@@ -186,6 +186,8 @@ model UserProject {
 
   @@index([userId])
   @@index([status])
+  @@index([clubId, status])
+
 }
 
 //-----------------------------------
@@ -344,6 +346,7 @@ model Withdrawal {
 model Club {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   name            String
+  slug            String? @unique
   college         String
   description     String?
   presidentEmail  String
@@ -357,6 +360,7 @@ model Club {
   updatedAt DateTime     @updatedAt
 
   @@index([presidentEmail])
+  @@index([college])
 }
 
 // -----------------------------

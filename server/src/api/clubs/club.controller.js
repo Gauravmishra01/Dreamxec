@@ -689,3 +689,145 @@ exports.getMyClubs = catchAsync(async (req, res) => {
 });
 
 /* ------------------ */
+
+exports.getAllPublicClubs = async (req, res) => {
+  const {
+    page = 1,
+    limit = 12,
+    search,
+    sort = "newest"
+  } = req.query;
+
+  const pageNumber = Number(page);
+  const pageSize = Number(limit);
+  const skip = (pageNumber - 1) * pageSize;
+
+  const where = {
+    ...(search && {
+      OR: [
+        { name: { contains: search, mode: "insensitive" } },
+        { college: { contains: search, mode: "insensitive" } }
+      ]
+    })
+  };
+
+  const orderBy =
+    sort === "oldest"
+      ? { createdAt: "asc" }
+      : { createdAt: "desc" };
+
+  const [clubs, totalClubs] = await Promise.all([
+    prisma.club.findMany({
+      where,
+      skip,
+      take: pageSize,
+      orderBy
+    }),
+    prisma.club.count({ where })
+  ]);
+
+  const clubIds = clubs.map(c => c.id);
+
+  const stats = await prisma.userProject.groupBy({
+    by: ["clubId"],
+    where: {
+      clubId: { in: clubIds },
+      status: "APPROVED"
+    },
+    _count: { _all: true },
+    _sum: { amountRaised: true }
+  });
+
+  const statsMap = {};
+  stats.forEach(s => {
+    statsMap[s.clubId] = {
+      totalCampaigns: s._count._all,
+      totalRaised: s._sum.amountRaised || 0
+    };
+  });
+
+  const formatted = clubs.map(club => ({
+    id: club.id,
+    name: club.name,
+    slug: club.slug,
+    college: club.college,
+    logoUrl: club.logoUrl,
+    totalCampaigns: statsMap[club.id]?.totalCampaigns || 0,
+    totalRaised: statsMap[club.id]?.totalRaised || 0
+  }));
+
+  res.json({
+    success: true,
+    data: formatted,
+    meta: {
+      total: totalClubs,
+      page: pageNumber,
+      limit: pageSize,
+      totalPages: Math.ceil(totalClubs / pageSize)
+    }
+  });
+};
+
+exports.getPublicClubBySlug = async (req, res) => {
+  const { slug } = req.params;
+  const { page = 1, limit = 6 } = req.query;
+
+  const pageNumber = Number(page);
+  const pageSize = Number(limit);
+
+  const club = await prisma.club.findUnique({
+    where: { slug }
+  });
+
+  if (!club) {
+    return res.status(404).json({
+      success: false,
+      message: "Club not found"
+    });
+  }
+
+  const [campaigns, totalCampaigns, stats] = await Promise.all([
+    prisma.userProject.findMany({
+      where: {
+        clubId: club.id,
+        status: "APPROVED"
+      },
+      skip: (pageNumber - 1) * pageSize,
+      take: pageSize,
+      orderBy: { createdAt: "desc" }
+    }),
+    prisma.userProject.count({
+      where: {
+        clubId: club.id,
+        status: "APPROVED"
+      }
+    }),
+    prisma.userProject.aggregate({
+      where: {
+        clubId: club.id,
+        status: "APPROVED"
+      },
+      _sum: { amountRaised: true }
+    })
+  ]);
+
+  res.json({
+    success: true,
+    data: {
+      id: club.id,
+      name: club.name,
+      slug: club.slug,
+      college: club.college,
+      description: club.description,
+      logoUrl: club.logoUrl,
+      totalCampaigns,
+      totalRaised: stats._sum.amountRaised || 0,
+      campaigns
+    },
+    meta: {
+      page: pageNumber,
+      limit: pageSize,
+      totalPages: Math.ceil(totalCampaigns / pageSize)
+    }
+  });
+};

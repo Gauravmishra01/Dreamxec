@@ -372,7 +372,7 @@ exports.getUserProject = catchAsync(async (req, res, next) => {
     userProject = await prisma.userProject.findUnique({
       where: { id: identifier },
       include: {
-        club: { select: { id: true, name: true, college: true } },
+        club: { select: { id: true, name: true, college: true, slug: true } },
         milestones: true,
         user: { select: { id: true, name: true } },
         donations: {
