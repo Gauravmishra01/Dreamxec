@@ -103,7 +103,7 @@ const ContactUs = () => {
             {contactCategories.map((category, index) => (
               <SwiperSlide key={index}>
                 <div
-                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex items-start gap-4"
+                  className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex items-start gap-4"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
@@ -139,7 +139,7 @@ const ContactUs = () => {
           </h2>
 
           <div className="max-w-7xl mx-auto space-y-8">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">✉️</span>
@@ -158,7 +158,7 @@ const ContactUs = () => {
               />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300">
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-3xl md:text-4xl">📱</span>
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue">
@@ -213,7 +213,7 @@ const ContactUs = () => {
           </h2>
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">📍</span>
@@ -235,7 +235,7 @@ const ContactUs = () => {
               />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">⚖️</span>
@@ -259,7 +259,7 @@ const ContactUs = () => {
         {/* CTA Section */}
         <section className="flex flex-wrap items-center justify-center gap-4 md:gap-6 py-12 px-4">
           <a href="mailto:hello@dreamxec.com">
-            <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform border-2 border-dreamxec-navy shadow-pastel-card">
               <h2 className="text-dreamxec-navy text-base md:text-xl font-bold">
                 ✉️ Send Us an Email
               </h2>
@@ -267,7 +267,7 @@ const ContactUs = () => {
           </a>
 
           <a href="/">
-            <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform border-4 border-dreamxec-navy/30">
+            <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform border-2 border-dreamxec-navy/30">
               <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-bold">
                 🏠 Back to Home
               </h2>

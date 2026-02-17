@@ -48,7 +48,7 @@ export const NewsletterModal = ({ isOpen, onClose, source = 'navbar_modal' }: Ne
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
-            <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border-4 border-dreamxec-navy overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border-2 border-dreamxec-navy overflow-hidden animate-in zoom-in-95 duration-200">
 
                 {/* Close Button */}
                 <button

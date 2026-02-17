@@ -56,7 +56,7 @@ export default function DonateModal({
             <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
                 {/* Modal Panel */}
                 <div
-                    className="relative transform overflow-hidden card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card text-left transition-all sm:my-8 sm:w-full sm:max-w-lg p-4 sm:p-5 md:p-8 w-full max-w-md mx-auto"
+                    className="relative transform overflow-hidden card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-5 border-dreamxec-navy shadow-pastel-card text-left transition-all sm:my-8 sm:w-full sm:max-w-lg p-4 sm:p-5 md:p-8 w-full max-w-md mx-auto"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="card-tricolor-tag"></div>
@@ -82,7 +82,7 @@ export default function DonateModal({
                                 min="1"
                                 step="1"
                                 required
-                                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-2 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
                             />
                         </div>
 
@@ -96,7 +96,7 @@ export default function DonateModal({
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
+                                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border-3 sm:border-2 border-dreamxec-navy rounded-md sm:rounded-lg text-base sm:text-lg md:text-xl font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all"
                                     required
                                     placeholder="Enter email"
                                 />
@@ -121,14 +121,14 @@ export default function DonateModal({
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gray-300 text-dreamxec-navy rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform text-xs sm:text-sm md:text-base"
+                                className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gray-300 text-dreamxec-navy rounded-md sm:rounded-lg border-3 sm:border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform text-xs sm:text-sm md:text-base"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={!donationAmount || (!currentUser && !email)}
-                                className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
+                                className="flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-3 sm:border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-green disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
                             >
                                 Donate Now
                             </button>

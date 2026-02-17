@@ -215,8 +215,8 @@ export default function ClubDiscovery() {
                 />
 
                 {/* Glowing orb accent */}
-                <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-dreamxec-orange/10 blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-1/3 w-64 h-32 rounded-full bg-dreamxec-green/10 blur-2xl pointer-events-none" />
+                {/* <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-dreamxec-orange/10 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-1/3 w-64 h-32 rounded-full bg-dreamxec-green/10 blur-2xl pointer-events-none" /> */}
 
                 {/* Corner tricolor tag */}
                 <div className="card-tricolor-tag absolute top-0 right-0 z-10" />

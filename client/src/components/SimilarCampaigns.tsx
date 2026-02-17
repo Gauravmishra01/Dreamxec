@@ -50,7 +50,7 @@ export default function SimilarCampaigns({
                 group
                 bg-dreamxec-cream
                 rounded-xl
-                border-4 border-dreamxec-navy
+                border-2 border-dreamxec-navy
                 shadow-pastel-card
                 cursor-pointer
                 transition-all

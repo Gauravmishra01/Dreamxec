@@ -73,8 +73,15 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
 
       {/* Header */}
       <div className="relative bg-gradient-to-r from-dreamxec-navy to-dreamxec-berkeley-blue border-b-8 border-dreamxec-orange shadow-xl">
-        <div className="card-tricolor-tag absolute top-0 right-0"></div>
+        {/* <div className="card-tricolor-tag absolute top-0 right-0"></div> */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <div
+                    className="absolute inset-0 opacity-[0.04]"
+                    style={{
+                        backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+                        backgroundSize: "48px 48px"
+                    }}
+                />
           <div className="flex items-start gap-4 mb-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-dreamxec-orange font-display leading-tight">
               Browse Campaigns
@@ -82,7 +89,7 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
             <StarDecoration className="w-12 h-12 mt-2" color="#FF7F00" />
           </div>
           <p className="text-dreamxec-cream/95 text-xl sm:text-2xl font-medium max-w-2xl leading-relaxed">
-            Discover and support student-led initiatives across colleges
+            Discover and support student-led initiatives across clubs & colleges. 
           </p>
         </div>
       </div>
@@ -99,7 +106,7 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
               placeholder="Search campaigns, clubs, colleges..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-16 pr-6 py-4 border-4 border-dreamxec-navy rounded-xl text-lg font-medium text-dreamxec-navy bg-white/80 backdrop-blur-sm focus:outline-none focus:border-dreamxec-orange focus:ring-4 focus:ring-dreamxec-orange/30 shadow-pastel-card hover:shadow-xl transition-all duration-300"
+              className="w-full pl-16 pr-6 py-4 border-2 border-dreamxec-navy rounded-xl text-lg font-medium text-dreamxec-navy bg-white/80 backdrop-blur-sm focus:outline-none focus:border-dreamxec-orange focus:ring-4 focus:ring-dreamxec-orange/30 shadow-pastel-card hover:shadow-xl transition-all duration-300"
             />
           </div>
 
@@ -109,7 +116,7 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full lg:w-64 pl-16 pr-8 py-4 border-4 border-dreamxec-navy rounded-xl text-lg font-semibold text-dreamxec-navy bg-white/80 backdrop-blur-sm focus:outline-none focus:border-dreamxec-green focus:ring-4 focus:ring-dreamxec-green/30 shadow-pastel-card hover:shadow-xl appearance-none cursor-pointer transition-all duration-300"
+              className="w-full lg:w-64 pl-16 pr-8 py-4 border-2 border-dreamxec-navy rounded-xl text-lg font-semibold text-dreamxec-navy bg-white/80 backdrop-blur-sm focus:outline-none focus:border-dreamxec-green focus:ring-4 focus:ring-dreamxec-green/30 shadow-pastel-card hover:shadow-xl appearance-none cursor-pointer transition-all duration-300"
             >
               <option value="recent">Most Recent First</option>
               <option value="goal">Highest Goals</option>
@@ -120,9 +127,9 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
 
         {/* Results */}
         {filteredCampaigns.length === 0 ? (
-          <div className="card-pastel-offwhite rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card p-16 sm:p-24 text-center max-w-2xl mx-auto">
+          <div className="card-pastel-offwhite rounded-2xl border-2 border-dreamxec-navy shadow-pastel-card p-16 sm:p-24 text-center max-w-2xl mx-auto">
             <div className="card-tricolor-tag"></div>
-            <div className="w-28 h-28 mx-auto mb-8 bg-gradient-to-br from-dreamxec-orange/20 to-dreamxec-navy/20 rounded-2xl flex items-center justify-center border-4 border-dreamxec-navy/30">
+            <div className="w-28 h-28 mx-auto mb-8 bg-gradient-to-br from-dreamxec-orange/20 to-dreamxec-navy/20 rounded-2xl flex items-center justify-center border-2 border-dreamxec-navy/30">
               <SearchIcon className="w-14 h-14 text-dreamxec-navy/50" />
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-dreamxec-navy mb-4 font-display">
@@ -136,7 +143,7 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
           <div>
             {/* Results Count */}
             <div className="mb-10">
-              <div className="inline-flex items-center gap-3 px-6 py-3 bg-dreamxec-orange text-white rounded-xl border-4 border-dreamxec-navy shadow-pastel-saffron hover:shadow-xl transition-all">
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-dreamxec-orange text-white rounded-xl border-2 border-dreamxec-navy shadow-pastel-saffron hover:shadow-xl transition-all">
                 <span className="text-2xl font-black font-display">
                   {filteredCampaigns.length}
                 </span>

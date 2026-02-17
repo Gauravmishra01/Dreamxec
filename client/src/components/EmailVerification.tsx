@@ -76,7 +76,7 @@ export default function EmailVerification({ onVerificationSuccess }: EmailVerifi
         
         {status === 'loading' && (
           <>
-            <div className="w-16 h-16 border-4 border-dreamxec-green border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+            <div className="w-16 h-16 border-2 border-dreamxec-green border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
             <h2 className="text-2xl md:text-3xl font-bold text-dreamxec-navy mb-4 font-display">
               Verifying Email...
             </h2>
@@ -89,7 +89,7 @@ export default function EmailVerification({ onVerificationSuccess }: EmailVerifi
         {status === 'success' && (
           <>
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center border-4 border-dreamxec-navy shadow-pastel-green">
+              <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center border-2 border-dreamxec-navy shadow-pastel-green">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
@@ -102,14 +102,14 @@ export default function EmailVerification({ onVerificationSuccess }: EmailVerifi
             <p className="text-dreamxec-navy font-sans text-lg mb-6">
               {message}
             </p>
-            <div className="w-12 h-12 border-4 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="w-12 h-12 border-2 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto"></div>
           </>
         )}
 
         {status === 'error' && (
           <>
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center border-4 border-dreamxec-navy shadow-lg">
+              <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center border-2 border-dreamxec-navy shadow-lg">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -123,7 +123,7 @@ export default function EmailVerification({ onVerificationSuccess }: EmailVerifi
             </p>
             <button
               onClick={() => navigate('/auth')}
-              className="px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron"
+              className="px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron"
             >
               Back to Login
             </button>

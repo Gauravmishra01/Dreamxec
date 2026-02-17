@@ -284,7 +284,7 @@ export const VerificationModal = ({ isOpen, onClose }: VerificationModalProps) =
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl border-4 border-dreamxec-navy overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl border-2 border-dreamxec-navy overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
 
                 {/* Header */}
                 <div className="p-6 border-b-2 border-dashed border-dreamxec-navy/20 flex justify-between items-center bg-gray-50">

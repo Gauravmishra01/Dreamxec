@@ -137,7 +137,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
       {/* Success Message */}
       {showSuccess && (
         <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 animate-bounce">
-          <div className="bg-dreamxec-green border-4 border-dreamxec-navy rounded-xl px-6 py-4 shadow-pastel-green flex items-center gap-3">
+          <div className="bg-dreamxec-green border-2 border-dreamxec-navy rounded-xl px-6 py-4 shadow-pastel-green flex items-center gap-3">
             <CheckCircleIcon className="w-6 h-6 text-white" />
             <span className="text-white font-bold font-display text-lg">Bank details saved successfully!</span>
           </div>
@@ -149,7 +149,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
         {/* Back Button */}
         <button
           onClick={onBack}
-          className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-dreamxec-orange text-white rounded-lg border-4 border-dreamxec-navy hover:scale-105 transition-transform font-display font-bold shadow-pastel-saffron"
+          className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-dreamxec-orange text-white rounded-lg border-2 border-dreamxec-navy hover:scale-105 transition-transform font-display font-bold shadow-pastel-saffron"
         >
           <span>←</span>
           Back to Dashboard
@@ -246,7 +246,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
             /* Bank Details Form */
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <div className="p-4 bg-red-100 border-4 border-red-600 text-red-700 rounded-lg font-sans">
+                <div className="p-4 bg-red-100 border-2 border-red-600 text-red-700 rounded-lg font-sans">
                   {error}
                 </div>
               )}
@@ -264,7 +264,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                     onChange={(e) => setAccountHolderName(e.target.value)}
                     placeholder="Enter account holder name"
                     required
-                    className="w-full pl-12 pr-4 py-3 border-4 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron"
                   />
                 </div>
               </div>
@@ -282,7 +282,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                     onChange={(e) => setBankName(e.target.value)}
                     placeholder="e.g., State Bank of India"
                     required
-                    className="w-full pl-12 pr-4 py-3 border-4 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
                   />
                 </div>
               </div>
@@ -301,7 +301,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                     placeholder="Enter account number"
                     required
                     maxLength={18}
-                    className="w-full pl-12 pr-4 py-3 border-4 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron"
                   />
                 </div>
               </div>
@@ -320,7 +320,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                     placeholder="Re-enter account number"
                     required
                     maxLength={18}
-                    className="w-full pl-12 pr-4 py-3 border-4 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
                   />
                 </div>
               </div>
@@ -337,7 +337,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                   placeholder="e.g., SBIN0001234"
                   required
                   maxLength={11}
-                  className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron uppercase"
+                  className="w-full px-4 py-3 border-2 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron uppercase"
                 />
               </div>
 
@@ -350,7 +350,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                   <button
                     type="button"
                     onClick={() => setAccountType('savings')}
-                    className={`px-4 py-3 rounded-lg font-bold font-display border-4 transition-all ${
+                    className={`px-4 py-3 rounded-lg font-bold font-display border-2 transition-all ${
                       accountType === 'savings'
                         ? 'bg-dreamxec-green text-white border-dreamxec-navy shadow-pastel-green scale-105'
                         : 'bg-white text-dreamxec-navy border-dreamxec-navy hover:bg-dreamxec-cream'
@@ -361,7 +361,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                   <button
                     type="button"
                     onClick={() => setAccountType('current')}
-                    className={`px-4 py-3 rounded-lg font-bold font-display border-4 transition-all ${
+                    className={`px-4 py-3 rounded-lg font-bold font-display border-2 transition-all ${
                       accountType === 'current'
                         ? 'bg-dreamxec-green text-white border-dreamxec-navy shadow-pastel-green scale-105'
                         : 'bg-white text-dreamxec-navy border-dreamxec-navy hover:bg-dreamxec-cream'
@@ -382,7 +382,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                   value={upiId}
                   onChange={(e) => setUpiId(e.target.value)}
                   placeholder="e.g., yourname@paytm"
-                  className="w-full px-4 py-3 border-4 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
+                  className="w-full px-4 py-3 border-2 border-dreamxec-navy rounded-lg text-base font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
                 />
               </div>
 
@@ -392,7 +392,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                   <button
                     type="button"
                     onClick={() => setIsEditing(false)}
-                    className="px-6 py-3 border-4 border-dreamxec-navy rounded-lg font-bold text-dreamxec-navy hover:bg-dreamxec-cream transition-colors font-display text-lg shadow-pastel-navy"
+                    className="px-6 py-3 border-2 border-dreamxec-navy rounded-lg font-bold text-dreamxec-navy hover:bg-dreamxec-cream transition-colors font-display text-lg shadow-pastel-navy"
                   >
                     Cancel
                   </button>
@@ -401,7 +401,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
                 <button
                   type="submit"
                   disabled={!isFormValid}
-                  className={`flex-1 px-6 py-3 rounded-lg font-bold text-white transition-all font-display text-lg border-4 border-dreamxec-navy ${
+                  className={`flex-1 px-6 py-3 rounded-lg font-bold text-white transition-all font-display text-lg border-2 border-dreamxec-navy ${
                     isFormValid
                       ? 'bg-dreamxec-green hover:scale-105 shadow-pastel-green'
                       : 'bg-gray-400 cursor-not-allowed opacity-50'
@@ -415,7 +415,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
         </div>
 
         {/* Info Card */}
-        <div className="mt-6 card-pastel rounded-xl p-4 border-4 border-dreamxec-navy shadow-pastel-saffron">
+        <div className="mt-6 card-pastel rounded-xl p-4 border-2 border-dreamxec-navy shadow-pastel-saffron">
           <div className="flex items-start gap-3">
             <div className="icon-pastel-container w-10 h-10 p-2 flex-shrink-0">
               <span className="text-dreamxec-saffron text-xl">🔒</span>

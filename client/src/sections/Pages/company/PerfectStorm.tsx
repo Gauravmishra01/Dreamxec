@@ -92,7 +92,7 @@ const PerfectStorm = () => {
                 {innovationGapData.map((item, index) => (
                   <div
                     key={index}
-                    className="card-pastel p-4 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 flex items-center justify-between gap-4"
+                    className="card-pastel p-4 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 flex items-center justify-between gap-4"
                   >
                     <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl flex-1">
                       <span className="font-bold text-dreamxec-berkeley-blue">{item.stat}</span> {item.desc}
@@ -107,7 +107,7 @@ const PerfectStorm = () => {
               </div>
             </div>
 
-            <div className="card-pastel p-4 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
+            <div className="card-pastel p-4 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
               <img 
                 src="/assets/icon-pack/DX-ILLUSTRATION-PACK/11.svg" 
                 alt="" 
@@ -122,7 +122,7 @@ const PerfectStorm = () => {
               </p>
             </div>
 
-            <div className="card-pastel p-4 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
+            <div className="card-pastel p-4 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
               <img 
                 src="/assets/icon-pack/DX-ILLUSTRATION-PACK/18.svg" 
                 alt="" 
@@ -143,7 +143,7 @@ const PerfectStorm = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-4 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
+            <div className="card-pastel p-4 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
               <img 
                 src="/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg" 
                 alt="" 
@@ -187,7 +187,7 @@ const PerfectStorm = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
+                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
@@ -217,7 +217,7 @@ const PerfectStorm = () => {
           </h2>
 
           <div className="max-w-7xl mx-auto space-y-8">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">🎓</span>
@@ -254,7 +254,7 @@ const PerfectStorm = () => {
               />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">🚀</span>
@@ -273,7 +273,7 @@ const PerfectStorm = () => {
               />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">💸</span>
@@ -306,7 +306,7 @@ const PerfectStorm = () => {
               />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl md:text-4xl">📊</span>
@@ -334,7 +334,7 @@ const PerfectStorm = () => {
           </h2>
 
           <div className="max-w-7xl mx-auto space-y-8">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-start gap-6">
               <div className="flex-1">
                 <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed mb-6">
                   We're not inventing anything new. Crowdfunding exists. Mentorship networks exist. Student innovation happens. We're just connecting the dots.
@@ -392,7 +392,7 @@ const PerfectStorm = () => {
             Conclusion
           </h2>
 
-          <div className="card-pastel p-8 md:p-12 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card relative overflow-hidden">
+          <div className="card-pastel p-8 md:p-12 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card relative overflow-hidden">
             <img 
               src="/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg" 
               alt="" 

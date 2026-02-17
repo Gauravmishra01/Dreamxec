@@ -403,7 +403,7 @@ function AppContent() {
   //   return (
   //     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
   //       <div className="text-center">
-  //         <div className="w-16 h-16 border-4 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+  //         <div className="w-16 h-16 border-2 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
   //         <p className="text-dreamxec-navy text-xl font-bold">Loading...</p>
   //       </div>
   //     </div>
@@ -1307,7 +1307,7 @@ function AppContent() {
                                         </p>
                                         <button
                                           onClick={handleLoginClick}
-                                          className="mt-6 px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron"
+                                          className="mt-6 px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron"
                                         >
                                           Sign In
                                         </button>

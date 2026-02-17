@@ -289,8 +289,8 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
   if (showSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-dreamxec-cream to-white flex items-center justify-center p-4">
-        <div className=" rounded-2xl border-4 border-dreamxec-navy shadow-lg p-8 text-center max-w-sm w-full mx-auto">
-          <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-md">
+        <div className=" rounded-2xl border-2 border-dreamxec-navy shadow-lg p-8 text-center max-w-sm w-full mx-auto">
+          <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-white shadow-md">
             <CheckCircleIcon className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-dreamxec-navy mb-2">Success! 🎉</h1>
@@ -386,7 +386,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
           </div>
         )}
 
-        <div className=" backdrop-blur-xl rounded-2xl border-4 border-dreamxec-navy shadow-lg p-4 sm:p-6">
+        <div className=" backdrop-blur-xl rounded-2xl border-2 border-dreamxec-navy shadow-lg p-4 sm:p-6">
 
           <form onSubmit={handleSubmit} className="space-y-5">
 

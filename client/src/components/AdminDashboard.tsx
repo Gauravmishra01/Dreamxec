@@ -88,7 +88,7 @@
 //           <img
 //             src={campaign.imageUrl}
 //             alt={campaign.title}
-//             className="w-full h-72 object-cover rounded-lg border-4 border-dreamxec-navy shadow-pastel-saffron mb-6"
+//             className="w-full h-72 object-cover rounded-lg border-2 border-dreamxec-navy shadow-pastel-saffron mb-6"
 //           />
 
 //           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-orange">
@@ -181,7 +181,7 @@
 //             value={reason}
 //             onChange={(e) => setReason(e.target.value)}
 //             placeholder="e.g., Incomplete description, inappropriate content..."
-//             className="w-full h-32 p-4 border-4 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all resize-none"
+//             className="w-full h-32 p-4 border-2 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all resize-none"
 //             required
 //             autoFocus
 //           />
@@ -197,7 +197,7 @@
 //             <button
 //               type="submit"
 //               disabled={!reason.trim()}
-//               className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-bold border-4 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+//               className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-bold border-2 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
 //             >
 //               <SendIcon className="w-5 h-5" />
 //               Submit Rejection
@@ -350,7 +350,7 @@
 //                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
 //                   Pending Campaigns
 //                 </p>
-//                 <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
+//                 <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
 //                   <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
 //                 </div>
 //               </div>
@@ -366,7 +366,7 @@
 //                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
 //                   Pending Projects
 //                 </p>
-//                 <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
+//                 <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
 //                   <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
 //                 </div>
 //               </div>
@@ -382,7 +382,7 @@
 //                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
 //                   Total Approved
 //                 </p>
-//                 <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green">
+//                 <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green">
 //                   <CheckCircleIcon className="w-8 h-8 text-dreamxec-green" />
 //                 </div>
 //               </div>
@@ -398,7 +398,7 @@
 //                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
 //                   Total Submissions
 //                 </p>
-//                 <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-navy">
+//                 <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-navy">
 //                   <EyeIcon className="w-8 h-8 text-dreamxec-navy" />
 //                 </div>
 //               </div>
@@ -641,7 +641,7 @@
 
 //             <div className="space-y-6">
 //               {pendingProjects.map((project) => (
-//                 <div key={project.id} className="bg-white p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-green">
+//                 <div key={project.id} className="bg-white p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-green">
 //                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
 //                     <div className="flex-1">
 //                       <h3 className="text-2xl sm:text-3xl font-bold text-dreamxec-navy mb-2 font-display">
@@ -677,7 +677,7 @@
 //                       </button>
 //                       <button
 //                         onClick={() => setRejectionProjectInfo({ id: project.id, title: project.title })}
-//                         className="bg-red-600 text-white inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold border-4 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg"
+//                         className="bg-red-600 text-white inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold border-2 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg"
 //                       >
 //                         <XCircleIcon className="w-5 h-5" />
 //                         Reject
@@ -784,7 +784,7 @@ const CampaignDetailModal = ({ campaign, onClose }: { campaign: Campaign; onClos
           <img
             src={campaign.imageUrl}
             alt={campaign.title}
-            className="w-full h-72 object-cover rounded-lg border-4 border-dreamxec-navy shadow-pastel-saffron mb-6"
+            className="w-full h-72 object-cover rounded-lg border-2 border-dreamxec-navy shadow-pastel-saffron mb-6"
           />
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-4 bg-dreamxec-cream rounded-lg border-3 border-dreamxec-orange">
@@ -877,7 +877,7 @@ const RejectionModal = ({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="e.g., Incomplete description, inappropriate content..."
-            className="w-full h-32 p-4 border-4 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all resize-none"
+            className="w-full h-32 p-4 border-2 border-dreamxec-navy rounded-lg text-lg font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all resize-none"
             required
             autoFocus
           />
@@ -893,7 +893,7 @@ const RejectionModal = ({
             <button
               type="submit"
               disabled={!reason.trim()}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-bold border-4 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-bold border-2 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               <SendIcon className="w-5 h-5" />
               Submit Rejection
@@ -1009,7 +1009,7 @@ export default function AdminDashboard({
                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
                   Pending Campaigns
                 </p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
+                <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
                   <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
                 </div>
               </div>
@@ -1025,7 +1025,7 @@ export default function AdminDashboard({
                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
                   Pending Projects
                 </p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
+                <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
                   <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
                 </div>
               </div>
@@ -1041,7 +1041,7 @@ export default function AdminDashboard({
                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
                   Total Approved
                 </p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green">
+                <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green">
                   <CheckCircleIcon className="w-8 h-8 text-dreamxec-green" />
                 </div>
               </div>
@@ -1057,7 +1057,7 @@ export default function AdminDashboard({
                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display">
                   Total Submissions
                 </p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-navy">
+                <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-navy">
                   <EyeIcon className="w-8 h-8 text-dreamxec-navy" />
                 </div>
               </div>
@@ -1076,7 +1076,7 @@ export default function AdminDashboard({
                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display group-hover:text-dreamxec-orange transition-colors">
                   Club Verifications
                 </p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron group-hover:shadow-pastel-orange transition-shadow">
+                <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron group-hover:shadow-pastel-orange transition-shadow">
                   <CheckCircleIcon className="w-8 h-8 text-dreamxec-navy group-hover:text-dreamxec-orange" />
                 </div>
               </div>
@@ -1095,7 +1095,7 @@ export default function AdminDashboard({
                 <p className="text-dreamxec-navy text-base sm:text-lg font-bold font-display group-hover:text-dreamxec-green transition-colors">
                   Club Referrals
                 </p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green group-hover:shadow-pastel-green transition-shadow">
+                <div className="bg-white border-2 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green group-hover:shadow-pastel-green transition-shadow">
                   <SendIcon className="w-8 h-8 text-dreamxec-navy group-hover:text-dreamxec-green" />
                 </div>
               </div>
@@ -1339,7 +1339,7 @@ export default function AdminDashboard({
 
             <div className="space-y-6">
               {pendingProjects.map((project) => (
-                <div key={project.id} className="bg-white p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-green">
+                <div key={project.id} className="bg-white p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-green">
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                     <div className="flex-1">
                       <h3 className="text-2xl sm:text-3xl font-bold text-dreamxec-navy mb-2 font-display">
@@ -1375,7 +1375,7 @@ export default function AdminDashboard({
                       </button>
                       <button
                         onClick={() => setRejectionProjectInfo({ id: project.id, title: project.title })}
-                        className="bg-red-600 text-white inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold border-4 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg"
+                        className="bg-red-600 text-white inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold border-2 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display text-lg"
                       >
                         <XCircleIcon className="w-5 h-5" />
                         Reject

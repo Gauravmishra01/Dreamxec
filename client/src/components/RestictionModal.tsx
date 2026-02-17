@@ -11,7 +11,7 @@ export const RestrictionModal = ({ isOpen, onClose, onVerify }: RestrictionModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-xl border-4 border-blue-900 shadow-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+      <div className="bg-white rounded-xl border-2 border-blue-900 shadow-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
         {/* Close Button */}
         <button
           onClick={onClose}

@@ -37,7 +37,7 @@ export default function DonationHistoryModal({ onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card max-w-3xl w-full p-6"
+        className="bg-white rounded-2xl border-2 border-dreamxec-navy shadow-pastel-card max-w-3xl w-full p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-3xl font-bold text-dreamxec-navy mb-6">

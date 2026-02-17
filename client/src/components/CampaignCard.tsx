@@ -13,17 +13,17 @@ export default function CampaignCard({ campaign, href }: CampaignCardProps) {
   );
 
   return (
-    <a href={href} className="block focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/50 rounded-xl h-full">
-      <div className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden group hover:shadow-xl hover:border-dreamxec-orange/70 transition-all duration-300 h-full flex flex-col">
+    <a href={href} className="block focus:outline-none focus:ring-2 focus:ring-dreamxec-orange/50 rounded-xl h-full">
+      <div className="card-pastel-offwhite rounded-xl border-2 border-dreamxec-navy shadow-pastel-card overflow-hidden group hover:shadow-xl hover:border-dreamxec-orange/70 transition-all duration-300 h-full flex flex-col">
         
-        <div className="card-tricolor-tag"></div>
+        {/* <div className="card-tricolor-tag"></div> */}
 
         {/* Image */}
-        <div className="relative w-full aspect-video mt-4 overflow-hidden">
+        <div className="relative w-full aspect-video  overflow-hidden">
           <img
             src={campaign.imageUrl}
             alt={campaign.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 border-b-4 border-dreamxec-navy"
+            className="w-full h-full object-fill group-hover:scale-105 transition-transform duration-500 border-b-2 border-dreamxec-navy"
             loading="lazy"
           />
         </div>

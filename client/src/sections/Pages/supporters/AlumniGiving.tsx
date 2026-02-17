@@ -71,7 +71,7 @@ const AlumniGivingPrograms = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card max-w-7xl mx-auto hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card max-w-7xl mx-auto hover:shadow-lg transition-shadow duration-300"
               >
                 <p className="text-dreamxec-navy text-base md:text-xl font-medium leading-relaxed max-w-7xl mx-auto">
                   <span className="text-dreamxec-berkeley-blue font-bold">{reason.title}:</span> {reason.description}
@@ -91,7 +91,7 @@ const AlumniGivingPrograms = () => {
             {programTypes.map((program, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {program.title}

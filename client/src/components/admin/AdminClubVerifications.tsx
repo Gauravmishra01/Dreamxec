@@ -144,7 +144,7 @@ export default function AdminClubVerifications() {
           {/* Empty State */}
           {!loading && items.length === 0 && (
             <div className="text-center py-16 bg-white rounded-xl border-3 border-dashed border-dreamxec-navy/30">
-              <div className="bg-dreamxec-cream w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-dreamxec-navy">
+              <div className="bg-dreamxec-cream w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dreamxec-navy">
                 <CheckCircleIcon className="w-10 h-10 text-dreamxec-green" />
               </div>
               <h3 className="text-2xl font-bold text-dreamxec-navy font-display">All Caught Up!</h3>

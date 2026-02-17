@@ -1295,11 +1295,14 @@ img {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 127, 0, 0.9);
-  box-shadow: 0 4px 12px rgba(255, 127, 0, 0.3);
-  border: 3px solid #000080;
+  background: rgba(255, 255, 255, 0.75); /* white with low opacity */
+  backdrop-filter: blur(6px); /* optional glass effect */
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* softer shadow */
+  border: 2px solid rgba(0, 0, 128, 0.4); /* subtle navy border */
   transition: all 0.3s ease-in-out;
 }
+
 
 .eligibility-faq-carousel .swiper-button-next:after,
 .eligibility-faq-carousel .swiper-button-prev:after {

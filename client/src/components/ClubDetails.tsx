@@ -42,7 +42,7 @@ export default function ClubDetails() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
-                <div className="w-20 h-20 border-4 border-dreamxec-orange/30 border-t-dreamxec-orange rounded-full animate-spin" />
+                <div className="w-20 h-20 border-2 border-dreamxec-orange/30 border-t-dreamxec-orange rounded-full animate-spin" />
             </div>
         );
     }
@@ -143,7 +143,7 @@ export default function ClubDetails() {
                                 <button
                                     disabled={page === 1}
                                     onClick={() => setPage((prev) => prev - 1)}
-                                    className="px-8 py-4 border-4 border-dreamxec-navy rounded-2xl font-bold disabled:opacity-40"
+                                    className="px-8 py-4 border-2 border-dreamxec-navy rounded-2xl font-bold disabled:opacity-40"
                                 >
                                     ← Prev
                                 </button>
@@ -155,7 +155,7 @@ export default function ClubDetails() {
                                 <button
                                     disabled={page === meta.totalPages}
                                     onClick={() => setPage((prev) => prev + 1)}
-                                    className="px-8 py-4 border-4 border-dreamxec-navy rounded-2xl font-bold disabled:opacity-40"
+                                    className="px-8 py-4 border-2 border-dreamxec-navy rounded-2xl font-bold disabled:opacity-40"
                                 >
                                     Next →
                                 </button>

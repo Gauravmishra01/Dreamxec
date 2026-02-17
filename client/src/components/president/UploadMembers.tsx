@@ -93,7 +93,7 @@ export default function UploadMembers() {
       <button
         onClick={handleUpload}
         disabled={loading}
-        className={`px-6 py-3 rounded-lg font-semibold border-4 border-dreamxec-navy
+        className={`px-6 py-3 rounded-lg font-semibold border-2 border-dreamxec-navy
           ${
             loading
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"

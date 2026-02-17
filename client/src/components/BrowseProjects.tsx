@@ -278,7 +278,7 @@ export default function BrowseProjects({
                   placeholder="Tell the company why you're a good fit for this project, your relevant skills, and what you hope to contribute..."
                   rows={6}
                   minLength={50}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-4 border-dreamxec-navy rounded-xl font-sans text-dreamxec-navy text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all resize-none"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-dreamxec-navy rounded-xl font-sans text-dreamxec-navy text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all resize-none"
                 />
                 <p className="mt-1 text-xs sm:text-sm text-dreamxec-navy opacity-60 font-sans">
                   {coverLetter.length}/50 characters minimum
@@ -295,7 +295,7 @@ export default function BrowseProjects({
                   value={skillsInput}
                   onChange={(e) => setSkillsInput(e.target.value)}
                   placeholder="e.g., Teaching, Mentoring, Communication (comma-separated)"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-4 border-dreamxec-navy rounded-xl font-sans text-dreamxec-navy text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-dreamxec-navy rounded-xl font-sans text-dreamxec-navy text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all"
                 />
               </div>
 
@@ -314,14 +314,14 @@ export default function BrowseProjects({
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={handleCloseModal}
-                  className="w-full sm:flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-cream border-4 border-dreamxec-navy rounded-xl font-bold text-dreamxec-navy font-display hover:bg-dreamxec-beige transition-all text-sm sm:text-base"
+                  className="w-full sm:flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-cream border-2 border-dreamxec-navy rounded-xl font-bold text-dreamxec-navy font-display hover:bg-dreamxec-beige transition-all text-sm sm:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmitApplication}
                   disabled={isSubmitting || coverLetter.trim().length < 50}
-                  className="w-full sm:flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-green border-4 border-dreamxec-navy rounded-xl font-bold text-white font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-saffron disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm sm:text-base"
+                  className="w-full sm:flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-green border-2 border-dreamxec-navy rounded-xl font-bold text-white font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-saffron disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm sm:text-base"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </button>

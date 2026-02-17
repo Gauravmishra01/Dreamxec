@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import type { Campaign, User } from '../types';
@@ -19,10 +19,6 @@ import {
 } from "../services/donationService";
 import CommentSection from "./comments/CommentSection";
 import { Resizable } from "re-resizable";
-
-
-
-
 
 interface CampaignDetailsProps {
   currentUser: User | null;
@@ -48,7 +44,7 @@ const FAQItem = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-3 sm:border-4 border-dreamxec-navy rounded-lg sm:rounded-xl overflow-hidden bg-white">
+    <div className="border-3 sm:border-2 border-dreamxec-navy rounded-lg sm:rounded-xl overflow-hidden bg-white">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex justify-between items-center px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 text-left font-bold text-dreamxec-navy font-display text-xs sm:text-sm md:text-base"
@@ -131,14 +127,21 @@ function NoDescription() {
 
 const getYoutubeId = (url?: string) => {
   if (!url) return null;
-
-  const regExp =
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
-
+  const regExp = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
   const match = url.match(regExp);
   return match ? match[1] : null;
 };
 
+// Hook to detect if screen is desktop (>= 1024px)
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
+  useEffect(() => {
+    const handler = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return isDesktop;
+}
 
 export default function CampaignDetails({ currentUser, campaigns, onLogin, onLogout, onDonate }: CampaignDetailsProps) {
   const { id } = useParams<{ id: string }>();
@@ -153,6 +156,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
   const showMobileCTA = campaign?.status === 'approved';
   const [deckWidth, setDeckWidth] = useState<number | string>("100%");
+  const isDesktop = useIsDesktop();
 
   const refreshCampaign = async () => {
     const res = await getUserProject(id!);
@@ -173,18 +177,15 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
   const getEmbedUrl = (url: string) => {
     if (!url) return null;
-
     if (url.includes('drive.google.com')) {
       const fileIdMatch = url.match(/\/d\/(.*?)(\/|$)/);
       if (fileIdMatch?.[1]) {
         return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
       }
     }
-
     if (url.endsWith('.pdf')) {
       return url;
     }
-
     return null;
   };
 
@@ -198,15 +199,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     const fetchCampaign = async () => {
       try {
         setLoading(true);
-
         const res = await getUserProject(id!);
         const mapped = mapUserProjectToCampaign(res.data.userProject);
-
         if (mapped.status !== 'approved') {
           setError('This campaign is not available');
           return;
         }
-
         setCampaign(mapped);
       } catch (err) {
         console.error(err);
@@ -215,7 +213,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
         setLoading(false);
       }
     };
-
     fetchCampaign();
   }, [id]);
 
@@ -226,16 +223,15 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   }, [campaign]);
 
   useEffect(() => {
-  if (campaign) {
-    console.log("FULL CAMPAIGN OBJECT:", campaign);
-  }
-}, [campaign]);
+    if (campaign) {
+      console.log("FULL CAMPAIGN OBJECT:", campaign);
+    }
+  }, [campaign]);
 
   useEffect(() => {
     const checkWishlistStatus = async () => {
-      const isDonor = currentUser?.role === 'donor' || currentUser?.role === 'DONOR';
-      if (!isDonor || !id) return;
-
+      const isDonorUser = currentUser?.role === 'donor' || currentUser?.role === 'DONOR';
+      if (!isDonorUser || !id) return;
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get(`${API_BASE}/wishlist/check/${id}`, {
@@ -248,7 +244,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
         console.error('Failed to check wishlist status', error);
       }
     };
-
     if (campaign && currentUser) {
       checkWishlistStatus();
     }
@@ -256,7 +251,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
   const handleWishlistToggle = async () => {
     if (!currentUser) return navigate('/auth');
-
     setWishlistLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -264,7 +258,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
         { campaignId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       if (response.data.status === 'success') {
         setIsWishlisted(response.data.isWishlisted);
       }
@@ -279,8 +272,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   if (loading) {
     return (
       <div className="min-h-screen bg-dreamxec-cream">
-        {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
-
         <div className="flex items-center justify-center min-h-[60vh] px-4">
           <div className="text-center">
             <p className="text-base sm:text-lg md:text-xl text-dreamxec-navy">Loading campaign...</p>
@@ -293,15 +284,14 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   if (error) {
     return (
       <div className="min-h-screen bg-dreamxec-cream">
-        {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
         <div className="flex items-center justify-center min-h-[60vh] px-3 sm:px-4">
-          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
-            <div className="card-tricolor-tag"></div>
+          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
+            
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-2 sm:mb-3 md:mb-4 font-display">Error</h2>
             <p className="text-xs sm:text-sm md:text-base text-dreamxec-navy font-sans mb-3 sm:mb-4 md:mb-6 break-words">{error}</p>
             <button
               onClick={() => navigate('/campaigns')}
-              className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-xs sm:text-sm md:text-base"
+              className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-xs sm:text-sm md:text-base"
             >
               Browse Campaigns
             </button>
@@ -314,10 +304,9 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   if (!campaign) {
     return (
       <div className="min-h-screen bg-dreamxec-cream">
-        {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
         <div className="flex items-center justify-center min-h-[60vh] px-3 sm:px-4">
-          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
-            <div className="card-tricolor-tag"></div>
+          <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 md:p-12 text-center max-w-md w-full mx-3 sm:mx-4">
+            
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy mb-2 sm:mb-3 md:mb-4 font-display">
               Campaign Not Found
             </h2>
@@ -326,7 +315,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             </p>
             <button
               onClick={() => navigate('/campaigns')}
-              className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-xs sm:text-sm md:text-base"
+              className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-orange text-white rounded-lg border-3 sm:border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-xs sm:text-sm md:text-base"
             >
               Browse Campaigns
             </button>
@@ -345,36 +334,20 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
   const handleDonateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const amount = Number(donationAmount);
     if (!amount || amount <= 0) return;
-
     try {
       let res;
-
       if (currentUser) {
         console.log("✅ GOOGLE USER DONATION:", currentUser.email);
-        res = await createRazorpayOrderAuthenticated({
-          amount,
-          projectId: campaign.id,
-        });
+        res = await createRazorpayOrderAuthenticated({ amount, projectId: campaign.id });
       } else {
         console.log("✅ GUEST DONATION:", email);
         if (!email) throw new Error("Email required for guests");
-        res = await createRazorpayOrderGuest({
-          amount,
-          projectId: campaign.id,
-          email,
-        });
+        res = await createRazorpayOrderGuest({ amount, projectId: campaign.id, email });
       }
-
-      console.log("CREATE ORDER RESPONSE =", res);
-
       const { orderId, amount: razorAmount, key } = res;
-      if (!orderId || !key) {
-        throw new Error("Invalid order payload");
-      }
-
+      if (!orderId || !key) throw new Error("Invalid order payload");
       const options = {
         key,
         amount: razorAmount,
@@ -389,16 +362,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
           });
-
           setShowDonateModal(false);
           setDonationAmount("");
-          setTimeout(async () => {
-            await refreshCampaign();
-          }, 2000);
+          setTimeout(async () => { await refreshCampaign(); }, 2000);
         },
         theme: { color: "#0B9C2C" },
       };
-
       // @ts-ignore
       new window.Razorpay(options).open();
     } catch (err) {
@@ -415,10 +384,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
     return videoExtensions.some(ext => lowerUrl.includes(ext));
   };
 
-  return (
-    <div className="min-h-screen bg-dreamxec-cream relative">
-      {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
+  // Presentation deck iFrame height: taller on desktop, shorter on mobile
+  const deckIframeHeight = isDesktop ? 700 : 320;
 
+  return (
+    <div className="min-h-screen bg-dreamxec-cream relative overflow-x-hidden">
       {/* Decorative elements - hidden on mobile and small tablets */}
       <div className="hidden lg:block absolute top-20 left-10 z-0 opacity-20 pointer-events-none">
         <StarDecoration className="w-16 h-16" color="#FF7F00" />
@@ -440,17 +410,17 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
           <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="truncate">Back</span>
+          <span>Back</span>
         </button>
 
-        <div className="flex flex-col lg:flex-row gap-6 mb-12 items-start">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 mb-8 sm:mb-12 items-start">
 
           {/* Left Column - Campaign Image & Details */}
-          <div className="flex-1 min-w-0 space-y-6 relative">
+          <div className="w-full flex-1 min-w-0 space-y-4 sm:space-y-6 relative">
 
             {/* Campaign Image */}
-            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
-              <div className="card-tricolor-tag"></div>
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
+              
               <img
                 src={campaign.imageUrl}
                 alt={campaign.title}
@@ -459,25 +429,20 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             </div>
 
             {/* Campaign Title & Info */}
-            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl md:rounded-2xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
-              <div className="card-tricolor-tag"></div>
-
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl md:rounded-2xl border-3 sm:border-2 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
+              
               <div className="p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
                 {/* Title Row */}
                 <div className="flex items-start gap-2 sm:gap-3 md:gap-4 mb-2 sm:mb-3 md:mb-5">
                   <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy font-display leading-tight flex-1 break-words min-w-0">
                     {campaign.title}
                   </h1>
-
                   <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 flex-shrink-0">
                     {isDonor && (
                       <button
                         onClick={handleWishlistToggle}
                         disabled={wishlistLoading}
-                        className={`p-1.5 sm:p-2 md:p-2.5 rounded-full transition-all hover:scale-110 ${isWishlisted
-                          ? 'text-red-500 bg-red-50'
-                          : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                          }`}
+                        className={`p-1.5 sm:p-2 md:p-2.5 rounded-full transition-all hover:scale-110 ${isWishlisted ? 'text-red-500 bg-red-50' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`}
                       >
                         <svg
                           className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
@@ -486,23 +451,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                           viewBox="0 0 24 24"
                           strokeWidth={isWishlisted ? 0 : 2}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                          />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                       </button>
                     )}
-
-                    <span
-                      className={`px-2 sm:px-2.5 md:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-xs whitespace-nowrap ${campaign.status === 'approved'
-                        ? 'bg-green-100 text-green-700 border-2 border-green-300'
-                        : campaign.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-300'
-                          : 'bg-red-100 text-red-700 border-2 border-red-300'
-                        }`}
-                    >
+                    <span className={`px-2 sm:px-2.5 md:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-xs whitespace-nowrap ${campaign.status === 'approved' ? 'bg-green-100 text-green-700 border-2 border-green-300' : campaign.status === 'pending' ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-300' : 'bg-red-100 text-red-700 border-2 border-red-300'}`}>
                       {campaign.status.toUpperCase()}
                     </span>
                   </div>
@@ -514,48 +467,25 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     <span className="text-sm sm:text-base md:text-lg flex-shrink-0">🏛️</span>
                     <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">{campaign.club?.college}</span>
                   </div>
-
                   <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block flex-shrink-0"></div>
-
                   <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 min-w-0">
                     <span className="text-sm sm:text-base md:text-lg flex-shrink-0">👥</span>
-
                     {campaign.club?.slug ? (
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("CLICKED");
                           navigate(`/clubs/${campaign.club?.slug}`);
                         }}
-                        className="
-        font-medium 
-    truncate 
-    max-w-[100px] sm:max-w-[150px] md:max-w-none 
-    text-dreamxec-navy
-    hover:text-dreamxec-orange 
-    hover:underline 
-    transition-colors 
-    cursor-pointer         
-    bg-transparent 
-    border-none 
-    p-0
-  "
+                        className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none text-dreamxec-navy hover:text-dreamxec-orange hover:underline transition-colors cursor-pointer bg-transparent border-none p-0"
                       >
                         {campaign.club.name}
                       </button>
-
                     ) : (
-                      <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">
-                        {campaign.club?.name}
-                      </span>
+                      <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">{campaign.club?.name}</span>
                     )}
                   </div>
-
-
-
                   <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block flex-shrink-0"></div>
-
                   <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
                     <span className="text-sm sm:text-base md:text-lg flex-shrink-0">🏷️</span>
                     <span className="font-medium whitespace-nowrap">{campaign.category}</span>
@@ -566,38 +496,22 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* Tabs */}
             <div className="mb-3 sm:mb-4 md:mb-6 border-b-3 sm:border-b-4 border-dreamxec-navy overflow-x-auto -mx-3 sm:-mx-0 px-3 sm:px-0 scrollbar-hide">
-              <div className="flex gap-1 sm:gap-2 md:gap-4 lg:gap-6 min-w-max">
+              <div className="flex gap-0 sm:gap-1 md:gap-4 lg:gap-6 min-w-max">
                 {(['about', 'video', 'media', 'presentation', 'faqs', 'comments'] as const).map((tab: CampaignTab) => {
                   const isActive = activeTab === tab;
-
                   return (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`
-                        relative pb-2 sm:pb-3 px-2 sm:px-3 md:px-4
-                        min-w-[60px] sm:min-w-[80px] md:min-w-[100px]
-                        min-h-[36px] sm:min-h-[40px] md:min-h-[48px] flex items-center justify-center
-                        text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg
-                        font-bold font-display capitalize
-                        whitespace-nowrap
-                        transition-all duration-300 ease-out
-                        ${isActive
-                          ? 'text-dreamxec-navy scale-105'
-                          : 'text-dreamxec-navy/60 hover:text-dreamxec-navy/80 active:scale-95'}
-                      `}
+                      className={`relative pb-2 sm:pb-3 px-1.5 sm:px-3 md:px-4 min-w-[50px] sm:min-w-[70px] md:min-w-[100px] min-h-[36px] sm:min-h-[40px] md:min-h-[48px] flex items-center justify-center text-[9px] sm:text-xs md:text-sm lg:text-base xl:text-lg font-bold font-display capitalize whitespace-nowrap transition-all duration-300 ease-out ${isActive ? 'text-dreamxec-navy scale-105' : 'text-dreamxec-navy/60 hover:text-dreamxec-navy/80 active:scale-95'}`}
                       role="tab"
                       aria-selected={isActive}
                       aria-controls={`${tab}-panel`}
                     >
                       {tab}
-
                       {isActive && (
-                        <span
-                          className="absolute left-0 bottom-0 w-full h-[2px] sm:h-[3px] md:h-[4px] bg-dreamxec-orange rounded-full animate-in duration-300"
-                        />
+                        <span className="absolute left-0 bottom-0 w-full h-[2px] sm:h-[3px] md:h-[4px] bg-dreamxec-orange rounded-full animate-in duration-300" />
                       )}
-
                       <span className="absolute inset-0 rounded-lg transition-colors active:bg-dreamxec-navy/5" />
                     </button>
                   );
@@ -607,13 +521,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* About Tab */}
             {activeTab === 'about' && (
-              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl md:rounded-2xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 lg:p-8 w-full overflow-hidden">
-                <div className="card-tricolor-tag"></div>
-
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl md:rounded-2xl border-3 sm:border-2 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 lg:p-8 w-full overflow-hidden">
+                
                 <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 lg:mb-8 font-display leading-tight break-words">
                   About This Campaign
                 </h2>
-
                 <div className="prose prose-dreamxec prose-sm sm:prose-base md:prose-lg w-full max-w-full">
                   <CleanDescription description={campaign.description} />
                 </div>
@@ -622,14 +534,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* YouTube Video Tab */}
             {activeTab === "video" && campaign.youtubeUrl && (
-              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
-                <div className="card-tricolor-tag"></div>
-
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
+                
                 <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4 break-words">
                   Campaign Video
                 </h2>
-
-                <div className="rounded-lg sm:rounded-xl overflow-hidden border-3 sm:border-4 border-dreamxec-navy shadow-lg w-full">
+                <div className="rounded-lg sm:rounded-xl overflow-hidden border-3 sm:border-2 border-dreamxec-navy shadow-lg w-full">
                   <YouTube
                     videoId={getYoutubeId(campaign.youtubeUrl) || ""}
                     className="w-full"
@@ -637,13 +547,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     opts={{
                       width: "100%",
                       height: "auto",
-                      playerVars: {
-                        autoplay: 0,
-                      },
+                      playerVars: { autoplay: 0 },
                     }}
                   />
                 </div>
-
                 <p className="mt-2 sm:mt-3 md:mt-4 text-dreamxec-navy/70 text-[10px] sm:text-xs md:text-sm text-center">
                   Watch how this campaign makes an impact 🎯
                 </p>
@@ -652,102 +559,93 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* Media Gallery */}
             {activeTab === 'media' && (
-              <div className="card-pastel-offwhite border-3 sm:border-4 md:border-5 border-dreamxec-navy rounded-lg sm:rounded-xl shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
+              <div className="card-pastel-offwhite border-3 sm:border-2 md:border-2 border-dreamxec-navy rounded-lg sm:rounded-xl shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4 text-dreamxec-navy break-words">
                   Campaign Media
                 </h3>
-
                 {campaign?.campaignMedia && campaign.campaignMedia.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
                     {campaign.campaignMedia.map((url, index) => (
-                      <div
-                        key={index}
-                        className="rounded-md sm:rounded-lg overflow-hidden border-2 sm:border-3 border-dreamxec-navy bg-white aspect-square"
-                      >
+                      <div key={index} className="rounded-md sm:rounded-lg overflow-hidden border-2 sm:border-3 border-dreamxec-navy bg-white aspect-square">
                         {isVideo(url) ? (
-                          <video
-                            src={url}
-                            controls
-                            className="w-full h-full object-cover"
-                          />
+                          <video src={url} controls className="w-full h-full object-cover" />
                         ) : (
-                          <img
-                            src={url}
-                            alt={`Campaign media ${index + 1}`}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
+                          <img src={url} alt={`Campaign media ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
                         )}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-dreamxec-navy/70 text-xs sm:text-sm md:text-base">
-                    No media uploaded for this campaign yet.
-                  </p>
+                  <p className="text-dreamxec-navy/70 text-xs sm:text-sm md:text-base">No media uploaded for this campaign yet.</p>
                 )}
               </div>
             )}
 
-            {/* Pitch Deck */}
+            {/* Pitch Deck / Presentation Tab */}
             {activeTab === 'presentation' && (
-              <div className="relative">
-                <Resizable
-                  size={{ width: deckWidth, height: "auto" }}
-                  minWidth={900}
-                  maxWidth={window.innerWidth * 0.95}
-                  enable={{ right: true }}
-                  onResizeStop={(e, direction, ref) => {
-                    setDeckWidth(ref.offsetWidth);
-                  }}
-                  className="relative z-20"
-                  style={{ overflow: "visible" }}
-                >
-                  <div className="card-pastel-offwhite
-                      w-full
-                      rounded-xl
-                      border-4
-                      border-dreamxec-navy
-                      shadow-pastel-card
-                      p-6">
-
-                    <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
-                      <h2 className="text-3xl font-bold text-dreamxec-navy font-display">
-                        Presentation Deck
-                      </h2>
-
-                      <span className="text-xs md:text-sm text-dreamxec-navy/60 flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                            d="M4 12h16M14 6l6 6-6 6" />
-                        </svg>
-                        Drag right edge to resize
-                      </span>
+              <div className="w-full overflow-x-auto">
+                {isDesktop ? (
+                  /* Desktop: full resizable experience */
+                  <Resizable
+                    size={{ width: deckWidth, height: "auto" }}
+                    minWidth={600}
+                    maxWidth={window.innerWidth * 0.95}
+                    enable={{ right: true }}
+                    onResizeStop={(e, direction, ref) => {
+                      setDeckWidth(ref.offsetWidth);
+                    }}
+                    className="relative z-20"
+                    style={{ overflow: "visible" }}
+                  >
+                    <div className="card-pastel-offwhite w-full rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-4 md:p-6">
+                      <div className="mb-4 md:mb-6 flex items-center justify-between flex-wrap gap-2">
+                        <h2 className="text-2xl md:text-3xl font-bold text-dreamxec-navy font-display">
+                          Presentation Deck
+                        </h2>
+                        <span className="text-xs md:text-sm text-dreamxec-navy/60 flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12h16M14 6l6 6-6 6" />
+                          </svg>
+                          Drag right edge to resize
+                        </span>
+                      </div>
+                      <div className="border-2 border-dreamxec-navy rounded-lg bg-white shadow-inner overflow-hidden" style={{ height: 700 }}>
+                        <iframe
+                          src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined}
+                          className="w-full h-full"
+                          title="Presentation Deck"
+                        />
+                      </div>
                     </div>
+                  </Resizable>
+                ) : (
+                  /* Mobile / Tablet: fixed full-width, no resizable */
+                  <div className="card-pastel-offwhite w-full rounded-xl border-3 sm:border-2 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4">
+                    <h2 className="text-lg sm:text-xl font-bold text-dreamxec-navy font-display mb-3 sm:mb-4">
+                      Presentation Deck
+                    </h2>
                     <div
-                      className="border-4 border-dreamxec-navy rounded-lg bg-white shadow-inner overflow-hidden"
-                      style={{ height: 700 }}
+                      className="border-3 sm:border-2 border-dreamxec-navy rounded-lg bg-white shadow-inner overflow-hidden w-full"
+                      style={{ height: deckIframeHeight }}
                     >
                       <iframe
-                        src={getEmbedUrl(campaign.presentationDeckUrl!)}
+                        src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined}
                         className="w-full h-full"
+                        title="Presentation Deck"
                       />
                     </div>
+                    <p className="mt-2 text-[10px] sm:text-xs text-dreamxec-navy/60 text-center">
+                      View on a larger screen for best experience
+                    </p>
                   </div>
-                </Resizable>
+                )}
               </div>
             )}
 
-
+            {/* Comments Tab */}
             {activeTab === 'comments' && (
-              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
-                <div className="card-tricolor-tag"></div>
-
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
+                
                 <CommentSection
                   campaignId={campaign.id}
                   campaignOwnerId={campaign.userId}
@@ -759,13 +657,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* FAQ Tab */}
             {activeTab === 'faqs' && campaign.faqs?.length > 0 && (
-              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
-                <div className="card-tricolor-tag"></div>
-
+              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
+                
                 <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display mt-1 sm:mt-2 md:mt-4 break-words">
                   Campaign FAQs
                 </h2>
-
                 <div className="space-y-2 sm:space-y-3 md:space-y-4">
                   {campaign.faqs.map((faq, index) => (
                     <FAQItem key={index} faq={faq} />
@@ -775,9 +671,8 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             )}
 
             {/* Timeline */}
-            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8 w-full overflow-hidden">
-              <div className="card-tricolor-tag"></div>
-
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 border-dreamxec-navy shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8 w-full overflow-hidden">
+              
               <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 lg:mb-8 font-display leading-tight break-words">
                 Campaign Timeline & Fund Allocation
               </h2>
@@ -786,17 +681,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 <div className="space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8">
                   {campaign.milestones.map((milestone, index) => (
                     <div key={index} className="group relative flex items-start gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 p-2.5 sm:p-3 md:p-4 lg:p-5 xl:p-6 bg-white/60 border border-dreamxec-navy/10 rounded-lg hover:border-dreamxec-orange/30 hover:shadow-md transition-all duration-300">
-
-                      {/* Step indicator */}
                       <div className="flex-shrink-0 pt-0.5 sm:pt-1">
                         <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 xl:w-11 xl:h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-dreamxec-orange to-dreamxec-saffron border-2 border-white shadow-sm group-hover:scale-[1.05] transition-transform duration-300 font-bold text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg text-white">
                           {index + 1}
                         </div>
                       </div>
-
-                      {/* Content */}
                       <div className="flex-1 min-w-0">
-                        {/* Header */}
                         <div className="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-2 md:gap-3 mb-1.5 sm:mb-2 md:mb-3 lg:mb-4">
                           <h3 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-semibold text-dreamxec-navy font-display leading-tight flex-1 pr-2 break-words min-w-0">
                             {milestone.title}
@@ -805,15 +695,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                             {milestone.timeline}
                           </span>
                         </div>
-
-                        {/* Description */}
                         {milestone.description && (
                           <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dreamxec-navy/75 leading-relaxed mb-2 sm:mb-3 md:mb-4 lg:mb-5 line-clamp-3 sm:line-clamp-2 break-words">
                             {milestone.description}
                           </p>
                         )}
-
-                        {/* Budget */}
                         <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-dreamxec-navy/10 gap-2">
                           <span className="text-[10px] sm:text-xs md:text-sm lg:text-base font-medium text-dreamxec-navy/80 tracking-wide truncate">
                             Budget Allocation
@@ -856,9 +742,10 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 * Timeline shows phased fund utilization across execution milestones
               </p>
             </div>
-            {/* Comments Section */}
-            <div className="card-pastel-offwhite mt-6 rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
-              <div className="card-tricolor-tag"></div>
+
+            {/* Comments Section (always visible below timeline) */}
+            <div className="card-pastel-offwhite mt-4 sm:mt-6 rounded-lg sm:rounded-xl border-3 sm:border-2 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
+              
               <CommentSection
                 campaignId={campaign.id}
                 campaignOwnerId={campaign.userId}
@@ -869,16 +756,15 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
           </div>
 
-
           {/* Right Column - Funding Card */}
-          <div className="w-full lg:w-[400px] flex-shrink-0">
+          <div className="w-full lg:w-[380px] xl:w-[420px] flex-shrink-0">
 
-            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] overflow-y-auto w-full">
-              <div className="card-tricolor-tag"></div>
+            <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full">
+              
 
               {/* Funding Amount */}
               <div className="mt-1 sm:mt-2 md:mt-4 mb-3 sm:mb-4 md:mb-6">
-                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-dreamxec-navy mb-1 sm:mb-1.5 md:mb-2 font-display break-words">
+                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-dreamxec-navy mb-1 sm:mb-1.5 md:mb-2 font-display break-all">
                   ₹{campaign.currentAmount.toLocaleString()}
                 </p>
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-dreamxec-navy opacity-70 font-sans break-words">
@@ -888,7 +774,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
               {/* Progress Bar */}
               <div className="mb-3 sm:mb-4 md:mb-6">
-                <div className="w-full h-4 sm:h-5 md:h-6 bg-dreamxec-cream rounded-full border-3 sm:border-4 border-dreamxec-navy overflow-hidden shadow-inner">
+                <div className="w-full h-4 sm:h-5 md:h-6 bg-dreamxec-cream rounded-full border-3 sm:border-2 border-dreamxec-navy overflow-hidden shadow-inner">
                   <div
                     className="h-full bg-gradient-to-r from-dreamxec-green to-dreamxec-saffron transition-all duration-500 flex items-center justify-center"
                     style={{ width: `${progressPercentage}%` }}
@@ -911,12 +797,24 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               </div>
 
               {/* Donate Button */}
-              {campaign.status === 'approved' && (
+             {campaign.status === 'approved' && (
                 <button
                   onClick={handleDonate}
-                  className="w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 bg-dreamxec-green text-white rounded-md sm:rounded-lg border-3 sm:border-4 border-dreamxec-navy font-bold font-display text-sm sm:text-base md:text-lg lg:text-xl hover:scale-105 transition-transform shadow-pastel-green flex items-center justify-center gap-1.5 sm:gap-2"
+                  className="relative w-full overflow-hidden px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-md sm:rounded-lg border-3 sm:border-2 border-dreamxec-navy font-bold font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-95 flex items-center justify-center gap-2 group"
+                  style={{
+                    background: 'linear-gradient(135deg, #f97316 0%, #ef4444 40%, #dc2626 100%)',
+                    
+                    color: '#fff',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.25)',
+                  }}
                 >
-                  <span className="truncate">Support This Campaign</span>
+                  {/* shine sweep on hover */}
+                  <span className="pointer-events-none absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-[-20deg]" />
+                  {/* heart icon */}
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 drop-shadow" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                  <span className="relative z-10 tracking-wide">Support This Campaign</span>
                 </button>
               )}
 
@@ -926,11 +824,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
-                  <span className="truncate">Share this campaign</span>
+                  <span>Share this campaign</span>
                 </p>
 
                 <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
-                  {/* LinkedIn Share */}
+                  {/* LinkedIn */}
                   <button
                     onClick={() => {
                       const campaignUrl = window.location.href;
@@ -940,12 +838,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     className="flex-1 p-1.5 sm:p-2 md:p-3 bg-[#0A66C2] text-white rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-105 transition-transform"
                     aria-label="Share on LinkedIn"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mx-auto"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mx-auto">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z" />
                     </svg>
                   </button>
@@ -954,7 +847,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   <button
                     onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank")}
                     className="p-1.5 sm:p-2 md:p-3 bg-blue-600 text-white rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-110 hover:-rotate-3 transition-all shadow-lg"
-                    title="Share on Facebook"
                     aria-label="Share on Facebook"
                   >
                     <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24">
@@ -962,35 +854,21 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     </svg>
                   </button>
 
-                  {/* Twitter */}
+                  {/* Twitter/X */}
                   <button
-                    onClick={() =>
-                      window.open(
-                        `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                          "Check out this amazing campaign!"
-                        )}&url=${encodeURIComponent(window.location.href)}`,
-                        "_blank"
-                      )
-                    }
+                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent("Check out this amazing campaign!")}&url=${encodeURIComponent(window.location.href)}`, "_blank")}
                     className="p-1.5 sm:p-2 md:p-3 bg-black text-white flex items-center justify-center rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-110 hover:rotate-3 transition-all shadow-lg"
-                    title="Share on Twitter"
                     aria-label="Share on Twitter"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="#ffffff"
-                      viewBox="0 0 16 16"
-                      className="w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 16 16" className="w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4">
                       <path d="M12.6 0.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867 -5.07 -4.425 5.07H0.316l5.733 -6.57L0 0.75h5.063l3.495 4.633L12.601 0.75Z" />
                     </svg>
                   </button>
 
                   {/* WhatsApp */}
                   <button
-                    onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent("Check out this amazing campaign!")}%20${encodeURIComponent(window.location.href)}`, "_blank")}
+                    onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(" Check out \"" + campaign.title + "\" on DreamXec! Don't miss this opportunity to support an innovative idea.")}%20${encodeURIComponent(window.location.href)}`, "_blank")}
                     className="p-1.5 sm:p-2 md:p-3 bg-green-600 text-white rounded-md sm:rounded-lg border-2 sm:border-3 border-dreamxec-navy hover:scale-110 hover:-rotate-3 transition-all shadow-lg"
-                    title="Share on WhatsApp"
                     aria-label="Share on WhatsApp"
                   >
                     <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24">
@@ -1002,47 +880,33 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             </div>
 
             {/* Team Members */}
-            {campaign.campaignType === "TEAM" &&
-              campaign.teamMembers?.length > 0 && (
-                <div className="card-pastel-offwhite mt-3 sm:mt-4 md:mt-6 lg:mt-8 rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
-                  <div className="card-tricolor-tag"></div>
-
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display break-words">
-                    Meet the Team
-                  </h2>
-
-                  <div className="space-y-2 sm:space-y-3 md:space-y-4">
-                    {campaign.teamMembers.map((member, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 sm:gap-3 md:gap-4 bg-white border-2 sm:border-3 border-dreamxec-navy rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3"
-                      >
-                        <img
-                          src={member.image || "https://via.placeholder.com/100"}
-                          className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-dreamxec-orange flex-shrink-0"
-                          alt={member.name}
-                        />
-
-                        <div className="min-w-0 flex-1">
-                          <p className="font-bold text-dreamxec-navy text-xs sm:text-sm md:text-base truncate">
-                            {member.name}
-                          </p>
-                          <p className="text-[10px] sm:text-xs md:text-sm text-dreamxec-navy/70 truncate">
-                            {member.role}
-                          </p>
-                        </div>
+            {campaign.campaignType === "TEAM" && campaign.teamMembers?.length > 0 && (
+              <div className="card-pastel-offwhite mt-3 sm:mt-4 md:mt-6 lg:mt-8 rounded-lg sm:rounded-xl border-3 sm:border-2 md:border-2 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
+                
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display break-words">
+                  Meet the Team
+                </h2>
+                <div className="space-y-2 sm:space-y-3 md:space-y-4">
+                  {campaign.teamMembers.map((member, index) => (
+                    <div key={index} className="flex items-center gap-2 sm:gap-3 md:gap-4 bg-white border-2 sm:border-3 border-dreamxec-navy rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3">
+                      <img
+                        src={member.image || "https://via.placeholder.com/100"}
+                        className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-dreamxec-orange flex-shrink-0"
+                        alt={member.name}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-dreamxec-navy text-xs sm:text-sm md:text-base truncate">{member.name}</p>
+                        <p className="text-[10px] sm:text-xs md:text-sm text-dreamxec-navy/70 truncate">{member.role}</p>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
 
-        <DiscoverySection
-          campaigns={campaigns}
-          currentCampaign={campaign}
-        />
+        <DiscoverySection campaigns={campaigns} currentCampaign={campaign} />
       </div>
 
       {/* Donation Modal */}

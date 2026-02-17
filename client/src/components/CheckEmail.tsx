@@ -13,7 +13,7 @@ export default function CheckEmail({ email, onBackToLogin }: CheckEmailProps) {
         
         {/* Email Icon */}
         <div className="flex justify-center mb-6">
-          <div className="w-24 h-24 bg-dreamxec-green rounded-full flex items-center justify-center border-4 border-dreamxec-navy shadow-pastel-green">
+          <div className="w-24 h-24 bg-dreamxec-green rounded-full flex items-center justify-center border-2 border-dreamxec-navy shadow-pastel-green">
             <svg className="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
@@ -37,7 +37,7 @@ export default function CheckEmail({ email, onBackToLogin }: CheckEmailProps) {
         </div>
 
         {/* Instructions */}
-        <div className="bg-dreamxec-cream rounded-lg border-4 border-dreamxec-navy p-6 mb-6">
+        <div className="bg-dreamxec-cream rounded-lg border-2 border-dreamxec-navy p-6 mb-6">
           <h3 className="font-bold text-dreamxec-navy mb-3 font-display text-lg">
             📬 What's Next?
           </h3>
@@ -50,7 +50,7 @@ export default function CheckEmail({ email, onBackToLogin }: CheckEmailProps) {
         </div>
 
         {/* Additional Info */}
-        <div className="bg-yellow-50 border-4 border-yellow-400 rounded-lg p-4 mb-6">
+        <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4 mb-6">
           <p className="text-sm text-dreamxec-navy font-sans">
             <strong className="font-bold">💡 Tip:</strong> Check your spam folder if you don't see the email within a few minutes.
           </p>
@@ -60,7 +60,7 @@ export default function CheckEmail({ email, onBackToLogin }: CheckEmailProps) {
         <div className="space-y-3">
           <button
             onClick={onBackToLogin}
-            className="w-full px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-lg"
+            className="w-full px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron text-lg"
           >
             Back to Login
           </button>

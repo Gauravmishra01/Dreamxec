@@ -28,7 +28,7 @@ export const Header = ({ currentUser, onLogin, onLogout }: HeaderProps) => {
   return (
     <header className="bg-transparent z-50 sticky top-0">
       <div className="max-w-[1500px] mx-auto px-6">
-        <div className="bg-white border-4 border-dreamxec-navy rounded-2xl shadow-pastel-saffron my-2">
+        <div className="bg-white border-2 border-dreamxec-navy rounded-2xl shadow-pastel-saffron my-2">
           <Navbar currentUser={user} onLogin={handleLogin} onLogout={handleLogout} />
         </div>
       </div>
