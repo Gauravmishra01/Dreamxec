@@ -1,7 +1,7 @@
 import apiRequest, { type ApiResponse } from './api';
 import type { UserProject } from './userProjectService';
 import type { DonorProject } from './donorProjectService';
-import type  {
+import type {
   Campaign,
   Project,
   User,
@@ -34,15 +34,15 @@ export const getDashboardStats = async (): Promise<ApiResponse<DashboardStats>> 
 // PROJECT MANAGEMENT
 
 interface ProjectQueryParams {
-  page? : number;
-  limit? : number;
-  status? : ProjectStatus | '';
+  page?: number;
+  limit?: number;
+  status?: ProjectStatus | '';
 }
 
 // Get all projects (admin)
 export const getAllProjects = async (
   params: ProjectQueryParams = {}
-): Promise<ApiResponse<AllProjectsResponse>> =>{
+): Promise<ApiResponse<AllProjectsResponse>> => {
   const query = new URLSearchParams();
   if (params.page) query.append('page', params.page.toString());
   if (params.limit) query.append('limit', params.limit.toString());
@@ -93,11 +93,11 @@ export const getAllDonors = async (): Promise<ApiResponse<{ donors: User[] }>> =
   });
 };
 
-export const manageUserStatus = async(
+export const manageUserStatus = async (
   userId: string,
   status: AccountStatus
-): Promise<ApiResponse<{ user: User}>> => {
-  return apiRequest(`/admin/users/${userId}/status`,{
+): Promise<ApiResponse<{ user: User }>> => {
+  return apiRequest(`/admin/users/${userId}/status`, {
     method: 'PATCH',
     body: JSON.stringify({ status })
   })
@@ -115,14 +115,14 @@ export const getAllClubs = async (): Promise<ApiResponse<{ clubs: any[] }>> => {
 
 // Add this function
 export const manageClubStatus = async (
-  clubId: string, 
+  clubId: string,
   status: 'ACTIVE' | 'SUSPENDED'
 ): Promise<ApiResponse<any>> => {
   return apiRequest(`/admin/clubs/${clubId}/status`, {
     method: 'PATCH',
     body: JSON.stringify({ status }),
   });
-};  
+};
 
 /* =========================================================
    Club Verification & Management
@@ -190,7 +190,7 @@ export const getAdminWithdrawals = async (status = 'pending'): Promise<ApiRespon
 };
 
 export const processWithdrawal = async (
-  id: string, 
+  id: string,
   status: 'approved' | 'rejected',
   note?: string
 ): Promise<ApiResponse<any>> => {
@@ -204,6 +204,13 @@ export const processWithdrawal = async (
 /* =========================================================
    Milestones
 ========================================================= */
+
+export const getAllMilestones = async (status?: string): Promise<ApiResponse<any>> => {
+  const query = status ? `?status=${status}` : '';
+  return apiRequest(`/admin/milestones${query}`, {
+    method: 'GET',
+  });
+};
 
 export const getPendingMilestones = async (): Promise<ApiResponse<any>> => {
   return apiRequest('/admin/milestones/pending', {
@@ -253,9 +260,9 @@ export const rejectStudentVerification = async (id: string, reason?: string): Pr
 ========================================================= */
 
 export const getAuditLogs = async (
-  page = 1, 
-  limit = 20, 
-  type?: string, 
+  page = 1,
+  limit = 20,
+  type?: string,
   search?: string
 ): Promise<ApiResponse<any>> => {
   const params = new URLSearchParams({
@@ -276,7 +283,7 @@ export const getAuditLogs = async (
 ========================================================= */
 
 export const toggleDonorVerification = async (
-  id: string, 
+  id: string,
   verified: boolean
 ): Promise<ApiResponse<any>> => {
   return apiRequest(`/admin/donors/${id}/verify`, {
@@ -286,7 +293,7 @@ export const toggleDonorVerification = async (
 };
 
 export const manageDonorStatus = async (
-  id: string, 
+  id: string,
   status: 'ACTIVE' | 'BLOCKED' | 'SUSPENDED'
 ): Promise<ApiResponse<any>> => {
   return apiRequest(`/admin/donors/${id}/status`, {
@@ -330,7 +337,7 @@ export const getAdminApplications = async (): Promise<ApiResponse<any>> => {
 };
 
 export const overrideApplicationStatus = async (
-  id: string, 
+  id: string,
   status: 'ACCEPTED' | 'REJECTED' | 'PENDING',
   reason?: string
 ): Promise<ApiResponse<any>> => {
@@ -346,7 +353,7 @@ export const overrideApplicationStatus = async (
 ========================================================= */
 
 export const getProjectFullDetails = async (
-  type: 'user' | 'donor', 
+  type: 'user' | 'donor',
   id: string
 ): Promise<ApiResponse<any>> => {
   return apiRequest(`/admin/projects/${type}/${id}/details`, {

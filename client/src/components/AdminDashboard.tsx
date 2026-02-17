@@ -105,13 +105,13 @@
 
 // export default function AdminDashboard() {
 //   const navigate = useNavigate();
-  
+
 //   // State
 //   const [loading, setLoading] = useState(true);
 //   const [stats, setStats] = useState<DashboardStats | null>(null);
 //   const [userProjects, setUserProjects] = useState<Campaign[]>([]);
 //   const [donorProjects, setDonorProjects] = useState<Project[]>([]);
-  
+
 //   // Modals
 //   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
 //   const [rejectionInfo, setRejectionInfo] = useState<{ id: string; title: string; type: 'user' | 'donor' } | null>(null);
@@ -166,13 +166,13 @@
 
 //   return (
 //     <div className="flex min-h-screen bg-transparent relative">
-      
+
 //       {/* 1. Collapsible Sidebar */}
 //       <AdminSidebar />
 
 //       {/* 2. Main Content Area */}
 //       <div className="flex-1 relative min-h-screen">
-        
+
 //         {/* Modals */}
 //         {selectedCampaign && <CampaignDetailModal campaign={selectedCampaign} onClose={() => setSelectedCampaign(null)} />}
 //         {rejectionInfo && <RejectionModal campaignTitle={rejectionInfo.title} onClose={() => setRejectionInfo(null)} onSubmit={handleRejectSubmit} />}
@@ -204,7 +204,7 @@
 
 //         {/* Dashboard Content */}
 //         <div className="max-w-7xl mx-auto px-8 py-8 relative z-10 pb-24">
-          
+
 //           {/* 1. Global KPIs Row (Added as requested) */}
 //           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 //             <KPIStatCard label="Total Users" value={stats.kpi.totalUsers} icon={<UsersIcon className="w-6 h-6" />} color="blue" />
@@ -396,11 +396,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
-import AdminProjectDetails from '../components/AdminProjectDetails'; 
-import { 
-  getDashboardStats, 
-  getAllProjects, 
-  verifyUserProject, 
+import AdminProjectDetails from '../components/AdminProjectDetails';
+import {
+  getDashboardStats,
+  getAllProjects,
+  verifyUserProject,
   verifyDonorProject
 } from '../services/adminService';
 import type { Campaign, Project, DashboardStats } from '../types';
@@ -443,7 +443,7 @@ const RejectionModal = ({ campaignTitle, onClose, onSubmit }: { campaignTitle: s
           <h2 className="text-2xl sm:text-3xl font-bold text-dreamxec-navy font-display">Reject Campaign</h2>
           <button onClick={onClose} className="text-dreamxec-navy hover:scale-110 transition-transform flex-shrink-0"><XCircleIcon className="w-6 h-6" /></button>
         </div>
-        <form onSubmit={(e) => { e.preventDefault(); if(reason.trim()) onSubmit(reason); }}>
+        <form onSubmit={(e) => { e.preventDefault(); if (reason.trim()) onSubmit(reason); }}>
           <textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Reason for rejection..." className="w-full h-32 p-4 border-4 border-dreamxec-navy rounded-lg text-lg font-sans bg-white focus:outline-none focus:border-dreamxec-orange" required autoFocus />
           <div className="mt-6 flex justify-end gap-3">
             <button type="button" onClick={onClose} className="btn-pastel-secondary px-6 py-3 rounded-lg font-display text-lg">Cancel</button>
@@ -471,13 +471,13 @@ const KPIStatCard = ({ label, value, icon, color }: any) => (
 // --- Main Component ---
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  
+
   // State
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [userProjects, setUserProjects] = useState<Campaign[]>([]);
   const [donorProjects, setDonorProjects] = useState<Project[]>([]);
-  
+
   // Modals
   const [selectedProject, setSelectedProject] = useState<{ id: string, type: 'user' | 'donor' } | null>(null);
   const [rejectionInfo, setRejectionInfo] = useState<{ id: string; title: string; type: 'user' | 'donor' } | null>(null);
@@ -504,7 +504,7 @@ export default function AdminDashboard() {
   }
 
   const handleApprove = async (id: string, type: 'user' | 'donor') => {
-    if(!window.confirm("Approve this project?")) return;
+    if (!window.confirm("Approve this project?")) return;
     try {
       if (type === 'user') await verifyUserProject(id, { status: 'APPROVED' });
       else await verifyDonorProject(id, { status: 'APPROVED' });
@@ -532,22 +532,22 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex min-h-screen bg-transparent relative">
-      
+
       {/* 1. Collapsible Sidebar */}
       <AdminSidebar />
 
       {/* 2. Main Content Area */}
       <div className="flex-1 relative min-h-screen">
-        
+
         {/* Modals */}
         {selectedProject && (
-          <AdminProjectDetails 
-            projectId={selectedProject.id} 
-            projectType={selectedProject.type} 
+          <AdminProjectDetails
+            projectId={selectedProject.id}
+            projectType={selectedProject.type}
             onClose={() => {
               setSelectedProject(null);
-              fetchData(); 
-            }} 
+              fetchData();
+            }}
           />
         )}
         {rejectionInfo && <RejectionModal campaignTitle={rejectionInfo.title} onClose={() => setRejectionInfo(null)} onSubmit={handleRejectSubmit} />}
@@ -579,7 +579,7 @@ export default function AdminDashboard() {
 
         {/* Dashboard Content - CHANGED: Removed max-w-7xl mx-auto, Replaced with w-full px-6 lg:px-10 */}
         <div className="w-full px-6 lg:px-10 py-8 relative z-10 pb-24">
-          
+
           {/* 1. Global KPIs Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <KPIStatCard label="Total Users" value={stats.kpi.totalUsers} icon={<UsersIcon className="w-6 h-6" />} color="blue" />
@@ -613,7 +613,7 @@ export default function AdminDashboard() {
           )}
 
           {/* 3. Original Workflow Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
             <div className="card-pastel rounded-xl p-6 card-pastel-tilt-left hover:scale-105 transition-transform bg-white">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-dreamxec-navy text-lg font-bold font-display">Pending Campaigns</p>
@@ -656,6 +656,19 @@ export default function AdminDashboard() {
               </div>
               <p className="text-5xl font-bold text-dreamxec-navy font-display">{totalSubmissions}</p>
               <div className="mt-2 h-1 bg-gradient-to-r from-dreamxec-orange via-white to-dreamxec-green rounded"></div>
+            </div>
+
+            {/* Pending Milestones */}
+            <div onClick={() => navigate('/admin/milestones')} className="card-pastel rounded-xl p-6 hover:scale-105 transition-transform bg-white cursor-pointer group">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-dreamxec-navy text-lg font-bold font-display group-hover:text-dreamxec-orange transition-colors">Milestones</p>
+                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
+                  <svg className="w-8 h-8 text-dreamxec-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" /></svg>
+                </div>
+              </div>
+              <p className="text-5xl font-bold text-dreamxec-navy font-display">{stats.kpi.milestones?.total || 0}</p>
+              <p className="text-xs text-gray-500 mt-1 font-bold">{stats.kpi.milestones?.SUBMITTED || 0} awaiting review</p>
+              <div className="mt-2 h-1 bg-dreamxec-orange rounded"></div>
             </div>
           </div>
 

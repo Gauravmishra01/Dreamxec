@@ -45,6 +45,7 @@ router.patch('/financials/withdrawals/:id', adminController.manageWithdrawal);
 // --------------------
 // MILESTONES
 // --------------------
+router.get('/milestones', adminController.getAllMilestones);
 router.get('/milestones/pending', adminController.getPendingMilestones);
 router.patch('/milestones/:id/verify', adminController.verifyMilestone);
 

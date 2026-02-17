@@ -24,7 +24,8 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
     pendingVerifications,
     pendingDonorProjects,
     slaBreaches,
-    frozenCampaigns
+    frozenCampaigns,
+    milestoneStats
   ] = await prisma.$transaction([
     // 1. total users
     prisma.user.count(),
@@ -66,6 +67,12 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
         status: 'APPROVED',
         updatedAt: { lt: thirtyDaysAgo }
       }
+    }),
+
+    //10. milestone stats (group by status)
+    prisma.milestone.groupBy({
+      by: ['status'],
+      _count: { status: true }
     })
   ]);
 
@@ -81,6 +88,13 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
     campaigns.total += stat._count.status;
   })
 
+  // Build milestone counts
+  const milestones = { PENDING: 0, SUBMITTED: 0, APPROVED: 0, REJECTED: 0, total: 0 };
+  milestoneStats.forEach(stat => {
+    milestones[stat.status] = stat._count.status;
+    milestones.total += stat._count.status;
+  });
+
   const totalPendingActions =
     campaigns.PENDING +
     pendingVerifications +
@@ -95,13 +109,14 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
         totalClubs: clubCount,
         totalDonations: donationStats._sum.amount || 0,
         campaigns,
+        milestones,
         pendingApprovals: totalPendingActions,
         openTickets: 0
       },
       attention: {
         slaBreaches,
         frozenCampaigns,
-        failedMilestones: 0
+        pendingMilestones: milestones.SUBMITTED
       }
     }
   })
@@ -218,7 +233,7 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
   // Send email notification to project owner
   if (userProject.user && userProject.user.email) {
     const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
-    
+
     try {
       await publishEvent(eventName, {
         email: userProject.user.email,
@@ -496,13 +511,13 @@ exports.verifyClub = catchAsync(async (req, res, next) => {
   // send email
   try {
     if (request.user && request.user.email) {
-        await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
-            email: request.user.email,
-            clubName: request.clubName || 'Your Club',
-            status: status,
-            reason: reason || null,
-            dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
-        });
+      await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
+        email: request.user.email,
+        clubName: request.clubName || 'Your Club',
+        status: status,
+        reason: reason || null,
+        dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+      });
     }
   } catch (err) {
     console.error(err);
@@ -550,7 +565,7 @@ exports.getAllClubs = catchAsync(async (req, res, next) => {
 // 3. Manage Club Status
 exports.manageClubStatus = catchAsync(async (req, res, next) => {
   const { status } = req.body;
-  
+
   const club = await prisma.club.update({
     where: { id: req.params.id },
     data: { status } // Ensure Club model has 'status' field in Prisma
@@ -570,9 +585,9 @@ exports.manageClubStatus = catchAsync(async (req, res, next) => {
 exports.uploadClubMembers = catchAsync(async (req, res, next) => {
   if (!req.file) return next(new AppError('CSV file is required', 400));
   const clubId = req.body.clubId;
-  
+
   if (!clubId) {
-    try { fs.unlinkSync(req.file.path); } catch (e) {}
+    try { fs.unlinkSync(req.file.path); } catch (e) { }
     return next(new AppError('clubId is required in form body', 400));
   }
 
@@ -733,7 +748,7 @@ exports.getWithdrawals = catchAsync(async (req, res, next) => {
 // ADMIN: Approve or Reject Withdrawal
 exports.manageWithdrawal = catchAsync(async (req, res, next) => {
   const { status, note } = req.body;
-  
+
   if (!['approved', 'rejected'].includes(status)) {
     return next(new AppError('Invalid status', 400));
   }
@@ -772,6 +787,45 @@ exports.manageWithdrawal = catchAsync(async (req, res, next) => {
 // MILESTONE VERIFICATION
 // ---------------------------------------------------
 
+// ADMIN: Get ALL milestones (with optional status filter)
+exports.getAllMilestones = catchAsync(async (req, res, next) => {
+  const statusFilter = req.query.status; // optional: PENDING, SUBMITTED, APPROVED, REJECTED
+  const where = statusFilter ? { status: statusFilter } : {};
+
+  const [milestones, statusCounts] = await prisma.$transaction([
+    prisma.milestone.findMany({
+      where,
+      include: {
+        project: {
+          select: {
+            title: true,
+            status: true,
+            user: { select: { name: true, email: true } }
+          }
+        }
+      },
+      orderBy: { updatedAt: 'desc' }
+    }),
+    prisma.milestone.groupBy({
+      by: ['status'],
+      _count: { status: true }
+    })
+  ]);
+
+  // Build counts object
+  const counts = { PENDING: 0, SUBMITTED: 0, APPROVED: 0, REJECTED: 0, total: 0 };
+  statusCounts.forEach(s => {
+    counts[s.status] = s._count.status;
+    counts.total += s._count.status;
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: milestones.length,
+    data: { milestones, counts }
+  });
+});
+
 // ADMIN: Get all pending milestones (Submitted for review)
 exports.getPendingMilestones = catchAsync(async (req, res, next) => {
   const milestones = await prisma.milestone.findMany({
@@ -793,6 +847,7 @@ exports.getPendingMilestones = catchAsync(async (req, res, next) => {
     data: { milestones }
   });
 });
+
 
 // ADMIN: Verify Milestone (Approve/Reject)
 exports.verifyMilestone = catchAsync(async (req, res, next) => {
@@ -837,74 +892,6 @@ exports.verifyMilestone = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: 'success', data: { milestone: updatedMilestone } });
 });
 
-// ---------------------------------------------------
-// MILESTONE VERIFICATION
-// ---------------------------------------------------
-
-// ADMIN: Get all submitted milestones pending review
-exports.getPendingMilestones = catchAsync(async (req, res, next) => {
-  const milestones = await prisma.milestone.findMany({
-    where: { status: 'SUBMITTED' }, 
-    include: {
-      project: {
-        select: {
-          title: true,
-          user: { select: { name: true, email: true } }
-        }
-      }
-    },
-    orderBy: { updatedAt: 'desc' }
-  });
-
-  res.status(200).json({
-    status: 'success',
-    results: milestones.length,
-    data: { milestones }
-  });
-});
-
-// ADMIN: Approve or Reject a Milestone
-exports.verifyMilestone = catchAsync(async (req, res, next) => {
-  const { status, feedback } = req.body;
-
-  if (!['APPROVED', 'REJECTED'].includes(status)) {
-    return next(new AppError('Invalid status. Must be APPROVED or REJECTED', 400));
-  }
-
-  const milestone = await prisma.milestone.findUnique({
-    where: { id: req.params.id },
-    include: { project: true }
-  });
-
-  if (!milestone) return next(new AppError('Milestone not found', 404));
-
-  const updateData = {
-    status,
-    adminFeedback: feedback || null,
-    approvedAt: status === 'APPROVED' ? new Date() : null
-  };
-
-  const updatedMilestone = await prisma.milestone.update({
-    where: { id: req.params.id },
-    data: updateData
-  });
-
-  // Log to Audit Trail
-  await prisma.auditLog.create({
-    data: {
-      action: `MILESTONE_${status}`,
-      entityType: 'Milestone',
-      entityId: milestone.id,
-      performedBy: req.user.id,
-      details: { project: milestone.project.title, feedback }
-    }
-  });
-
-  // TODO: Send email notification to user about milestone status
-
-  res.status(200).json({ status: 'success', data: { milestone: updatedMilestone } });
-});
-
 
 // ---------------------------------------------------
 // AUDIT LOGS & SYSTEM ACTIVITY
@@ -915,11 +902,11 @@ exports.getAuditLogs = catchAsync(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;
   const skip = (page - 1) * limit;
-  
+
   const { type, search } = req.query;
 
   const where = {};
-  
+
   // Filter by Entity Type (User, Project, Withdrawal, etc.)
   if (type && type !== 'ALL') {
     where.entityType = type;
@@ -1076,7 +1063,7 @@ exports.getUserDetails = catchAsync(async (req, res, next) => {
       userProjects: { select: { id: true, title: true, status: true, amountRaised: true } },
       donations: { select: { id: true, amount: true, createdAt: true } },
       clubsPresided: { select: { id: true, name: true } },
-      notesReceived: { 
+      notesReceived: {
         include: { author: { select: { name: true } } },
         orderBy: { createdAt: 'desc' }
       }
@@ -1115,9 +1102,9 @@ exports.overrideApplicationStatus = catchAsync(async (req, res, next) => {
 
   const application = await prisma.application.update({
     where: { id: req.params.id },
-    data: { 
-      status, 
-      rejectionReason: status === 'REJECTED' ? reason : null 
+    data: {
+      status,
+      rejectionReason: status === 'REJECTED' ? reason : null
     },
     include: {
       user: { select: { name: true } },
@@ -1157,15 +1144,15 @@ exports.getProjectFullDetails = catchAsync(async (req, res, next) => {
         user: { select: { id: true, name: true, email: true } },
         club: { select: { id: true, name: true, college: true } },
         bankAccount: true,
-        donations: { 
+        donations: {
           include: { donor: { select: { name: true } } },
-          orderBy: { createdAt: 'desc' } 
+          orderBy: { createdAt: 'desc' }
         },
         withdrawals: { orderBy: { createdAt: 'desc' } },
         milestones: { orderBy: { createdAt: 'asc' } },
-        adminNotes: { 
-          include: { author: { select: { name: true } } }, 
-          orderBy: { createdAt: 'desc' } 
+        adminNotes: {
+          include: { author: { select: { name: true } } },
+          orderBy: { createdAt: 'desc' }
         }
       }
     });
@@ -1174,13 +1161,13 @@ exports.getProjectFullDetails = catchAsync(async (req, res, next) => {
       where: { id },
       include: {
         donor: { select: { id: true, name: true, email: true, organizationName: true } },
-        applications: { 
+        applications: {
           include: { user: { select: { name: true, email: true } } },
           orderBy: { createdAt: 'desc' }
         },
-        adminNotes: { 
-          include: { author: { select: { name: true } } }, 
-          orderBy: { createdAt: 'desc' } 
+        adminNotes: {
+          include: { author: { select: { name: true } } },
+          orderBy: { createdAt: 'desc' }
         }
       }
     });

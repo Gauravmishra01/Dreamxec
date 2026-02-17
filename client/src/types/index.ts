@@ -187,13 +187,13 @@ export interface Student {
    Admin Specific Types
 ========================================================= */
 
-export interface DashboardStats{
+export interface DashboardStats {
   kpi: {
     totalUsers: number;
     totalDonors: number;
     totalClubs: number;
     totalDonations: number;
-    campaigns:{
+    campaigns: {
       APPROVED: number;
       PENDING: number;
       REJECTED: number;
@@ -201,13 +201,20 @@ export interface DashboardStats{
       FROZEN: number;
       total: number;
     };
+    milestones?: {
+      PENDING: number;
+      SUBMITTED: number;
+      APPROVED: number;
+      REJECTED: number;
+      total: number;
+    };
     pendingApprovals: number;
     openTickets: number;
   };
-  attention:{
+  attention: {
     slaBreaches: number;
     frozenCampaigns: number;
-    failedMilstones: number;
+    pendingMilestones: number;
   }
 }
 

@@ -7,19 +7,23 @@ const {
   getReferral,
   approveReferral,
   rejectReferral,
+  updateReferralStatus,
 } = require("./adminClubReferral.controller");
 
 // All admin-only
 router.use(protect, restrictTo("ADMIN"));
 
 // List all referrals (with optional status filter)
-router.get("/referrals", listReferrals);
+router.get("/", listReferrals);
 
 // Get single referral
-router.get("/referrals/:id", getReferral);
+router.get("/:id", getReferral);
 
-// Approve / reject
-router.post("/referrals/:id/approve", approveReferral);
-router.post("/referrals/:id/reject", rejectReferral);
+// Update status (unified endpoint)
+router.patch("/:id/status", updateReferralStatus);
+
+// Approve / reject (legacy endpoints)
+router.post("/:id/approve", approveReferral);
+router.post("/:id/reject", rejectReferral);
 
 module.exports = router;

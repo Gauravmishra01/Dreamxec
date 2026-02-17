@@ -21,6 +21,32 @@ exports.getReferral = async (req, res) => {
   res.json({ success: true, data: referral });
 };
 
+// Unified status update endpoint
+exports.updateReferralStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status, notes } = req.body;
+  
+  if (!['APPROVED', 'REJECTED'].includes(status)) {
+    return res.status(400).json({ success: false, message: "Invalid status" });
+  }
+  
+  const data = {
+    status,
+    reviewedBy: req.user.id,
+    reviewedAt: new Date(),
+  };
+  
+  if (status === 'REJECTED') {
+    data.rejectionReason = notes || null;
+  }
+  
+  const updated = await prisma.clubReferralRequest.update({
+    where: { id },
+    data,
+  });
+  res.json({ success: true, data: updated });
+};
+
 exports.approveReferral = async (req, res) => {
   const { id } = req.params;
   // set status to APPROVED, maybe create Club record etc.
