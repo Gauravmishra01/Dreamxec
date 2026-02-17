@@ -78,7 +78,7 @@ export default function DonorProjects({
           try {
             const response = await getProjectApplications(project.id);
             
-            if (response.status === 'success' && response.data) {
+            if (response.success === true && response.data) {
               console.log(`Found ${response.data.applications.length} applications for project ${project.id}`);
               setProjectApplications(prev => ({
                 ...prev,

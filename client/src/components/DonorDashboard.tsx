@@ -85,7 +85,7 @@ interface DonorDashboardProps {
   projectsCount: number;
   onCreateProject?: () => void;
   onViewProjects?: () => void;
-  getDonorApplications: () => Promise<{ status: string; data?: { applications: Application[] } }>;
+  getDonorApplications: () => Promise<{ success: boolean; data?: { applications: Application[] } }>;
   updateApplicationStatus: (
     id: string,
     payload: {
@@ -678,7 +678,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
     setApplicationsError(null);
     try {
       const response = await getDonorApplications();
-      if (response.status === 'success' && response.data) {
+      if (response.success === true && response.data) {
         setApplications(response.data.applications);
       } else {
         setApplications([]);
@@ -732,7 +732,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
   ): Promise<void> => {
     try {
       const response = await updateApplicationStatus(applicationId, { status, rejectionReason });
-      if (response.status === 'success') {
+      if (response.success === true) {
         toast.success(`Application ${status === 'ACCEPTED' ? 'accepted' : 'rejected'} successfully`);
         await loadApplications();
       }

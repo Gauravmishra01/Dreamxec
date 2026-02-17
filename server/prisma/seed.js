@@ -1,28 +1,46 @@
 const prisma = require("../src/config/prisma");
 const slugify = require("slugify");
 
-async function run() {
-  const campaigns = await prisma.userProject.findMany();
+async function backfillClubSlugs() {
+  console.log("Starting club slug backfill...\n");
 
-  for (const c of campaigns) {
-    if (!c.slug) {
-      const slug = slugify(c.title, {
+  const allClubs = await prisma.club.findMany();
+  const clubs = allClubs.filter(club => !club.slug);
+
+  console.log(`Found ${clubs.length} clubs without slug\n`);
+
+  for (const club of clubs) {
+    const baseSlug = slugify(
+      `${club.college} ${club.name}`,
+      {
         lower: true,
         strict: true,
         trim: true,
-      });
+      }
+    );
 
-      await prisma.userProject.update({
-        where: { id: c.id },
-        data: { slug },
-      });
+    let slug = baseSlug;
+    let counter = 1;
 
-      console.log("Updated:", c.title);
+    while (await prisma.club.findFirst({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
     }
+
+
+    await prisma.club.update({
+      where: { id: club.id },
+      data: { slug }
+    });
+
+    console.log(`✔ ${club.name} → ${slug}`);
   }
 
-  console.log("All slugs generated.");
-  process.exit();
+  console.log("\nBackfill completed successfully.");
+  process.exit(0);
 }
 
-run();
+backfillClubSlugs().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

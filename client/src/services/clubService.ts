@@ -5,9 +5,9 @@ import axios from "axios";
    TYPES
 ========================================================= */
 export interface MyClub {
-  id: string;
-  name: string;
-  college: string;
+    id: string;
+    name: string;
+    college: string;
 }
 export interface ClubMember {
     id: string;
@@ -39,39 +39,70 @@ export interface FAQ {
 
 export interface ClubCampaign {
     id: string;
-    
-      /* BASIC */
-      title: string;
-      description: string;
-      companyName: string;
-    
-      skillsRequired: string[];
-    
-      goalAmount: number;
-      amountRaised: number;
-    
-      /* MEDIA */
-      imageUrl?: string;
-      campaignMedia?: string[];
-      presentationDeckUrl?: string | null;
-    
-      /* NEW FIELDS */
-      campaignType?: "INDIVIDUAL" | "TEAM";
-      teamMembers?: TeamMember[];
-      faqs?: FAQ[];
-      youtubeUrl?: string;
-    
-      /* STATUS */
-      status: "PENDING" | "APPROVED" | "REJECTED";
-      rejectionReason?: string;
-    
-      /* OWNER */
-      userId: string;
-      bankAccountId?: string | null;
-    
-      createdAt: string;
-      updatedAt: string;
+
+    /* BASIC */
+    title: string;
+    description: string;
+    companyName: string;
+
+    skillsRequired: string[];
+
+    goalAmount: number;
+    amountRaised: number;
+
+    /* MEDIA */
+    imageUrl?: string;
+    campaignMedia?: string[];
+    presentationDeckUrl?: string | null;
+
+    /* NEW FIELDS */
+    campaignType?: "INDIVIDUAL" | "TEAM";
+    teamMembers?: TeamMember[];
+    faqs?: FAQ[];
+    youtubeUrl?: string;
+
+    /* STATUS */
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    rejectionReason?: string;
+
+    /* OWNER */
+    userId: string;
+    bankAccountId?: string | null;
+
+    createdAt: string;
+    updatedAt: string;
 }
+
+/* =========================================================
+   PUBLIC DISCOVERY TYPES
+========================================================= */
+
+export interface PublicClub {
+    id: string;
+    name: string;
+    slug: string;
+    college: string;
+    logoUrl?: string;
+    totalCampaigns: number;
+    totalRaised: number;
+}
+
+export interface PublicSingleClub {
+    id: string;
+    name: string;
+    slug: string;
+    college: string;
+    description?: string;
+    logoUrl?: string;
+    totalCampaigns: number;
+    totalRaised: number;
+    campaigns: ClubCampaign[];
+}
+
+
+
+
+
 
 /* =========================================================
    MEMBER MANAGEMENT
@@ -79,8 +110,8 @@ export interface ClubCampaign {
 
 
 export const getMyClubs = async (): Promise<MyClub[]> => {
-  const res = await apiRequest("/clubs/my", { method: "GET" });
-  return res.data as MyClub[]; // backend returns { data: [...] }
+    const res = await apiRequest("/clubs/my", { method: "GET" });
+    return res.data as MyClub[]; // backend returns { data: [...] }
 };
 
 // GET CLUB MEMBERS
@@ -190,4 +221,36 @@ export const getRejectedClubCampaigns = async (
     return apiRequest(`/clubs/${clubId}/campaigns/rejected`, {
         method: "GET",
     });
+};
+
+/* =========================================================
+   PUBLIC CLUB DISCOVERY
+========================================================= */
+
+export const getPublicClubs = async (
+  params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    sort?: string;
+  }
+): Promise<ApiResponse<PublicClub[]>> => {
+  return apiRequest<PublicClub[]>("/clubs/public", {
+    method: "GET",
+    params,
+  });
+};
+
+
+export const getPublicClubBySlug = async (
+  slug: string,
+  params?: { page?: number; limit?: number }
+): Promise<ApiResponse<PublicSingleClub>> => {
+  return apiRequest<PublicSingleClub>(
+    `/clubs/public/${slug}`,
+    {
+      method: "GET",
+      params,
+    }
+  );
 };

@@ -38,6 +38,7 @@ export interface UserProject {
     id: string;
     name: string;
     college: string;
+    slug?: string;
   };
 
   goalAmount: number;
@@ -105,6 +106,7 @@ export interface UpdateUserProjectData {
     id: string;
     name: string;
     college: string;
+    slug?: string;
   }
 
   skillsRequired?: string[];

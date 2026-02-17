@@ -11,6 +11,7 @@ export interface Club {
     id: string;
     name: string;
     college: string;
+    slug: string;
     verified: boolean;
 }
 
@@ -71,6 +72,7 @@ export interface Campaign {
         id: string;
         name: string;
         college: string;
+        slug: string;
     };
     description: string;
 

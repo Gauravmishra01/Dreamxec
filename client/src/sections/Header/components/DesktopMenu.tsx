@@ -1,4 +1,5 @@
 import type { UserRole } from "../../../types";
+import { Link } from "react-router-dom";
 
 interface DesktopMenuProps {
   currentUser?: { name: string; role: UserRole } | null;
@@ -20,10 +21,17 @@ export const DesktopMenu = ({ currentUser, onLogin }: DesktopMenuProps) => {
         href="/campaigns"
         className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
       >
-        CAMPAIGNS
+        BROWSE CAMPAIGNS
       </a>
 
-      
+      <Link
+        to="/clubs"
+        className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
+      >
+        CLUBS
+      </Link>
+
+
 
       {/* Role-specific links */}
       {currentUser?.role === 'student' && (

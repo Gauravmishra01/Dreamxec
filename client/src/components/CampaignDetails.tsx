@@ -18,6 +18,9 @@ import {
   verifyPayment,
 } from "../services/donationService";
 import CommentSection from "./comments/CommentSection";
+import { Resizable } from "re-resizable";
+
+
 
 
 
@@ -149,6 +152,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   type CampaignTab = 'about' | 'video' | 'media' | 'presentation' | 'faqs' | 'comments';
   const [activeTab, setActiveTab] = useState<CampaignTab>('about');
   const showMobileCTA = campaign?.status === 'approved';
+  const [deckWidth, setDeckWidth] = useState<number | string>("100%");
 
   const refreshCampaign = async () => {
     const res = await getUserProject(id!);
@@ -220,6 +224,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
       console.log("FAQs:", campaign.faqs);
     }
   }, [campaign]);
+
+  useEffect(() => {
+  if (campaign) {
+    console.log("FULL CAMPAIGN OBJECT:", campaign);
+  }
+}, [campaign]);
 
   useEffect(() => {
     const checkWishlistStatus = async () => {
@@ -406,7 +416,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   };
 
   return (
-    <div className="min-h-screen bg-dreamxec-cream relative overflow-x-hidden">
+    <div className="min-h-screen bg-dreamxec-cream relative">
       {/* <Header currentUser={currentUser} onLogin={onLogin} onLogout={onLogout} /> */}
 
       {/* Decorative elements - hidden on mobile and small tablets */}
@@ -433,9 +443,11 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
           <span className="truncate">Back</span>
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+        <div className="flex flex-col lg:flex-row gap-6 mb-12 items-start">
+
           {/* Left Column - Campaign Image & Details */}
-          <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6 w-full overflow-hidden">
+          <div className="flex-1 min-w-0 space-y-6 relative">
+
             {/* Campaign Image */}
             <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card overflow-hidden w-full">
               <div className="card-tricolor-tag"></div>
@@ -507,8 +519,40 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
                   <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 min-w-0">
                     <span className="text-sm sm:text-base md:text-lg flex-shrink-0">👥</span>
-                    <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">{campaign.club?.name}</span>
+
+                    {campaign.club?.slug ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("CLICKED");
+                          navigate(`/clubs/${campaign.club?.slug}`);
+                        }}
+                        className="
+        font-medium 
+    truncate 
+    max-w-[100px] sm:max-w-[150px] md:max-w-none 
+    text-dreamxec-navy
+    hover:text-dreamxec-orange 
+    hover:underline 
+    transition-colors 
+    cursor-pointer         
+    bg-transparent 
+    border-none 
+    p-0
+  "
+                      >
+                        {campaign.club.name}
+                      </button>
+
+                    ) : (
+                      <span className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">
+                        {campaign.club?.name}
+                      </span>
+                    )}
                   </div>
+
+
 
                   <div className="w-1 h-1 rounded-full bg-dreamxec-navy/30 hidden sm:block flex-shrink-0"></div>
 
@@ -647,64 +691,58 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* Pitch Deck */}
             {activeTab === 'presentation' && (
-              <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 w-full overflow-hidden">
-                <div className="card-tricolor-tag"></div>
+              <div className="relative">
+                <Resizable
+                  size={{ width: deckWidth, height: "auto" }}
+                  minWidth={900}
+                  maxWidth={window.innerWidth * 0.95}
+                  enable={{ right: true }}
+                  onResizeStop={(e, direction, ref) => {
+                    setDeckWidth(ref.offsetWidth);
+                  }}
+                  className="relative z-20"
+                  style={{ overflow: "visible" }}
+                >
+                  <div className="card-pastel-offwhite
+                      w-full
+                      rounded-xl
+                      border-4
+                      border-dreamxec-navy
+                      shadow-pastel-card
+                      p-6">
 
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-dreamxec-navy mb-3 sm:mb-4 md:mb-6 font-display leading-tight mt-1 sm:mt-2 md:mt-4 text-left break-words">
-                  Presentation Deck
-                </h2>
+                    <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
+                      <h2 className="text-3xl font-bold text-dreamxec-navy font-display">
+                        Presentation Deck
+                      </h2>
 
-                {campaign.presentationDeckUrl ? (
-                  (() => {
-                    const embedUrl = getEmbedUrl(campaign.presentationDeckUrl);
-
-                    return embedUrl ? (
-                      <div className="w-full aspect-video sm:aspect-[4/3] lg:max-h-[500px] border-3 sm:border-4 border-dreamxec-navy rounded-md sm:rounded-lg overflow-hidden bg-white shadow-inner">
-                        <iframe
-                          src={embedUrl}
-                          className="w-full h-full"
-                          allow="autoplay; fullscreen"
-                          title="Campaign Presentation"
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      <div className="p-3 sm:p-4 md:p-6 bg-dreamxec-cream rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy text-center">
-                        <svg className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 text-dreamxec-navy/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p className="text-dreamxec-navy/80 mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium break-words">
-                          Preview not available for this file type
-                        </p>
-                        <a
-                          href={campaign.presentationDeckUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 sm:gap-2 md:gap-3 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-dreamxec-navy text-white rounded-lg sm:rounded-xl font-bold font-display text-xs sm:text-sm md:text-base lg:text-lg hover:bg-dreamxec-orange transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                      <span className="text-xs md:text-sm text-dreamxec-navy/60 flex items-center gap-1">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          <span className="whitespace-nowrap">Open Presentation</span>
-                        </a>
-                      </div>
-                    );
-                  })()
-                ) : (
-                  <div className="p-4 sm:p-6 md:p-8 lg:p-12 text-center bg-dreamxec-cream/50 rounded-lg sm:rounded-xl border-2 border-dreamxec-navy/30">
-                    <svg className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 md:mb-6 text-dreamxec-navy/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <h3 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-dreamxec-navy/70 mb-1.5 sm:mb-2 md:mb-3 font-display break-words">
-                      No Presentation Available
-                    </h3>
-                    <p className="text-dreamxec-navy/60 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl max-w-md mx-auto leading-relaxed break-words px-2">
-                      This campaign hasn't uploaded a presentation deck yet.
-                    </p>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                            d="M4 12h16M14 6l6 6-6 6" />
+                        </svg>
+                        Drag right edge to resize
+                      </span>
+                    </div>
+                    <div
+                      className="border-4 border-dreamxec-navy rounded-lg bg-white shadow-inner overflow-hidden"
+                      style={{ height: 700 }}
+                    >
+                      <iframe
+                        src={getEmbedUrl(campaign.presentationDeckUrl!)}
+                        className="w-full h-full"
+                      />
+                    </div>
                   </div>
-                )}
+                </Resizable>
               </div>
             )}
+
 
             {activeTab === 'comments' && (
               <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
@@ -818,11 +856,23 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 * Timeline shows phased fund utilization across execution milestones
               </p>
             </div>
+            {/* Comments Section */}
+            <div className="card-pastel-offwhite mt-6 rounded-lg sm:rounded-xl border-3 sm:border-4 border-dreamxec-navy shadow-pastel-card p-4 sm:p-6 w-full overflow-hidden">
+              <div className="card-tricolor-tag"></div>
+              <CommentSection
+                campaignId={campaign.id}
+                campaignOwnerId={campaign.userId}
+                currentUser={currentUser}
+                onLogin={onLogin}
+              />
+            </div>
+
           </div>
 
 
           {/* Right Column - Funding Card */}
-          <div className="lg:col-span-1 w-full">
+          <div className="w-full lg:w-[400px] flex-shrink-0">
+
             <div className="card-pastel-offwhite rounded-lg sm:rounded-xl border-3 sm:border-4 md:border-5 border-dreamxec-navy shadow-pastel-card p-3 sm:p-4 md:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] overflow-y-auto w-full">
               <div className="card-tricolor-tag"></div>
 
