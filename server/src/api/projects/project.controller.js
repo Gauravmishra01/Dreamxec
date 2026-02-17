@@ -2,6 +2,8 @@ const prisma = require('../../config/prisma');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const sendEmail = require('../../services/email.service');
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 // USER: Create a project
 exports.createProject = catchAsync(async (req, res, next) => {
@@ -23,6 +25,14 @@ exports.createProject = catchAsync(async (req, res, next) => {
     403
   ));
 }
+
+  // Publish Event
+  await publishEvent(EVENTS.CAMPAIGN_CREATED, {
+    email: req.user.email,
+    name: req.user.name,
+    campaignTitle: project.title,
+    campaignUrl: `${process.env.CLIENT_URL}/projects/${project.id}`
+  });
 
   res.status(201).json({ status: 'success', data: { project } });
 });
@@ -52,6 +62,14 @@ exports.updateMyProject = catchAsync(async (req, res, next) => {
   const updatedProject = await prisma.project.update({
     where: { id: req.params.id },
     data: req.body,
+  });
+
+  // Publish Event
+  await publishEvent(EVENTS.CAMPAIGN_UPDATE, {
+    email: req.user.email,
+    name: req.user.name,
+    campaignTitle: updatedProject.title,
+    campaignUrl: `${process.env.CLIENT_URL}/projects/${updatedProject.id}`
   });
 
   res.status(200).json({ status: 'success', data: { project: updatedProject } });
@@ -190,25 +208,21 @@ exports.verifyProject = catchAsync(async (req, res, next) => {
     data: updateData
   });
 
-  // Send email notification to project owner
+  // Send event notification to project owner
   if (project.owner) {
-    let rejectionDetails = 'Please review your project details and resubmit if needed.';
-    if (reason) {
-      rejectionDetails = `Reason for rejection: ${reason}\n\nPlease review the feedback, update your project, and resubmit if needed.`;
-    }
-    const approvalMessage = 'Congratulations! Your project is now live and accepting donations.';
-    
-    const message = `Dear ${project.owner.name},\n\nYour project "${project.title}" has been ${status.toLowerCase()}.\n\n${status === 'APPROVED' ? approvalMessage : rejectionDetails}\n\nBest regards,\nThe Crowdfunding Team`;
+    const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
     
     try {
-      await sendEmail({
+      await publishEvent(eventName, {
         email: project.owner.email,
-        subject: `Your Project "${project.title}" has been ${status}`,
-        message
+        name: project.owner.name,
+        campaignTitle: project.title,
+        status: status,
+        reason: reason || null,
+        campaignUrl: `${process.env.CLIENT_URL}/projects/${project.id}`
       });
     } catch (err) {
-      console.error('Email sending error:', err);
-      // Note: The operation will still succeed even if the email fails.
+      console.error('Event publishing error:', err);
     }
   }
 

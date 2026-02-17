@@ -170,10 +170,13 @@ const createUserProjectSchema = zod.object({
       /* Budget vs Milestones */
       /* ------------------ */
 
-      const totalMilestones = data.milestones.reduce(
-        (s, m) => s + m.budget,
-        0
-      );
+      let totalMilestones = 0;
+      if (Array.isArray(data.milestones)) {
+        totalMilestones = data.milestones.reduce(
+          (s, m) => s + m.budget,
+          0
+        );
+      }
 
       if (totalMilestones > data.goalAmount) {
         ctx.addIssue({
@@ -205,9 +208,9 @@ const createUserProjectSchema = zod.object({
       /* Duplicate milestone titles */
       /* ------------------ */
 
-      const titles = data.milestones.map((m) =>
-        m.title.toLowerCase()
-      );
+      const titles = Array.isArray(data.milestones) 
+        ? data.milestones.map((m) => m.title.toLowerCase())
+        : [];
 
       if (new Set(titles).size !== titles.length) {
         ctx.addIssue({

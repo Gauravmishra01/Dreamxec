@@ -192,6 +192,8 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const prisma = require("./prisma");
+const { publishEvent } = require("../services/eventPublisher.service");
+const EVENTS = require("./events");
 
 // --------------------------------------------
 // COMMON FUNCTION TO PROCESS OAUTH USER
@@ -305,6 +307,15 @@ async function processOAuthUser(providerIdKey, profile, requestedRole) {
       clubVerified: false,
     },
   });
+
+  // Publish Welcome Event
+  publishEvent(EVENTS.USER_WELCOME, {
+      email: newUser.email,
+      name: newUser.name,
+      dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+  }).catch(err => console.error("Failed to publish welcome event for OAuth user:", err));
+
+  return newUser;
 }
 
 // --------------------------------------------

@@ -245,7 +245,7 @@ export default function StudentDashboard({
         const matchesSearch = searchQuery === '' ||
             campaign.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             campaign.club?.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesStatus = filterStatus === 'ALL' || campaign.status === filterStatus;
+        const matchesStatus = filterStatus === 'ALL' || campaign.status.toLowerCase() === filterStatus.toLowerCase();
         return matchesSearch && matchesStatus;
     });
 

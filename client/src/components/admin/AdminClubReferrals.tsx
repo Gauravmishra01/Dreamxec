@@ -21,7 +21,7 @@ export default function AdminClubReferrals() {
   async function load() {
     setLoading(true);
     try {
-      const res = await API.get('/club-referral'); // GET all referrals
+      const res = await API.get('/admin/referrals'); // GET all referrals
       setReferrals(res.data.data || res.data || []);
     } catch (e) { console.error(e); alert('Failed to fetch referrals'); }
     setLoading(false);
@@ -29,7 +29,7 @@ export default function AdminClubReferrals() {
 
   async function approve(id: string) {
     try {
-      await API.post(`/club-referral/${id}/approve`);
+      await API.post(`/admin/referrals/${id}/approve`);
       load();
     } catch (e) { console.error(e); alert('Approve failed'); }
   }
@@ -46,31 +46,31 @@ export default function AdminClubReferrals() {
     <>
       <Header />
       <div className="bg-white rounded-xl shadow p-6 max-w-7xl mx-auto mt-6">
-      <h2 className="text-2xl font-bold mb-4">Club Referrals</h2>
-      {loading ? <p>Loading…</p> : (
-        <table className="w-full">
-          <thead><tr><th>Club</th><th>Referrer</th><th>President</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            {referrals.length === 0 && <tr><td colSpan={5} className="py-6 text-center">No referrals</td></tr>}
-            {referrals.map(r => (
-              <tr key={r.id} className="border-b">
-                <td className="py-3">{r.clubName || r.collegeName}</td>
-                <td>{r.referrerEmail || r.studentEmail}</td>
-                <td>{r.presidentName || '—'}</td>
-                <td>{r.status}</td>
-                <td className="text-right">
-                  <button onClick={() => setSelected(r)} className="px-3 py-1 mr-2 bg-gray-100 rounded">View</button>
-                  <button onClick={() => approve(r.id)} className="px-3 py-1 mr-2 bg-green-600 text-white rounded">Approve</button>
-                  <button onClick={() => setRejectionId(r.id)} className="px-3 py-1 bg-red-600 text-white rounded">Reject</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <h2 className="text-2xl font-bold mb-4">Club Referrals</h2>
+        {loading ? <p>Loading…</p> : (
+          <table className="w-full">
+            <thead><tr><th>Club</th><th>Referrer</th><th>President</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              {referrals.length === 0 && <tr><td colSpan={5} className="py-6 text-center">No referrals</td></tr>}
+              {referrals.map(r => (
+                <tr key={r.id} className="border-b">
+                  <td className="py-3">{r.clubName || r.collegeName}</td>
+                  <td>{r.referrerEmail || r.studentEmail}</td>
+                  <td>{r.presidentName || '—'}</td>
+                  <td>{r.status}</td>
+                  <td className="text-right">
+                    <button onClick={() => setSelected(r)} className="px-3 py-1 mr-2 bg-gray-100 rounded">View</button>
+                    <button onClick={() => approve(r.id)} className="px-3 py-1 mr-2 bg-green-600 text-white rounded">Approve</button>
+                    <button onClick={() => setRejectionId(r.id)} className="px-3 py-1 bg-red-600 text-white rounded">Reject</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-      {selected && <ReferralDetailsModal referral={selected} onClose={() => setSelected(null)} onApprove={approve} onReject={reject} />}
-      {rejectionId && <RejectionPrompt onSubmit={(reason) => reject(rejectionId, reason)} onClose={() => setRejectionId(null)} />}
+        {selected && <ReferralDetailsModal referral={selected} onClose={() => setSelected(null)} onApprove={approve} onReject={reject} />}
+        {rejectionId && <RejectionPrompt onSubmit={(reason) => reject(rejectionId, reason)} onClose={() => setRejectionId(null)} />}
       </div>
     </>
   );

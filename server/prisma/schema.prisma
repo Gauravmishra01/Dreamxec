@@ -445,12 +445,12 @@ model ClubVerification {
   status        String  @default("PENDING")
 
   // NEW — required by feature
-  clubName        String
-  clubDescription String
-  clubInstagram   String
+  clubName        String?
+  clubDescription String?
+  clubInstagram   String?
   clubLinkedIn    String?
   clubYouTube     String?
-  alumni          Json
+  alumni          Json?
 
 
   userId String? @db.ObjectId

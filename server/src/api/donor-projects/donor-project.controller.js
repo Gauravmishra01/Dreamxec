@@ -1,6 +1,8 @@
 const prisma = require('../../config/prisma');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 const {
   getDonorEligibility,
@@ -130,6 +132,16 @@ exports.updateDonorProject = catchAsync(async (req, res, next) => {
     data: updateData,
   });
 
+  // Publish Event
+  if (updatedDonorProject.status === 'APPROVED') {
+    await publishEvent(EVENTS.CAMPAIGN_UPDATE, {
+      email: req.user.email,
+      name: req.user.name,
+      campaignTitle: updatedDonorProject.title,
+      campaignUrl: `${process.env.CLIENT_URL}/donor-projects/${updatedDonorProject.id}`
+    });
+  }
+
   res.status(200).json({
     status: 'success',
     data: { donorProject: updatedDonorProject },
@@ -189,10 +201,15 @@ exports.getDonorProject = catchAsync(async (req, res, next) => {
     }
   }
 
-  res.status(200).json({
-    status: 'success',
-    data: { donorProject },
+  // Publish Event
+  await publishEvent(EVENTS.CAMPAIGN_CREATED, {
+    email: req.user.email,
+    name: req.user.name,
+    campaignTitle: donorProject.title,
+    campaignUrl: `${process.env.CLIENT_URL}/donor-projects/${donorProject.id}`
   });
+
+  res.status(201).json({ status: 'success', data: { donorProject } });
 });
 
 /* ======================================================

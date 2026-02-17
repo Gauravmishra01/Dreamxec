@@ -333,6 +333,16 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
     return project;
   });
 
+  // Publish Event
+  if (updatedProject.status === 'APPROVED') {
+     await publishEvent(EVENTS.CAMPAIGN_UPDATE, {
+       email: req.user.email,
+       name: req.user.name,
+       campaignTitle: updatedProject.title,
+       campaignUrl: `${process.env.CLIENT_URL}/projects/${updatedProject.id}`
+     });
+  }
+
   res.status(200).json({
     status: 'success',
     data: { userProject: updatedProject },

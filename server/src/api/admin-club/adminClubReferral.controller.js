@@ -26,7 +26,7 @@ exports.approveReferral = async (req, res) => {
   // set status to APPROVED, maybe create Club record etc.
   const updated = await prisma.clubReferralRequest.update({
     where: { id },
-    data: { status: "APPROVED", reviewedBy: req.user.id, reviewedAt: new Date() },
+    data: { status: "APPROVED" },
   });
   res.json({ success: true, data: updated });
 };
@@ -36,7 +36,7 @@ exports.rejectReferral = async (req, res) => {
   const { reason } = req.body;
   const updated = await prisma.clubReferralRequest.update({
     where: { id },
-    data: { status: "REJECTED", rejectionReason: reason || null, reviewedBy: req.user.id, reviewedAt: new Date() },
+    data: { status: "REJECTED", rejectionReason: reason || null },
   });
   res.json({ success: true, data: updated });
 };
