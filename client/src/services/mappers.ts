@@ -91,16 +91,15 @@ export const mapUserProjectToCampaign = (
     title: userProject.title,
     description: userProject.description,
 
-    ownerId: userProject.userId,
     user: userProject.user,
 
     clubId: userProject.clubId,
     club: userProject.club
       ? {
-          id: userProject.club.id,
-          name: userProject.club.name,
-          college: userProject.club.college,
-        }
+        id: userProject.club.id,
+        name: userProject.club.name,
+        college: userProject.club.college,
+      }
       : undefined,
 
     goalAmount: userProject.goalAmount,

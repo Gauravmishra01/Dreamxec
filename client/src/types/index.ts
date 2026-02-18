@@ -91,7 +91,7 @@ export interface Campaign {
   user?: {
     id: string;
     name: string;
-    email: string;
+    email?: string;
   };
 
   goalAmount: number;
