@@ -64,7 +64,6 @@ export interface UserProject {
 
   rejectionReason?: string;
   reapprovalCount?: number;
-  userId: string;
   milestones?: any[];
 }
 

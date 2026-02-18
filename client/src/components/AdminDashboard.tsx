@@ -8,6 +8,7 @@ import {
   verifyUserProject,
   verifyDonorProject
 } from '../services/adminService';
+import { mapUserProjectToCampaign, mapDonorProjectToProject } from '../services/mappers';
 import type { Campaign, Project, DashboardStats } from '../types';
 import { StarDecoration } from './icons/StarDecoration';
 
@@ -99,8 +100,8 @@ export default function AdminDashboard() {
         getAllProjects({ limit: 100 })
       ]);
       setStats(statsRes.data);
-      setUserProjects(projectsRes.data.userProjects.data);
-      setDonorProjects(projectsRes.data.donorProjects.data);
+      setUserProjects(projectsRes.data.userProjects.data.map((p: any) => mapUserProjectToCampaign(p)));
+      setDonorProjects(projectsRes.data.donorProjects.data.map((p: any) => mapDonorProjectToProject(p)));
     } catch (error) {
       console.error("Failed to fetch dashboard data", error);
     } finally {
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
 
   // Derived Data
   const pendingCampaigns = userProjects.filter(p => p.status === 'pending');
-  const pendingDonorProjects = donorProjects.filter(p => p.status === 'PENDING');
+  const pendingDonorProjects = donorProjects.filter(p => p.status === 'pending');
   const approvedCount = stats.kpi.campaigns.APPROVED;
   const totalSubmissions = stats.kpi.campaigns.total;
 
@@ -226,7 +227,7 @@ export default function AdminDashboard() {
                   <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
                 </div>
               </div>
-              <p className="text-5xl font-bold text-dreamxec-navy font-display">{pendingCampaigns.length}</p>
+              <p className="text-5xl font-bold text-dreamxec-navy font-display">{stats.kpi.campaigns.PENDING}</p>
               <div className="mt-2 h-1 bg-dreamxec-orange rounded"></div>
             </div>
 

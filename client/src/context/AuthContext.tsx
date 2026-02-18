@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { User } from '../types';
-import { 
-  login as apiLogin, 
-  register as apiRegister, 
-  logout as apiLogout, 
+import {
+  login as apiLogin,
+  register as apiRegister,
+  logout as apiLogout,
   getCurrentUser,
   initiateGoogleAuth,
   initiateLinkedInAuth,
@@ -25,6 +25,7 @@ interface BackendUser {
   clubVerified?: boolean;
   name?: string;
   studentVerified?: boolean;
+  accountStatus?: 'ACTIVE' | 'BLOCKED' | 'SUSPENDED' | 'UNDER_REVIEW';
 }
 
 interface AuthContextType {
@@ -66,7 +67,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isClubMember: backendUser?.isClubMember || false,
     clubVerified: backendUser?.clubVerified || false,
     name: backendUser.name,
-    studentVerified: backendUser?.studentVerified,
+    studentVerified: backendUser?.studentVerified || false,
+    accountStatus: backendUser.accountStatus || 'ACTIVE',
   });
 
   // Load user from token on mount
