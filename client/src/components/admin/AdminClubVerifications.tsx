@@ -7,6 +7,7 @@ import {
 } from '../../services/adminService';
 import VerificationDetailModal from './VerificationDetailModal';
 import { StarDecoration } from '../icons/StarDecoration';
+import { Header } from '../../sections/Header';
 
 // --- Icons (Matching Dashboard Style) ---
 const CheckCircleIcon = ({ className }: { className?: string }) => (
@@ -228,6 +229,7 @@ export default function AdminClubVerifications() {
           onReject={reject}
         />
       )}
-    </div>
-  );
-}
+      </div>
+    
+  
+  );}

@@ -17,9 +17,10 @@ body {
 /* Replace your entire @layer components with this */
 @layer components {
 
-  input, textarea {
-  caret-color: #f97316 !important;
-}
+  input,
+  textarea {
+    caret-color: #f97316 !important;
+  }
 
   /* The scroller NO LONGER has a fixed height or overflow */
   .scroll-stack-scroller {
@@ -66,7 +67,11 @@ body {
   body {
     @apply text-dreamxec-navy;
     /* Pastel watercolor diagonal tricolor */
-    background: url("/assets/textures/tri-bg.png");
+    background:
+      linear-gradient(rgba(255, 248, 235, 0.8),
+        rgba(255, 248, 235, 0.8)),
+      url("/assets/textures/tri-bg.png");
+
     background-size: 100% 100%;
     background-repeat: repeat;
     background-attachment: fixed;
@@ -93,7 +98,7 @@ body {
   }
 
   /* Oil pastel paper texture overlay */
-  
+
 
   /* Optional: Rough edge mask for hand-drawn effect */
   body::before {
@@ -109,6 +114,7 @@ body {
     mask-repeat: no-repeat;
     background: inherit;
   }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -136,6 +142,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -452,20 +459,23 @@ body {
     align-items: center;
     justify-content: center;
   }
+
   /* Glassmorphism Effect */
   .card-glass {
     /* Frosted glass background */
     background: rgba(255, 255, 255, 0.1);
-    -webkit-backdrop-filter: blur(12px); /* Backdrop filter for Safari */
+    -webkit-backdrop-filter: blur(12px);
+    /* Backdrop filter for Safari */
     backdrop-filter: blur(12px);
 
     /* Subtle border to catch the light */
     border: 1px solid rgba(255, 255, 255, 0.2);
 
     /* Rounded corners and a modern shadow */
-    border-radius: 1rem; /* 16px */
+    border-radius: 1rem;
+    /* 16px */
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    
+
     transition: all 0.3s ease-in-out;
   }
 
@@ -483,17 +493,19 @@ body {
   .card-whiteboard {
     /* Set the whiteboard image as the background */
     background-image: url('/assets/icon-pack/DX-ILLUSTRATION-PACK/white-board.png');
-    background-size: 100% 100%; /* Stretch the image to fit */
+    background-size: 100% 100%;
+    /* Stretch the image to fit */
     background-repeat: no-repeat;
-    
+
     /* Adjust padding to fit text inside the whiteboard's writing area */
     padding: 18% 12% 20%;
-    
+
     /* Ensure text color is dark and readable on the white background */
     color: #333;
 
-    min-height: 300px; /* Give the card a minimum height */
-    
+    min-height: 300px;
+    /* Give the card a minimum height */
+
     /* Animation and transition */
     transition: transform 0.3s ease-out;
   }
@@ -503,42 +515,57 @@ body {
   }
 
   /* EMPTY */
-.react-calendar-heatmap .dx-empty {
-  fill: #e5e7eb;
-  rx: 4px;
-}
-.react-calendar-heatmap .dx-empty { fill: #e5e7eb; }
-.react-calendar-heatmap .dx-1 { fill: #bfdbfe; }
-.react-calendar-heatmap .dx-2 { fill: #60a5fa; }
-.react-calendar-heatmap .dx-3 { fill: #2563eb; }
-.react-calendar-heatmap .dx-4 { fill: #1e3a8a; }
+  .react-calendar-heatmap .dx-empty {
+    fill: #e5e7eb;
+    rx: 4px;
+  }
+
+  .react-calendar-heatmap .dx-empty {
+    fill: #e5e7eb;
+  }
+
+  .react-calendar-heatmap .dx-1 {
+    fill: #bfdbfe;
+  }
+
+  .react-calendar-heatmap .dx-2 {
+    fill: #60a5fa;
+  }
+
+  .react-calendar-heatmap .dx-3 {
+    fill: #2563eb;
+  }
+
+  .react-calendar-heatmap .dx-4 {
+    fill: #1e3a8a;
+  }
 
 
-/* LIGHT */
-.react-calendar-heatmap .dx-1 {
-  fill: #bfdbfe;
-  rx: 4px;
-}
+  /* LIGHT */
+  .react-calendar-heatmap .dx-1 {
+    fill: #bfdbfe;
+    rx: 4px;
+  }
 
-/* MEDIUM */
-.react-calendar-heatmap .dx-2 {
-  fill: #60a5fa;
-  rx: 4px;
-}
+  /* MEDIUM */
+  .react-calendar-heatmap .dx-2 {
+    fill: #60a5fa;
+    rx: 4px;
+  }
 
-/* STRONG */
-.react-calendar-heatmap .dx-3 {
-  fill: #2563eb;
-  rx: 4px;
-}
+  /* STRONG */
+  .react-calendar-heatmap .dx-3 {
+    fill: #2563eb;
+    rx: 4px;
+  }
 
-/* MAX */
-.react-calendar-heatmap .dx-4 {
-  fill: #1e3a8a;
-  rx: 4px;
-}
+  /* MAX */
+  .react-calendar-heatmap .dx-4 {
+    fill: #1e3a8a;
+    rx: 4px;
+  }
 
-  
+
 }
 
 
@@ -569,6 +596,7 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -590,11 +618,25 @@ body {
 }
 
 /* Stagger utility */
-.reveal-delay-1 { transition-delay: 120ms; }
-.reveal-delay-2 { transition-delay: 240ms; }
-.reveal-delay-3 { transition-delay: 360ms; }
-.reveal-delay-4 { transition-delay: 480ms; }
-.reveal-delay-5 { transition-delay: 600ms; }
+.reveal-delay-1 {
+  transition-delay: 120ms;
+}
+
+.reveal-delay-2 {
+  transition-delay: 240ms;
+}
+
+.reveal-delay-3 {
+  transition-delay: 360ms;
+}
+
+.reveal-delay-4 {
+  transition-delay: 480ms;
+}
+
+.reveal-delay-5 {
+  transition-delay: 600ms;
+}
 
 /* Optional: fade in on load for elegance */
 @keyframes fade-in {
@@ -602,6 +644,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -618,6 +661,7 @@ img {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -643,6 +687,7 @@ img {
 
 /* Mobile responsive padding for carousels */
 @media (max-width: 768px) {
+
   .criteria-carousel,
   .whiteboard-carousel,
   .faq-carousel,
@@ -663,6 +708,7 @@ img {
 }
 
 @media (max-width: 480px) {
+
   .criteria-carousel,
   .whiteboard-carousel,
   .faq-carousel,
@@ -882,12 +928,13 @@ img {
 }
 
 /* Ensure smooth card height transitions */
-.swiper-slide > div {
+.swiper-slide>div {
   width: 100%;
 }
 
 /* Touch feedback for mobile */
 @media (hover: none) and (pointer: coarse) {
+
   .criteria-carousel .swiper-button-next:active,
   .criteria-carousel .swiper-button-prev:active,
   .whiteboard-carousel .swiper-button-next:active,
@@ -1211,9 +1258,10 @@ img {
 }
 
 /* Uniform Card Heights */
-.swiper-slide > div {
+.swiper-slide>div {
   width: 100%;
-  min-height: 280px; /* Ensures consistent minimum height across all cards */
+  min-height: 280px;
+  /* Ensures consistent minimum height across all cards */
 }
 
 /* Whiteboard cards specific height */
@@ -1236,7 +1284,7 @@ img {
   display: flex;
 }
 
-.eligibility-faq-carousel .swiper-slide > div {
+.eligibility-faq-carousel .swiper-slide>div {
   width: 100%;
   min-height: 280px;
 }
@@ -1247,11 +1295,14 @@ img {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 127, 0, 0.9);
-  box-shadow: 0 4px 12px rgba(255, 127, 0, 0.3);
-  border: 3px solid #000080;
+  background: rgba(255, 255, 255, 0.75); /* white with low opacity */
+  backdrop-filter: blur(6px); /* optional glass effect */
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* softer shadow */
+  border: 2px solid rgba(0, 0, 128, 0.4); /* subtle navy border */
   transition: all 0.3s ease-in-out;
 }
+
 
 .eligibility-faq-carousel .swiper-button-next:after,
 .eligibility-faq-carousel .swiper-button-prev:after {
@@ -1288,4 +1339,3 @@ img {
   width: 32px;
   border-radius: 6px;
 }
-

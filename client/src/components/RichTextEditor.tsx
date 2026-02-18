@@ -32,7 +32,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
   if (!editor) return null;
 
   return (
-    <div className="border-4 border-dreamxec-navy rounded-lg bg-white">
+    <div className="border-2 border-dreamxec-navy rounded-lg bg-white">
       {/* Toolbar */}
       <div className="flex flex-wrap gap-2 p-2 border-b">
         <button onClick={() => editor.chain().focus().toggleBold().run()}>

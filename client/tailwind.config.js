@@ -1,204 +1,191 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    darkMode: ["class"],
-    content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  darkMode: ["class"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-  	extend: {
-  		colors: {
-  			dreamxec: {
-  				saffron: '#FF7F00',
-  				'saffron-deep': '#cc5500',
-  				orange: '#FF9933',
-  				white: '#FFFFFF',
-  				green: '#0B9C2C',
-  				'green-alt': '#138808',
-  				'dark-green': '#0A7A23',
-  				navy: '#003366',
-  				'berkeley-blue': '#003366',
-  				'resolution-blue': '#1A237E',
-  				'sky-blue': '#00B4D8',
-  				cream: '#FFF8F0',
-  				beige: '#FEF5E7',
-  				'off-white': '#FAFAF8',
-  				black: '#1A1A1A',
-  				gray: {
-  					'50': '#F9FAFB',
-  					'100': '#F3F4F6',
-  					'200': '#E5E7EB',
-  					'250': '#333333',
-  					'300': '#D1D5DB',
-  					'400': '#9CA3AF',
-  					'500': '#6B7280',
-  					'600': '#4B5563',
-  					'700': '#374151',
-  					'800': '#1F2937',
-  					'900': '#111827'
-  				},
-  				red: {
-  					'50': '#FEF2F2',
-  					'100': '#FEE2E2',
-  					'200': '#FECACA',
-  					'300': '#FCA5A5',
-  					'400': '#F87171',
-  					'500': '#EF4444',
-  					'600': '#DC2626',
-  					'700': '#B91C1C',
-  					'800': '#991B1B',
-  					'900': '#7F1D1D'
-  				},
-  				moonstone: {
-  					'50': '#E5F8FA',
-  					'100': '#C7F0F3',
-  					'200': '#99E0E7',
-  					'300': '#6ACFD9',
-  					'400': '#3EBECC',
-  					'500': '#0FA3B1',
-  					'600': '#0C8692',
-  					'700': '#096671',
-  					'800': '#064A53',
-  					'900': '#033033'
-  				},
-  				uranianBlue: {
-  					'50': '#F4FBFF',
-  					'100': '#E8F7FF',
-  					'200': '#D5EFFF',
-  					'300': '#C0E6FF',
-  					'400': '#A5DBFF',
-  					'500': '#B5E2FA',
-  					'600': '#84C6E5',
-  					'700': '#5BA8C7',
-  					'800': '#387B96',
-  					'900': '#1C5063'
-  				},
-  				babyPowder: {
-  					'50': '#FFFFFF',
-  					'100': '#FBFAF7',
-  					'200': '#F7F5EE',
-  					'300': '#F0EDE0',
-  					'400': '#E7E4D2',
-  					'500': '#F9F7F3',
-  					'600': '#CFCBBF',
-  					'700': '#A8A59A',
-  					'800': '#7C7A71',
-  					'900': '#4F4D46'
-  				},
-  				vanilla: {
-  					'50': '#FCF8EA',
-  					'100': '#F8F1D4',
-  					'200': '#F3E7BA',
-  					'300': '#EBDCA2',
-  					'400': '#E4D48E',
-  					'500': '#EDDEA4',
-  					'600': '#CDBD86',
-  					'700': '#A89A69',
-  					'800': '#7D724B',
-  					'900': '#524C30'
-  				},
-  				atomicTangerine: {
-  					'50': '#FFF4ED',
-  					'100': '#FFE5D6',
-  					'200': '#FFCCB1',
-  					'300': '#FFB38D',
-  					'400': '#FF9764',
-  					'500': '#F7A072',
-  					'600': '#D77F54',
-  					'700': '#B1633E',
-  					'800': '#864A2C',
-  					'900': '#58301C'
-  				}
-  			},
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		},
-  		fontFamily: {
-  			sans: [
-  				'Inter',
-  				'Nunito',
-  				'system-ui',
-  				'sans-serif'
-  			],
-  			display: [
-  				'Poppins',
-  				'Baloo 2',
-  				'sans-serif'
-  			],
-  			serif: [
-  				'Merriweather',
-  				'serif'
-  			],
-  			mono: [
-  				'Fira Code',
-  				'monospace'
-  			],
-  			handwriting: [
-  				'Pacifico',
-  				'cursive'
-  			],
-  			popper: [
-  				'Poppins',
-  				'sans-serif'
-  			]
-  		},
-  		boxShadow: {
-  			'pastel-saffron': '4px 4px 0px #FF7F00, 8px 8px 0px rgba(255, 127, 0, 0.3)',
-  			'pastel-green': '4px 4px 0px #0B9C2C, 8px 8px 0px rgba(11, 156, 44, 0.3)',
-  			'pastel-navy': '4px 4px 0px #000080, 8px 8px 0px rgba(0, 0, 128, 0.3)',
-  			'pastel-card': '6px 6px 0px #FF7F00, 12px 12px 0px rgba(0, 0, 128, 0.2)',
-  			'pastel-glow-saffron': '0 0 20px rgba(255, 127, 0, 0.4)',
-  			'pastel-glow-green': '0 0 20px rgba(11, 156, 44, 0.4)'
-  		},
-  		borderWidth: {
-  			'3': '3px',
-  			'5': '5px',
-  			'6': '6px'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		}
-  	}
+    screens: {
+      xs: "475px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
+    extend: {
+      colors: {
+        dreamxec: {
+          saffron: "#FF7F00",
+          "saffron-deep": "#cc5500",
+          orange: "#FF9933",
+          white: "#FFFFFF",
+          green: "#0B9C2C",
+          "green-alt": "#138808",
+          "dark-green": "#0A7A23",
+          navy: "#003366",
+          "berkeley-blue": "#003366",
+          "resolution-blue": "#1A237E",
+          "sky-blue": "#00B4D8",
+          cream: "#FFF8F0",
+          beige: "#FEF5E7",
+          "off-white": "#FAFAF8",
+          black: "#1A1A1A",
+          gray: {
+            50: "#F9FAFB",
+            100: "#F3F4F6",
+            200: "#E5E7EB",
+            250: "#333333",
+            300: "#D1D5DB",
+            400: "#9CA3AF",
+            500: "#6B7280",
+            600: "#4B5563",
+            700: "#374151",
+            800: "#1F2937",
+            900: "#111827",
+          },
+          red: {
+            50: "#FEF2F2",
+            100: "#FEE2E2",
+            200: "#FECACA",
+            300: "#FCA5A5",
+            400: "#F87171",
+            500: "#EF4444",
+            600: "#DC2626",
+            700: "#B91C1C",
+            800: "#991B1B",
+            900: "#7F1D1D",
+          },
+          moonstone: {
+            50: "#E5F8FA",
+            100: "#C7F0F3",
+            200: "#99E0E7",
+            300: "#6ACFD9",
+            400: "#3EBECC",
+            500: "#0FA3B1",
+            600: "#0C8692",
+            700: "#096671",
+            800: "#064A53",
+            900: "#033033",
+          },
+          uranianBlue: {
+            50: "#F4FBFF",
+            100: "#E8F7FF",
+            200: "#D5EFFF",
+            300: "#C0E6FF",
+            400: "#A5DBFF",
+            500: "#B5E2FA",
+            600: "#84C6E5",
+            700: "#5BA8C7",
+            800: "#387B96",
+            900: "#1C5063",
+          },
+          babyPowder: {
+            50: "#FFFFFF",
+            100: "#FBFAF7",
+            200: "#F7F5EE",
+            300: "#F0EDE0",
+            400: "#E7E4D2",
+            500: "#F9F7F3",
+            600: "#CFCBBF",
+            700: "#A8A59A",
+            800: "#7C7A71",
+            900: "#4F4D46",
+          },
+          vanilla: {
+            50: "#FCF8EA",
+            100: "#F8F1D4",
+            200: "#F3E7BA",
+            300: "#EBDCA2",
+            400: "#E4D48E",
+            500: "#EDDEA4",
+            600: "#CDBD86",
+            700: "#A89A69",
+            800: "#7D724B",
+            900: "#524C30",
+          },
+          atomicTangerine: {
+            50: "#FFF4ED",
+            100: "#FFE5D6",
+            200: "#FFCCB1",
+            300: "#FFB38D",
+            400: "#FF9764",
+            500: "#F7A072",
+            600: "#D77F54",
+            700: "#B1633E",
+            800: "#864A2C",
+            900: "#58301C",
+          },
+        },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
+        },
+      },
+      fontFamily: {
+        sans: ["Inter", "Nunito", "system-ui", "sans-serif"],
+        display: ["Poppins", "Baloo 2", "sans-serif"],
+        serif: ["Merriweather", "serif"],
+        mono: ["Fira Code", "monospace"],
+        handwriting: ["Pacifico", "cursive"],
+        popper: ["Poppins", "sans-serif"],
+      },
+      boxShadow: {
+        "pastel-saffron":
+          "4px 4px 0px #FF7F00, 8px 8px 0px rgba(255, 127, 0, 0.3)",
+        "pastel-green":
+          "4px 4px 0px #0B9C2C, 8px 8px 0px rgba(11, 156, 44, 0.3)",
+        "pastel-navy": "4px 4px 0px #000080, 8px 8px 0px rgba(0, 0, 128, 0.3)",
+        "pastel-card":
+          "6px 6px 0px #FF7F00, 12px 12px 0px rgba(0, 0, 128, 0.2)",
+        "pastel-glow-saffron": "0 0 20px rgba(255, 127, 0, 0.4)",
+        "pastel-glow-green": "0 0 20px rgba(11, 156, 44, 0.4)",
+      },
+      borderWidth: {
+        3: "3px",
+        5: "5px",
+        6: "6px",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+    },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

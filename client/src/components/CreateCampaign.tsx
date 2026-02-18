@@ -50,6 +50,7 @@ interface CreateCampaignProps {
     youtubeUrl?: string;
     milestones: { title: string; timeline: string; budget: string; description?: string }[];
   }) => Promise<void>;
+  initialData?: any; // 🆕 EDIT MODE
 }
 
 type Milestone = { title: string; timeline: string; budget: string; description?: string };
@@ -59,40 +60,54 @@ type ClubOption = {
   college: string;
 };
 
-export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps) {
+export default function CreateCampaign({ onBack, onSubmit, initialData }: CreateCampaignProps) {
   const [step, setStep] = useState(1);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState(initialData?.title || '');
+  const [description, setDescription] = useState(initialData?.description || '');
   // const [collegeName, setCollegeName] = useState('');
   const [clubs, setClubs] = useState<ClubOption[]>([]);
-  const [clubId, setClubId] = useState('');
+  const [clubId, setClubId] = useState(initialData?.clubId || '');
 
-  const [goalAmount, setGoalAmount] = useState('');
-  const [presentationDeckUrl, setPresentationDeckUrl] = useState('');
-  const [campaignType, setCampaignType] = useState<"INDIVIDUAL" | "TEAM">("INDIVIDUAL");
-  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [goalAmount, setGoalAmount] = useState(initialData?.goalAmount?.toString() || '');
+  const [presentationDeckUrl, setPresentationDeckUrl] = useState(initialData?.presentationDeckUrl || '');
+  const [campaignType, setCampaignType] = useState<"INDIVIDUAL" | "TEAM">(initialData?.campaignType || "INDIVIDUAL");
+  const [youtubeUrl, setYoutubeUrl] = useState(initialData?.youtubeUrl || '');
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-  const [bannerPreview, setBannerPreview] = useState('');
-  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
 
-  const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>([]);
-  const [teamMembers, setTeamMembers] = useState<{ name: string; role: string; image: File | null }[]>([]);
-  const [milestones, setMilestones] = useState<Milestone[]>([
-    { title: '', timeline: '', budget: '', description: '' }
-  ]);
+  // Preview URLs for existing data
+  const [bannerPreview, setBannerPreview] = useState(initialData?.imageUrl || '');
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>(initialData?.campaignMedia || []);
+
+  const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>(initialData?.faqs || []);
+
+  const [teamMembers, setTeamMembers] = useState<{ name: string; role: string; image: File | null }[]>(
+    initialData?.teamMembers?.map((m: any) => ({ ...m, image: null })) || []
+  );
+
+  const [milestones, setMilestones] = useState<Milestone[]>(
+    initialData?.milestones?.map((m: any) => ({
+      title: m.title,
+      timeline: m.timeline,
+      budget: m.budget.toString(),
+      description: m.description || ''
+    })) || [{ title: '', timeline: '', budget: '', description: '' }]
+  );
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const mediaInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
-      if (bannerPreview) URL.revokeObjectURL(bannerPreview);
-      mediaPreviews.forEach(url => URL.revokeObjectURL(url));
+      // Cleanup object URLs but NOT external URLs from initialData
+      if (bannerPreview && !bannerPreview.startsWith('http')) URL.revokeObjectURL(bannerPreview);
+      mediaPreviews.forEach(url => {
+        if (!url.startsWith('http')) URL.revokeObjectURL(url);
+      });
     };
   }, [bannerPreview, mediaPreviews]);
 
@@ -150,7 +165,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
       case 3:
         return (
-          bannerFile &&
+          (bannerFile || initialData?.imageUrl) && // ✅ Allow if existing image
           milestones.every(
             m =>
               m.title.trim() &&
@@ -221,7 +236,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
     // STEP 3 validation (milestones belong here)
     if (
       step === 3 &&
-      (!bannerFile ||
+      ((!bannerFile && !initialData?.imageUrl) || // ✅ Check existing
         totalMilestoneBudget > parseFloat(goalAmount) ||
         !milestones.every(
           m =>
@@ -274,8 +289,8 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
   if (showSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-dreamxec-cream to-white flex items-center justify-center p-4">
-        <div className=" rounded-2xl border-4 border-dreamxec-navy shadow-lg p-8 text-center max-w-sm w-full mx-auto">
-          <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-md">
+        <div className=" rounded-2xl border-2 border-dreamxec-navy shadow-lg p-8 text-center max-w-sm w-full mx-auto">
+          <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-white shadow-md">
             <CheckCircleIcon className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-dreamxec-navy mb-2">Success! 🎉</h1>
@@ -345,7 +360,33 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
       {/* Main Form */}
       <div className="max-w-4xl mx-auto px-4 pb-12">
-        <div className=" backdrop-blur-xl rounded-2xl border-4 border-dreamxec-navy shadow-lg p-4 sm:p-6">
+
+        {/* 🔴 ADMIN NOTE FOR REJECTED CAMPAIGNS */}
+        {initialData?.status === 'REJECTED' && initialData.rejectionReason && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                {/* Alert Icon */}
+                <svg className="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-red-800 uppercase tracking-wide">
+                  ⚠️ Admin Feedback (Attempt {(initialData.reapprovalCount || 0) + 1}/3)
+                </h3>
+                <div className="mt-1 text-sm text-red-700 font-medium">
+                  {initialData.rejectionReason}
+                </div>
+                <p className="mt-2 text-xs text-red-600">
+                  Please address the issues above and resubmit your campaign. You have {3 - (initialData.reapprovalCount || 0)} attempts remaining.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className=" backdrop-blur-xl rounded-2xl border-2 border-dreamxec-navy shadow-lg p-4 sm:p-6">
 
           <form onSubmit={handleSubmit} className="space-y-5">
 

@@ -141,6 +141,21 @@ exports.rejectVerification = async (req, res) => {
       data: updated 
     });
 
+    // Publish Event (Non-blocking)
+    try {
+        if (updated.studentEmail) {
+            await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
+                email: updated.studentEmail,
+                clubName: updated.clubName || 'Your Club',
+                status: 'REJECTED',
+                reason: reason || "No reason specified",
+                dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+            });
+        }
+    } catch (err) {
+        console.error("Event Publish Error:", err);
+    }
+
   } catch (error) {
     console.error("Reject Verification Error:", error);
 

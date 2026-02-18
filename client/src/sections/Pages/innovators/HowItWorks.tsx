@@ -98,7 +98,7 @@ const HowItWorksStudents = () => {
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                        <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+                        <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-2xl font-bold mb-4">DO</h3>
                             <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
                                 <li>✅ Be honest about your timeline and challenges</li>
@@ -110,7 +110,7 @@ const HowItWorksStudents = () => {
                             </ul>
                         </div>
 
-                        <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+                        <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-2xl font-bold mb-4">DON&apos;T</h3>
                             <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg leading-relaxed">
                                 <li>❌ Exaggerate your past experience or credentials</li>
@@ -133,7 +133,7 @@ const HowItWorksStudents = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
 
-                        <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+                        <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                                 Vague Project Description
                             </h3>
@@ -144,7 +144,7 @@ const HowItWorksStudents = () => {
                             </p>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                        <div className="card-pastel p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card">
                             <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                                 Incorrect Funding Goal
                             </h3>
@@ -155,7 +155,7 @@ const HowItWorksStudents = () => {
                             </p>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                        <div className="card-pastel p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card">
                             <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                                 Poor Video Quality
                             </h3>
@@ -166,7 +166,7 @@ const HowItWorksStudents = () => {
                             </p>
                         </div>
 
-                        <div className="card-pastel p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+                        <div className="card-pastel p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card">
                             <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                                 Missing Updates
                             </h3>

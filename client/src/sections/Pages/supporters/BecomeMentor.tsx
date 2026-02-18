@@ -111,7 +111,7 @@ const BecomeMentor = () => {
               Any expert can mentor:
             </p>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card mb-8 hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card mb-8 hover:shadow-lg transition-shadow duration-300">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {mentorTypes.map((type, index) => (
                   <div key={index} className="flex items-center gap-3 text-dreamxec-navy text-base md:text-lg p-2 rounded-lg hover:bg-dreamxec-cream transition-colors duration-200">
@@ -122,7 +122,7 @@ const BecomeMentor = () => {
               </div>
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <p className="text-dreamxec-navy text-base md:text-xl font-medium leading-relaxed">
                 No specific experience required. Just genuine interest in helping students, ability to give 1 hour/week for 8–12 weeks, and willingness to share what you've learned (successes and failures both).
               </p>
@@ -161,7 +161,7 @@ const BecomeMentor = () => {
             {mentorBenefits.map((benefit, index) => (
               <SwiperSlide key={index}>
                 <div
-                   className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
+                   className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -199,7 +199,7 @@ const BecomeMentor = () => {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 max-w-7xl mx-auto">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-start gap-4">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-start gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl">⏱️</span>
@@ -233,7 +233,7 @@ const BecomeMentor = () => {
               />
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-start gap-4">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-start gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl">👥</span>
@@ -288,7 +288,7 @@ const BecomeMentor = () => {
             {mentorStories.map((story, index) => (
               <SwiperSlide key={index}>
                 <div
-                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
+                  className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">

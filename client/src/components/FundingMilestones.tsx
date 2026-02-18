@@ -48,7 +48,7 @@ export const ChecklistItem = ({ text, completed }: ChecklistItemProps) => {
   return (
     <div className={`${completed ? 'checklist-item-pastel' : 'pl-10'} py-3 transition-all duration-300`}>
       {!completed && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 border-4 border-dreamxec-navy bg-white rounded"></div>
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 border-2 border-dreamxec-navy bg-white rounded"></div>
       )}
       <span className={`text-dreamxec-navy text-base md:text-lg ${completed ? 'font-semibold' : 'opacity-60'}`}>
         {text}

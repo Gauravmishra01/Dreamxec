@@ -91,7 +91,7 @@ const FAQ = () => {
       {faqs.map((item, index) => (
         <SwiperSlide key={index}>
           <div
-            className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+            className="card-pastel-offwhite rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
           >
             <div className="card-tricolor-tag"></div>
 

@@ -79,6 +79,27 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
   const [institution, setInstitution] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  // Password validation rules
+  const passwordValidation = {
+    minLength: password.length >= 8,
+    hasAlphabet: /[a-zA-Z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>_\-+=[\]\\;'/`~]/.test(password),
+  };
+  const isPasswordValid = passwordValidation.minLength && passwordValidation.hasAlphabet && passwordValidation.hasNumber && passwordValidation.hasSpecialChar;
+
+  // Reset form helper
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setInstitution('');
+    setPasswordTouched(false);
+  };
 
   // Check window width to show/hide background images
   useEffect(() => {
@@ -150,12 +171,21 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
           setIsSubmitting(false);
           return;
         }
-        if (password.length < 6) {
-          setError('Password must be at least 6 characters');
+        if (!isPasswordValid) {
+          setError('Password must be at least 8 characters and include alphabets, numbers, and a special character');
           setIsSubmitting(false);
           return;
         }
         await onSignup(name, email, password, role, institution);
+        // On successful signup, reset form and show success message
+        resetForm();
+        setSuccessMessage('🎉 Account created successfully! Please sign in.');
+        setError('');
+        // Switch to login form after 2.5 seconds
+        setTimeout(() => {
+          setIsSignup(false);
+          setSuccessMessage('');
+        }, 2500);
       } else {
         // Login
         await onLogin(email, password, role);
@@ -171,7 +201,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
   const isFormValid = isForgotPassword
     ? email.trim()
     : isSignup
-      ? name.trim() && email.trim() && password && confirmPassword && (role === 'student' || role === 'donor' ? institution.trim() : true)
+      ? name.trim() && email.trim() && isPasswordValid && password === confirmPassword && (role === 'student' || role === 'donor' ? institution.trim() : true)
       : email.trim() && password;
 
   return (
@@ -366,9 +396,22 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
               </div>
             )}
 
+            {/* Success Message */}
+            {successMessage && (
+              <div className="mb-4 p-3 bg-green-100 border-3 border-green-600 text-green-700 rounded-lg font-sans text-sm flex items-center gap-2">
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {successMessage}
+              </div>
+            )}
+
             {/* Error Message */}
             {error && (
-              <div className="mb-4 p-3 bg-red-100 border-3 border-red-600 text-red-700 rounded-lg font-sans text-sm">
+              <div className="mb-4 p-3 bg-red-100 border-3 border-red-600 text-red-700 rounded-lg font-sans text-sm flex items-center gap-2">
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 {error}
               </div>
             )}
@@ -461,12 +504,88 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder={isSignup ? 'Create a password (min 6 characters)' : 'Enter your password'}
+                        onBlur={() => isSignup && setPasswordTouched(true)}
+                        placeholder={isSignup ? 'Create a strong password' : 'Enter your password'}
                         required
-                        minLength={isSignup ? 6 : undefined}
-                        className="w-full pl-10 pr-3 py-2 border-3 border-dreamxec-navy rounded-lg text-sm font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green transition-all shadow-pastel-green"
+                        className={`w-full pl-10 pr-3 py-2 border-3 rounded-lg text-sm font-sans text-dreamxec-navy bg-white focus:outline-none transition-all ${
+                          isSignup && passwordTouched && !isPasswordValid
+                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-300'
+                            : isSignup && passwordTouched && isPasswordValid
+                            ? 'border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-300'
+                            : 'border-dreamxec-navy focus:border-dreamxec-green focus:ring-2 focus:ring-dreamxec-green shadow-pastel-green'
+                        }`}
                       />
                     </div>
+                    {/* Password Requirements Helper Text - Only for Signup */}
+                    {isSignup && (
+                      <div className="mt-2 space-y-1">
+                        <p className="text-xs text-dreamxec-navy opacity-70 font-sans mb-1.5">
+                          Password must include:
+                        </p>
+                        <div className="grid grid-cols-2 gap-1">
+                          <div className={`flex items-center gap-1.5 text-xs font-sans ${
+                            !passwordTouched && !password ? 'text-gray-500' :
+                            passwordValidation.minLength ? 'text-green-600' : 'text-red-500'
+                          }`}>
+                            {passwordValidation.minLength ? (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                              </svg>
+                            )}
+                            <span>8+ characters</span>
+                          </div>
+                          <div className={`flex items-center gap-1.5 text-xs font-sans ${
+                            !passwordTouched && !password ? 'text-gray-500' :
+                            passwordValidation.hasAlphabet ? 'text-green-600' : 'text-red-500'
+                          }`}>
+                            {passwordValidation.hasAlphabet ? (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                              </svg>
+                            )}
+                            <span>1+ alphabet</span>
+                          </div>
+                          <div className={`flex items-center gap-1.5 text-xs font-sans ${
+                            !passwordTouched && !password ? 'text-gray-500' :
+                            passwordValidation.hasNumber ? 'text-green-600' : 'text-red-500'
+                          }`}>
+                            {passwordValidation.hasNumber ? (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                              </svg>
+                            )}
+                            <span>1+ number</span>
+                          </div>
+                          <div className={`flex items-center gap-1.5 text-xs font-sans ${
+                            !passwordTouched && !password ? 'text-gray-500' :
+                            passwordValidation.hasSpecialChar ? 'text-green-600' : 'text-red-500'
+                          }`}>
+                            {passwordValidation.hasSpecialChar ? (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                              </svg>
+                            )}
+                            <span>1+ special char (!@#$...)</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -484,9 +603,37 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Re-enter your password"
                         required
-                        className="w-full pl-10 pr-3 py-2 border-3 border-dreamxec-navy rounded-lg text-sm font-sans text-dreamxec-navy bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange transition-all shadow-pastel-saffron"
+                        className={`w-full pl-10 pr-3 py-2 border-3 rounded-lg text-sm font-sans text-dreamxec-navy bg-white focus:outline-none transition-all ${
+                          confirmPassword && password !== confirmPassword
+                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-300'
+                            : confirmPassword && password === confirmPassword
+                            ? 'border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-300'
+                            : 'border-dreamxec-navy focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange shadow-pastel-saffron'
+                        }`}
                       />
                     </div>
+                    {/* Password match indicator */}
+                    {confirmPassword && (
+                      <div className={`mt-1.5 flex items-center gap-1.5 text-xs font-sans ${
+                        password === confirmPassword ? 'text-green-600' : 'text-red-500'
+                      }`}>
+                        {password === confirmPassword ? (
+                          <>
+                            <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Passwords match</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span>Passwords do not match</span>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -537,11 +684,8 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                     onClick={() => {
                       setIsSignup(!isSignup);
                       setError('');
-                      setName('');
-                      setEmail('');
-                      setPassword('');
-                      setConfirmPassword('');
-                      setInstitution('');
+                      setSuccessMessage('');
+                      resetForm();
                     }}
                     className="font-bold text-dreamxec-orange hover:text-dreamxec-green transition-colors underline font-display"
                   >

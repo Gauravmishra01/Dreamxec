@@ -195,7 +195,7 @@ export default function PresidentMembers({
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl border-4 border-dreamxec-navy overflow-hidden">
+          <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl border-2 border-dreamxec-navy overflow-hidden">
 
             {/* Header */}
             <div className="px-6 py-4 bg-dreamxec-navy text-white flex items-center justify-between">

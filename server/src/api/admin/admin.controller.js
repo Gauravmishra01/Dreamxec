@@ -219,10 +219,11 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
 
   // Update status and save rejection reason if rejected
   const updateData = { status };
+
   if (status === 'REJECTED' && reason) {
     updateData.rejectionReason = reason;
   } else if (status === 'APPROVED') {
-    updateData.rejectionReason = null; // Clear any previous rejection reason
+    updateData.rejectionReason = null;
   }
 
   const updatedUserProject = await prisma.userProject.update({
@@ -230,16 +231,33 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
     data: updateData
   });
 
+  // ✅ ADD THIS: Create Audit Log
+  await prisma.auditLog.create({
+    data: {
+      action: `USER_PROJECT_${status}`, // e.g., USER_PROJECT_APPROVED
+      entity: 'UserProject',
+      entityId: updatedUserProject.id,
+      performedBy: req.user.id,
+      details: {
+        title: updatedUserProject.title,
+        reason: reason || null
+      }
+    }
+  });
+
   // Send email notification to project owner
   if (userProject.user && userProject.user.email) {
-    const eventName = status === 'APPROVED' ? EVENTS.CAMPAIGN_APPROVED : EVENTS.CAMPAIGN_REJECTED;
+    const eventName =
+      status === 'APPROVED'
+        ? EVENTS.CAMPAIGN_APPROVED
+        : EVENTS.CAMPAIGN_REJECTED;
 
     try {
       await publishEvent(eventName, {
         email: userProject.user.email,
         name: userProject.user.name,
         campaignTitle: userProject.title,
-        status: status,
+        status,
         reason: reason || null,
         campaignUrl: `${process.env.CLIENT_URL}/projects/${userProject.id}`
       });
@@ -253,6 +271,7 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
     data: { userProject: updatedUserProject }
   });
 });
+
 
 // ADMIN: Approve or reject a donor project
 exports.verifyDonorProject = catchAsync(async (req, res, next) => {
@@ -391,7 +410,7 @@ exports.manageUserStatus = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `USER_STATUS_CHANGE`,
-      entityType: 'User',
+      entity: 'User',
       entityId: user.id,
       performedBy: req.user.id,
       details: { newStatus: status }
@@ -437,7 +456,7 @@ exports.manageClubStatus = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `CLUB_STATUS_CHANGE`,
-      entityType: 'Club',
+      entity: 'Club',
       entityId: club.id,
       performedBy: req.user.id,
       details: { newStatus: status }
@@ -770,7 +789,7 @@ exports.manageWithdrawal = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `WITHDRAWAL_${status.toUpperCase()}`,
-      entityType: 'Withdrawal',
+      entity: 'Withdrawal',
       entityId: withdrawal.id,
       performedBy: req.user.id,
       details: { amount: withdrawal.amount, note }
@@ -883,7 +902,7 @@ exports.verifyMilestone = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `MILESTONE_${status}`,
-      entityType: 'Milestone',
+      entity: 'Milestone',
       entityId: milestone.id,
       performedBy: req.user.id,
       details: { project: milestone.project.title, feedback }
@@ -913,7 +932,7 @@ exports.getAuditLogs = catchAsync(async (req, res, next) => {
 
   // Filter by Entity Type (User, Project, Withdrawal, etc.)
   if (type && type !== 'ALL') {
-    where.entityType = type;
+    where.entity = type;
   }
 
   // Search by Action Name or Entity ID
@@ -969,7 +988,7 @@ exports.verifyDonor = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `DONOR_${verified ? 'VERIFIED' : 'UNVERIFIED'}`,
-      entityType: 'Donor',
+      entity: 'Donor',
       entityId: donor.id,
       performedBy: req.user.id,
       details: { organization: donor.organizationName }
@@ -994,7 +1013,7 @@ exports.manageDonorStatus = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `DONOR_STATUS_CHANGE`,
-      entityType: 'Donor',
+      entity: 'Donor',
       entityId: donor.id,
       performedBy: req.user.id,
       details: { newStatus: status }
@@ -1120,7 +1139,7 @@ exports.overrideApplicationStatus = catchAsync(async (req, res, next) => {
   await prisma.auditLog.create({
     data: {
       action: `APP_OVERRIDE_${status}`,
-      entityType: 'Application',
+      entity: 'Application',
       entityId: application.id,
       performedBy: req.user.id,
       details: { project: application.donorProject.title, student: application.user.name, reason }

@@ -71,6 +71,16 @@ const generateOtp = async (req, res) => {
         });
       }
 
+      // Suspicious Activity Event (Rate Limit Hit)
+      if (await redis.get(rateLimitKey) >= MAX_REQUESTS && !await redis.get(`suspicious:${value}`)) {
+         await redis.set(`suspicious:${value}`, "1", "EX", 3600); // 1 hour debounce
+         await publishEvent(events.SUSPICIOUS_ACTIVITY, {
+            type: 'OTP_RATE_LIMIT',
+            value: value,
+            reason: 'Max OTP generation requests exceeded'
+         });
+      }
+
       /* ⏳ COOLDOWN (ATOMIC) */
       const cooldownSet = await redis.set(
         cooldownKey,
@@ -174,6 +184,13 @@ const verifyOtp = async (req, res) => {
         .del(attemptsKey)
         .set(lockKey, "1", "EX", LOCK_PERIOD)
         .exec();
+
+        // Publish Suspicious Activity
+        await publishEvent(events.SUSPICIOUS_ACTIVITY, {
+            type: 'OTP_VERIFY_LOCK',
+            value: value,
+            reason: 'Max OTP verification attempts exceeded - Account Locked'
+        });
 
       return res.status(429).json({
         message: "Too many failed attempts. Locked for 30 minutes.",

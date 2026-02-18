@@ -173,7 +173,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
         {/* Back Button - Enhanced */}
         <button
           onClick={onBack}
-          className="mb-6 flex items-center gap-2 px-6 py-3 bg-white border-4 border-dreamxec-navy 
+          className="mb-6 flex items-center gap-2 px-6 py-3 bg-white border-2 border-dreamxec-navy 
                      shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
                      hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150
                      text-dreamxec-navy font-bold text-lg rounded-xl"
@@ -193,11 +193,11 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
         </div>
 
         {/* ---------------- ELIGIBILITY CARD ---------------- */}
-        <div className="mb-8 rounded-2xl border-4 border-dreamxec-navy bg-white p-6 
+        <div className="mb-8 rounded-2xl border-2 border-dreamxec-navy bg-white p-6 
                         shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
           {loadingEligibility ? (
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 border-4 border-dreamxec-navy border-t-transparent 
+              <div className="w-6 h-6 border-2 border-dreamxec-navy border-t-transparent 
                               rounded-full animate-spin"></div>
               <p className="font-black text-dreamxec-navy text-lg">
                 Checking eligibility…
@@ -221,7 +221,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
               </div>
 
               {/* Progress Bar - Neobrutalist Style */}
-              <div className="relative w-full h-8 bg-dreamxec-cream border-4 border-dreamxec-navy 
+              <div className="relative w-full h-8 bg-dreamxec-cream border-2 border-dreamxec-navy 
                               rounded-full overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-3">
                 <div
                   className="h-full bg-dreamxec-green transition-all duration-500 ease-out
@@ -250,7 +250,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
         {/* ---------------- FORM ---------------- */}
         <form
           onSubmit={handleSubmit}
-          className={`space-y-6 rounded-2xl border-4 border-dreamxec-navy bg-white p-8 
+          className={`space-y-6 rounded-2xl border-2 border-dreamxec-navy bg-white p-8 
                       shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ${!eligibility?.canCreateOpportunity
               ? 'opacity-50 pointer-events-none grayscale'
               : ''
@@ -266,7 +266,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
               placeholder="e.g., Build AI-Powered Marketing Tool"
               value={formData.title}
               onChange={handleChange}
-              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+              className={`w-full p-4 border-2 rounded-xl font-bold text-dreamxec-navy
                          placeholder:text-dreamxec-navy/40 bg-white
                          shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                          focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
@@ -291,7 +291,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
               placeholder="e.g., DreamXec Labs"
               value={formData.companyName}
               onChange={handleChange}
-              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+              className={`w-full p-4 border-2 rounded-xl font-bold text-dreamxec-navy
                          placeholder:text-dreamxec-navy/40 bg-white
                          shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                          focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
@@ -317,7 +317,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
               rows={5}
               value={formData.description}
               onChange={handleChange}
-              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+              className={`w-full p-4 border-2 rounded-xl font-bold text-dreamxec-navy
                          placeholder:text-dreamxec-navy/40 bg-white resize-none
                          shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                          focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
@@ -342,7 +342,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
               placeholder="e.g., React, Node.js, Python, UI/UX Design"
               value={formData.skillsInput}
               onChange={handleChange}
-              className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+              className={`w-full p-4 border-2 rounded-xl font-bold text-dreamxec-navy
                          placeholder:text-dreamxec-navy/40 bg-white
                          shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                          focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
@@ -376,7 +376,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleChange}
-                  className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                  className={`w-full p-4 border-2 rounded-xl font-bold text-dreamxec-navy
                              bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                              focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
                              focus:translate-x-[-2px] focus:translate-y-[-2px]
@@ -400,7 +400,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleChange}
-                  className={`w-full p-4 border-4 rounded-xl font-bold text-dreamxec-navy
+                  className={`w-full p-4 border-2 rounded-xl font-bold text-dreamxec-navy
                              bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                              focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
                              focus:translate-x-[-2px] focus:translate-y-[-2px]
@@ -421,7 +421,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
             type="submit"
             disabled={isSubmitting || !eligibility?.canCreateOpportunity}
             className="w-full bg-dreamxec-green text-white py-5 px-8 rounded-xl font-black text-xl
-                       border-4 border-dreamxec-navy shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                       border-2 border-dreamxec-navy shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                        hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                        hover:translate-x-[4px] hover:translate-y-[4px]
                        active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
@@ -433,7 +433,7 @@ export default function CreateProject({ onBack, onSubmit }: CreateProjectProps) 
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center gap-3">
-                <div className="w-6 h-6 border-4 border-white border-t-transparent 
+                <div className="w-6 h-6 border-2 border-white border-t-transparent 
                                 rounded-full animate-spin"></div>
                 Creating Project...
               </span>

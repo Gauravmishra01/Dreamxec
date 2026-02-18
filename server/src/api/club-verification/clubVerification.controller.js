@@ -1,5 +1,7 @@
 const prisma = require("../../config/prisma");
 const uploadToCloudinary = require("../../utils/uploadToCloudinary");
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
 async function submitClubVerification(req, res) {
   try {
@@ -69,6 +71,20 @@ async function submitClubVerification(req, res) {
       message: "Verification request submitted",
       data: verification,
     });
+
+    // Publish Event
+    try {
+      if (req.user && req.user.email) {
+        await publishEvent(EVENTS.CLUB_VERIFICATION_PENDING, {
+            email: req.user.email,
+            name: req.user.name || presidentName,
+            clubName: clubName,
+            applicationId: verification.id
+        });
+      }
+    } catch (err) {
+      console.error("Event error:", err);
+    }
   } catch (error) {
     console.error("Verification Error:", error);
     res.status(500).json({ success: false, message: "Server error" });

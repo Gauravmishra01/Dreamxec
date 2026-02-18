@@ -1,4 +1,6 @@
 const AppError = require('../utils/AppError');
+const { publishEvent } = require('../services/eventPublisher.service');
+const EVENTS = require('../config/events');
 
 const handlePrismaError = (err) => {
   if (err.code === 'P2002') {
@@ -25,6 +27,15 @@ module.exports = (err, req, res, next) => {
 
   error.statusCode = error.statusCode || 500;
   error.status = error.status || 'error';
+
+  if (error.statusCode === 500) {
+      publishEvent(EVENTS.SYSTEM_ERROR, {
+          message: error.message,
+          stack: error.stack,
+          path: req.originalUrl,
+          method: req.method
+      }).catch(e => console.error("Failed to publish system error:", e));
+  }
 
   if (process.env.NODE_ENV === 'development') {
     res.status(error.statusCode).json({

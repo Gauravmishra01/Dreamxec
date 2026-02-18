@@ -4,6 +4,8 @@ const AppError = require('../../utils/AppError');
 const uploadToCloudinary = require('../../utils/uploadToCloudinary');
 const { publishEvent } = require('../../services/eventPublisher.service');
 const EVENTS = require('../../config/events');
+const generateUniqueSlug = require("../../utils/generateSlug");
+
 
 
 /* ======================================================
@@ -11,8 +13,6 @@ const EVENTS = require('../../config/events');
 ====================================================== */
 exports.createUserProject = catchAsync(async (req, res, next) => {
 
-
-  
   /* =============================
      AUTH CHECK
   ============================== */
@@ -199,9 +199,12 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
   ============================== */
   const project = await prisma.$transaction(async (tx) => {
 
+    const slug = await generateUniqueSlug(title, tx);
+
     const createdProject = await tx.userProject.create({
       data: {
         title,
+        slug,
         description,
         companyName: companyName || null,
 
@@ -276,6 +279,18 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
       new AppError('Only PENDING or REJECTED projects can be updated', 400)
     );
 
+  if (userProject.status === 'REJECTED') {
+    const currentCount = userProject.reapprovalCount || 0;
+    if (currentCount >= 3) {
+      return next(new AppError('Maximum reapproval attempts (3) reached. Please contact support.', 403));
+    }
+
+    // Auto-increment and reset status
+    req.body.reapprovalCount = currentCount + 1;
+    req.body.status = 'PENDING';
+    req.body.rejectionReason = null; // Clear previous rejection reason
+  }
+
   const updateData = { ...req.body };
 
   if (!('presentationDeckUrl' in req.body)) {
@@ -316,6 +331,16 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
     return project;
   });
 
+  // Publish Event
+  if (updatedProject.status === 'APPROVED') {
+     await publishEvent(EVENTS.CAMPAIGN_UPDATE, {
+       email: req.user.email,
+       name: req.user.name,
+       campaignTitle: updatedProject.title,
+       campaignUrl: `${process.env.CLIENT_URL}/projects/${updatedProject.id}`
+     });
+  }
+
   res.status(200).json({
     status: 'success',
     data: { userProject: updatedProject },
@@ -346,31 +371,56 @@ exports.deleteUserProject = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserProject = catchAsync(async (req, res, next) => {
-  const userProject = await prisma.userProject.findUnique({
-    where: { id: req.params.id },
-    include: {
-      club: { select: { id: true, name: true, college: true } },
-      milestones: true,
-      user: { select: { id: true, name: true } },
-      donations: {
-        select: {
-          amount: true,
-          createdAt: true,
-          donor: { select: { name: true } },
-          anonymous: true,
+  const { id: identifier } = req.params;
+
+  let userProject;
+
+  // If it's Mongo ObjectId (24 chars)
+  if (identifier.length === 24) {
+    userProject = await prisma.userProject.findUnique({
+      where: { id: identifier },
+      include: {
+        club: { select: { id: true, name: true, college: true, slug: true } },
+        milestones: true,
+        user: { select: { id: true, name: true } },
+        donations: {
+          select: {
+            amount: true,
+            createdAt: true,
+            donor: { select: { name: true } },
+            anonymous: true,
+          },
         },
       },
-    },
-  });
+    });
+  } else {
+    userProject = await prisma.userProject.findUnique({
+      where: { slug: identifier },
+      include: {
+        club: { select: { id: true, name: true, college: true } },
+        milestones: true,
+        user: { select: { id: true, name: true } },
+        donations: {
+          select: {
+            amount: true,
+            createdAt: true,
+            donor: { select: { name: true } },
+            anonymous: true,
+          },
+        },
+      },
+    });
+  }
 
   if (!userProject)
-    return next(new AppError('User project not found', 404));
+    return next(new AppError("User project not found", 404));
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: { userProject },
   });
 });
+
 
 exports.getPublicUserProjects = catchAsync(async (req, res) => {
   const userProjects = await prisma.userProject.findMany({
@@ -407,5 +457,45 @@ exports.getMyUserProjects = catchAsync(async (req, res) => {
     status: 'success',
     results: userProjects.length,
     data: { userProjects },
+  });
+});
+
+/* ======================================================
+   GET STUDENT ANALYTICS
+====================================================== */
+exports.getStudentAnalytics = catchAsync(async (req, res, next) => {
+  const projects = await prisma.userProject.findMany({
+    where: { userId: req.user.id },
+    select: {
+      status: true,
+      currentAmount: true,
+      donations: { select: { amount: true } }
+    }
+  });
+
+  const analytics = {
+    total: projects.length,
+    approvedCount: 0,
+    pendingCount: 0,
+    rejectedCount: 0,
+    totalRaised: 0
+  };
+
+  projects.forEach(p => {
+    // Status counting (case-insensitive safety)
+    const status = p.status ? p.status.toUpperCase() : 'PENDING';
+    if (status === 'APPROVED') analytics.approvedCount++;
+    else if (status === 'PENDING') analytics.pendingCount++;
+    else if (status === 'REJECTED') analytics.rejectedCount++;
+
+    // Calculate funds raised
+    // Use currentAmount or calculate from donations
+    const raised = p.currentAmount || p.donations?.reduce((sum, d) => sum + d.amount, 0) || 0;
+    analytics.totalRaised += raised;
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: { analytics }
   });
 });

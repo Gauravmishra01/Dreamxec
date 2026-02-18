@@ -37,6 +37,9 @@ const studentVerificationRoutes = require("./src/api/studentVerification/student
 const healthRoutes = require("./src/routes/health.routes");
 const adminRedisRoutes = require("./src/api/admin/adminRedis.routes");
 const clubRoutes = require('./src/api/clubs/club.routes');
+const campaignCommentRoutes = require("./src/api/campaign-comments/campaignComment.routes");
+const seoRoutes = require("./src/api/seo/seo.routes");
+
 
 
 
@@ -160,6 +163,8 @@ app.use('/api/upload', uploadRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/student-verification", studentVerificationRoutes);
 app.use("/api/payments", require("./src/api/payments/payment.routes"));
+app.use("/api", campaignCommentRoutes);
+app.use("/", seoRoutes);
 
 // --------------------------------------------
 // 404 HANDLER

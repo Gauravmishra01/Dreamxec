@@ -11,7 +11,9 @@ const {
   getPendingClubCampaigns,
   getRejectedClubCampaigns,
   changeClubPresident,
-  getMyClubs
+  getMyClubs,
+  getAllPublicClubs,
+  getPublicClubBySlug
 } = require('./club.controller');
 
 const router = express.Router();
@@ -89,5 +91,9 @@ router.get(
   protect,
   getRejectedClubCampaigns
 );
+
+router.get('/public', getAllPublicClubs);
+router.get('/public/:slug', getPublicClubBySlug);
+
 
 module.exports = router;

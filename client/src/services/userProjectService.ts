@@ -44,6 +44,7 @@ export interface UserProject {
     id: string;
     name: string;
     college: string;
+    slug?: string;
   };
 
   goalAmount: number;
@@ -62,7 +63,8 @@ export interface UserProject {
   presentationDeckUrl?: string | null;
 
   rejectionReason?: string;
-
+  reapprovalCount?: number;
+  userId: string;
   milestones?: any[];
 }
 
@@ -106,10 +108,11 @@ export interface UpdateUserProjectData {
   collegeName?: string;
 
   clubId?: string;
-  club? :{
+  club?: {
     id: string;
     name: string;
     college: string;
+    slug?: string;
   }
 
   skillsRequired?: string[];
@@ -148,6 +151,13 @@ export const getMyUserProjects = async (): Promise<
   ApiResponse<{ userProjects: UserProject[] }>
 > => {
   return apiRequest("/user-projects/my", { method: "GET" });
+};
+
+// STUDENT ANALYTICS
+export const getStudentAnalytics = async (): Promise<
+  ApiResponse<{ analytics: { total: number; approved: number; pending: number; rejected: number; fundsRaised: number } }>
+> => {
+  return apiRequest("/user-projects/analytics", { method: "GET" });
 };
 
 // CREATE CAMPAIGN

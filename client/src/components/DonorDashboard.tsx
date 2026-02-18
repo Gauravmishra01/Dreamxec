@@ -85,7 +85,7 @@ interface DonorDashboardProps {
   projectsCount: number;
   onCreateProject?: () => void;
   onViewProjects?: () => void;
-  getDonorApplications: () => Promise<{ status: string; data?: { applications: Application[] } }>;
+  getDonorApplications: () => Promise<{ success: boolean; data?: { applications: Application[] } }>;
   updateApplicationStatus: (
     id: string,
     payload: {
@@ -274,7 +274,7 @@ const StatCardSkeleton: React.FC = () => (
 );
 
 const CardSkeleton: React.FC = () => (
-  <div className="bg-white border-4 border-blue-900/20 rounded-xl p-6 shadow-lg space-y-3">
+  <div className="bg-white border-2 border-blue-900/20 rounded-xl p-6 shadow-lg space-y-3">
     <div className="flex items-center gap-3">
       <Skeleton className="w-12 h-12 rounded-full" />
       <div className="space-y-2 flex-1">
@@ -305,7 +305,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     className="fixed inset-0 z-50 flex justify-center items-center p-4 bg-black/50"
     onClick={(e) => e.target === e.currentTarget && onClose()}
   >
-    <div className="bg-orange-50 rounded-xl border-4 border-blue-900 shadow-xl max-w-md w-full p-6">
+    <div className="bg-orange-50 rounded-xl border-2 border-blue-900 shadow-xl max-w-md w-full p-6">
       <h2 className="text-2xl font-bold text-blue-900 mb-2">{title}</h2>
       <p className="text-blue-900/70 mb-6">{message}</p>
       <div className="flex gap-3 justify-end">
@@ -341,7 +341,7 @@ const RejectionModal: React.FC<RejectionModalProps> = ({ applicationTitle, onClo
       className="fixed inset-0 z-50 flex justify-center items-center p-4 bg-black/50"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-orange-50 rounded-xl border-4 border-blue-900 shadow-xl max-w-md w-full p-6 relative">
+      <div className="bg-orange-50 rounded-xl border-2 border-blue-900 shadow-xl max-w-md w-full p-6 relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-blue-900 hover:scale-110 transition-transform"
@@ -509,7 +509,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({ icon, title, description, action }) => (
-  <div className="bg-white rounded-xl border-4 border-blue-900 p-12 text-center shadow-lg">
+  <div className="bg-white rounded-xl border-2 border-blue-900 p-12 text-center shadow-lg">
     <div className="w-16 h-16 bg-orange-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
       {icon}
     </div>
@@ -526,7 +526,7 @@ interface ErrorBannerProps {
 }
 
 const ErrorBanner: React.FC<ErrorBannerProps> = ({ message, onRetry }) => (
-  <div className="bg-red-50 border-4 border-red-400 rounded-xl p-5 flex items-center justify-between shadow">
+  <div className="bg-red-50 border-2 border-red-400 rounded-xl p-5 flex items-center justify-between shadow">
     <div className="flex items-center gap-3">
       <Ico name="alert" className="w-6 h-6 text-red-600 shrink-0" />
       <p className="text-red-700 font-bold">{message}</p>
@@ -678,7 +678,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
     setApplicationsError(null);
     try {
       const response = await getDonorApplications();
-      if (response.status === 'success' && response.data) {
+      if (response.success === true && response.data) {
         setApplications(response.data.applications);
       } else {
         setApplications([]);
@@ -732,7 +732,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
   ): Promise<void> => {
     try {
       const response = await updateApplicationStatus(applicationId, { status, rejectionReason });
-      if (response.status === 'success') {
+      if (response.success === true) {
         toast.success(`Application ${status === 'ACCEPTED' ? 'accepted' : 'rejected'} successfully`);
         await loadApplications();
       }
@@ -885,7 +885,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
               </div>
 
               {eligibility && (
-                <div className="bg-white border-4 border-blue-900 rounded-xl p-5 shadow-lg">
+                <div className="bg-white border-2 border-blue-900 rounded-xl p-5 shadow-lg">
                   <p className="font-bold text-blue-900 mb-2">Project Slots</p>
                   <div className="flex justify-between text-sm font-bold mb-1">
                     <span>{eligibility.createdProjects} / {eligibility.allowedProjects} used</span>
@@ -962,7 +962,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
                   onClick={onCreateProject}
-                  className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
+                  className="bg-white rounded-xl border-2 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
                 >
                   <div className="w-16 h-16 bg-green-400 rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform">
                     <Ico name="plus" className="w-8 h-8 text-blue-900" />
@@ -972,7 +972,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
                 </button>
                 <button
                   onClick={onViewProjects}
-                  className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
+                  className="bg-white rounded-xl border-2 border-blue-900 p-6 shadow-lg hover:scale-105 transition-transform text-left group"
                 >
                   <div className="w-16 h-16 bg-orange-400 rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform">
                     <Ico name="folder" className="w-8 h-8 text-blue-900" />
@@ -1022,7 +1022,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
               ) : (
                 <>
                   {paginatedApps.map((app) => (
-                    <div key={app.id} className="bg-white rounded-xl border-4 border-blue-900 p-6 shadow-lg">
+                    <div key={app.id} className="bg-white rounded-xl border-2 border-blue-900 p-6 shadow-lg">
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center text-blue-900 font-bold text-xl">
@@ -1171,7 +1171,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
               ) : (
                 <>
                   {paginatedDonations.map((d) => (
-                    <div key={d.id} className="bg-white border-4 border-blue-900 rounded-xl p-6 shadow-lg hover:scale-[1.01] transition-transform">
+                    <div key={d.id} className="bg-white border-2 border-blue-900 rounded-xl p-6 shadow-lg hover:scale-[1.01] transition-transform">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
                           <p className="text-xl font-bold text-blue-900 truncate">{d.userProject?.title}</p>
@@ -1208,7 +1208,7 @@ const DonorDashboardInner: React.FC<DonorDashboardProps> = ({
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {wishlist.map((campaign) => (
-                    <div key={campaign.id} className="bg-white rounded-xl border-4 border-blue-900 overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
+                    <div key={campaign.id} className="bg-white rounded-xl border-2 border-blue-900 overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
                       <div className="h-48 overflow-hidden relative">
                         <img
                           src={campaign.imageUrl || 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800'}

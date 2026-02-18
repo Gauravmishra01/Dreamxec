@@ -89,6 +89,7 @@ model User {
   clubVerified         Boolean    @default(false)
   studentVerified      Boolean    @default(false)
   donations            Donation[]
+  comments CampaignComment[] @relation("UserComments")
 
   subscriptionStatus String    @default("NONE") // NEW
   subscriptionId     String? // NEW
@@ -150,6 +151,10 @@ model Donor {
   donorProjects DonorProject[]
   wishlist      Wishlist[]
   adminNotes    AdminNote[]
+  comments CampaignComment[] @relation("DonorComments")
+
+
+
 
   @@index([googleId])
   @@index([linkedinId])
@@ -162,6 +167,7 @@ model Donor {
 model UserProject {
   id                  String        @id @default(auto()) @map("_id") @db.ObjectId
   title               String
+  slug                String? @unique
   description         String
   companyName         String?
   collegeName         Json? //[name, logo]
@@ -187,8 +193,11 @@ model UserProject {
 
   youtubeUrl String?
   // Relation to user (creator)
-  userId     String? @db.ObjectId
-  user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments CampaignComment[] @relation("ProjectComments")
+
+
 
   clubId String? @db.ObjectId
   club   Club?   @relation(fields: [clubId], references: [id], onDelete: Cascade)
@@ -208,6 +217,8 @@ model UserProject {
 
   @@index([userId])
   @@index([status])
+  @@index([clubId, status])
+
 }
 
 //-----------------------------------
@@ -371,19 +382,16 @@ model Withdrawal {
 // CLUB MODEL (new)
 // -----------------------------
 model Club {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  college        String
-  description    String?
-  presidentEmail String
-
-  //new
-  status AccountStatus @default(ACTIVE)
-
-  presidentUserId String?       @db.ObjectId
-  presidentUser   User?         @relation("ClubPresident", fields: [presidentUserId], references: [id])
-  users           User[]        @relation("UserClubRelation", fields: [userIds], references: [id])
-  userIds         String[]      @db.ObjectId
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  slug            String? @unique
+  college         String
+  description     String?
+  presidentEmail  String
+  presidentUserId String? @db.ObjectId
+  presidentUser   User?   @relation("ClubPresident", fields: [presidentUserId], references: [id])
+  users           User[]   @relation("UserClubRelation", fields: [userIds], references: [id])
+  userIds         String[] @db.ObjectId
   members         ClubMember[]
   campaigns       UserProject[]
   createdAt       DateTime      @default(now())
@@ -391,6 +399,7 @@ model Club {
   adminNotes      AdminNote[]
 
   @@index([presidentEmail])
+  @@index([college])
 }
 
 // -----------------------------
@@ -475,12 +484,12 @@ model ClubVerification {
   status        String  @default("PENDING")
 
   // NEW — required by feature
-  clubName        String
-  clubDescription String
-  clubInstagram   String
+  clubName        String?
+  clubDescription String?
+  clubInstagram   String?
   clubLinkedIn    String?
   clubYouTube     String?
-  alumni          Json
+  alumni          Json?
 
   userId String? @db.ObjectId
   user   User?   @relation("UserClubVerifications", fields: [userId], references: [id])
@@ -522,6 +531,39 @@ model Wishlist {
 // -----------------------------
 // Additional notes: keep your existing models and relations unchanged.
 // -----------------------------
+//----------------------------------
+// Campaign Comments (User OR Donor)
+//----------------------------------
+model CampaignComment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  campaignId String   @db.ObjectId
+  campaign   UserProject @relation("ProjectComments", fields: [campaignId], references: [id], onDelete: Cascade)
+
+  // Polymorphic identity (exactly one must be set)
+  userId     String?  @db.ObjectId
+  user       User?    @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+
+  donorId    String?  @db.ObjectId
+  donor      Donor?   @relation("DonorComments", fields: [donorId], references: [id], onDelete: Cascade)
+
+  parentId   String?  @db.ObjectId
+
+  content    String
+  isDeleted  Boolean  @default(false)
+  isFlagged  Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([userId])
+  @@index([donorId])
+  @@index([parentId])
+}
+
+
+
 
 // -----------------------------
 // STUDENT VERIFICATION MODEL

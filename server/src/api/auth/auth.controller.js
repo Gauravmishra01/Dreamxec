@@ -260,6 +260,15 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   if (!account || !account.password || !(await bcrypt.compare(password, account.password))) {
+    // Publish Security Alert
+    publishEvent(EVENTS.SECURITY_ALERT, {
+        email: email,
+        action: 'LOGIN_FAILED',
+        reason: 'Incorrect credentials',
+        ip: req.ip,
+        userAgent: req.headers['user-agent']
+    }).catch(console.error);
+
     return next(new AppError('Incorrect email or password', 401));
   }
 

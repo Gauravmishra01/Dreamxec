@@ -78,7 +78,7 @@ export default function DonorProjects({
           try {
             const response = await getProjectApplications(project.id);
             
-            if (response.status === 'success' && response.data) {
+            if (response.success === true && response.data) {
               console.log(`Found ${response.data.applications.length} applications for project ${project.id}`);
               setProjectApplications(prev => ({
                 ...prev,
@@ -228,7 +228,7 @@ export default function DonorProjects({
 
         {/* Projects grid */}
         {projects.length === 0 ? (
-          <div className="card-pastel-offwhite rounded-2xl border-4 sm:border-5 border-dreamxec-navy p-6 sm:p-8 md:p-12 shadow-pastel-card text-center max-w-2xl mx-auto">
+          <div className="card-pastel-offwhite rounded-2xl border-2 sm:border-5 border-dreamxec-navy p-6 sm:p-8 md:p-12 shadow-pastel-card text-center max-w-2xl mx-auto">
             <div className="card-tricolor-tag"></div>
             <div className="text-4xl sm:text-5xl md:text-6xl mb-4">📝</div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-navy font-display mb-4">
@@ -239,7 +239,7 @@ export default function DonorProjects({
             </p>
             <button
               onClick={onCreateProject}
-              className="px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-green border-3 sm:border-4 border-dreamxec-navy rounded-xl font-bold text-white text-base sm:text-lg font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-saffron focus:outline-none focus:ring-2 focus:ring-dreamxec-orange focus:ring-offset-2"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-green border-3 sm:border-2 border-dreamxec-navy rounded-xl font-bold text-white text-base sm:text-lg font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-saffron focus:outline-none focus:ring-2 focus:ring-dreamxec-orange focus:ring-offset-2"
               aria-label="Create your first project"
             >
               Create Project
@@ -262,7 +262,7 @@ export default function DonorProjects({
               return (
                 <div
                   key={project.id}
-                  className="card-pastel-offwhite rounded-xl sm:rounded-2xl border-3 sm:border-4 lg:border-5 border-dreamxec-navy p-4 sm:p-5 lg:p-6 shadow-pastel-card hover:shadow-pastel-saffron transition-all duration-300"
+                  className="card-pastel-offwhite rounded-xl sm:rounded-2xl border-3 sm:border-2 lg:border-5 border-dreamxec-navy p-4 sm:p-5 lg:p-6 shadow-pastel-card hover:shadow-pastel-saffron transition-all duration-300"
                 >
                   <div className="card-tricolor-tag"></div>
 

@@ -109,7 +109,7 @@ export default function AddMemberManually({ clubId }: AddMemberManuallyProps) {
       <button
         onClick={handleAdd}
         disabled={loading}
-        className="w-full py-3 rounded-lg font-semibold text-white bg-dreamxec-orange border-4 border-dreamxec-navy hover:opacity-90 transition disabled:opacity-60"
+        className="w-full py-3 rounded-lg font-semibold text-white bg-dreamxec-orange border-2 border-dreamxec-navy hover:opacity-90 transition disabled:opacity-60"
       >
         {loading ? "Adding Member..." : "Add Member"}
       </button>

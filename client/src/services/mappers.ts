@@ -21,6 +21,21 @@ export type Milestone = {
    Role Mapping
 ========================================================= */
 
+export const CAMPAIGN_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+} as const;
+
+export const PROJECT_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  COMPLETED: 'completed',
+  PAUSED: 'paused',
+  FROZEN: 'frozen',
+} as const;
+
 // Backend → Frontend
 export const mapBackendRole = (
   backendRole: 'USER' | 'DONOR' | 'ADMIN' | 'STUDENT_PRESIDENT'
@@ -62,12 +77,13 @@ export const mapFrontendRole = (
 
 export const mapBackendStatus = (
   backendStatus: 'PENDING' | 'APPROVED' | 'REJECTED'
-): 'pending' | 'approved' | 'rejected' | 'PENDING' | 'APPROVED' | 'REJECTED' => {
+): 'pending' | 'approved' | 'rejected' => {
   return backendStatus.toLowerCase() as
     | 'pending'
     | 'approved'
     | 'rejected';
 };
+
 
 export const mapFrontendStatus = (
   frontendStatus: 'pending' | 'approved' | 'rejected'
@@ -91,7 +107,7 @@ export const mapUserProjectToCampaign = (
     title: userProject.title,
     description: userProject.description,
 
-    user: userProject.user,
+    // user: userProject.user,
 
     clubId: userProject.clubId,
     club: userProject.club
@@ -99,15 +115,16 @@ export const mapUserProjectToCampaign = (
         id: userProject.club.id,
         name: userProject.club.name,
         college: userProject.club.college,
+        slug: userProject.club.slug,
       }
       : undefined,
 
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
-    amountRaised: userProject.amountRaised || 0,
-
+    userId: userProject.userId,
     status: mapBackendStatus(userProject.status),
-    createdAt: userProject.createdAt,
+    createdAt: new Date(userProject.createdAt),
+
 
     campaignType: userProject.campaignType || "INDIVIDUAL",
     teamMembers: userProject.teamMembers || [],

@@ -189,7 +189,18 @@ exports.razorpayWebhook = async (req, res) => {
           
           // --- EMAIL EVENTS ---
           
-          // 1. To Donor (DONATION_SUCCESS)
+          // 0. High Value Donation Check
+    if (amount >= 10000) {
+       await publishEvent(EVENTS.HIGH_VALUE_DONATION, {
+           amount: amount,
+           currency: "INR",
+           transactionId: payment.id,
+           donorEmail: payment.email || 'N/A',
+           campaignTitle: project.title
+       });
+    }
+
+    // 1. To Donor (DONATION_SUCCESS)
           // We need to find the specific donation to get donor details (email/name)
           const donationRecord = await tx.donation.findUnique({
               where: { razorpayOrderId: orderId },
