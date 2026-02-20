@@ -654,10 +654,11 @@ img {
 
 .criteria-carousel .swiper-button-next,
 .criteria-carousel .swiper-button-prev {
+  --swiper-navigation-size: 11px;
   color: #000080;
   background: rgba(255, 255, 255, 0.9);
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 2px solid #000080;
   box-shadow: 0 4px 12px rgba(0, 0, 128, 0.2);
@@ -674,8 +675,8 @@ img {
 
 .criteria-carousel .swiper-button-next:after,
 .criteria-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 11px !important;
+  font-weight: 400 !important;
 }
 
 .criteria-carousel .swiper-button-next:hover,
@@ -719,10 +720,11 @@ img {
 
 .whiteboard-carousel .swiper-button-next,
 .whiteboard-carousel .swiper-button-prev {
+  --swiper-navigation-size: 11px;
   color: #000080;
   background: rgba(255, 255, 255, 0.95);
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 3px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
@@ -739,8 +741,8 @@ img {
 
 .whiteboard-carousel .swiper-button-next:after,
 .whiteboard-carousel .swiper-button-prev:after {
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 11px !important;
+  font-weight: 400 !important;
 }
 
 .whiteboard-carousel .swiper-button-next:hover,
@@ -786,10 +788,11 @@ img {
 
 .faq-carousel .swiper-button-next,
 .faq-carousel .swiper-button-prev {
+  --swiper-navigation-size: 11px;
   color: #000080;
   background: #FAFAF8;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 4px solid #000080;
   box-shadow: 4px 4px 0 #FF7F00;
@@ -806,8 +809,8 @@ img {
 
 .faq-carousel .swiper-button-next:after,
 .faq-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 11px !important;
+  font-weight: 400 !important;
 }
 
 .faq-carousel .swiper-button-next:hover,

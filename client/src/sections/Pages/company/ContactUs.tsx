@@ -1,13 +1,14 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
-import { Mail, Linkedin, Twitter, Instagram } from 'lucide-react'
+import { useState } from 'react';
+import { Mail, Linkedin, Twitter, Instagram, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const ContactUs = () => {
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
 
   const contactCategories = [
     {
@@ -82,24 +83,32 @@ const ContactUs = () => {
             📞 How to Reach Us
           </h2>
 
-          <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={32}
-            slidesPerView={1}
-            speed={800}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            grabCursor={true}
-            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            breakpoints={{
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 32,
-              },
-            }}
-            className="contact-carousel"
-          >
+          <div className="relative">
+            <button
+              onClick={() => swiperInstance?.slidePrev()}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <Swiper
+              modules={[Pagination, Keyboard, A11y, Autoplay]}
+              spaceBetween={32}
+              slidesPerView={1}
+              speed={800}
+              onSwiper={(s) => setSwiperInstance(s)}
+              pagination={{ clickable: true }}
+              keyboard={{ enabled: true }}
+              grabCursor={true}
+              autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 32,
+                },
+              }}
+              className="contact-carousel"
+            >
             {contactCategories.map((category, index) => (
               <SwiperSlide key={index}>
                 <div
@@ -129,7 +138,15 @@ const ContactUs = () => {
                 </div>
               </SwiperSlide>
             ))}
-          </Swiper>
+            </Swiper>
+            <button
+              onClick={() => swiperInstance?.slideNext()}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+              aria-label="Next"
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
         </section>
 
         {/* Email & Socials */}

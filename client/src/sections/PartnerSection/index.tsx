@@ -1,12 +1,14 @@
 import { href, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 export const PartnersSection = () => {
   const navigate = useNavigate();
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const partners = [
     {
       name: "Q: Is my donation tax-deductible? (Corporate/Foundation)",
@@ -59,13 +61,20 @@ export const PartnersSection = () => {
         </div>
 
         {/* FAQ Carousel */}
-        <div className="mb-12">
+        <div className="mb-12 relative">
+          <button
+            onClick={() => swiperInstance?.slidePrev()}
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
           <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+            modules={[Pagination, Keyboard, A11y, Autoplay]}
             spaceBetween={16}
             slidesPerView={1}
             speed={800}
-            navigation
+            onSwiper={(s) => setSwiperInstance(s)}
             pagination={{ clickable: true }}
             keyboard={{ enabled: true }}
             grabCursor={true}
@@ -109,6 +118,13 @@ export const PartnersSection = () => {
               </SwiperSlide>
             ))}
           </Swiper>
+          <button
+            onClick={() => swiperInstance?.slideNext()}
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+            aria-label="Next"
+          >
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
         </div>
 
         {/* Call to Action */}

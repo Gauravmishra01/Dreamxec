@@ -4,7 +4,7 @@ import { CampaignCard } from "./CampaignCard";
 import { SkeletonCard } from "./SkeletonCard";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const SPEED = 1; // px per frame (increased for better visibility)
+const SPEED = 0.5; // px per frame - matching the slow, elegant pace of other carousels
 
 export const CampaignCarousel = () => {
   const { data, loading, error } = useHeroCampaigns();
@@ -83,7 +83,7 @@ export const CampaignCarousel = () => {
   };
 
   return (
-    <div className="mt-10 relative w-full overflow-hidden px-12">
+    <div className="mt-6 sm:mt-8 md:mt-10 relative w-full overflow-hidden">
       {error && (
         <p className="px-4 text-sm text-red-500">
           Failed to load campaigns
@@ -94,10 +94,10 @@ export const CampaignCarousel = () => {
       {!loading && canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
           aria-label="Scroll left"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       )}
 
@@ -105,10 +105,10 @@ export const CampaignCarousel = () => {
       {!loading && canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
           aria-label="Scroll right"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       )}
 
@@ -116,10 +116,10 @@ export const CampaignCarousel = () => {
         ref={containerRef}
         onScroll={checkScroll}
         className="
-          flex gap-4 sm:gap-6 px-4
+          flex gap-3 xs:gap-4 sm:gap-5 md:gap-6 px-4
           overflow-x-auto overflow-y-hidden
           scrollbar-hide
-          pb-2
+          pb-3 sm:pb-4
         "
         style={{
           alignItems: 'stretch',
@@ -134,7 +134,7 @@ export const CampaignCarousel = () => {
           Array.from({ length: 3 }).map((_, i) => (
             <div 
               key={i}
-              className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px]"
+              className="flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px]"
             >
               <SkeletonCard />
             </div>
@@ -144,7 +144,7 @@ export const CampaignCarousel = () => {
           items.map((campaign, i) => (
             <div
               key={`${campaign.id}-${i}`}
-              className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px] h-auto transition-transform duration-500 ease-in-out"
+              className="flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] h-auto"
             >
               <CampaignCard campaign={campaign} />
             </div>

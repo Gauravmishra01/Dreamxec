@@ -1,13 +1,16 @@
 import { Header } from '../../Header'
 import { FooterContent } from '../../Footer/components/FooterContent'
 import useScrollReveal from '../../../hooks/useScrollReveal'
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const HowItWorksDonors = () => {
+    const [impactSwiper, setImpactSwiper] = useState<any>(null);
+    const [faqSwiper, setFaqSwiper] = useState<any>(null);
 
     /* -------------------- Scroll Reveal Hooks -------------------- */
     const fundingFlow = useScrollReveal()
@@ -156,24 +159,32 @@ const HowItWorksDonors = () => {
                         Impact Tracking
                     </h2>
 
-                    <Swiper
-                      modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-                      spaceBetween={32}
-                      slidesPerView={1}
-                      speed={800}
-                      navigation
-                      pagination={{ clickable: true }}
-                      keyboard={{ enabled: true }}
-                      grabCursor={true}
-                      autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-                      breakpoints={{
-                        768: {
-                          slidesPerView: 2,
-                          spaceBetween: 32,
-                        },
-                      }}
-                      className="how-it-works-carousel"
-                    >
+                    <div className="relative">
+                      <button
+                        onClick={() => impactSwiper?.slidePrev()}
+                        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+                        aria-label="Previous"
+                      >
+                        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+                      <Swiper
+                        modules={[Pagination, Keyboard, A11y, Autoplay]}
+                        spaceBetween={32}
+                        slidesPerView={1}
+                        speed={800}
+                        onSwiper={(s) => setImpactSwiper(s)}
+                        pagination={{ clickable: true }}
+                        keyboard={{ enabled: true }}
+                        grabCursor={true}
+                        autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                        breakpoints={{
+                          768: {
+                            slidesPerView: 2,
+                            spaceBetween: 32,
+                          },
+                        }}
+                        className="how-it-works-carousel"
+                      >
                       {impactMetrics.map((metric, index) => (
                         <SwiperSlide key={index}>
                           <div
@@ -198,7 +209,15 @@ const HowItWorksDonors = () => {
                           </div>
                         </SwiperSlide>
                       ))}
-                    </Swiper>
+                      </Swiper>
+                      <button
+                        onClick={() => impactSwiper?.slideNext()}
+                        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+                        aria-label="Next"
+                      >
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+                    </div>
                 </section>
 
                 {/* -------------------- FAQ -------------------- */}
@@ -207,28 +226,36 @@ const HowItWorksDonors = () => {
                     className={`px-4 sm:px-6 lg:px-8 reveal ${faq.isVisible ? 'reveal-visible' : ''}`}
                 >
                     <div className="max-w-7xl mx-auto">
-                      <Swiper
-                        modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-                        spaceBetween={32}
-                        slidesPerView={1}
-                        speed={800}
-                        navigation
-                        pagination={{ clickable: true }}
-                        keyboard={{ enabled: true }}
-                        grabCursor={true}
-                        autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-                        breakpoints={{
-                          640: {
-                            slidesPerView: 2,
-                            spaceBetween: 32,
-                          },
-                          1024: {
-                            slidesPerView: 3,
-                            spaceBetween: 32,
-                          },
-                        }}
-                        className="how-it-works-faq-carousel"
-                      >
+                      <div className="relative">
+                        <button
+                          onClick={() => faqSwiper?.slidePrev()}
+                          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+                          aria-label="Previous"
+                        >
+                          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
+                        <Swiper
+                          modules={[Pagination, Keyboard, A11y, Autoplay]}
+                          spaceBetween={32}
+                          slidesPerView={1}
+                          speed={800}
+                          onSwiper={(s) => setFaqSwiper(s)}
+                          pagination={{ clickable: true }}
+                          keyboard={{ enabled: true }}
+                          grabCursor={true}
+                          autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                          breakpoints={{
+                            640: {
+                              slidesPerView: 2,
+                              spaceBetween: 32,
+                            },
+                            1024: {
+                              slidesPerView: 3,
+                              spaceBetween: 32,
+                            },
+                          }}
+                          className="how-it-works-faq-carousel"
+                        >
                         {FAQ.map((item, index) => (
                           <SwiperSlide key={index}>
                             <div
@@ -246,7 +273,15 @@ const HowItWorksDonors = () => {
                             </div>
                           </SwiperSlide>
                         ))}
-                      </Swiper>
+                        </Swiper>
+                        <button
+                          onClick={() => faqSwiper?.slideNext()}
+                          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+                          aria-label="Next"
+                        >
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
+                      </div>
                     </div>
                 </section>
 

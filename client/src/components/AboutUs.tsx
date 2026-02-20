@@ -1,14 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { FooterContent } from '../sections/Footer/components/FooterContent';
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const AboutUs = () => {
     const navigate = useNavigate();
-    const role = localStorage.getItem('role'); // "STUDENT" | "DONOR" | null
+    const role = localStorage.getItem('role');
+    const [valuesSwiper, setValuesSwiper] = useState<any>(null);
 
     return (
         <div className="min-h-screen  pt-20">
@@ -82,29 +84,36 @@ const AboutUs = () => {
                 </div>
 
 
-                {/* CORE VALUES */}
-                <Swiper
-                  modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-                  spaceBetween={32}
-                  slidesPerView={1}
-                  speed={800}
-                  navigation
-                  pagination={{ clickable: true }}
-                  keyboard={{ enabled: true }}
-                  grabCursor={true}
-                  autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-                  breakpoints={{
-                    768: {
-                      slidesPerView: 2,
-                      spaceBetween: 32,
-                    },
-                    1024: {
-                      slidesPerView: 3,
-                      spaceBetween: 32,
-                    },
-                  }}
-                  className="about-values-carousel mb-20"
-                >
+                <div className="relative">
+                  <button
+                    onClick={() => valuesSwiper?.slidePrev()}
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+                    aria-label="Previous"
+                  >
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                  <Swiper
+                    modules={[Pagination, Keyboard, A11y, Autoplay]}
+                    spaceBetween={32}
+                    slidesPerView={1}
+                    speed={800}
+                    onSwiper={(s) => setValuesSwiper(s)}
+                    pagination={{ clickable: true }}
+                    keyboard={{ enabled: true }}
+                    grabCursor={true}
+                    autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                    breakpoints={{
+                      768: {
+                        slidesPerView: 2,
+                        spaceBetween: 32,
+                      },
+                      1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 32,
+                      },
+                    }}
+                    className="about-values-carousel mb-20"
+                  >
                   <SwiperSlide>
                     <div className="bg-white p-8 rounded-xl shadow-pastel-card border-2 border-dreamxec-navy hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                         <h3 className="text-xl font-bold text-dreamxec-navy mb-3 font-display">
@@ -139,7 +148,15 @@ const AboutUs = () => {
                         </p>
                     </div>
                   </SwiperSlide>
-                </Swiper>
+                  </Swiper>
+                  <button
+                    onClick={() => valuesSwiper?.slideNext()}
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+                    aria-label="Next"
+                  >
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                </div>
 
                 {/* HOW DREAMXEC IS DIFFERENT */}
                 <div className="max-w-5xl mx-auto mb-20 text-center">

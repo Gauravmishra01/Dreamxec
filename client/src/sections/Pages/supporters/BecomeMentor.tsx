@@ -1,12 +1,15 @@
 import { Header } from '../../Header'
 import { Footer } from '../../Footer'
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const BecomeMentor = () => {
+  const [benefitsSwiper, setBenefitsSwiper] = useState<any>(null);
+  const [storiesSwiper, setStoriesSwiper] = useState<any>(null);
 
   const mentorTypes = [
     { icon: "👨‍💻", text: "Engineers & technical leaders" },
@@ -136,28 +139,36 @@ const BecomeMentor = () => {
             Mentor Benefits
           </h2>
 
-          <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={32}
-            slidesPerView={1}
-            speed={800}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            grabCursor={true}
-            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            breakpoints={{
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 32,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 32,
-              },
-            }}
-            className="mentor-benefits-carousel"
-          >
+          <div className="relative">
+            <button
+              onClick={() => benefitsSwiper?.slidePrev()}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <Swiper
+              modules={[Pagination, Keyboard, A11y, Autoplay]}
+              spaceBetween={32}
+              slidesPerView={1}
+              speed={800}
+              onSwiper={(s) => setBenefitsSwiper(s)}
+              pagination={{ clickable: true }}
+              keyboard={{ enabled: true }}
+              grabCursor={true}
+              autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              breakpoints={{
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 32,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 32,
+                },
+              }}
+              className="mentor-benefits-carousel"
+            >
             {mentorBenefits.map((benefit, index) => (
               <SwiperSlide key={index}>
                 <div
@@ -189,7 +200,15 @@ const BecomeMentor = () => {
                 </div>
               </SwiperSlide>
             ))}
-          </Swiper>
+            </Swiper>
+            <button
+              onClick={() => benefitsSwiper?.slideNext()}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+              aria-label="Next"
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
         </section>
 
         {/* Time Commitment */}
@@ -267,24 +286,32 @@ const BecomeMentor = () => {
             Mentor Stories
           </h2>
 
-          <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={32}
-            slidesPerView={1}
-            speed={800}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            grabCursor={true}
-            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            breakpoints={{
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 32,
-              },
-            }}
-            className="mentor-stories-carousel"
-          >
+          <div className="relative">
+            <button
+              onClick={() => storiesSwiper?.slidePrev()}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <Swiper
+              modules={[Pagination, Keyboard, A11y, Autoplay]}
+              spaceBetween={32}
+              slidesPerView={1}
+              speed={800}
+              onSwiper={(s) => setStoriesSwiper(s)}
+              pagination={{ clickable: true }}
+              keyboard={{ enabled: true }}
+              grabCursor={true}
+              autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              breakpoints={{
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 32,
+                },
+              }}
+              className="mentor-stories-carousel"
+            >
             {mentorStories.map((story, index) => (
               <SwiperSlide key={index}>
                 <div
@@ -317,7 +344,15 @@ const BecomeMentor = () => {
                 </div>
               </SwiperSlide>
             ))}
-        </Swiper>
+            </Swiper>
+            <button
+              onClick={() => storiesSwiper?.slideNext()}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+              aria-label="Next"
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
         </section>
 
         {/* CTA Section */}

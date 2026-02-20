@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 export const CriteriaGrid = () => {
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const criteria = [
     {
       title: "Merit First",
@@ -48,51 +50,67 @@ export const CriteriaGrid = () => {
           </h4>
         </div>
         
-        <Swiper
-          modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-          spaceBetween={32}
-          slidesPerView={1}
-          speed={800}
-          navigation
-          pagination={{ clickable: true }}
-          keyboard={{ enabled: true }}
-          grabCursor={true}
-          autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          breakpoints={{
-            768: {
-              slidesPerView: 2,
-              spaceBetween: 32,
-            },
-            1024: {
-              slidesPerView: 2,
-              spaceBetween: 32,
-            },
-          }}
-          className="criteria-carousel"
-        >
-          {criteria.map((item, index) => (
-            <SwiperSlide key={index}>
-              <div
-                className="card-glass flex items-center p-6 h-full transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl"
-              >
-                {/* Left Side: Text Content */}
-                <div className="w-2/3 pr-4">
-                  <h2 className="text-2xl font-bold text-dreamxec-gray-250 mb-2">{item.title}</h2>
-                  <p className="text-dreamxec-gray-600 text-sm font-semibold leading-relaxed">{item.text}</p>
-                </div>
+        <div className="relative">
+          <button
+            onClick={() => swiperInstance?.slidePrev()}
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+          <Swiper
+            modules={[Pagination, Keyboard, A11y, Autoplay]}
+            spaceBetween={32}
+            slidesPerView={1}
+            speed={800}
+            onSwiper={(s) => setSwiperInstance(s)}
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            grabCursor={true}
+            autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+              1024: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+            }}
+            className="criteria-carousel"
+          >
+            {criteria.map((item, index) => (
+              <SwiperSlide key={index}>
+                <div
+                  className="card-glass flex items-center p-6 h-full transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl"
+                >
+                  {/* Left Side: Text Content */}
+                  <div className="w-2/3 pr-4">
+                    <h2 className="text-2xl font-bold text-dreamxec-gray-250 mb-2">{item.title}</h2>
+                    <p className="text-dreamxec-gray-600 text-sm font-semibold leading-relaxed">{item.text}</p>
+                  </div>
 
-                {/* Right Side: SVG Icon */}
-                <div className="w-1/3 flex justify-center items-center">
-                  <img
-                    src={item.icon}
-                    alt={`${item.title} Icon`}
-                    className="h-30 w-30 opacity-100"
-                  />
+                  {/* Right Side: SVG Icon */}
+                  <div className="w-1/3 flex justify-center items-center">
+                    <img
+                      src={item.icon}
+                      alt={`${item.title} Icon`}
+                      className="h-30 w-30 opacity-100"
+                    />
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <button
+            onClick={() => swiperInstance?.slideNext()}
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+            aria-label="Next"
+          >
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
