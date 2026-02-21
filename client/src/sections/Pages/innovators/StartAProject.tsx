@@ -294,7 +294,7 @@ const StartAProject = () => {
               className="start-project-carousel"
             >
             <SwiperSlide>
-              <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
+              <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
                   Funding (₹5K–₹50L)
                 </h3>
@@ -306,7 +306,7 @@ const StartAProject = () => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
+              <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
                   Mentorship (Expert Guidance)
                 </h3>
@@ -318,7 +318,7 @@ const StartAProject = () => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
+              <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
                   Exposure (Build Your Network)
                 </h3>
@@ -347,7 +347,7 @@ const StartAProject = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Who Can Apply */}
-            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
                 Who Can Apply
               </h3>
@@ -363,7 +363,7 @@ const StartAProject = () => {
             </div>
 
             {/* What Doesn't Qualify */}
-            <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
                 What Doesn&apos;t Qualify
               </h3>
@@ -485,7 +485,7 @@ const StartAProject = () => {
               {FAQ.map((item, index) => (
                 <div
                   key={index}
-                  className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
+                  className="card-pastel-offwhite rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="card-tricolor-tag"></div>

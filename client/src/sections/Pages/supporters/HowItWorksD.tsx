@@ -99,7 +99,7 @@ const HowItWorksDonors = () => {
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
+                                className={`card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
               reveal ${fundingFlow.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
@@ -128,7 +128,7 @@ const HowItWorksDonors = () => {
                             <div
                                 key={index}
                                 style={{ transitionDelay: `${index * 120}ms` }}
-                                className={`card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
+                                className={`card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300
               reveal ${transparency.isVisible ? 'reveal-visible' : ''}`}
                             >
                                 <div className="flex justify-between items-center">
@@ -188,7 +188,7 @@ const HowItWorksDonors = () => {
                       {impactMetrics.map((metric, index) => (
                         <SwiperSlide key={index}>
                           <div
-                            className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex items-center gap-4"
+                            className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex items-center gap-4"
                           >
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-3">
@@ -259,7 +259,7 @@ const HowItWorksDonors = () => {
                         {FAQ.map((item, index) => (
                           <SwiperSlide key={index}>
                             <div
-                              className="card-pastel-offwhite p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+                              className="card-pastel-offwhite p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
                             >
                               <div className="flex items-center gap-2 mb-3">
                                 {/* <span className="text-2xl">{item.icon}</span> */}

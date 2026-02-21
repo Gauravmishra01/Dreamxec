@@ -151,7 +151,7 @@ export default function ReferClub() {
 
         <form
           onSubmit={handleSubmit}
-          className="card-pastel rounded-3xl border-4 border-dreamxec-navy p-8 space-y-10"
+          className="card-pastel rounded-3xl border-2 border-dreamxec-navy p-8 space-y-10"
         >
 
           {/* Club Info */}
@@ -221,7 +221,7 @@ export default function ReferClub() {
             className="
               w-full bg-dreamxec-orange text-white
               font-bold text-lg py-4 rounded-full
-              border-4 border-dreamxec-navy
+              border-2 border-dreamxec-navy
               hover:opacity-90 transition
             "
           >

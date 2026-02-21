@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AdminSidebar from '../AdminSidebar';
 import {
   getClubVerifications,
   approveClubVerification,
@@ -30,12 +31,6 @@ const EyeIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const ArrowLeftIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M19 12H5M12 19l-7-7 7-7" />
-  </svg>
-);
-
 export default function AdminClubVerifications() {
   const [items, setItems] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
@@ -47,8 +42,11 @@ export default function AdminClubVerifications() {
     setLoading(true);
     try {
       const res = await getClubVerifications();
-      // Handle response structure (either { data: [...] } or [...])
-      setItems(res.data || (Array.isArray(res) ? res : []));
+      console.log("🔍 Club Verifications API Response:", res);
+      // Handle response structure: { data: { requests: [...] } } or { data: [...] }
+      const responseData = res.data as any;
+      const data = (responseData?.requests) || responseData || [];
+      setItems(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Failed to load verifications:", e);
     } finally {
@@ -78,151 +76,148 @@ export default function AdminClubVerifications() {
   }
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen relative overflow-hidden bg-orange-50/30">
+    <div className="flex min-h-screen bg-transparent relative">
+      
+      {/* Sidebar */}
+      <AdminSidebar />
 
-      {/* --- Decorative Background --- */}
-      <div className="absolute top-20 left-10 z-0 opacity-20 pointer-events-none">
-        <StarDecoration className="w-16 h-16" color="#FF7F00" />
-      </div>
-      <div className="absolute bottom-32 right-10 z-0 opacity-15 pointer-events-none">
-        <StarDecoration className="w-20 h-20" color="#000080" />
-      </div>
+      {/* Main Content Area - Fluid full width layout */}
+      <div className="flex-1 relative min-h-screen w-full px-6 lg:px-10 py-8">
 
-      {/* --- Page Header --- */}
-      <div className="relative bg-dreamxec-navy border-b-8 border-dreamxec-orange shadow-pastel-saffron z-10">
-        <div className="card-tricolor-tag"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <button
-            onClick={() => window.location.href = '/admin'}
-            className="flex items-center gap-2 text-dreamxec-cream hover:text-white mb-4 transition-colors font-bold"
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            Back to Dashboard
-          </button>
-
-          <div className="flex items-center gap-4">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-dreamxec-orange font-display">
-              Club Verifications
-            </h1>
-            <StarDecoration className="w-8 h-8 hidden sm:block" color="#FF7F00" />
-          </div>
-          <p className="text-dreamxec-cream text-lg sm:text-xl font-sans mt-2 opacity-90">
-            Review proof documents and approve Student Presidents
-          </p>
+        {/* --- Decorative Background --- */}
+        <div className="absolute top-20 right-20 z-0 opacity-20 pointer-events-none">
+          <StarDecoration className="w-16 h-16" color="#FF7F00" />
         </div>
-      </div>
+        <div className="absolute bottom-32 left-10 z-0 opacity-15 pointer-events-none">
+          <StarDecoration className="w-20 h-20" color="#000080" />
+        </div>
 
-      {/* --- Main Content --- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-
-        <div className="card-pastel-offwhite rounded-xl p-6 sm:p-8 border-5 border-dreamxec-navy shadow-pastel-card">
-          <div className="card-tricolor-tag"></div>
-
-          {/* Header Row */}
-          <div className="flex items-center justify-between mb-6 mt-2">
-            <h2 className="text-2xl font-bold text-dreamxec-navy font-display flex items-center gap-3">
-              Verification Requests
-              <span className="bg-dreamxec-orange text-white text-sm px-3 py-1 rounded-full border-2 border-dreamxec-navy">
-                {items.length} Total
-              </span>
-            </h2>
-            <button onClick={load} className="text-dreamxec-navy hover:text-dreamxec-orange underline font-bold text-sm">
+        {/* Content Wrapper */}
+        <div className="relative z-10 w-full">
+          
+          {/* Header */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+              <h1 className="text-4xl font-bold text-dreamxec-navy font-display flex items-center gap-3">
+                Club Verifications <StarDecoration className="w-8 h-8 hidden sm:block" color="#FF7F00" />
+              </h1>
+              <p className="text-gray-600 mt-2 font-sans text-lg">
+                Review proof documents and approve Student Presidents.
+              </p>
+            </div>
+            
+            <button 
+              onClick={load} 
+              className="px-6 py-2.5 bg-white text-dreamxec-navy rounded-xl border-2 border-dreamxec-navy/20 shadow-sm font-bold font-display hover:bg-dreamxec-navy/5 transition-all"
+            >
               Refresh List
             </button>
           </div>
 
-          {/* Loading State */}
-          {loading && (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-dreamxec-orange mx-auto"></div>
-              <p className="text-dreamxec-navy mt-4 font-bold">Loading requests...</p>
+          <div className="bg-white rounded-xl border-4 border-dreamxec-navy shadow-pastel-card overflow-hidden">
+            
+            {/* Header Row count */}
+            <div className="bg-dreamxec-cream border-b-2 border-dreamxec-navy/20 p-5 flex items-center gap-3">
+              <h2 className="text-xl font-bold text-dreamxec-navy font-display">
+                Verification Requests
+              </h2>
+              <span className="bg-dreamxec-orange text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                {items.length} Total
+              </span>
             </div>
-          )}
 
-          {/* Empty State */}
-          {!loading && items.length === 0 && (
-            <div className="text-center py-16 bg-white rounded-xl border-3 border-dashed border-dreamxec-navy/30">
-              <div className="bg-dreamxec-cream w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-dreamxec-navy">
-                <CheckCircleIcon className="w-10 h-10 text-dreamxec-green" />
+            {/* Loading State */}
+            {loading && (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-dreamxec-orange mx-auto"></div>
+                <p className="text-dreamxec-navy mt-4 font-bold font-display text-xl">Loading requests...</p>
               </div>
-              <h3 className="text-2xl font-bold text-dreamxec-navy font-display">All Caught Up!</h3>
-              <p className="text-dreamxec-navy opacity-70">No pending club verifications.</p>
-            </div>
-          )}
+            )}
 
-          {/* Table */}
-          {!loading && items.length > 0 && (
-            <div className="overflow-x-auto rounded-lg border-3 border-dreamxec-navy">
-              <table className="w-full bg-white">
-                <thead className="bg-dreamxec-cream border-b-3 border-dreamxec-navy">
-                  <tr>
-                    <th className="text-left py-4 px-6 font-bold text-dreamxec-navy font-display text-lg">College / Club</th>
-                    <th className="text-left py-4 px-6 font-bold text-dreamxec-navy font-display text-lg">President</th>
-                    <th className="text-left py-4 px-6 font-bold text-dreamxec-navy font-display text-lg">Status</th>
-                    <th className="text-right py-4 px-6 font-bold text-dreamxec-navy font-display text-lg">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y-2 divide-dreamxec-gray-200">
-                  {items.map((v) => (
-                    <tr key={v.id} className="hover:bg-blue-50/50 transition-colors group">
-                      <td className="py-4 px-6">
-                        <div className="font-bold text-dreamxec-navy text-lg">{v.collegeName}</div>
-                        <div className="text-sm text-dreamxec-navy opacity-70 font-sans">{v.clubName || "Club Name Not Set"}</div>
-                      </td>
-                      <td className="py-4 px-6 text-dreamxec-navy font-medium">
-                        {v.presidentName}
-                        <div className="text-xs opacity-60">{v.studentEmail}</div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold border-2 border-dreamxec-navy font-display shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${v.status === 'APPROVED' ? 'bg-dreamxec-green text-white shadow-pastel-green-sm' :
-                            v.status === 'REJECTED' ? 'bg-red-600 text-white shadow-pastel-navy-sm' :
-                              'bg-dreamxec-orange text-white shadow-pastel-saffron-sm'
-                          }`}>
-                          {v.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => setSelected(v)}
-                            className="inline-flex items-center gap-2 p-2 sm:p-3 bg-dreamxec-gray-100 text-dreamxec-navy rounded-lg font-bold border-3 border-dreamxec-navy hover:scale-110 transition-transform"
-                            title="View Details"
-                          >
-                            <EyeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                          </button>
+            {/* Empty State */}
+            {!loading && items.length === 0 && (
+              <div className="text-center py-16">
+                <div className="bg-dreamxec-cream w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-dreamxec-navy shadow-sm">
+                  <CheckCircleIcon className="w-10 h-10 text-dreamxec-green" />
+                </div>
+                <h3 className="text-2xl font-bold text-dreamxec-navy font-display">All Caught Up!</h3>
+                <p className="text-gray-500 font-sans mt-2">No pending club verifications.</p>
+              </div>
+            )}
 
-                          {v.status === 'PENDING' && (
-                            <>
-                              <button
-                                onClick={() => approve(v.id)}
-                                className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-dreamxec-green text-white rounded-lg font-bold border-3 border-dreamxec-navy shadow-pastel-green hover:scale-105 transition-transform font-display"
-                              >
-                                <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span className="hidden sm:inline">Approve</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  const reason = prompt('Enter rejection reason:');
-                                  if (reason) reject(v.id, reason);
-                                }}
-                                className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-3 bg-red-600 text-white rounded-lg font-bold border-3 border-dreamxec-navy shadow-pastel-navy hover:scale-105 transition-transform font-display"
-                              >
-                                <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span className="hidden sm:inline">Reject</span>
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
+            {/* Table */}
+            {!loading && items.length > 0 && (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <tr>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">College / Club</th>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">President</th>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">Status</th>
+                      <th className="p-5 text-right font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {items.map((v) => (
+                      <tr key={v.id} className="hover:bg-dreamxec-cream/50 transition-colors group">
+                        <td className="p-5">
+                          <div className="font-bold text-dreamxec-navy text-lg font-display">{v.collegeName}</div>
+                          <div className="text-sm text-gray-500 font-sans mt-1">{v.clubName || "Club Name Not Set"}</div>
+                        </td>
+                        <td className="p-5">
+                          <div className="font-bold text-sm text-dreamxec-navy">{v.presidentName}</div>
+                          <div className="text-xs text-gray-500 font-mono mt-1">{v.studentEmail}</div>
+                        </td>
+                        <td className="p-5">
+                          <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold uppercase border-2 shadow-sm ${
+                            v.status === 'APPROVED' ? 'bg-green-50 text-green-700 border-green-200' :
+                            v.status === 'REJECTED' ? 'bg-red-50 text-red-700 border-red-200' :
+                            'bg-yellow-50 text-yellow-700 border-yellow-200'
+                          }`}>
+                            {v.status}
+                          </span>
+                        </td>
+                        <td className="p-5 text-right">
+                          <div className="flex items-center justify-end gap-3">
+                            <button
+                              onClick={() => setSelected(v)}
+                              className="inline-flex items-center justify-center p-2.5 bg-white text-dreamxec-navy rounded-lg border-2 border-dreamxec-navy/20 shadow-sm hover:bg-dreamxec-navy/5 hover:border-dreamxec-navy transition-all"
+                              title="View Details"
+                            >
+                              <EyeIcon className="w-5 h-5" />
+                            </button>
+
+                            {v.status === 'PENDING' && (
+                              <>
+                                <button
+                                  onClick={() => approve(v.id)}
+                                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-700 rounded-lg font-bold border-2 border-green-200 shadow-sm hover:bg-green-100 transition-colors"
+                                >
+                                  <CheckCircleIcon className="w-5 h-5" />
+                                  <span className="hidden sm:inline">Approve</span>
+                                </button>
+
+                                <button
+                                  onClick={() => {
+                                    const reason = prompt('Enter rejection reason:');
+                                    if (reason) reject(v.id, reason);
+                                  }}
+                                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 rounded-lg font-bold border-2 border-red-200 shadow-sm hover:bg-red-100 transition-colors"
+                                >
+                                  <XCircleIcon className="w-5 h-5" />
+                                  <span className="hidden sm:inline">Reject</span>
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -235,6 +230,6 @@ export default function AdminClubVerifications() {
         />
       )}
       </div>
-    </>
-  );
-}
+    
+  
+  );}

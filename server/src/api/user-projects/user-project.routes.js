@@ -8,6 +8,7 @@ const {
   getUserProject,
   getPublicUserProjects,
   getMyUserProjects,
+  getStudentAnalytics,
 } = require('./user-project.controller');
 
 const { protect, restrictTo } = require('../../middleware/auth.middleware');
@@ -18,9 +19,10 @@ const {
 } = require('./user-project.validation');
 
 // 🟢 Import the new middleware
-const { validateCampaignEligibility } = require('../../middleware/club.middleware');
+const { validateCampaignEligibility, resolveCampaignClub } = require('../../middleware/club.middleware');
 
 const multer = require('multer');
+const catchAsync = require('../../utils/catchAsync');
 
 /* ---------------------------
    MULTER CONFIG
@@ -32,6 +34,9 @@ const upload = multer({
   },
 });
 
+// Student's own campaigns
+router.get('/analytics', protect, restrictTo('USER', 'STUDENT_PRESIDENT'), getStudentAnalytics);
+router.get('/my',protect, restrictTo('USER', 'STUDENT_PRESIDENT'),getMyUserProjects);
 /* ---------------------------
    PUBLIC ROUTES
 ---------------------------- */
@@ -43,19 +48,18 @@ router.get('/:id', getUserProject);
 ---------------------------- */
 router.use(protect);
 
-// Student's own campaigns
-router.get('/my', restrictTo('USER', 'STUDENT_PRESIDENT'), getMyUserProjects);
 
 // 🚀 CREATE CAMPAIGN
 router.post(
   '/',
   restrictTo('USER', 'STUDENT_PRESIDENT'),           // 1. Must be a User
-  validateCampaignEligibility,  // 2. 🛡️ Strict Flow Check (Student -> Club -> Verified)
- upload.fields([
-  { name: "bannerFile", maxCount: 1 },
-  { name: "mediaFiles", maxCount: 10 },
-  { name: "teamImages", maxCount: 20 }, // 🟢 NEW
-]),
+  upload.fields([
+    { name: "bannerFile", maxCount: 1 },
+    { name: "mediaFiles", maxCount: 10 },
+    { name: "teamImages", maxCount: 20 }, // 🟢 NEW
+  ]),
+  validateCampaignEligibility,
+  resolveCampaignClub,
   validate(createUserProjectSchema),
   createUserProject
 );
@@ -73,7 +77,7 @@ router.put(
 router.delete(
   '/:id',
   restrictTo('USER', 'STUDENT_PRESIDENT'),
-  validateCampaignEligibility, 
+  validateCampaignEligibility,
   deleteUserProject
 );
 

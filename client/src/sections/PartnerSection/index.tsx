@@ -129,7 +129,7 @@ export const PartnersSection = () => {
 
         {/* Call to Action */}
         <div className="text-center">
-          <div className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 sm:p-8 max-w-2xl mx-auto">
+          <div className="card-pastel rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 sm:p-8 max-w-2xl mx-auto">
             <div className="card-tricolor-tag"></div>
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue font-display mb-3 sm:mb-4 mt-4">
               Partner With Us

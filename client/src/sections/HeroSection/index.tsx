@@ -1,13 +1,48 @@
 import { HeroTitle } from "./components/HeroTitle";
 import { Hero } from "./components/Hero";
 import { CampaignCarousel } from "./components/CampaignCarousel";
+import { useEffect, useState } from "react";
+import { NewsletterModal } from "../../components/NewsletterModal";
 
 
 export const HeroSection = () => {
   const currentUser = null;
+  const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeenModal = localStorage.getItem("dx_newsletter_seen");
+
+    if (hasSeenModal) return;
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const pageHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      const scrollPercentage = scrollPosition / pageHeight;
+
+      if (scrollPercentage > 0.4) {
+        setIsNewsletterOpen(true);
+        localStorage.setItem("dx_newsletter_seen", "true");
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
 
   return (
+
     <section className="relative w-full overflow-x-hidden">
+      <NewsletterModal
+        isOpen={isNewsletterOpen}
+        onClose={() => setIsNewsletterOpen(false)}
+      />
       {/* Constrained Content */}
       <div
         className="

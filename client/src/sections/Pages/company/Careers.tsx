@@ -82,7 +82,7 @@ const Careers = () => {
             {cultureValues.map((value, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-lg md:text-xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {value.title}
@@ -105,7 +105,7 @@ const Careers = () => {
             {whyWork.map((item, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {item.title}
@@ -129,7 +129,7 @@ const Careers = () => {
               We're currently hiring for:
             </p>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 mb-8">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300 mb-8">
               <ul className="space-y-3">
                 {openRoles.map((role, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base sm:text-lg md:text-xl">
@@ -140,7 +140,7 @@ const Careers = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed">
                 All roles are open to remote candidates (India-based). We hire for potential + mission alignment over just experience.
               </p>
@@ -155,7 +155,7 @@ const Careers = () => {
           </h2>
 
           <div className="max-w-7xl mx-auto space-y-8">
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <p className="text-dreamxec-navy text-base md:text-2xl font-semibold leading-relaxed mb-6">
                 DreamXec Internships: 3–6 month programs for students/recent grads. Roles in Engineering, Product, Community, Partnerships, Content, Design.
               </p>
@@ -173,7 +173,7 @@ const Careers = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                 Application
               </h3>

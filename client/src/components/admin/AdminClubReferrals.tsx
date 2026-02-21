@@ -1,93 +1,158 @@
-// src/components/admin/AdminClubReferrals.tsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import AdminSidebar from '../AdminSidebar';
+import { getClubReferrals, updateReferralStatus } from '../../services/adminService';
 import ReferralDetailsModal from './ReferralDetailsModal';
-import { Header } from '../../sections/Header';
+import { StarDecoration } from '../icons/StarDecoration';
+import { EyeIcon } from 'lucide-react';
 
-const API = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api' });
-API.interceptors.request.use(cfg => {
-  const t = localStorage.getItem('token'); if (t) cfg.headers.Authorization = `Bearer ${t}`; return cfg;
-});
+// Icons
+const Icons = {
+  Check: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>,
+  X: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>,
+  Eye: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+};
 
 export default function AdminClubReferrals() {
   const [referrals, setReferrals] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState<any | null>(null);
-  const [rejectionId, setRejectionId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedReferral, setSelectedReferral] = useState<any | null>(null);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    loadReferrals();
+  }, []);
 
-  async function load() {
-    setLoading(true);
+  const loadReferrals = async () => {
     try {
-      const res = await API.get('/club-referral'); // GET all referrals
-      setReferrals(res.data.data || res.data || []);
-    } catch (e) { console.error(e); alert('Failed to fetch referrals'); }
-    setLoading(false);
-  }
+      setLoading(true);
+      const res = await getClubReferrals();
+      // Handle array vs nested data object
+      setReferrals(Array.isArray(res.data) ? res.data : (res.data as any).data || []);
+    } catch (error) {
+      console.error('Failed to load referrals', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  async function approve(id: string) {
+  const handleStatusUpdate = async (id: string, status: 'APPROVED' | 'REJECTED') => {
+    const notes = prompt(`Enter notes for ${status} (Optional):`);
     try {
-      await API.post(`/club-referral/${id}/approve`);
-      load();
-    } catch (e) { console.error(e); alert('Approve failed'); }
-  }
-
-  async function reject(id: string, reason: string) {
-    try {
-      await API.post(`/club-referral/${id}/reject`, { reason });
-      setRejectionId(null);
-      load();
-    } catch (e) { console.error(e); alert('Reject failed'); }
-  }
+      await updateReferralStatus(id, status, notes || '');
+      loadReferrals();
+      setSelectedReferral(null);
+    } catch (error) {
+      alert("Failed to update status");
+    }
+  };
 
   return (
-    <>
-      <Header />
-      <div className="bg-white rounded-xl shadow p-6 max-w-7xl mx-auto mt-6">
-      <h2 className="text-2xl font-bold mb-4">Club Referrals</h2>
-      {loading ? <p>Loading…</p> : (
-        <table className="w-full">
-          <thead><tr><th>Club</th><th>Referrer</th><th>President</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            {referrals.length === 0 && <tr><td colSpan={5} className="py-6 text-center">No referrals</td></tr>}
-            {referrals.map(r => (
-              <tr key={r.id} className="border-b">
-                <td className="py-3">{r.clubName || r.collegeName}</td>
-                <td>{r.referrerEmail || r.studentEmail}</td>
-                <td>{r.presidentName || '—'}</td>
-                <td>{r.status}</td>
-                <td className="text-right">
-                  <button onClick={() => setSelected(r)} className="px-3 py-1 mr-2 bg-gray-100 rounded">View</button>
-                  <button onClick={() => approve(r.id)} className="px-3 py-1 mr-2 bg-green-600 text-white rounded">Approve</button>
-                  <button onClick={() => setRejectionId(r.id)} className="px-3 py-1 bg-red-600 text-white rounded">Reject</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className="flex min-h-screen bg-transparent relative">
+      <AdminSidebar />
+      
+      {/* Main Content Area - Fluid full width layout */}
+      <div className="flex-1 relative min-h-screen w-full px-6 lg:px-10 py-8">
+        
+        {/* Decorative Background Elements */}
+        <div className="absolute top-10 left-10 z-0 opacity-10 pointer-events-none">
+          <StarDecoration className="w-24 h-24" color="#0B9C2C" />
+        </div>
 
-      {selected && <ReferralDetailsModal referral={selected} onClose={() => setSelected(null)} onApprove={approve} onReject={reject} />}
-      {rejectionId && <RejectionPrompt onSubmit={(reason) => reject(rejectionId, reason)} onClose={() => setRejectionId(null)} />}
-      </div>
-    </>
-  );
-}
+        {/* Content Wrapper */}
+        <div className="relative z-10 w-full">
+          
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+              <h1 className="text-4xl font-bold text-dreamxec-navy font-display flex items-center gap-3">
+                Club Referrals <StarDecoration className="w-8 h-8 hidden sm:block" color="#FF7F00" />
+              </h1>
+              <p className="text-gray-600 mt-2 font-sans text-lg">Manage student referrals for new club chapters.</p>
+            </div>
 
-function RejectionPrompt({ onSubmit, onClose }: { onSubmit: (r: string) => void; onClose: () => void; }) {
-  const [reason, setReason] = useState('');
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/40 p-4 z-50">
-      <div className="bg-white rounded p-6 w-full max-w-md">
-        <h3 className="text-lg font-bold">Reject referral</h3>
-        <textarea className="w-full p-2 border mt-3" value={reason} onChange={e => setReason(e.target.value)} />
-        <div className="mt-4 flex justify-end gap-2">
-          <button onClick={onClose} className="px-3 py-1 border rounded">Cancel</button>
-          <button onClick={() => onSubmit(reason)} className="px-3 py-1 bg-red-600 text-white rounded" disabled={!reason.trim()}>Submit</button>
+            <button 
+              onClick={loadReferrals} 
+              className="px-6 py-2.5 bg-white text-dreamxec-navy rounded-xl border-2 border-dreamxec-navy/20 shadow-sm font-bold font-display hover:bg-dreamxec-navy/5 transition-all"
+            >
+              Refresh List
+            </button>
+          </div>
+
+          <div className="bg-white rounded-xl border-4 border-dreamxec-navy shadow-pastel-navy overflow-hidden">
+            
+            {/* Header Row count */}
+            <div className="bg-dreamxec-cream border-b-2 border-dreamxec-navy/20 p-5 flex items-center gap-3">
+              <h2 className="text-xl font-bold text-dreamxec-navy font-display">
+                Pending Referrals
+              </h2>
+              <span className="bg-dreamxec-orange text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                {referrals.length} Total
+              </span>
+            </div>
+
+            {loading ? (
+              <div className="p-12 text-center text-gray-500 animate-pulse font-bold font-display text-xl">Loading referrals...</div>
+            ) : referrals.length === 0 ? (
+              <div className="p-12 text-center">
+                <div className="text-6xl mb-4">🤝</div>
+                <h3 className="text-2xl font-bold text-dreamxec-navy font-display">No Pending Referrals</h3>
+                <p className="text-gray-500 font-sans mt-2">Check back later for new club chapter recommendations.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <tr>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">Club Name</th>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">Referrer</th>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">President Nominee</th>
+                      <th className="p-5 font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">Status</th>
+                      <th className="p-5 text-right font-bold tracking-wider font-display uppercase text-sm text-dreamxec-navy">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {referrals.map((ref) => (
+                      <tr key={ref.id} className="hover:bg-dreamxec-cream/50 transition-colors group">
+                        <td className="p-5 font-bold text-dreamxec-navy text-lg font-display">{ref.clubName}</td>
+                        <td className="p-5 text-sm font-mono text-gray-600">{ref.referrerEmail}</td>
+                        <td className="p-5">
+                          <div className="font-bold text-sm text-dreamxec-navy">{ref.presidentName}</div>
+                          <div className="text-xs text-gray-500 font-mono mt-1">{ref.presidentEmail}</div>
+                        </td>
+                        <td className="p-5">
+                          <span className={`inline-flex px-3 py-1.5 rounded-lg text-xs font-bold uppercase border-2 shadow-sm ${
+                            ref.status === 'APPROVED' ? 'bg-green-50 text-green-700 border-green-200' :
+                            ref.status === 'REJECTED' ? 'bg-red-50 text-red-700 border-red-200' :
+                            'bg-yellow-50 text-yellow-700 border-yellow-200'
+                          }`}>
+                            {ref.status}
+                          </span>
+                        </td>
+                        <td className="p-5 text-right">
+                          <button 
+                            onClick={() => setSelectedReferral(ref)}
+                            className="inline-flex items-center justify-center p-2.5 bg-white text-dreamxec-navy rounded-lg border-2 border-dreamxec-navy/20 shadow-sm hover:bg-dreamxec-navy/5 hover:border-dreamxec-navy transition-all"
+                            title="View Details"
+                          >
+                            <EyeIcon className="w-5 h-5" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {selectedReferral && (
+        <ReferralDetailsModal 
+          referral={selectedReferral} 
+          onClose={() => setSelectedReferral(null)}
+          onApprove={() => handleStatusUpdate(selectedReferral.id, 'APPROVED')}
+          onReject={() => handleStatusUpdate(selectedReferral.id, 'REJECTED')}
+        />
+      )}
     </div>
   );
 }

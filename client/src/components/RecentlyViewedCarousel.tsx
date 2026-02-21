@@ -106,7 +106,7 @@ export default function RecentlyViewedCarousel() {
                 max-w-[280px]
                 bg-dreamxec-cream
                 rounded-xl
-                border-4 border-dreamxec-navy
+                border-2 border-dreamxec-navy
                 shadow-pastel-card
                 cursor-pointer
                 transition-all

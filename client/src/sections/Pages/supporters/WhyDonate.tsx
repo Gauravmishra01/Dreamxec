@@ -82,7 +82,7 @@ const WhyDonate = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
+                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
@@ -140,7 +140,7 @@ const WhyDonate = () => {
             {stories.map((story, index) => (
               <SwiperSlide key={index}>
                 <div
-                   className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
+                   className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">

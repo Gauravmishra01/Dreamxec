@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { StarDecoration } from './icons/StarDecoration';
 import YouTube from "react-youtube";
 import toast from 'react-hot-toast';
-
+import apiRequest from '../services/api';
+import { getMyClubs, type MyClub } from '../services/clubService';
 
 // Icons
 const ArrowLeftIcon = ({ className }: { className?: string }) => (
@@ -37,7 +38,8 @@ interface CreateCampaignProps {
   onSubmit: (data: {
     title: string;
     description: string;
-    clubName: string;
+    clubId: string;        // 🆕 REQUIRED
+    // collegeName: string;   // 🆕 RENAMED
     goalAmount: number;
     bannerFile: File | null;
     mediaFiles: File[];
@@ -48,43 +50,86 @@ interface CreateCampaignProps {
     youtubeUrl?: string;
     milestones: { title: string; timeline: string; budget: string; description?: string }[];
   }) => Promise<void>;
+  initialData?: any; // 🆕 EDIT MODE
 }
 
 type Milestone = { title: string; timeline: string; budget: string; description?: string };
+type ClubOption = {
+  id: string;
+  name: string;
+  college: string;
+};
 
-export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps) {
+export default function CreateCampaign({ onBack, onSubmit, initialData }: CreateCampaignProps) {
   const [step, setStep] = useState(1);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [clubName, setClubName] = useState('');
-  const [goalAmount, setGoalAmount] = useState('');
-  const [presentationDeckUrl, setPresentationDeckUrl] = useState('');
-  const [campaignType, setCampaignType] = useState<"INDIVIDUAL" | "TEAM">("INDIVIDUAL");
-  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [title, setTitle] = useState(initialData?.title || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  // const [collegeName, setCollegeName] = useState('');
+  const [clubs, setClubs] = useState<ClubOption[]>([]);
+  const [clubId, setClubId] = useState(initialData?.clubId || '');
+
+  const [goalAmount, setGoalAmount] = useState(initialData?.goalAmount?.toString() || '');
+  const [presentationDeckUrl, setPresentationDeckUrl] = useState(initialData?.presentationDeckUrl || '');
+  const [campaignType, setCampaignType] = useState<"INDIVIDUAL" | "TEAM">(initialData?.campaignType || "INDIVIDUAL");
+  const [youtubeUrl, setYoutubeUrl] = useState(initialData?.youtubeUrl || '');
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-  const [bannerPreview, setBannerPreview] = useState('');
-  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
 
-  const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>([]);
-  const [teamMembers, setTeamMembers] = useState<{ name: string; role: string; image: File | null }[]>([]);
-  const [milestones, setMilestones] = useState<Milestone[]>([
-    { title: '', timeline: '', budget: '', description: '' }
-  ]);
+  // Preview URLs for existing data
+  const [bannerPreview, setBannerPreview] = useState(initialData?.imageUrl || '');
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>(initialData?.campaignMedia || []);
+
+  const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>(initialData?.faqs || []);
+
+  const [teamMembers, setTeamMembers] = useState<{ name: string; role: string; image: File | null }[]>(
+    initialData?.teamMembers?.map((m: any) => ({ ...m, image: null })) || []
+  );
+
+  const [milestones, setMilestones] = useState<Milestone[]>(
+    initialData?.milestones?.map((m: any) => ({
+      title: m.title,
+      timeline: m.timeline,
+      budget: m.budget.toString(),
+      description: m.description || ''
+    })) || [{ title: '', timeline: '', budget: '', description: '' }]
+  );
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const mediaInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
-      if (bannerPreview) URL.revokeObjectURL(bannerPreview);
-      mediaPreviews.forEach(url => URL.revokeObjectURL(url));
+      // Cleanup object URLs but NOT external URLs from initialData
+      if (bannerPreview && !bannerPreview.startsWith('http')) URL.revokeObjectURL(bannerPreview);
+      mediaPreviews.forEach(url => {
+        if (!url.startsWith('http')) URL.revokeObjectURL(url);
+      });
     };
   }, [bannerPreview, mediaPreviews]);
+
+  useEffect(() => {
+    const fetchClubs = async () => {
+      try {
+        const res = await apiRequest('/clubs/my', { method: 'GET' });
+
+        console.log('🔥 /clubs/my RAW RESPONSE:', res);
+
+        const data = res.data as { clubs: ClubOption[] };
+        setClubs(data.clubs);
+      } catch (err) {
+        console.error('❌ clubs fetch failed:', err);
+        toast.error('Failed to load clubs');
+      }
+    };
+
+    fetchClubs();
+  }, []);
+
+
 
   const getVideoId = useCallback((url: string): string => {
     if (!url) return '';
@@ -113,14 +158,14 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
         const goalNum = parseFloat(goalAmount);
         return title.trim() &&
           description.trim() &&
-          clubName.trim() &&
+          clubId.trim() &&
           goalAmount && !isNaN(goalNum) && goalNum > 0; // ✅ FIXED
       case 2:
         return true; // Step 2 has no required fields
 
       case 3:
         return (
-          bannerFile &&
+          (bannerFile || initialData?.imageUrl) && // ✅ Allow if existing image
           milestones.every(
             m =>
               m.title.trim() &&
@@ -180,7 +225,8 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
       step === 1 &&
       (!title.trim() ||
         !description.trim() ||
-        !clubName.trim() ||
+        !goalAmount.trim() ||
+        !clubId.trim() ||
         !parseFloat(goalAmount))
     ) {
       toast.error('Please fill all basic information');
@@ -190,7 +236,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
     // STEP 3 validation (milestones belong here)
     if (
       step === 3 &&
-      (!bannerFile ||
+      ((!bannerFile && !initialData?.imageUrl) || // ✅ Check existing
         totalMilestoneBudget > parseFloat(goalAmount) ||
         !milestones.every(
           m =>
@@ -199,7 +245,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
             parseFloat(m.budget) > 0
         ))
     ) {
-      toast.error('Please complete all milestones');
+      toast.error('Please complete all milestones and upload a banner image. Ensure total milestone budget does not exceed campaign goal.');
       return;
     }
 
@@ -215,9 +261,15 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
     setSubmitError('');
     try {
       await onSubmit({
-        title, description, clubName,
+        title, description,
         goalAmount: parseFloat(goalAmount),
-        bannerFile, mediaFiles, presentationDeckUrl, campaignType, youtubeUrl,
+        clubId,
+        // collegeName,
+        bannerFile,
+        mediaFiles,
+        presentationDeckUrl,
+        campaignType,
+        youtubeUrl,
         faqs: faqs.filter(f => f.question.trim() && f.answer.trim()),
         teamMembers: campaignType === 'TEAM' ? teamMembers.filter(m => m.name.trim() && m.role.trim()) : undefined,
         milestones,
@@ -237,8 +289,8 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
   if (showSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-dreamxec-cream to-white flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl border-4 border-dreamxec-navy shadow-lg p-8 text-center max-w-sm w-full mx-auto">
-          <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-md">
+        <div className=" rounded-2xl border-2 border-dreamxec-navy shadow-lg p-8 text-center max-w-sm w-full mx-auto">
+          <div className="w-20 h-20 bg-dreamxec-green rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-white shadow-md">
             <CheckCircleIcon className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-dreamxec-navy mb-2">Success! 🎉</h1>
@@ -257,7 +309,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
   const inputCls = "w-full px-3 py-2 border-2 border-dreamxec-navy rounded-lg text-sm font-medium bg-white focus:outline-none focus:border-dreamxec-orange focus:ring-2 focus:ring-dreamxec-orange/20 transition-all";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dreamxec-cream to-white relative overflow-hidden">
+    <div className="min-h-screen  relative overflow-hidden">
       {/* Decorations */}
       <div className="absolute top-10 left-4 opacity-20 pointer-events-none">
         <StarDecoration className="w-10 h-10" color="#FF7F00" />
@@ -308,7 +360,33 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
       {/* Main Form */}
       <div className="max-w-4xl mx-auto px-4 pb-12">
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl border-4 border-dreamxec-navy shadow-lg p-4 sm:p-6">
+
+        {/* 🔴 ADMIN NOTE FOR REJECTED CAMPAIGNS */}
+        {initialData?.status === 'REJECTED' && initialData.rejectionReason && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                {/* Alert Icon */}
+                <svg className="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-red-800 uppercase tracking-wide">
+                  ⚠️ Admin Feedback (Attempt {(initialData.reapprovalCount || 0) + 1}/3)
+                </h3>
+                <div className="mt-1 text-sm text-red-700 font-medium">
+                  {initialData.rejectionReason}
+                </div>
+                <p className="mt-2 text-xs text-red-600">
+                  Please address the issues above and resubmit your campaign. You have {3 - (initialData.reapprovalCount || 0)} attempts remaining.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className=" backdrop-blur-xl rounded-2xl border-2 border-dreamxec-navy shadow-lg p-4 sm:p-6">
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -332,15 +410,35 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Club Name *</label>
+                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">
+                    Select Club *
+                  </label>
+
+                  <select
+                    value={clubId}
+                    onChange={(e) => setClubId(e.target.value)}
+                    className={inputCls}
+                  >
+                    <option value="">Select your club</option>
+                    {clubs.map((club) => (
+                      <option key={club.id} value={club.id}>
+                        {club.name} — {club.college}
+                      </option>
+                    ))}
+                  </select>
+
+                </div>
+
+                {/* <div>
+                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">College Name *</label>
                   <input
                     type="text"
-                    value={clubName}
-                    onChange={(e) => setClubName(e.target.value)}
-                    placeholder="e.g., Robotics Club IIT Delhi"
+                    value={collegeName}
+                    onChange={(e) => setCollegeName(e.target.value)}
+                    placeholder="e.g., IIT Delhi"
                     className={inputCls}
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="mt-4">
@@ -471,7 +569,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
               {/* YouTube Pitch */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">🎥 Pitch Video (Optional)</label>
+                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">🎥 Pitch Video</label>
                 <input
                   type="url"
                   value={youtubeUrl}
@@ -518,7 +616,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
               {/* FAQs */}
               <div className="space-y-3">
-                <label className="block text-sm font-semibold text-dreamxec-navy">FAQs (Optional)</label>
+                <label className="block text-sm font-semibold text-dreamxec-navy">FAQs</label>
                 {faqs.map((faq, idx) => (
                   <div key={idx} className="p-4 border-2 border-dreamxec-navy rounded-lg bg-white">
                     <div className="flex justify-between mb-2">
@@ -593,7 +691,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
 
               {/* Media Upload */}
               <div className="mb-5">
-                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Additional Media (Optional)</label>
+                <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Additional Media *</label>
                 <div
                   className="border-2 border-dashed border-dreamxec-navy rounded-lg p-6 text-center cursor-pointer hover:bg-dreamxec-cream transition-all"
                   onClick={() => mediaInputRef.current?.click()}
@@ -664,7 +762,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                           </div>
                         </div>
                         <textarea
-                          placeholder="Description (optional)"
+                          placeholder="Description"
                           value={milestone.description || ''}
                           onChange={(e) => updateMilestone(idx, 'description', e.target.value)}
                           rows={2}
@@ -711,7 +809,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                   <h3 className="text-sm font-bold text-dreamxec-navy mb-3">Campaign Summary</h3>
                   <div className="space-y-2 text-sm">
                     <div><span className="font-semibold">Title:</span> {title || <span className="text-gray-400 italic">Not set</span>}</div>
-                    <div><span className="font-semibold">Club:</span> {clubName || <span className="text-gray-400 italic">Not set</span>}</div>
+                    {/* <div><span className="font-semibold">Club:</span> {clubId || <span className="text-gray-400 italic">Not set</span>}</div> */}
                     <div><span className="font-semibold">Goal:</span> ₹{parseFloat(goalAmount || '0').toLocaleString()}</div>
                     <div><span className="font-semibold">Type:</span> {campaignType}</div>
                     <div><span className="font-semibold">Milestones:</span> {milestones.length}</div>
@@ -720,7 +818,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Pitch Deck Link (Optional)</label>
+                  <label className="block text-sm font-semibold text-dreamxec-navy mb-1.5">Pitch Deck Link</label>
                   <input
                     type="url"
                     value={presentationDeckUrl}
@@ -739,7 +837,7 @@ export default function CreateCampaign({ onBack, onSubmit }: CreateCampaignProps
                 {submitError}
               </div>
             )}
-            
+
 
             {/* Navigation */}
             {/* Navigation - FIXED */}

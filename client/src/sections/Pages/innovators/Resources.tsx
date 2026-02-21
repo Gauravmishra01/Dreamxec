@@ -110,7 +110,7 @@ const ResourceCenter = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 animate-fade-in hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 animate-fade-in hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dreamxec-berkeley-blue mb-2">
                   {category.title}
@@ -140,7 +140,7 @@ const ResourceCenter = () => {
             {resourceCards.map((resource, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:scale-105 hover:shadow-lg transition-all duration-300"
+                className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:scale-105 hover:shadow-lg transition-all duration-300"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="mb-4">

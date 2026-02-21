@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useHeroCampaigns } from "../../../hooks/useHeroCampaigns";
 import { CampaignCard } from "./CampaignCard";
 import { SkeletonCard } from "./SkeletonCard";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const SPEED = 0.5; // px per frame - matching the slow, elegant pace of other carousels
+const SPEED = 1;
 
 export const CampaignCarousel = () => {
   const { data, loading, error } = useHeroCampaigns();
@@ -14,13 +13,11 @@ export const CampaignCarousel = () => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Triple the items for smoother infinite loop
   const items = data.length > 0 ? [...data, ...data, ...data] : [];
 
   const checkScroll = () => {
     const container = containerRef.current;
     if (!container) return;
-
     setCanScrollLeft(container.scrollLeft > 10);
     setCanScrollRight(
       container.scrollLeft < container.scrollWidth - container.clientWidth - 10
@@ -37,20 +34,17 @@ export const CampaignCarousel = () => {
       if (!isPausedRef.current && container) {
         container.scrollLeft += SPEED;
 
-        // Seamless reset when reaching the second set
         const maxScroll = container.scrollWidth / 3;
         if (container.scrollLeft >= maxScroll) {
           container.scrollLeft = 0;
         }
-        
-        // Check scroll position periodically (every 100ms)
+
         const now = Date.now();
         if (now - lastCheck > 100) {
           checkScroll();
           lastCheck = now;
         }
       }
-
       rafRef.current = requestAnimationFrame(animate);
     };
 
@@ -67,14 +61,11 @@ export const CampaignCarousel = () => {
 
     isPausedRef.current = true;
     const scrollAmount = 350;
-    const targetScroll = direction === 'left' 
-      ? container.scrollLeft - scrollAmount 
+    const targetScroll = direction === 'left'
+      ? container.scrollLeft - scrollAmount
       : container.scrollLeft + scrollAmount;
 
-    container.scrollTo({
-      left: targetScroll,
-      behavior: 'smooth'
-    });
+    container.scrollTo({ left: targetScroll, behavior: 'smooth' });
 
     setTimeout(() => {
       isPausedRef.current = false;
@@ -83,32 +74,53 @@ export const CampaignCarousel = () => {
   };
 
   return (
-    <div className="mt-6 sm:mt-8 md:mt-10 relative w-full overflow-hidden">
+    <div className="mt-10 relative w-full overflow-hidden">
+
       {error && (
-        <p className="px-4 text-sm text-red-500">
-          Failed to load campaigns
-        </p>
+        <p className="px-4 text-sm text-red-500">Failed to load campaigns</p>
       )}
 
-      {/* Left Navigation Button */}
+      {/* Left arrow */}
       {!loading && canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+          className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-20 h-10 w-6 flex items-center justify-center bg-white/80 backdrop-blur rounded-full shadow-md opacity-70 hover:opacity-100 transition-all duration-200"
           aria-label="Scroll left"
         >
-          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          <svg width="12" height="26" viewBox="0 0 12 26" fill="none">
+            <line
+              x1="11" y1="1" x2="1" y2="13"
+              stroke="#000080" strokeWidth="1.75" strokeLinecap="round"
+              className="group-hover:stroke-[#FF7F00] transition-all duration-200"
+            />
+            <line
+              x1="1" y1="13" x2="11" y2="25"
+              stroke="#000080" strokeWidth="1.75" strokeLinecap="round"
+              className="group-hover:stroke-[#FF7F00] transition-all duration-200"
+            />
+          </svg>
         </button>
       )}
 
-      {/* Right Navigation Button */}
+      {/* Right arrow */}
       {!loading && canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
+          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-20 h-10 w-6 flex items-center justify-center bg-white/80 backdrop-blur rounded-full shadow-md opacity-70 hover:opacity-100 transition-all duration-200"
           aria-label="Scroll right"
         >
-          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+          <svg width="12" height="26" viewBox="0 0 12 26" fill="none">
+            <line
+              x1="1" y1="1" x2="11" y2="13"
+              stroke="#000080" strokeWidth="1.75" strokeLinecap="round"
+              className="group-hover:stroke-[#FF7F00] transition-all duration-200"
+            />
+            <line
+              x1="11" y1="13" x2="1" y2="25"
+              stroke="#000080" strokeWidth="1.75" strokeLinecap="round"
+              className="group-hover:stroke-[#FF7F00] transition-all duration-200"
+            />
+          </svg>
         </button>
       )}
 
@@ -121,10 +133,7 @@ export const CampaignCarousel = () => {
           scrollbar-hide
           pb-3 sm:pb-4
         "
-        style={{
-          alignItems: 'stretch',
-          scrollBehavior: 'auto'
-        }}
+        style={{ alignItems: 'stretch', scrollBehavior: 'auto' }}
         onMouseEnter={() => (isPausedRef.current = true)}
         onMouseLeave={() => (isPausedRef.current = false)}
         onTouchStart={() => (isPausedRef.current = true)}
@@ -132,10 +141,7 @@ export const CampaignCarousel = () => {
       >
         {loading &&
           Array.from({ length: 3 }).map((_, i) => (
-            <div 
-              key={i}
-              className="flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px]"
-            >
+            <div key={i} className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px]">
               <SkeletonCard />
             </div>
           ))}

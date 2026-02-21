@@ -12,10 +12,15 @@ export default function DonationHistoryModal({ onClose }: Props) {
   useEffect(() => {
     const loadDonations = async () => {
       try {
-        const res = await getMyDonations();
-        if (res.status === 'success' && res.data?.donations) {
-          setDonations(res.data.donations);
+        const res: any = await getMyDonations();
+
+        console.log("DONATIONS RESPONSE:", res);
+
+        // ✅ THIS MATCHES YOUR BACKEND
+        if (res?.success && Array.isArray(res.donations)) {
+          setDonations(res.donations);
         }
+
       } catch (err) {
         console.error('Failed to load donations', err);
       } finally {
@@ -32,40 +37,44 @@ export default function DonationHistoryModal({ onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl border-4 border-dreamxec-navy shadow-pastel-card max-w-3xl w-full p-6"
+        className="bg-white rounded-2xl border-2 border-dreamxec-navy shadow-pastel-card max-w-3xl w-full p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-3xl font-bold font-display text-dreamxec-navy mb-6">
+        <h2 className="text-3xl font-bold text-dreamxec-navy mb-6">
           💝 Donation History
         </h2>
 
         {loading ? (
           <p className="text-center">Loading donations...</p>
+
         ) : donations.length === 0 ? (
           <p className="text-center text-lg">No donations yet.</p>
+
         ) : (
           <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-            {donations.map((d, index) => (
+            {donations.map((d) => (
               <div
-                key={d.id || index}
+                key={d.id}
                 className="border-3 border-dreamxec-navy rounded-xl p-4 bg-dreamxec-cream"
               >
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between">
                   <div>
                     <p className="font-bold text-lg text-dreamxec-navy">
-                      ₹{d.amount.toLocaleString()}
+                      ₹{d.amount}
                     </p>
-                    <p className="text-sm opacity-80">
-                      Project: {d.userProject.title}
+
+                    <p className="text-sm">
+                      Project: {d.userProject?.title}
                     </p>
+
                     <p className="text-xs opacity-60">
                       {new Date(d.createdAt).toLocaleString()}
                     </p>
                   </div>
 
-                  <div className="text-sm font-semibold">
+                  <span className="font-semibold text-sm">
                     {d.anonymous ? 'Anonymous' : 'Public'}
-                  </div>
+                  </span>
                 </div>
               </div>
             ))}

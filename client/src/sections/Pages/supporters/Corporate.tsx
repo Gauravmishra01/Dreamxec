@@ -146,7 +146,7 @@ const CorporateCSRPartnerships = () => {
               {sdgAlignments.map((item, index) => (
                 <div
                   key={index}
-                  className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+                  className="card-pastel p-5 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300 w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl md:text-3xl">{item.icon}</span>
@@ -174,7 +174,7 @@ const CorporateCSRPartnerships = () => {
               <div
                 key={index}
                 style={{ animationDelay: `${index * 120}ms` }}
-                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
+                className="card-pastel animate-fade-in p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex items-center gap-6"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
@@ -232,7 +232,7 @@ const CorporateCSRPartnerships = () => {
             {corporateBenefits.map((benefit, index) => (
               <SwiperSlide key={index}>
                 <div
-                  className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
+                  className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">

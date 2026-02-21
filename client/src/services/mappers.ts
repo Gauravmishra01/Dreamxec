@@ -6,7 +6,7 @@ import type { UserProject } from './userProjectService';
 import type { DonorProject } from './donorProjectService';
 
 /* =========================================================
-   Shared Types (Campaign-only)
+   Shared Types
 ========================================================= */
 
 export type Milestone = {
@@ -20,6 +20,21 @@ export type Milestone = {
 /* =========================================================
    Role Mapping
 ========================================================= */
+
+export const CAMPAIGN_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+} as const;
+
+export const PROJECT_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  COMPLETED: 'completed',
+  PAUSED: 'paused',
+  FROZEN: 'frozen',
+} as const;
 
 // Backend → Frontend
 export const mapBackendRole = (
@@ -69,6 +84,7 @@ export const mapBackendStatus = (
     | 'rejected';
 };
 
+
 export const mapFrontendStatus = (
   frontendStatus: 'pending' | 'approved' | 'rejected'
 ): 'PENDING' | 'APPROVED' | 'REJECTED' => {
@@ -80,56 +96,53 @@ export const mapFrontendStatus = (
 
 /* =========================================================
    UserProject (Backend) → Campaign (Frontend)
-   ✅ Milestones live ONLY here
+   ✅ Single source of truth = Club Relation
 ========================================================= */
 
 export const mapUserProjectToCampaign = (
   userProject: UserProject
 ): Campaign => {
-  const milestones: Milestone[] = userProject.milestones || [];
-
   return {
     id: userProject.id,
     title: userProject.title,
     description: userProject.description,
 
-    clubName: userProject.companyName,
+    // user: userProject.user,
+
+    clubId: userProject.clubId,
+    club: userProject.club
+      ? {
+        id: userProject.club.id,
+        name: userProject.club.name,
+        college: userProject.club.college,
+        slug: userProject.club.slug,
+      }
+      : undefined,
 
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
-
+    userId: userProject.userId,
     status: mapBackendStatus(userProject.status),
+    createdAt: new Date(userProject.createdAt),
 
-    createdBy: userProject.userId,
+
+    campaignType: userProject.campaignType || "INDIVIDUAL",
+    teamMembers: userProject.teamMembers || [],
+    faqs: userProject.faqs || [],
+    youtubeUrl: userProject.youtubeUrl,
 
     imageUrl: userProject.imageUrl,
     campaignMedia: userProject.campaignMedia || [],
-
     presentationDeckUrl: userProject.presentationDeckUrl || null,
 
-    category: "Technology",
-
-    createdAt: new Date(userProject.createdAt),
-
     rejectionReason: userProject.rejectionReason,
-
-    /* ✅ NEW FIELDS */
-
-    campaignType: userProject.campaignType || "INDIVIDUAL",
-
-    teamMembers: userProject.teamMembers || [],
-
-    faqs: userProject.faqs || [],
-
-    youtubeUrl: userProject.youtubeUrl || undefined,
-
-    milestones,
+    milestones: userProject.milestones || [],
   };
 };
 
+
 /* =========================================================
    DonorProject (Backend) → Project (Frontend)
-   ❌ NO milestones here
 ========================================================= */
 
 export const mapDonorProjectToProject = (
@@ -139,10 +152,11 @@ export const mapDonorProjectToProject = (
     id: donorProject.id,
     title: donorProject.title,
     companyName: donorProject.organization,
+    organization: donorProject.organization,
     description: donorProject.description,
     skillsRequired: donorProject.skillsRequired,
     createdBy: donorProject.donorId,
-    createdAt: new Date(donorProject.createdAt),
+    createdAt: donorProject.createdAt,
     interestedUsers: [],
     status: mapBackendStatus(donorProject.status),
     rejectionReason: donorProject.rejectionReason,
@@ -155,6 +169,7 @@ export const mapDonorProjectToProject = (
 
 /* =========================================================
    Campaign (Frontend) → CreateUserProjectData (Backend)
+   🚀 clubId is sent directly (NO names)
 ========================================================= */
 
 export const mapCampaignToUserProjectData = (
@@ -163,8 +178,7 @@ export const mapCampaignToUserProjectData = (
   return {
     title: campaign.title || '',
     description: campaign.description || '',
-    companyName: campaign.clubName || '',
-    skillsRequired: [],
+    clubId: campaign.club?.id,
     goalAmount: campaign.goalAmount || 0,
     milestones: campaign.milestones || [],
   };

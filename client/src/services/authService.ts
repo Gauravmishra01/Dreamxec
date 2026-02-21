@@ -14,6 +14,7 @@ export interface User {
   role: 'USER' | 'DONOR' | 'ADMIN' | 'STUDENT_PRESIDENT'; // Added STUDENT_PRESIDENT
   organizationName?: string;
   studentVerified?: boolean;
+  accountStatus?: 'ACTIVE' | 'BLOCKED' | 'SUSPENDED' | 'UNDER_REVIEW';
 }
 
 export interface RegisterData {

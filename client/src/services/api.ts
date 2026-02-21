@@ -1,81 +1,147 @@
+// ===============================
 // API BASE URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// ===============================
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-// Types
+
+// ===============================
+// TYPES
+// ===============================
 export interface ApiResponse<T> {
-  status: 'success' | 'error';
+  success: boolean;
   message?: string;
   data?: T;
+  meta?: any;
   token?: string;
-  otp?: string; // Added for dev/testing OTP usage
+  otp?: string;
   results?: number;
 }
 
 export interface ApiError {
-  status: 'error';
+  status: "error";
   message: string;
 }
 
-// Token helpers
-export const getToken = (): string | null => localStorage.getItem('token');
-export const setToken = (token: string): void => localStorage.setItem('token', token);
-export const removeToken = (): void => localStorage.removeItem('token');
 
-// Main API request function
+// ===============================
+// TOKEN HELPERS
+// ===============================
+export const getToken = (): string | null =>
+  localStorage.getItem("token");
+
+export const setToken = (token: string): void =>
+  localStorage.setItem("token", token);
+
+export const removeToken = (): void =>
+  localStorage.removeItem("token");
+
+
+// ===============================
+// EXTENDED REQUEST TYPE
+// ===============================
+interface ExtendedRequestInit extends RequestInit {
+  params?: Record<string, any>;
+}
+
+
+// ===============================
+// MAIN API FUNCTION
+// ===============================
 async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: ExtendedRequestInit = {}
 ): Promise<ApiResponse<T>> {
 
   const token = getToken();
 
+  // Headers
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string> ?? {})
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string> ?? {}),
   };
 
+  // Attach JWT automatically
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
+  console.log("📡 API CALL:", endpoint);
+
+  // ===============================
+  // BUILD QUERY STRING (NEW)
+  // ===============================
+  const queryString = options.params
+    ? "?" +
+    new URLSearchParams(
+      Object.entries(options.params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .reduce((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {} as Record<string, string>)
+    ).toString()
+    : "";
+
+  // Remove params before sending to fetch
+  const { params, ...fetchOptions } = options;
+
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      headers,
-    });
+    const response = await fetch(
+      `${API_BASE_URL}${endpoint}${queryString}`,
+      {
+        ...fetchOptions,
+        headers,
+      }
+    );
 
     const data = await response.json().catch(() => ({}));
 
-    // --- FIX 1: Gracefully handle NOT LOGGED IN ---
+    // ===============================
+    // HANDLE 401 AUTH ERRORS
+    // ===============================
     if (response.status === 401) {
-      const error = new Error('Not authenticated');
-      (error as any).status = 401;
-      throw error;
+      console.warn("🔒 Not authenticated");
+
+      return {
+        success: false,
+        message: "Not authenticated",
+      } as ApiResponse<T>;
     }
 
-    // --- Other errors ---
+    // ===============================
+    // HANDLE OTHER ERRORS
+    // ===============================
     if (!response.ok) {
-      console.error('API Error Response:', {
-        status: response.status,
-        statusText: response.statusText,
-        data,
-      });
+      console.error("❌ API Error:", data);
 
-      // validation errors
-      if (data.errors && Array.isArray(data.errors)) {
-        const errorMessages = data.errors
-          .map((err: any) => `${err.field}: ${err.message}`)
-          .join(', ');
-        throw new Error(`Validation failed: ${errorMessages}`);
-      }
-
-      throw new Error(data.message || data.error || 'An error occurred');
+      return {
+        success: false,
+        message:
+          data?.message ||
+          data?.error ||
+          "Something went wrong",
+      } as ApiResponse<T>;
     }
 
-    return data;
+    // ===============================
+    // SUCCESS
+    // ===============================
+    return data as ApiResponse<T>;
+
+
+    // ===============================
+    // SUCCESS
+    // ===============================
+    return data as ApiResponse<T>;
+
   } catch (error) {
-    console.error('API Error:', error);
-    throw error;
+    console.error("🚨 Network Error:", error);
+
+    return {
+      success: false,
+      message: "Network error. Please try again.",
+    } as ApiResponse<T>;
   }
 }
 

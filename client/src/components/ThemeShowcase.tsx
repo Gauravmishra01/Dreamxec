@@ -35,22 +35,22 @@ export const ThemeShowcase = () => {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="card-pastel p-6 text-center">
-            <div className="bg-dreamxec-saffron h-24 mb-4 rounded-lg border-4 border-dreamxec-navy"></div>
+            <div className="bg-dreamxec-saffron h-24 mb-4 rounded-lg border-2 border-dreamxec-navy"></div>
             <h3 className="font-bold text-dreamxec-navy">Saffron</h3>
             <p className="text-sm text-dreamxec-navy opacity-70">#FF9933</p>
           </div>
           <div className="card-pastel p-6 text-center">
-            <div className="bg-dreamxec-white h-24 mb-4 rounded-lg border-4 border-dreamxec-navy"></div>
+            <div className="bg-dreamxec-white h-24 mb-4 rounded-lg border-2 border-dreamxec-navy"></div>
             <h3 className="font-bold text-dreamxec-navy">White</h3>
             <p className="text-sm text-dreamxec-navy opacity-70">#FFFFFF</p>
           </div>
           <div className="card-pastel p-6 text-center">
-            <div className="bg-dreamxec-green h-24 mb-4 rounded-lg border-4 border-dreamxec-navy"></div>
+            <div className="bg-dreamxec-green h-24 mb-4 rounded-lg border-2 border-dreamxec-navy"></div>
             <h3 className="font-bold text-dreamxec-navy">Green</h3>
             <p className="text-sm text-dreamxec-navy opacity-70">#138808</p>
           </div>
           <div className="card-pastel p-6 text-center">
-            <div className="bg-dreamxec-navy h-24 mb-4 rounded-lg border-4 border-dreamxec-navy"></div>
+            <div className="bg-dreamxec-navy h-24 mb-4 rounded-lg border-2 border-dreamxec-navy"></div>
             <h3 className="font-bold text-dreamxec-navy">Navy</h3>
             <p className="text-sm text-dreamxec-navy opacity-70">#000080</p>
           </div>

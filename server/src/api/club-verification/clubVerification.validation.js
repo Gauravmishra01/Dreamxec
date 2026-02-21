@@ -1,33 +1,33 @@
-const { z } = require("zod");
+const zod = require("zod");
 
-exports.clubVerificationSchema = z.object({
-  body: z.object({
+const clubVerificationSchema = zod.object({
+  body: zod.object({
     // -----------------------
     // EXISTING FIELDS (UNCHANGED)
     // -----------------------
-    collegeName: z.string().min(1, "College name is required"),
-    studentEmail: z.string().email("Invalid student email"),
-    studentPhone: z.string().min(5, "Invalid student phone"),
-    presidentName: z.string().min(1, "President name is required"),
-    ficName: z.string().min(1, "FIC name is required"),
-    ficEmail: z.string().email("Invalid FIC email"),
-    ficPhone: z.string().min(5, "Invalid FIC phone"),
+    collegeName: zod.string().min(1, "College name is required"),
+    studentEmail: zod.string().email("Invalid student email"),
+    studentPhone: zod.string().min(5, "Invalid student phone"),
+    presidentName: zod.string().min(1, "President name is required"),
+    ficName: zod.string().min(1, "FIC name is required"),
+    ficEmail: zod.string().email("Invalid FIC email"),
+    ficPhone: zod.string().min(5, "Invalid FIC phone"),
 
     // -----------------------
     // CLUB DETAILS (NEW)
     // -----------------------
-    clubName: z.string().min(3, "Club name must be at least 3 characters"),
-    clubDescription: z
+    clubName: zod.string().min(3, "Club name must be at least 3 characters"),
+    clubDescription: zod
       .string()
       .min(30, "Club description must be at least 30 characters"),
-    clubInstagram: z.string().url("Invalid Instagram URL"),
-    clubLinkedIn: z.string().url("Invalid LinkedIn URL").optional().or(z.literal("")),
-    clubYouTube: z.string().url("Invalid YouTube URL").optional().or(z.literal("")),
+    clubInstagram: zod.string().url("Invalid Instagram URL"),
+    clubLinkedIn: zod.string().url("Invalid LinkedIn URL").optional().or(zod.literal("")),
+    clubYouTube: zod.string().url("Invalid YouTube URL").optional().or(zod.literal("")),
 
     // -----------------------
     // ALUMNI (STRINGIFIED JSON)
     // -----------------------
-    alumni: z
+    alumni: zod
       .string()
       .refine((val) => {
         try {
@@ -52,3 +52,7 @@ exports.clubVerificationSchema = z.object({
       }, "Invalid alumni data"),
   }),
 });
+
+module.exports = {
+  clubVerificationSchema,
+};

@@ -51,7 +51,7 @@ export interface Donation {
 export interface Campaign extends Omit<Project, 'detail' | 'amountRaised' | 'status' | 'createdAt' | 'updatedAt'> {
   description: string;
   currentAmount: number;
-  clubName: string;
+  clubId: string | null;
   imageUrl: string;
   studentId?: string;
   status: CampaignStatus;
@@ -72,7 +72,7 @@ export function projectToCampaign(project: Project, additionalData?: Partial<Cam
     description: project.detail,
     goalAmount: project.goalAmount,
     currentAmount: project.amountRaised,
-    clubName: project.owner?.name || 'Unknown Club',
+    clubId: project.owner?.clubIds[0] || null,
     imageUrl: additionalData?.imageUrl || '',
     studentId: project.ownerId,
     status: projectStatusToCampaignStatus(project.status),

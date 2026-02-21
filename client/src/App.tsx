@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import toast, { Toast, Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import FloatingDoodles from './components/FloatingDoodles';
 import { Header } from './sections/Header';
@@ -7,6 +7,8 @@ import { Main } from './components/Main';
 import BrowseCampaigns from './components/BrowseCampaigns';
 import StudentDashboard from './components/StudentDashboard';
 import CreateCampaign from './components/CreateCampaign';
+import EditCampaign from './components/EditCampaign';
+import CreateCampaignDemo from './components/CreateCampaignDemo';
 import AdminDashboard from './components/AdminDashboard';
 import AuthPage from './components/AuthPage';
 import UserProfile from './components/UserProfile';
@@ -27,7 +29,14 @@ import AddMemberManually from "./components/president/AddMemberManually";
 import PresidentLayout from "./components/president/PresidentLayout";
 import AdminClubReferrals from './components/admin/AdminClubReferrals';
 import AdminClubVerifications from './components/admin/AdminClubVerifications';
+import ClubDiscovery from "./components/ClubDiscovery";
+import ClubDetails from "./components/ClubDetails";
 import AuthCallback from './components/AuthCallback';
+import {
+  getDonorApplications,
+  updateApplicationStatus
+} from "./services/applicationService";
+
 
 // Import API services
 import { login, register, logout as apiLogout, getCurrentUser, initiateGoogleAuth, handleGoogleCallback, initiateLinkedInAuth, handleLinkedInCallback } from './services/authService';
@@ -58,10 +67,32 @@ import VerifyPresident from './components/VerifyPresident';
 import { LoaderProvider, useLoader } from './context/LoaderContext';
 import { AuthProvider } from './context/AuthContext';
 import LoadingAnimation from './components/LoadingAnimation';
+// Add these imports with the others
+import AdminUsers from './components/AdminUser';
+import AdminClubs from './components/AdminClubs';
+import AdminFinancials from './components/AdminFinancials';
+import AdminMilestones from './components/AdminMilestone';
+import AdminStudentVerifications from './components/AdminStudentVerification';
+import AdminAuditLogs from './components/AdminAuditLogs';
+import AdminDonors from './components/AdminDonors';
+import AdminApplications from './components/AdminApplications';
+import apiRequest from './services/api';
 
+
+type UserProjectsResponse = {
+  userProjects: any;
+  status: string;
+  data: {
+    userProjects: any;
+    projects: Campaign[];
+  };
+};
 // Main App Content Component
 function AppContent() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [userCampaigns, setUserCampaigns] = useState<Campaign[]>([]);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(false);
+
   const [user, setUser] = useState<User | null>(null);
   const [_isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -129,12 +160,13 @@ function AppContent() {
               emailVerified: response.data.user.emailVerified || false,
               clubIds: response.data.user?.clubIds || [],
               createdAt: response.data.user.createdAt || new Date().toISOString(),
-              updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+              updatedAt: response.data.user.updatedAt || new Date().toISOString(),
               isClubPresident: response.data.user?.isClubPresident || false,
               isClubMember: response.data.user?.isClubMember || false,
               clubVerified: response.data.user?.clubVerified || false,
               name: response.data.user.name,
               studentVerified: response.data.user?.studentVerified,
+              accountStatus: response.data.user?.accountStatus || 'ACTIVE',
             };
 
             setUser(userData);
@@ -187,12 +219,13 @@ function AppContent() {
             emailVerified: response.data.user.emailVerified || false,
             clubIds: response.data.user?.clubIds || [],
             createdAt: response.data.user.createdAt || new Date().toISOString(),
-            updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+            updatedAt: response.data.user.updatedAt || new Date().toISOString(),
             isClubPresident: response.data.user?.isClubPresident || false,
             isClubMember: response.data.user?.isClubMember || false,
             clubVerified: response.data.user?.clubVerified || false,
             name: response.data.user.name,
             studentVerified: response.data.user?.studentVerified,
+            accountStatus: response.data.user?.accountStatus || 'ACTIVE',
           };
           setUser(userData);
         }
@@ -242,14 +275,12 @@ function AppContent() {
           const response = await getAllProjects();
           console.log('📦 Admin projects response:', response);
 
-          if (response.data?.userProjects?.projects) {
-            const mappedCampaigns = response.data.userProjects.projects.map(mapUserProjectToCampaign);
-            setCampaigns(mappedCampaigns);
+          if (response.data?.userProjects?.data) {
+            setCampaigns(response.data.userProjects.data);
           }
 
-          if (response.data?.donorProjects?.projects) {
-            const mappedProjects = response.data.donorProjects.projects.map(mapDonorProjectToProject);
-            setProjects(mappedProjects);
+          if (response.data?.donorProjects?.data) {
+            setProjects(response.data.donorProjects.data);
           }
         } catch (error) {
           console.error('Failed to load admin data:', error);
@@ -287,7 +318,7 @@ function AppContent() {
         try {
           console.log('📝 Loading user applications for student:', user.name);
           const response = await getMyApplications();
-          if (response.status === 'success' && response.data?.applications) {
+          if (response.success === true && response.data?.applications) {
             const appliedProjectIds = response.data.applications.map((app: any) => app.donorProjectId);
             setUserApplications(appliedProjectIds);
           } else {
@@ -305,18 +336,74 @@ function AppContent() {
     loadUserApplications();
   }, [user?.role, user?.id]);
 
-  const approvedCampaigns = campaigns.filter((c) => c.status === 'approved');
-  const pendingCampaigns = campaigns.filter((c) => c.status === 'pending');
-  const userCampaigns = campaigns.filter((c) => c.createdBy === user?.id);
-  const donorProjects = projects.filter((p) => p.createdBy === user?.id);
-  const approvedProjects = projects.filter((p) => p.status === 'approved');
-  const pendingProjects = projects.filter((p) => p.status === 'pending');
+  // ✅ Campaign filters (STATUS SAFE + CREATEDBY SAFE)
+
+  const approvedCampaigns = campaigns.filter(
+    (c) => c.status?.toLowerCase() === "approved"
+  );
+
+  const pendingCampaigns = campaigns.filter(
+    (c) => c.status?.toLowerCase() === "pending"
+  );
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchUserCampaigns = async () => {
+      try {
+        setLoadingCampaigns(true);
+
+        const res = await apiRequest<UserProjectsResponse>(
+          "/user-projects/my",
+          { method: "GET" }
+        );
+
+        const projects = res?.data?.userProjects;
+        console.log(projects)
+        if (!Array.isArray(projects)) {
+          console.error(
+            "Invalid /user-projects response shape:",
+            res?.data
+          );
+          setUserCampaigns([]);
+          return;
+        }
+
+        setUserCampaigns(projects);
+      } catch (error) {
+        console.error("Failed to fetch user campaigns", error);
+        setUserCampaigns([]);
+      } finally {
+        setLoadingCampaigns(false);
+      }
+    };
+
+    fetchUserCampaigns();
+  }, [user?.id]);
+
+
+  // ✅ Project filters (same fixes applied)
+
+  const donorProjects = projects.filter(
+  (p) => p.createdBy === user?.id
+);
+
+const approvedProjects = projects.filter(
+  (p) => p.status?.toLowerCase() === "approved"
+);
+
+const pendingProjects = projects.filter(
+  (p) => p.status?.toLowerCase() === "pending"
+);
+
+
+
 
   // if (loading) {
   //   return (
   //     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
   //       <div className="text-center">
-  //         <div className="w-16 h-16 border-4 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+  //         <div className="w-16 h-16 border-2 border-dreamxec-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
   //         <p className="text-dreamxec-navy text-xl font-bold">Loading...</p>
   //       </div>
   //     </div>
@@ -324,149 +411,143 @@ function AppContent() {
   // }
   // Circular spinner removed - LoadingAnimation component handles all loading states
 
- const handleCreateCampaign = async (data: {
-  title: string;
-  description: string;
-  clubName: string;
-  // skillsRequired?: string[];
-  goalAmount: number;
-
-  bannerFile: File | null;
-  mediaFiles: File[];
-
-  presentationDeckUrl: string;
-
-  /* NEW */
-  campaignType: "INDIVIDUAL" | "TEAM";
-
-  teamMembers?: {
-    name: string;
-    role: string;
-    image?: File | null; // FE image file
-  }[];
-
-  faqs?: {
-    question: string;
-    answer: string;
-  }[];
-
-  youtubeUrl?: string;
-
-  milestones: {
+  const handleCreateCampaign = async (data: {
     title: string;
-    timeline: string;
-    budget: string | number;
-    description?: string;
-  }[];
-}) => {
+    description: string;
 
-  showLoader();
+    /* RENAMED */
+    // collegeName: string;
+    clubId: string;
 
-  try {
-    console.log("🚀 Creating Campaign...");
+    goalAmount: number;
 
-    const formData = new FormData();
+    bannerFile: File | null;
+    mediaFiles: File[];
 
-    /* ---------------- BASIC ---------------- */
+    presentationDeckUrl: string;
 
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("companyName", data.clubName);
-    formData.append("goalAmount", data.goalAmount.toString());
+    campaignType: "INDIVIDUAL" | "TEAM";
 
-    formData.append(
-      "presentationDeckUrl",
-      data.presentationDeckUrl || ""
-    );
+    teamMembers?: {
+      name: string;
+      role: string;
+      image?: File | null;
+    }[];
 
-    /* ---------------- TYPE ---------------- */
+    faqs?: {
+      question: string;
+      answer: string;
+    }[];
 
-    formData.append("campaignType", data.campaignType);
+    youtubeUrl?: string;
 
-    /* ---------------- YOUTUBE ---------------- */
+    milestones: {
+      title: string;
+      timeline: string;
+      budget: string | number;
+      description?: string;
+    }[];
+  }) => {
+    showLoader();
 
-    if (data.youtubeUrl) {
-      formData.append("youtubeUrl", data.youtubeUrl);
-    }
+    try {
+      console.log("🚀 Creating Campaign...");
 
-    /* ---------------- FAQS ---------------- */
+      const formData = new FormData();
 
-    if (data.faqs?.length) {
-      formData.append("faqs", JSON.stringify(data.faqs));
-    }
+      /* ---------------- BASIC ---------------- */
 
-    /* ---------------- MILESTONES ---------------- */
+      formData.append("title", data.title);
+      formData.append("description", data.description);
 
-    const cleanMilestones = data.milestones.map(m => ({
-      ...m,
-      budget: Number(m.budget),
-    }));
+      // 🔑 companyName now stores COLLEGE NAME (legacy field)
+      // formData.append("companyName", data.collegeName);
 
-    formData.append(
-      "milestones",
-      JSON.stringify(cleanMilestones)
-    );
+      // 🔑 IMPORTANT: club ownership
+      formData.append("clubId", data.clubId);
 
-    /* ---------------- TEAM ---------------- */
+      formData.append("goalAmount", data.goalAmount.toString());
 
-    if (
-      data.campaignType === "TEAM" &&
-      data.teamMembers?.length
-    ) {
-      // Send team data WITHOUT images
-      const teamData = data.teamMembers.map(m => ({
-        name: m.name,
-        role: m.role,
+      if (data.presentationDeckUrl) {
+        formData.append("presentationDeckUrl", data.presentationDeckUrl);
+      }
+
+      /* ---------------- TYPE ---------------- */
+
+      formData.append("campaignType", data.campaignType);
+
+      /* ---------------- YOUTUBE ---------------- */
+
+      if (data.youtubeUrl) {
+        formData.append("youtubeUrl", data.youtubeUrl);
+      }
+
+      /* ---------------- FAQS ---------------- */
+
+      if (data.faqs?.length) {
+        formData.append("faqs", JSON.stringify(data.faqs));
+      }
+
+      /* ---------------- MILESTONES ---------------- */
+
+      const cleanMilestones = data.milestones.map(m => ({
+        ...m,
+        budget: Number(m.budget),
       }));
 
-      formData.append(
-        "teamMembers",
-        JSON.stringify(teamData)
-      );
+      formData.append("milestones", JSON.stringify(cleanMilestones));
 
-      // Send images separately
-      data.teamMembers.forEach(member => {
-        if (member.image) {
-          formData.append("teamImages", member.image);
-        }
-      });
+      /* ---------------- TEAM ---------------- */
+
+      if (data.campaignType === "TEAM" && data.teamMembers?.length) {
+        const teamData = data.teamMembers.map(m => ({
+          name: m.name,
+          role: m.role,
+        }));
+
+        formData.append("teamMembers", JSON.stringify(teamData));
+
+        data.teamMembers.forEach(member => {
+          if (member.image) {
+            formData.append("teamImages", member.image);
+          }
+        });
+      }
+
+      /* ---------------- FILES ---------------- */
+
+      if (data.bannerFile) {
+        formData.append("bannerFile", data.bannerFile);
+      }
+
+      if (data.mediaFiles?.length) {
+        data.mediaFiles.forEach(file => {
+          formData.append("mediaFiles", file);
+        });
+      }
+
+      /* ---------------- API CALL ---------------- */
+
+      const response = await createUserProject(formData);
+
+      if (response.data?.userProject) {
+        const newCampaign = mapUserProjectToCampaign(
+          response.data.userProject
+        );
+
+        setCampaigns(prev => [...prev, newCampaign]);
+        console.log("✅ Campaign created:", newCampaign);
+      } else {
+        throw new Error("Invalid response");
+      }
+    } catch (error) {
+      console.error("❌ Campaign creation failed:", error);
+      throw error;
+    } finally {
+      hideLoader();
     }
+  };
 
-    /* ---------------- FILES ---------------- */
-
-    if (data.bannerFile) {
-      formData.append("bannerFile", data.bannerFile);
-    }
-
-    if (data.mediaFiles?.length) {
-      data.mediaFiles.forEach(file => {
-        formData.append("mediaFiles", file);
-      });
-    }
-
-    /* ---------------- API CALL ---------------- */
-
-    const response = await createUserProject(formData);
-
-    if (response.data?.userProject) {
-      const newCampaign = mapUserProjectToCampaign(
-        response.data.userProject
-      );
-
-      setCampaigns(prev => [...prev, newCampaign]);
-
-      console.log("✅ Campaign created:", newCampaign);
-    } else {
-      throw new Error("Invalid response");
-    }
-
-  } catch (error) {
-    console.error("❌ Campaign creation failed:", error);
-    throw error;
-  } finally {
-    hideLoader();
-  }
-};
 
 
   const handleApproveCampaign = async (id: string) => {
@@ -481,8 +562,9 @@ function AppContent() {
       console.log('✅ Campaign approved successfully');
     } catch (error) {
       console.error('Failed to approve campaign:', error);
-      hideLoader()
       alert('Failed to approve campaign. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -498,8 +580,9 @@ function AppContent() {
       console.log('❌ Campaign rejected successfully');
     } catch (error) {
       console.error('Failed to reject campaign:', error);
-      hideLoader();
       alert('Failed to reject campaign. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -510,13 +593,14 @@ function AppContent() {
       await verifyDonorProject(id, { status: 'APPROVED' });
 
       setProjects(
-        projects.map((p) => (p.id === id ? { ...p, status: 'approved' as const } : p))
+        projects.map((p) => (p.id === id ? { ...p, status: 'APPROVED' as const } : p))
       );
       console.log('✅ Donor project approved successfully');
     } catch (error) {
       console.error('Failed to approve donor project:', error);
-      hideLoader();
       alert('Failed to approve donor project. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -527,13 +611,14 @@ function AppContent() {
       await verifyDonorProject(id, { status: 'REJECTED', reason });
 
       setProjects(
-        projects.map((p) => (p.id === id ? { ...p, status: 'rejected' as const, rejectionReason: reason } : p))
+        projects.map((p) => (p.id === id ? { ...p, status: 'REJECTED' as const, rejectionReason: reason } : p))
       );
       console.log('❌ Donor project rejected successfully');
     } catch (error) {
       console.error('Failed to reject donor project:', error);
-      hideLoader();
       alert('Failed to reject donor project. Please try again.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -552,12 +637,13 @@ function AppContent() {
           emailVerified: response.data.user?.emailVerified || false,
           clubIds: response.data.user?.clubIds || [],
           createdAt: response.data.user.createdAt || new Date().toISOString(),
-          updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+          updatedAt: response.data.user.updatedAt || new Date().toISOString(),
           isClubPresident: response.data.user?.isClubPresident || false,
           isClubMember: response.data.user?.isClubMember || false,
           clubVerified: response.data.user?.clubVerified || false,
           name: response.data.user.name,
           studentVerified: response.data.user?.studentVerified,
+          accountStatus: response.data.user?.accountStatus || 'ACTIVE',
         };
 
         setUser(userData);
@@ -572,9 +658,9 @@ function AppContent() {
       }
     } catch (error) {
       console.error('Login failed:', error);
-      hideLoader();
       throw error;
     } finally {
+      hideLoader();
       setIsSubmitting(false);
     }
   };
@@ -610,12 +696,13 @@ function AppContent() {
           emailVerified: response.data.user.emailVerified || false,
           clubIds: response.data.user?.clubIds || [],
           createdAt: response.data.user.createdAt || new Date().toISOString(),
-          updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+          updatedAt: response.data.user.updatedAt || new Date().toISOString(),
           isClubPresident: response.data.user?.isClubPresident || false,
           isClubMember: response.data.user?.isClubMember || false,
           clubVerified: response.data.user?.clubVerified || false,
           name: response.data.user.name,
           studentVerified: response.data.user?.studentVerified,
+          accountStatus: response.data.user?.accountStatus || 'ACTIVE',
         };
 
         setUser(userData);
@@ -630,9 +717,9 @@ function AppContent() {
       }
     } catch (error) {
       console.error('Signup failed:', error);
-      hideLoader();
       throw error;
     } finally {
+      hideLoader();
       setIsSubmitting(false);
     }
   };
@@ -645,21 +732,25 @@ function AppContent() {
       initiateGoogleAuth(backendRole);
     } catch (error) {
       console.error('Google auth error:', error);
-      hideLoader()
-      setIsSubmitting(false);
       throw new Error('Google authentication failed');
+    } finally {
+      hideLoader();
+      setIsSubmitting(false);
     }
   };
 
   const handleLinkedInAuth = async (role: 'student' | 'donor') => {
     showLoader();
+    setIsSubmitting(true);
     try {
       const backendRole = role === 'student' ? 'USER' : 'DONOR';
       initiateLinkedInAuth(backendRole);
     } catch (error) {
       console.error('LinkedIn auth error:', error);
-      hideLoader();
       throw new Error('LinkedIn authentication failed');
+    } finally {
+      hideLoader();
+      setIsSubmitting(false);
     }
   };
 
@@ -682,12 +773,13 @@ function AppContent() {
       emailVerified: backendUser.emailVerified || false,
       clubIds: backendUser?.clubIds || [],
       createdAt: backendUser.createdAt || new Date().toISOString(),
-      updatedAt: backendUser.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
+      updatedAt: backendUser.updatedAt || new Date().toISOString(),
       isClubPresident: backendUser?.isClubPresident || false,
       isClubMember: backendUser?.isClubMember || false,
       clubVerified: backendUser?.clubVerified || false,
       name: backendUser.name,
       studentVerified: backendUser?.studentVerified,
+      accountStatus: backendUser?.accountStatus || 'ACTIVE',
     };
     setUser(userData);
   };
@@ -739,12 +831,14 @@ function AppContent() {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
               body: JSON.stringify({
-                ...response,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
                 projectId: campaignId,
               }),
             }
           );
-
+          hideLoader();
           toast.success("🎉 Donation successful!");
         },
         theme: { color: "#0B9C2C" },
@@ -819,23 +913,14 @@ function AppContent() {
   };
 
   const handleUpdateApplicationStatus = (
-    projectId: string,
-    applicationId: string,
-    status: 'accepted' | 'rejected'
+    _projectId: string,
+    _applicationId: string,
+    _status: 'accepted' | 'rejected'
   ) => {
-    setProjects(
-      projects.map((project) => {
-        if (project.id === projectId) {
-          return {
-            ...project,
-            interestedUsers: project.interestedUsers.map((app) =>
-              app.id === applicationId ? { ...app, status } : app
-            ),
-          };
-        }
-        return project;
-      })
-    );
+    // Note: This function is kept for API compatibility but the actual
+    // application status update is handled by the DonorProjects component
+    // which fetches its own data
+    console.log('Application status update triggered - handled by component');
   };
 
   const handleUpdateBankDetails = async (bankDetails: any) => {
@@ -936,6 +1021,11 @@ function AppContent() {
                                 path="/campaign/:id"
                                 element={
                                   <>
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
 
                                     <CampaignDetails
                                       currentUser={user}
@@ -1009,7 +1099,7 @@ function AppContent() {
                                         onCreateCampaign={() => navigate('/create')}
                                         onViewCampaign={(id) => navigate(`/campaign/${id}`)}
                                         isClubPresident={user?.role === 'STUDENT_PRESIDENT'}
-                                        isClubMember={false}
+                                        isClubMember={user.isClubMember}
                                         clubVerified={user?.role === 'STUDENT_PRESIDENT'}
                                         user={user}
                                         studentVerified={user.studentVerified}
@@ -1029,7 +1119,7 @@ function AppContent() {
                                           <button
                                             onClick={() => navigate("/auth")}
                                             className="mt-8 px-8 py-3 bg-dreamxec-orange text-white font-bold rounded-xl
-                     hover:bg-dreamxec-saffron transition-colors shadow-lg"
+                                              hover:bg-dreamxec-saffron transition-colors shadow-lg"
                                           >
                                             Log in
                                           </button>
@@ -1069,6 +1159,25 @@ function AppContent() {
                                 }
                               />
 
+                              <Route
+                                path="/create-demo-campaign"
+                                element={
+                                  <>
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
+                                    <CreateCampaignDemo
+                                      onBack={() => navigate("/dashboard")}
+                                    />
+                                  </>
+                                }
+                              />
+
+                              {/* Edit Campaign */}
+                              <Route path="/campaign/:id/edit" element={<EditCampaign />} />
+
                               {/* Admin Dashboard */}
                               <Route
                                 path="/admin"
@@ -1080,17 +1189,7 @@ function AppContent() {
                                         onLogin={handleLoginClick}
                                         onLogout={handleLogout}
                                       />
-                                      <AdminDashboard
-                                        pendingCampaigns={pendingCampaigns}
-                                        allCampaigns={campaigns}
-                                        pendingProjects={pendingProjects}
-                                        allProjects={projects}
-
-                                        onApprove={handleApproveCampaign}
-                                        onReject={handleRejectCampaign}
-                                        onApproveProject={handleApproveProject}
-                                        onRejectProject={handleRejectProject}
-                                      />
+                                      <AdminDashboard />
                                     </>
                                   ) : (
                                     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
@@ -1105,11 +1204,107 @@ function AppContent() {
                                 }
                               />
 
+
                               <Route path="/admin/referrals" element={<AdminClubReferrals />} />
                               <Route path="/admin/club-referrals" element={<AdminClubReferrals />} />
 
                               <Route path="/admin/verifications" element={<AdminClubVerifications />} />
                               <Route path="/admin/club-verifications" element={<AdminClubVerifications />} />
+                              <Route path="/admin/financials" element={<AdminFinancials />} />
+                              <Route path="/admin/milestones" element={
+                                user?.role === 'admin' ? (
+                                  <>
+                                    <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                    <AdminMilestones />
+                                  </>
+                                ) : (
+                                  <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                    <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                  </div>
+                                )
+                              } />
+                              <Route path="/admin/student-verifications" element={
+                                user?.role === 'admin' ? (
+                                  <>
+                                    <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                    <AdminStudentVerifications />
+                                  </>
+                                ) : (
+                                  <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                    <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                  </div>
+                                )
+                              } />
+                              <Route path="/admin/audit-logs" element={
+                                user?.role === 'admin' ? (
+                                  <>
+                                    <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                    <AdminAuditLogs />
+                                  </>
+                                ) : (
+                                  <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                    <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                  </div>
+                                )
+                              } />
+                              <Route path="/admin/donors" element={
+                                user?.role === 'admin' ? (
+                                  <>
+                                    <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                    <AdminDonors />
+                                  </>
+                                ) : (
+                                  <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                    <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                  </div>
+                                )
+                              } />
+                              <Route path="/admin/applications" element={
+                                user?.role === 'admin' ? (
+                                  <>
+                                    <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                    <AdminApplications />
+                                  </>
+                                ) : (
+                                  <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                    <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                  </div>
+                                )
+                              } />
+
+                              {/* --- Admin User Management --- */}
+                              <Route
+                                path="/admin/users"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminUsers />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
+
+                              {/* --- Admin Club Management --- */}
+                              <Route
+                                path="/admin/clubs"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminClubs />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
 
                               {/* Auth Page - Login/Signup */}
                               <Route
@@ -1133,14 +1328,14 @@ function AppContent() {
                                 path="/login"
                                 element={
                                   <AuthPage
-                                    onLogin={handleLogin}
-                                    onSignup={handleSignup}
-                                    onGoogleAuth={handleGoogleAuth}
-                                    onLinkedInAuth={handleLinkedInAuth}
-                                    onForgotPassword={handleForgotPassword}
-                                    currentUser={user}
-                                    onHeaderLogin={handleLoginClick}
-                                    onLogout={handleLogout}
+                                  onLogin={handleLogin}
+                                  onSignup={handleSignup}
+                                  onGoogleAuth={handleGoogleAuth}
+                                  onLinkedInAuth={handleLinkedInAuth}
+                                  onForgotPassword={handleForgotPassword}
+                                  currentUser={user}
+                                  onHeaderLogin={handleLoginClick}
+                                  onLogout={handleLogout}
                                   />
                                 }
                               />
@@ -1153,10 +1348,10 @@ function AppContent() {
                                 path="/check-email"
                                 element={
                                   <CheckEmail
-                                    email={signupEmail}
-                                    onBackToLogin={() => {
-                                      setShowCheckEmail(false);
-                                      navigate('/auth');
+                                  email={signupEmail}
+                                  onBackToLogin={() => {
+                                    setShowCheckEmail(false);
+                                    navigate('/auth');
                                     }}
                                   />
                                 }
@@ -1167,7 +1362,7 @@ function AppContent() {
                                 path="/verify-email/:token"
                                 element={
                                   <EmailVerification
-                                    onVerificationSuccess={handleEmailVerificationSuccess}
+                                  onVerificationSuccess={handleEmailVerificationSuccess}
                                   />
                                 }
                               />
@@ -1178,9 +1373,9 @@ function AppContent() {
                                 element={
                                   user ? (
                                     <UserProfile
-                                      user={user}
-                                      onUpdateBankDetails={handleUpdateBankDetails}
-                                      onBack={() => navigate(-1)}
+                                    user={user}
+                                    onUpdateBankDetails={handleUpdateBankDetails}
+                                    onBack={() => navigate(-1)}
                                     />
                                   ) : (
                                     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
@@ -1191,7 +1386,7 @@ function AppContent() {
                                         </p>
                                         <button
                                           onClick={handleLoginClick}
-                                          className="mt-6 px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-4 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron"
+                                          className="mt-6 px-6 py-3 bg-dreamxec-orange text-white rounded-lg border-2 border-dreamxec-navy font-bold font-display hover:scale-105 transition-transform shadow-pastel-saffron"
                                         >
                                           Sign In
                                         </button>
@@ -1217,8 +1412,8 @@ function AppContent() {
                                         projectsCount={donorProjects.length}
                                         onCreateProject={() => navigate('/donor/create')}
                                         onViewProjects={() => navigate('/donor/projects')}
-                                        getDonorApplications={async () => []}
-                                        updateApplicationStatus={async () => { }}
+                                        getDonorApplications={getDonorApplications}
+                                        updateApplicationStatus={updateApplicationStatus}
                                         getDonationSummary={async () => ({})}
                                       />
                                     </>
@@ -1232,6 +1427,33 @@ function AppContent() {
                                       </div>
                                     </div>
                                   )
+                                }
+                              />
+                                <Route
+                                path="/clubs"
+                                element={
+                                  <>
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
+                                    <ClubDiscovery />
+                                  </>
+                                }
+                              />
+
+                              <Route
+                                path="/clubs/:slug"
+                                element={
+                                  <>
+                                    <Header
+                                      currentUser={user}
+                                      onLogin={handleLoginClick}
+                                      onLogout={handleLogout}
+                                    />
+                                    <ClubDetails />
+                                  </>
                                 }
                               />
 
@@ -1277,6 +1499,7 @@ function AppContent() {
                                       />
                                       <DonorProjects
                                         projects={donorProjects}
+                                        onCreateProject={() => navigate('/donor/create')}
                                         onBack={() => navigate('/donor/dashboard')}
                                         onUpdateApplicationStatus={handleUpdateApplicationStatus}
                                       />
@@ -1299,7 +1522,7 @@ function AppContent() {
                               <Route
                                 path="/projects"
                                 element={
-                                  user?.role === 'student' ? (
+                                  user?.role === 'student' || user?.role === 'STUDENT_PRESIDENT' ? (
                                     <>
                                       <Header
                                         currentUser={user}
@@ -1364,17 +1587,14 @@ function AppContent() {
 
                               {/* President Dashboard */}
                               <Route path="/president" element={<PresidentLayout><PresidentDashboard /></PresidentLayout>} />
-                              <Route path="/president/members" element={<PresidentLayout><PresidentMembers /></PresidentLayout>} />
-                              <Route path="/president/campaigns" element={<PresidentLayout><PresidentCampaigns /></PresidentLayout>} />
+                              <Route path="/president/members" element={<PresidentLayout><PresidentMembers clubId={user?.clubIds?.[0] || ''} currentUserId={user?.id || ''} /></PresidentLayout>} />
+                              <Route path="/president/campaigns" element={<PresidentLayout><PresidentCampaigns clubId={user?.clubIds?.[0] || ''} /></PresidentLayout>} />
                               <Route path="/president/upload-members" element={<PresidentLayout><UploadMembers /></PresidentLayout>} />
-                              <Route path="/president/add-member" element={<PresidentLayout><AddMemberManually /></PresidentLayout>} />
+                              <Route path="/president/add-member" element={<PresidentLayout><AddMemberManually clubId={user?.clubIds?.[0] || ''} /></PresidentLayout>} />
                             </Routes>
 
-                            {/* Footer Routes */}
+                            {/* Footer / content page routes */}
                             <Routes>
-                              <Route path="/start-project" element={<StartAProject />} />
-
-
                               <Route path="/start-project" element={<StartAProject />} />
                               <Route path="/how-it-works/students" element={<HowItWorksStudents />} />
                               <Route path="/eligibility" element={<ProjectEligibility />} />

@@ -66,67 +66,48 @@ const FAQ = () => {
     }
   ]
 
-  const FAQGrid = ({ faqs }) => {
-    const [swiperInstance, setSwiperInstance] = useState<any>(null);
-    return (
-      <div className="relative">
-        <button
-          onClick={() => swiperInstance?.slidePrev()}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
-          aria-label="Previous"
-        >
-          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <Swiper
-          modules={[Pagination, Keyboard, A11y, Autoplay]}
-          spaceBetween={32}
-          slidesPerView={1}
-          speed={800}
-          onSwiper={(s) => setSwiperInstance(s)}
-          pagination={{ clickable: true }}
-          keyboard={{ enabled: true }}
-          grabCursor={true}
-          autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 32,
-            },
-            1024: {
-              slidesPerView: 3,
-              spaceBetween: 32,
-            },
-          }}
-          className="faq-page-carousel"
-        >
-          {faqs.map((item, index) => (
-            <SwiperSlide key={index}>
-              <div
-                className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
-              >
-                <div className="card-tricolor-tag"></div>
+  const FAQGrid = ({ faqs }) => (
+    <Swiper
+      modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+      spaceBetween={32}
+      slidesPerView={1}
+      speed={800}
+      navigation
+      pagination={{ clickable: true }}
+      keyboard={{ enabled: true }}
+      grabCursor={true}
+      autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+      breakpoints={{
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 32,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 32,
+        },
+      }}
+      className="faq-page-carousel"
+    >
+      {faqs.map((item, index) => (
+        <SwiperSlide key={index}>
+          <div
+            className="card-pastel-offwhite rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full"
+          >
+            <div className="card-tricolor-tag"></div>
 
-                <h3 className="text-lg font-bold text-dreamxec-navy font-display mb-3">
-                  Q: {item.q}
-                </h3>
+            <h3 className="text-lg font-bold text-dreamxec-navy font-display mb-3">
+              Q: {item.q}
+            </h3>
 
-                <p className="text-dreamxec-gray font-sans text-sm sm:text-base md:text-lg leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
-                  A: {item.a}
-                </p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <button
-          onClick={() => swiperInstance?.slideNext()}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
-          aria-label="Next"
-        >
-          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-      </div>
-    );
-  };
+            <p className="text-dreamxec-gray font-sans text-sm sm:text-base md:text-lg leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
+              A: {item.a}
+            </p>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  )
 
   return (
     <>

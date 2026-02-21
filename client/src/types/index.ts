@@ -2,6 +2,86 @@
 
 import type { Milestone } from "../components/CampaignDetails";
 
+// export type UserRole = "student" | "admin" | "DONOR" | "donor" | "STUDENT_PRESIDENT";
+
+export type AccountStatus = "ACTIVE" | "BLOCKED" | "SUSPENDED" | "UNDER_REVIEW";
+
+export type ProjectStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED" | "PAUSED" | "FROZEN" | "pending" | "approved" | "rejected" | "completed" | "paused" | "frozen";
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[],
+  pagination: PaginationMeta;
+}
+
+/* =========================================================
+   Club Types
+========================================================= */
+
+export interface Club {
+    id: string;
+    name: string;
+    college: string;
+    slug: string;
+    verified: boolean;
+}
+
+/* =========================================================
+   Campaign Sub-Types
+========================================================= */
+
+export interface TeamMember {
+    name: string;
+    role: string;
+    image?: string; // Cloudinary URL
+}
+
+export interface FAQ {
+    question: string;
+    answer: string;
+}
+
+/* =========================================================
+   User & Roles
+========================================================= */
+
+export type UserRole =
+    | "student"
+    | "admin"
+    | "donor"
+    | "DONOR"
+    | "STUDENT_PRESIDENT";
+
+export interface User {
+    id: string;
+    email: string;
+    name: string;
+    role: UserRole;
+
+  accountStatus: AccountStatus;
+
+  emailVerified: boolean;
+  studentVerified: boolean;
+
+    isClubPresident: boolean;
+    isClubMember: boolean;
+    clubVerified: boolean;
+
+    clubIds: string[];
+
+    createdAt: string;
+    updatedAt: string;
+}
+
+/* =========================================================
+   Campaign Types (User Projects)
+========================================================= */
 /* =========================================================
    Campaign Sub-Types
 ========================================================= */
@@ -17,74 +97,50 @@ export interface FAQ {
   answer: string;
 }
 
-/* =========================================================
-   User & Roles
-========================================================= */
-
-export type UserRole =
-  | "student"
-  | "admin"
-  | "donor"
-  | "DONOR"
-  | "STUDENT_PRESIDENT";
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-
-  emailVerified: boolean;
-  studentVerified: boolean;
-
-  isClubPresident: boolean;
-  isClubMember: boolean;
-  clubVerified: boolean;
-
-  clubIds: string[];
-
-  createdAt: string;
-  updatedAt: string;
-}
-
-/* =========================================================
-   Campaign Types (User Projects)
-========================================================= */
-
 export interface Campaign {
-  id: string;
-  title: string;
-  clubName: string;
-  description: string;
+    id: string;
+    title: string;
+    clubId: string | null;
+    club: {
+        id: string;
+        name: string;
+        college: string;
+        slug: string;
+    };
+    description: string;
 
-  goalAmount: number;
-  currentAmount: number;
+    goalAmount: number;
+    currentAmount: number;
 
-  status: "approved" | "pending" | "rejected";
-  createdAt: Date;
+    status: "approved" | "pending" | "rejected";
+    createdAt: Date;
 
-  /* ✅ NEW BACKEND FIELDS */
+    rejectionReason?: string;
+    reapprovalCount?: number;
 
-  campaignType?: "INDIVIDUAL" | "TEAM";
+    /* ✅ NEW BACKEND FIELDS */
 
-  teamMembers?: TeamMember[];
+    campaignType?: "INDIVIDUAL" | "TEAM";
 
-  faqs?: FAQ[];
+    teamMembers?: TeamMember[];
 
-  youtubeUrl?: string;
+    faqs?: FAQ[];
 
-  category?: string;
-  imageUrl?: string;
-  campaignMedia?: string[];
-  presentationDeckUrl?: string | null;
+    youtubeUrl?: string;
 
-  createdBy?: string;
-  userId?: string;
+    category?: string;
+    imageUrl?: string;
+    campaignMedia?: string[];
+    presentationDeckUrl?: string | null;
 
-  rejectionReason?: string;
+    createdBy?: string | { id: string };
 
-  // ✅ Milestone-based timeline
-  milestones?: Milestone[];
+    userId?: string;
+
+
+
+    // ✅ Milestone-based timeline
+    milestones?: Milestone[];
 }
 
 /* =========================================================
@@ -94,40 +150,48 @@ export interface Campaign {
 export interface Project {
   id: string;
   title: string;
-  companyName: string;
   description: string;
+  organization?: string; // mapped from organizationName
+  companyName?: string; // Alias for organization used by components
 
-  skillsRequired: string[];
-
-  timeline: {
-    startDate: Date;
-    endDate: Date;
+  donor?: {
+    id: string;
+    name: string;
+    email: string;
+    organizationName: string;
   };
 
-  createdBy: string;
-  createdAt: Date;
+  createdBy?: string; // Donor ID who created the project
+  interestedUsers?: Array<{ id: string; name: string; email: string }>; // Users who applied
 
-  interestedUsers: ProjectApplication[];
+  skillsRequired: string[];
+  timeline: string | { startDate: Date | string; endDate: Date | string } | null; // DB string or parsed object
 
-  status: "approved" | "pending" | "rejected";
+  totalBudget?: number;
+  allocatedFunds?: number;
+
+  status: ProjectStatus;
   rejectionReason?: string;
+
+  createdAt: string | Date;
+  updatedAt?: string;
 }
 
 export interface ProjectApplication {
-  id: string;
-  projectId: string;
+    id: string;
+    projectId: string;
 
-  userId: string;
-  userName: string;
-  userEmail: string;
+    userId: string;
+    userName: string;
+    userEmail: string;
 
-  coverLetter: string;
-  skills: string[];
+    coverLetter: string;
+    skills: string[];
 
-  status: "pending" | "accepted" | "rejected";
-  rejectionReason?: string;
+    status: "pending" | "accepted" | "rejected";
+    rejectionReason?: string;
 
-  appliedAt: Date;
+    appliedAt: Date;
 }
 
 /* =========================================================
@@ -135,9 +199,55 @@ export interface ProjectApplication {
 ========================================================= */
 
 export interface Student {
-  id: string;
-  name: string;
-  email: string;
-  university: string;
-  avatar?: string;
+    id: string;
+    name: string;
+    email: string;
+    university: string;
+    avatar?: string;
+}
+
+
+/* =========================================================
+   Admin Specific Types
+========================================================= */
+
+export interface DashboardStats {
+  kpi: {
+    totalUsers: number;
+    totalDonors: number;
+    totalClubs: number;
+    totalDonations: number;
+    campaigns: {
+      APPROVED: number;
+      PENDING: number;
+      REJECTED: number;
+      PAUSED: number;
+      FROZEN: number;
+      total: number;
+    };
+    milestones?: {
+      PENDING: number;
+      SUBMITTED: number;
+      APPROVED: number;
+      REJECTED: number;
+      total: number;
+    };
+    pendingApprovals: number;
+    openTickets: number;
+  };
+  attention: {
+    slaBreaches: number;
+    frozenCampaigns: number;
+    pendingMilestones: number;
+  }
+}
+
+export interface AuditLog {
+  id: string,
+  action: string,
+  entityType: string,
+  entityId: string,
+  performedBy: string,
+  details?: any;
+  createdAt: string;
 }

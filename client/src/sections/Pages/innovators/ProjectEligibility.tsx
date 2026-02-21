@@ -249,7 +249,7 @@ const ProjectEligibility = () => {
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
               Eligibility Requirements:
             </h3>
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card">
               <ul className="space-y-3">
                 {eligibilityRequirements.map((req, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -362,7 +362,7 @@ const ProjectEligibility = () => {
             <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-6 text-center">
               What We Check:
             </h3>
-            <div className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card">
+            <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card">
               <ul className="space-y-3">
                 {reviewChecklist.map((item, index) => (
                   <li key={index} className="flex gap-3 text-dreamxec-navy text-base md:text-lg">
@@ -382,7 +382,7 @@ const ProjectEligibility = () => {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            <div className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="card-pastel p-5 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">🎬</span>
                 <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue">
@@ -401,7 +401,7 @@ const ProjectEligibility = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="card-pastel p-5 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">📝</span>
                 <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue">
@@ -420,7 +420,7 @@ const ProjectEligibility = () => {
               </ul>
             </div>
 
-            <div className="card-pastel p-5 md:p-6 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="card-pastel p-5 md:p-6 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">📢</span>
                 <h3 className="text-2xl font-bold text-dreamxec-berkeley-blue">
@@ -451,7 +451,7 @@ const ProjectEligibility = () => {
             {legalItems.map((item, index) => (
               <div
                 key={index}
-                className="card-pastel p-6 md:p-8 rounded-xl border-4 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
+                className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-shadow duration-300"
               >
                 <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-3">
                   {item.title}:
@@ -517,7 +517,7 @@ const ProjectEligibility = () => {
               {FAQ.map((item, index) => (
                 <SwiperSlide key={index}>
                   <div
-                    className="card-pastel-offwhite rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:scale-[1.02] hover:shadow-lg transition-all duration-300 h-full"
+                    className="card-pastel-offwhite rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:scale-[1.02] hover:shadow-lg transition-all duration-300 h-full"
                   >
                     <div className="card-tricolor-tag"></div>
 

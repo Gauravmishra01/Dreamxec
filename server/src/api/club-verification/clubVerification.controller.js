@@ -1,8 +1,9 @@
-const { success, json } = require("zod");
 const prisma = require("../../config/prisma");
 const uploadToCloudinary = require("../../utils/uploadToCloudinary");
+const { publishEvent } = require('../../services/eventPublisher.service');
+const EVENTS = require('../../config/events');
 
-exports.submitClubVerification = async (req, res) => {
+async function submitClubVerification(req, res) {
   try {
     const {
       collegeName,
@@ -70,17 +71,28 @@ exports.submitClubVerification = async (req, res) => {
       message: "Verification request submitted",
       data: verification,
     });
+
+    // Publish Event
+    try {
+      if (req.user && req.user.email) {
+        await publishEvent(EVENTS.CLUB_VERIFICATION_PENDING, {
+            email: req.user.email,
+            name: req.user.name || presidentName,
+            clubName: clubName,
+            applicationId: verification.id
+        });
+      }
+    } catch (err) {
+      console.error("Event error:", err);
+    }
   } catch (error) {
     console.error("Verification Error:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
-};
-
-
-
+}
 
 // ADMIN LIST
-exports.listVeridications = async (res, req) => {
+async function listVeridications(req, res) {  // Fixed param order
   try {
     const items = await prisma.clubVerification.findMany({
       orderBy: { createdAt: "desc" },
@@ -92,9 +104,7 @@ exports.listVeridications = async (res, req) => {
   }
 }
 
-
-
-exports.approveVerification = async (req, res) => {
+async function approveVerification(req, res) {
   const id = req.params.id;
 
   try {
@@ -116,7 +126,11 @@ exports.approveVerification = async (req, res) => {
       // 2. Upgrade user role
       await tx.user.update({
         where: { id: verification.userId },
-        data: { role: "STUDENT_PRESIDENT" },
+        data: { 
+          role: "STUDENT_PRESIDENT",
+          canCreateCampaign: true,
+          clubVerified: true
+        },
       });
 
       // 3. Create & verify club
@@ -127,6 +141,9 @@ exports.approveVerification = async (req, res) => {
           description: verification.clubDescription,
           presidentEmail: verification.studentEmail,
           presidentUserId: verification.userId,
+          users:{
+            connect : { id: verification.userId}
+          }
         },
       });
 
@@ -146,23 +163,6 @@ exports.approveVerification = async (req, res) => {
       return club;
     });
 
-    // Email: approval confirmation
-    await sendMail({
-      to: result.presidentEmail,
-      subject: "You are now a verified Student President on DreamXec",
-      text: `Hi,
-
-Congratulations 🎉  
-You are now a verified Student President on DreamXec.
-
-You can now:
-• Manage club members
-• Create & manage campaigns
-• Track donations & performance
-
-– DreamXec Team`,
-    });
-
     res.json({
       success: true,
       message: "Verification approved. Student upgraded to President.",
@@ -171,10 +171,9 @@ You can now:
     console.error("Approve Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
-};
+}
 
-
-exports.rejectVerification = async (req, res) => {
+async function rejectVerification(req, res) {
   const id = req.params.id;
   const { reason } = req.body;
 
@@ -187,4 +186,11 @@ exports.rejectVerification = async (req, res) => {
   });
 
   res.json({ success: true });
+}
+
+module.exports = {
+  submitClubVerification,
+  listVeridications,
+  approveVerification,
+  rejectVerification,
 };
