@@ -14,7 +14,6 @@ body {
   flex-direction: column;
 }
 
-/* Replace your entire @layer components with this */
 @layer components {
 
   input,
@@ -22,14 +21,9 @@ body {
     caret-color: #f97316 !important;
   }
 
-  /* The scroller NO LONGER has a fixed height or overflow */
   .scroll-stack-scroller {
     position: relative;
     width: 100%;
-    /* 
-      REMOVED: height, overflow-y, scrollbar styles.
-      This is because we are now using the main window scroll.
-    */
   }
 
   .scroll-stack-inner {
@@ -41,12 +35,9 @@ body {
     position: relative;
   }
 
-  /* --- SINGLE, CORRECTED DEFINITION FOR .scroll-stack-card --- */
   .scroll-stack-card {
-    /* From your @apply rule */
     @apply h-80 w-full my-8 p-12 rounded-[40px] shadow-lg box-border origin-top relative;
 
-    /* From the second, more detailed rule */
     transform-origin: top center;
     will-change: transform, filter;
     backface-visibility: hidden;
@@ -62,59 +53,17 @@ body {
 }
 
 
-
+/* ─────────────────────────────────────────────
+   SINGLE MERGED @layer base  (fixes the override)
+───────────────────────────────────────────── */
 @layer base {
-  body {
-    @apply text-dreamxec-navy;
-    /* Pastel watercolor diagonal tricolor */
-    background:
-      linear-gradient(rgba(255, 248, 235, 0.8),
-        rgba(255, 248, 235, 0.8)),
-      url("/assets/textures/tri-bg.png");
 
-    background-size: 100% 100%;
-    background-repeat: repeat;
-    background-attachment: fixed;
-    overflow-x: hidden;
-    overflow-y: auto;
-    min-height: 100vh;
-    position: relative;
+  /* ── Merge the shadcn wildcard rule here ── */
+  * {
+    @apply border-border;
   }
 
-
-  /* Ensure main content is properly layered */
-  main {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    overflow: visible;
-  }
-
-  /* Fix for sections getting cut off */
-  section {
-    position: relative;
-    width: 100%;
-    overflow: visible;
-  }
-
-  /* Oil pastel paper texture overlay */
-
-
-  /* Optional: Rough edge mask for hand-drawn effect */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    /* Use your SVG mask for rough edges */
-    -webkit-mask-image: url("/assets/masks/rough-edge-mask.svg");
-    mask-image: url("/assets/masks/rough-edge-mask.svg");
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    background: inherit;
-  }
-
+  /* ── CSS custom properties ── */
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -169,8 +118,86 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  /* ── Body — background defined here, NOT overridden anywhere else ── */
+  body {
+    @apply text-dreamxec-navy;
+
+    /* Keep shadcn foreground color */
+    color: hsl(var(--foreground));
+
+    /* Layer order (top → bottom):
+       1. Cream wash over everything
+       2. Horizontal grid lines
+       3. Vertical grid lines
+       4. Your texture image                */
+    background-image:
+      linear-gradient(
+        rgba(255, 248, 235, 0.82),
+        rgba(255, 248, 235, 0.82)
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 39px,
+        rgba(27, 58, 107, 0.08) 39px,
+        rgba(27, 58, 107, 0.08) 40px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 39px,
+        rgba(27, 58, 107, 0.08) 39px,
+        rgba(27, 58, 107, 0.08) 40px
+      ),
+      url("/assets/textures/tri-bg.png");
+
+    background-size:
+      100% 100%,   /* cream layer */
+      40px 40px,   /* h-grid      */
+      40px 40px,   /* v-grid      */
+      100% 100%;   /* texture     */
+
+    background-repeat: repeat;
+    background-attachment: fixed;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Rough-edge mask overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    -webkit-mask-image: url("/assets/masks/rough-edge-mask.svg");
+    mask-image: url("/assets/masks/rough-edge-mask.svg");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    background: inherit;
+  }
+
+  main {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    overflow: visible;
+  }
+
+  section {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+  }
 }
 
+
+/* ─────────────────────────────────────────────
+   @layer utilities
+───────────────────────────────────────────── */
 @layer utilities {
 
   /* Oil Pastel Stroke Effects */
@@ -198,7 +225,7 @@ body {
       8px 8px 0 rgba(0, 0, 128, 0.2);
   }
 
-  /* Tricolor Block Backgrounds - No Gradients */
+  /* Tricolor Block Backgrounds */
   .bg-tricolor-horizontal {
     background: linear-gradient(to right,
         #FF7F00 0%,
@@ -284,7 +311,6 @@ body {
     position: relative;
   }
 
-  /* Add slight rotation for hand-drawn feel */
   .card-pastel-tilt-right {
     transform: rotate(0.5deg);
   }
@@ -293,7 +319,6 @@ body {
     transform: rotate(-0.5deg);
   }
 
-  /* Off-white textured card variant */
   .card-pastel-offwhite {
     background: #FAFAF8;
     border: 5px solid #000080;
@@ -320,7 +345,7 @@ body {
     border-radius: 4px 4px 0 0;
   }
 
-  /* Thick outline text effect */
+  /* Thick outline text effects */
   .text-outlined-saffron {
     text-shadow:
       -2px -2px 0 #FF7F00,
@@ -337,7 +362,7 @@ body {
       2px 2px 0 #000080;
   }
 
-  /* Progress Bar - Oil Pastel Style */
+  /* Progress Bar */
   .progress-bar-pastel {
     background: #FFFFFF;
     border: 4px solid #000080;
@@ -401,7 +426,7 @@ body {
     text-shadow: 2px 2px 0 rgba(0, 0, 128, 0.3);
   }
 
-  /* Button - Oil Pastel Style */
+  /* Buttons */
   .btn-pastel-primary {
     background: #FF7F00;
     color: #FFFFFF;
@@ -436,7 +461,7 @@ body {
     box-shadow: 2px 2px 0 #FF7F00;
   }
 
-  /* Header with tricolor accent */
+  /* Header tricolor accent */
   .header-tricolor {
     border-bottom: 8px solid transparent;
     border-image: linear-gradient(to right,
@@ -448,7 +473,7 @@ body {
         #0B9C2C 100%) 1;
   }
 
-  /* Icon container - hand-drawn style */
+  /* Icon container */
   .icon-pastel-container {
     background: #FFFFFF;
     border: 4px solid #000080;
@@ -460,23 +485,16 @@ body {
     justify-content: center;
   }
 
-  /* Glassmorphism Effect */
+  /* Glassmorphism */
   .card-glass {
-    /* Frosted glass background */
     background: rgba(255, 255, 255, 0.1);
     -webkit-backdrop-filter: blur(12px);
-    /* Backdrop filter for Safari */
     backdrop-filter: blur(12px);
-
-    /* Subtle border to catch the light */
     border: 1px solid rgba(255, 255, 255, 0.2);
-
-    /* Rounded corners and a modern shadow */
     border-radius: 1rem;
-    /* 16px */
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-
     transition: all 0.3s ease-in-out;
+    min-height: 280px;
   }
 
   .card-glass:hover {
@@ -490,23 +508,14 @@ body {
     opacity: 0;
   }
 
+  /* Whiteboard card */
   .card-whiteboard {
-    /* Set the whiteboard image as the background */
     background-image: url('/assets/icon-pack/DX-ILLUSTRATION-PACK/white-board.png');
     background-size: 100% 100%;
-    /* Stretch the image to fit */
     background-repeat: no-repeat;
-
-    /* Adjust padding to fit text inside the whiteboard's writing area */
     padding: 18% 12% 20%;
-
-    /* Ensure text color is dark and readable on the white background */
     color: #333;
-
-    min-height: 300px;
-    /* Give the card a minimum height */
-
-    /* Animation and transition */
+    min-height: 320px;
     transition: transform 0.3s ease-out;
   }
 
@@ -514,12 +523,7 @@ body {
     transform: translateY(-10px) scale(1.05);
   }
 
-  /* EMPTY */
-  .react-calendar-heatmap .dx-empty {
-    fill: #e5e7eb;
-    rx: 4px;
-  }
-
+  /* Heatmap */
   .react-calendar-heatmap .dx-empty {
     fill: #e5e7eb;
   }
@@ -539,50 +543,20 @@ body {
   .react-calendar-heatmap .dx-4 {
     fill: #1e3a8a;
   }
-
-
-  /* LIGHT */
-  .react-calendar-heatmap .dx-1 {
-    fill: #bfdbfe;
-    rx: 4px;
-  }
-
-  /* MEDIUM */
-  .react-calendar-heatmap .dx-2 {
-    fill: #60a5fa;
-    rx: 4px;
-  }
-
-  /* STRONG */
-  .react-calendar-heatmap .dx-3 {
-    fill: #2563eb;
-    rx: 4px;
-  }
-
-  /* MAX */
-  .react-calendar-heatmap .dx-4 {
-    fill: #1e3a8a;
-    rx: 4px;
-  }
-
-
 }
 
 
-
-
+/* ─────────────────────────────────────────────
+   Keyframes & global animations
+───────────────────────────────────────────── */
 @keyframes float-updown {
+  0%, 100% { transform: translateY(0);     opacity: 0.9; }
+  50%       { transform: translateY(-12px); opacity: 1;   }
+}
 
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.9;
-  }
-
-  50% {
-    transform: translateY(-12px);
-    opacity: 1;
-  }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
 
 .animate-float-slow {
@@ -593,85 +567,39 @@ body {
   animation: float-updown 5s ease-in-out infinite;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+img {
+  animation: fade-in 1s ease-in forwards;
 }
 
+/* Scrollbar hide */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-/* Scroll reveal base */
+/* Scroll reveal */
 .reveal {
   opacity: 0;
   transform: translateY(32px);
-  transition:
-    opacity 0.8s ease-out,
-    transform 0.8s ease-out;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* When visible */
 .reveal-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Stagger utility */
-.reveal-delay-1 {
-  transition-delay: 120ms;
-}
-
-.reveal-delay-2 {
-  transition-delay: 240ms;
-}
-
-.reveal-delay-3 {
-  transition-delay: 360ms;
-}
-
-.reveal-delay-4 {
-  transition-delay: 480ms;
-}
-
-.reveal-delay-5 {
-  transition-delay: 600ms;
-}
-
-/* Optional: fade in on load for elegance */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-img {
-  animation: fade-in 1s ease-in forwards;
-}
+.reveal-delay-1 { transition-delay: 120ms; }
+.reveal-delay-2 { transition-delay: 240ms; }
+.reveal-delay-3 { transition-delay: 360ms; }
+.reveal-delay-4 { transition-delay: 480ms; }
+.reveal-delay-5 { transition-delay: 600ms; }
 
 
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-/* ===================================
-   Carousel Styles - Scoped to Card Sections Only
-   =================================== */
-
-/* Global Swiper Smooth Animations */
+/* ─────────────────────────────────────────────
+   Swiper global overrides
+───────────────────────────────────────────── */
 .swiper {
   overflow: visible !important;
 }
@@ -680,14 +608,20 @@ img {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Smooth slide transitions for all carousels */
 .swiper-slide {
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out !important;
 }
 
-/* Mobile responsive padding for carousels */
-@media (max-width: 768px) {
+/* Uniform card heights */
+.swiper-slide > div {
+  width: 100%;
+  min-height: 280px;
+}
 
+/* ─────────────────────────────────────────────
+   Carousel responsive padding
+───────────────────────────────────────────── */
+@media (max-width: 768px) {
   .criteria-carousel,
   .whiteboard-carousel,
   .faq-carousel,
@@ -708,7 +642,6 @@ img {
 }
 
 @media (max-width: 480px) {
-
   .criteria-carousel,
   .whiteboard-carousel,
   .faq-carousel,
@@ -728,15 +661,11 @@ img {
   }
 }
 
-/* Criteria Carousel */
-.criteria-carousel {
-  padding: 40px 70px 60px;
-}
-
-.criteria-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
+/* ─────────────────────────────────────────────
+   Criteria Carousel
+───────────────────────────────────────────── */
+.criteria-carousel { padding: 40px 70px 60px; }
+.criteria-carousel .swiper-slide { height: auto; display: flex; }
 
 .criteria-carousel .swiper-button-next,
 .criteria-carousel .swiper-button-prev {
@@ -749,21 +678,10 @@ img {
   box-shadow: 0 4px 12px rgba(0, 0, 128, 0.2);
   transition: all 0.3s ease-in-out;
 }
-
-.criteria-carousel .swiper-button-prev {
-  left: 0;
-}
-
-.criteria-carousel .swiper-button-next {
-  right: 0;
-}
-
+.criteria-carousel .swiper-button-prev { left: 0; }
+.criteria-carousel .swiper-button-next { right: 0; }
 .criteria-carousel .swiper-button-next:after,
-.criteria-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
-}
-
+.criteria-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
 .criteria-carousel .swiper-button-next:hover,
 .criteria-carousel .swiper-button-prev:hover {
   background: #FF7F00;
@@ -771,260 +689,138 @@ img {
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(255, 127, 0, 0.4);
 }
-
 .criteria-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: #000080;
-  opacity: 0.3;
+  width: 12px; height: 12px;
+  background: #000080; opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
-
-.criteria-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
-
+.criteria-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 .criteria-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 32px;
-  border-radius: 6px;
+  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
 }
 
-/* Whiteboard Carousel */
-.whiteboard-carousel {
-  padding: 40px 70px 60px;
-}
-
-.whiteboard-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
+/* ─────────────────────────────────────────────
+   Whiteboard Carousel
+───────────────────────────────────────────── */
+.whiteboard-carousel { padding: 40px 70px 60px; }
+.whiteboard-carousel .swiper-slide { height: auto; display: flex; }
 
 .whiteboard-carousel .swiper-button-next,
 .whiteboard-carousel .swiper-button-prev {
   color: #000080;
   background: rgba(255, 255, 255, 0.95);
-  width: 50px;
-  height: 50px;
+  width: 50px; height: 50px;
   border-radius: 50%;
   border: 3px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
 }
-
-.whiteboard-carousel .swiper-button-prev {
-  left: 0;
-}
-
-.whiteboard-carousel .swiper-button-next {
-  right: 0;
-}
-
+.whiteboard-carousel .swiper-button-prev { left: 0; }
+.whiteboard-carousel .swiper-button-next { right: 0; }
 .whiteboard-carousel .swiper-button-next:after,
-.whiteboard-carousel .swiper-button-prev:after {
-  font-size: 22px;
-  font-weight: bold;
-}
-
+.whiteboard-carousel .swiper-button-prev:after { font-size: 22px; font-weight: bold; }
 .whiteboard-carousel .swiper-button-next:hover,
 .whiteboard-carousel .swiper-button-prev:hover {
-  background: #FF7F00;
-  color: white;
+  background: #FF7F00; color: white;
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #000080, 0 8px 20px rgba(255, 127, 0, 0.35);
 }
-
 .whiteboard-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: #000080;
-  opacity: 0.3;
+  width: 12px; height: 12px;
+  background: #000080; opacity: 0.3;
   border: 2px solid transparent;
   transition: all 0.3s ease-in-out;
 }
-
-.whiteboard-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
-
+.whiteboard-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 .whiteboard-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 32px;
-  border-radius: 6px;
-  border-color: #000080;
+  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px; border-color: #000080;
 }
 
-/* FAQ Carousel */
-.faq-carousel {
-  padding: 40px 70px 60px;
-}
-
-.faq-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
+/* ─────────────────────────────────────────────
+   FAQ Carousel
+───────────────────────────────────────────── */
+.faq-carousel { padding: 40px 70px 60px; }
+.faq-carousel .swiper-slide { height: auto; display: flex; }
 
 .faq-carousel .swiper-button-next,
 .faq-carousel .swiper-button-prev {
   color: #000080;
   background: #FAFAF8;
-  width: 48px;
-  height: 48px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   border: 4px solid #000080;
   box-shadow: 4px 4px 0 #FF7F00;
   transition: all 0.2s ease-in-out;
 }
-
-.faq-carousel .swiper-button-prev {
-  left: 0;
-}
-
-.faq-carousel .swiper-button-next {
-  right: 0;
-}
-
+.faq-carousel .swiper-button-prev { left: 0; }
+.faq-carousel .swiper-button-next { right: 0; }
 .faq-carousel .swiper-button-next:after,
-.faq-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
-}
-
+.faq-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
 .faq-carousel .swiper-button-next:hover,
 .faq-carousel .swiper-button-prev:hover {
-  background: #0B9C2C;
-  color: white;
+  background: #0B9C2C; color: white;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 #FF7F00;
 }
-
 .faq-carousel .swiper-pagination-bullet {
-  width: 14px;
-  height: 14px;
-  background: #000080;
-  opacity: 0.4;
+  width: 14px; height: 14px;
+  background: #000080; opacity: 0.4;
   border: 2px solid #000080;
   transition: all 0.3s ease-in-out;
 }
-
-.faq-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
-
+.faq-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 .faq-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 36px;
-  border-radius: 7px;
+  background: #FF7F00; opacity: 1; width: 36px; border-radius: 7px;
   box-shadow: 2px 2px 0 rgba(0, 0, 128, 0.3);
 }
 
-/* Ensure smooth card height transitions */
-.swiper-slide>div {
-  width: 100%;
-}
-
-/* Touch feedback for mobile */
-@media (hover: none) and (pointer: coarse) {
-
-  .criteria-carousel .swiper-button-next:active,
-  .criteria-carousel .swiper-button-prev:active,
-  .whiteboard-carousel .swiper-button-next:active,
-  .whiteboard-carousel .swiper-button-prev:active,
-  .faq-carousel .swiper-button-next:active,
-  .faq-carousel .swiper-button-prev:active {
-    transform: scale(0.95);
-  }
-}
-
-/* FAQ Page Carousel */
-.faq-page-carousel {
-  padding: 40px 70px 60px;
-}
-
-.faq-page-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
+/* ─────────────────────────────────────────────
+   FAQ Page Carousel
+───────────────────────────────────────────── */
+.faq-page-carousel { padding: 40px 70px 60px; }
+.faq-page-carousel .swiper-slide { height: auto; display: flex; }
 
 .faq-page-carousel .swiper-button-next,
 .faq-page-carousel .swiper-button-prev {
-  color: #000080;
-  background: #FAFAF8;
-  width: 48px;
-  height: 48px;
+  color: #000080; background: #FAFAF8;
+  width: 48px; height: 48px;
   border-radius: 50%;
   border: 4px solid #000080;
   box-shadow: 4px 4px 0 #FF7F00;
   transition: all 0.2s ease-in-out;
 }
-
-.faq-page-carousel .swiper-button-prev {
-  left: 0;
-}
-
-.faq-page-carousel .swiper-button-next {
-  right: 0;
-}
-
+.faq-page-carousel .swiper-button-prev { left: 0; }
+.faq-page-carousel .swiper-button-next { right: 0; }
 .faq-page-carousel .swiper-button-next:after,
-.faq-page-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
-}
-
+.faq-page-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
 .faq-page-carousel .swiper-button-next:hover,
 .faq-page-carousel .swiper-button-prev:hover {
-  background: #0B9C2C;
-  color: white;
+  background: #0B9C2C; color: white;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 #FF7F00;
 }
-
 .faq-page-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: #000080;
-  opacity: 0.4;
+  width: 12px; height: 12px;
+  background: #000080; opacity: 0.4;
   transition: all 0.3s ease-in-out;
 }
-
-.faq-page-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
-
+.faq-page-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 .faq-page-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 32px;
-  border-radius: 6px;
+  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
 }
 
-/* Fund Innovation Carousel */
+/* ─────────────────────────────────────────────
+   Fund Innovation / Donor Stories / How It Works
+───────────────────────────────────────────── */
 .fund-innovation-carousel,
 .donor-stories-carousel,
 .how-it-works-carousel,
-.how-it-works-faq-carousel {
-  padding: 40px 70px 60px;
-}
+.how-it-works-faq-carousel { padding: 40px 70px 60px; }
 
 .fund-innovation-carousel .swiper-slide,
 .donor-stories-carousel .swiper-slide,
 .how-it-works-carousel .swiper-slide,
-.how-it-works-faq-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
+.how-it-works-faq-carousel .swiper-slide { height: auto; display: flex; }
 
 .fund-innovation-carousel .swiper-button-next,
 .fund-innovation-carousel .swiper-button-prev,
@@ -1036,27 +832,20 @@ img {
 .how-it-works-faq-carousel .swiper-button-prev {
   color: #000080;
   background: rgba(255, 255, 255, 0.95);
-  width: 48px;
-  height: 48px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   border: 4px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
 }
-
 .fund-innovation-carousel .swiper-button-prev,
 .donor-stories-carousel .swiper-button-prev,
 .how-it-works-carousel .swiper-button-prev,
-.how-it-works-faq-carousel .swiper-button-prev {
-  left: 0;
-}
-
+.how-it-works-faq-carousel .swiper-button-prev { left: 0; }
 .fund-innovation-carousel .swiper-button-next,
 .donor-stories-carousel .swiper-button-next,
 .how-it-works-carousel .swiper-button-next,
-.how-it-works-faq-carousel .swiper-button-next {
-  right: 0;
-}
+.how-it-works-faq-carousel .swiper-button-next { right: 0; }
 
 .fund-innovation-carousel .swiper-button-next:after,
 .fund-innovation-carousel .swiper-button-prev:after,
@@ -1065,10 +854,7 @@ img {
 .how-it-works-carousel .swiper-button-next:after,
 .how-it-works-carousel .swiper-button-prev:after,
 .how-it-works-faq-carousel .swiper-button-next:after,
-.how-it-works-faq-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
-}
+.how-it-works-faq-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
 
 .fund-innovation-carousel .swiper-button-next:hover,
 .fund-innovation-carousel .swiper-button-prev:hover,
@@ -1078,52 +864,39 @@ img {
 .how-it-works-carousel .swiper-button-prev:hover,
 .how-it-works-faq-carousel .swiper-button-next:hover,
 .how-it-works-faq-carousel .swiper-button-prev:hover {
-  background: #FF7F00;
-  color: white;
+  background: #FF7F00; color: white;
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #000080, 0 8px 20px rgba(255, 127, 0, 0.35);
 }
-
 .fund-innovation-carousel .swiper-pagination-bullet,
 .donor-stories-carousel .swiper-pagination-bullet,
 .how-it-works-carousel .swiper-pagination-bullet,
 .how-it-works-faq-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: #000080;
-  opacity: 0.3;
+  width: 12px; height: 12px;
+  background: #000080; opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
-
 .fund-innovation-carousel .swiper-pagination,
 .donor-stories-carousel .swiper-pagination,
 .how-it-works-carousel .swiper-pagination,
-.how-it-works-faq-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
-
+.how-it-works-faq-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 .fund-innovation-carousel .swiper-pagination-bullet-active,
 .donor-stories-carousel .swiper-pagination-bullet-active,
 .how-it-works-carousel .swiper-pagination-bullet-active,
 .how-it-works-faq-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 32px;
-  border-radius: 6px;
+  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
 }
 
-/* Start Project, Eligibility, Corporate, Mentor, Contact, About Carousels */
+/* ─────────────────────────────────────────────
+   Start Project / Eligibility / Corporate / Mentor / Contact / About
+───────────────────────────────────────────── */
 .start-project-carousel,
 .eligibility-carousel,
 .corporate-benefits-carousel,
 .mentor-benefits-carousel,
 .mentor-stories-carousel,
 .contact-carousel,
-.about-values-carousel {
-  padding: 40px 70px 60px;
-}
+.about-values-carousel { padding: 40px 70px 60px; }
 
 .start-project-carousel .swiper-slide,
 .eligibility-carousel .swiper-slide,
@@ -1131,10 +904,7 @@ img {
 .mentor-benefits-carousel .swiper-slide,
 .mentor-stories-carousel .swiper-slide,
 .contact-carousel .swiper-slide,
-.about-values-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
+.about-values-carousel .swiper-slide { height: auto; display: flex; }
 
 .start-project-carousel .swiper-button-next,
 .start-project-carousel .swiper-button-prev,
@@ -1152,23 +922,19 @@ img {
 .about-values-carousel .swiper-button-prev {
   color: #000080;
   background: rgba(255, 255, 255, 0.95);
-  width: 48px;
-  height: 48px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   border: 4px solid #000080;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
 }
-
 .start-project-carousel .swiper-button-prev,
 .eligibility-carousel .swiper-button-prev,
 .corporate-benefits-carousel .swiper-button-prev,
 .mentor-benefits-carousel .swiper-button-prev,
 .mentor-stories-carousel .swiper-button-prev,
 .contact-carousel .swiper-button-prev,
-.about-values-carousel .swiper-button-prev {
-  left: 0;
-}
+.about-values-carousel .swiper-button-prev { left: 0; }
 
 .start-project-carousel .swiper-button-next,
 .eligibility-carousel .swiper-button-next,
@@ -1176,9 +942,7 @@ img {
 .mentor-benefits-carousel .swiper-button-next,
 .mentor-stories-carousel .swiper-button-next,
 .contact-carousel .swiper-button-next,
-.about-values-carousel .swiper-button-next {
-  right: 0;
-}
+.about-values-carousel .swiper-button-next { right: 0; }
 
 .start-project-carousel .swiper-button-next:after,
 .start-project-carousel .swiper-button-prev:after,
@@ -1193,10 +957,7 @@ img {
 .contact-carousel .swiper-button-next:after,
 .contact-carousel .swiper-button-prev:after,
 .about-values-carousel .swiper-button-next:after,
-.about-values-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
-}
+.about-values-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
 
 .start-project-carousel .swiper-button-next:hover,
 .start-project-carousel .swiper-button-prev:hover,
@@ -1212,12 +973,10 @@ img {
 .contact-carousel .swiper-button-prev:hover,
 .about-values-carousel .swiper-button-next:hover,
 .about-values-carousel .swiper-button-prev:hover {
-  background: #FF7F00;
-  color: white;
+  background: #FF7F00; color: white;
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #000080, 0 8px 20px rgba(255, 127, 0, 0.35);
 }
-
 .start-project-carousel .swiper-pagination-bullet,
 .eligibility-carousel .swiper-pagination-bullet,
 .corporate-benefits-carousel .swiper-pagination-bullet,
@@ -1225,24 +984,17 @@ img {
 .mentor-stories-carousel .swiper-pagination-bullet,
 .contact-carousel .swiper-pagination-bullet,
 .about-values-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: #000080;
-  opacity: 0.3;
+  width: 12px; height: 12px;
+  background: #000080; opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
-
 .start-project-carousel .swiper-pagination,
 .eligibility-carousel .swiper-pagination,
 .corporate-benefits-carousel .swiper-pagination,
 .mentor-benefits-carousel .swiper-pagination,
 .mentor-stories-carousel .swiper-pagination,
 .contact-carousel .swiper-pagination,
-.about-values-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
+.about-values-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 
 .start-project-carousel .swiper-pagination-bullet-active,
 .eligibility-carousel .swiper-pagination-bullet-active,
@@ -1251,91 +1003,53 @@ img {
 .mentor-stories-carousel .swiper-pagination-bullet-active,
 .contact-carousel .swiper-pagination-bullet-active,
 .about-values-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 32px;
-  border-radius: 6px;
+  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
 }
 
-/* Uniform Card Heights */
-.swiper-slide>div {
-  width: 100%;
-  min-height: 280px;
-  /* Ensures consistent minimum height across all cards */
+/* Touch feedback */
+@media (hover: none) and (pointer: coarse) {
+  .criteria-carousel .swiper-button-next:active,
+  .criteria-carousel .swiper-button-prev:active,
+  .whiteboard-carousel .swiper-button-next:active,
+  .whiteboard-carousel .swiper-button-prev:active,
+  .faq-carousel .swiper-button-next:active,
+  .faq-carousel .swiper-button-prev:active { transform: scale(0.95); }
 }
 
-/* Whiteboard cards specific height */
-.card-whiteboard {
-  min-height: 320px;
-}
+/* ─────────────────────────────────────────────
+   Eligibility FAQ Carousel
+───────────────────────────────────────────── */
+.eligibility-faq-carousel { padding: 0 60px 50px; }
+.eligibility-faq-carousel .swiper-slide { height: auto; display: flex; }
+.eligibility-faq-carousel .swiper-slide > div { width: 100%; min-height: 280px; }
 
-/* Glass cards specific height */
-.card-glass {
-  min-height: 280px;
-}
-
-/* Eligibility FAQ Carousel */
-.eligibility-faq-carousel {
-  padding: 0 60px 50px;
-}
-
-.eligibility-faq-carousel .swiper-slide {
-  height: auto;
-  display: flex;
-}
-
-.eligibility-faq-carousel .swiper-slide>div {
-  width: 100%;
-  min-height: 280px;
-}
-
-/* Navigation Buttons */
 .eligibility-faq-carousel .swiper-button-next,
 .eligibility-faq-carousel .swiper-button-prev {
-  width: 48px;
-  height: 48px;
+  width: 48px; height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.75); /* white with low opacity */
-  backdrop-filter: blur(6px); /* optional glass effect */
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* softer shadow */
-  border: 2px solid rgba(0, 0, 128, 0.4); /* subtle navy border */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0, 0, 128, 0.4);
   transition: all 0.3s ease-in-out;
 }
-
-
 .eligibility-faq-carousel .swiper-button-next:after,
 .eligibility-faq-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: 900;
-  color: #FFFFFF;
+  font-size: 20px; font-weight: 900; color: #FFFFFF;
 }
-
 .eligibility-faq-carousel .swiper-button-next:hover,
 .eligibility-faq-carousel .swiper-button-prev:hover {
   background: #000080;
   box-shadow: 0 6px 20px rgba(0, 0, 128, 0.4);
   transform: scale(1.1);
 }
-
-/* Pagination */
 .eligibility-faq-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: #000080;
-  opacity: 0.3;
+  width: 12px; height: 12px;
+  background: #000080; opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
-
-.eligibility-faq-carousel .swiper-pagination {
-  position: relative;
-  bottom: 0;
-  margin-top: 24px;
-}
-
+.eligibility-faq-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
 .eligibility-faq-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00;
-  opacity: 1;
-  width: 32px;
-  border-radius: 6px;
+  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
 }

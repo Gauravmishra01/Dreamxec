@@ -4,15 +4,15 @@ import CampaignCard from './CampaignCard';
 import { StarDecoration } from './icons/StarDecoration';
 import { FooterContent } from '../sections/Footer/components/FooterContent';
 
-const SearchIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+const SearchIcon = ({ className, style }: { className?: string , style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
     <circle cx="11" cy="11" r="8" />
     <path d="m21 21-4.35-4.35" />
   </svg>
 );
 
-const SlidersIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+const SlidersIcon = ({ className, style }: { className?: string, style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
     <line x1="4" x2="4" y1="21" y2="14" />
     <line x1="4" x2="4" y1="10" y2="3" />
     <line x1="12" x2="12" y1="21" y2="12" />
@@ -28,12 +28,12 @@ const SlidersIcon = ({ className }: { className?: string }) => (
 interface BrowseCampaignsProps {
   campaigns: Campaign[];
   onViewCampaign: (id: string) => void;
+  
 }
 
 type SortOption = 'recent' | 'goal' | 'progress';
 
 export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCampaignsProps) {
-  console.log(campaigns)
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 
@@ -62,96 +62,233 @@ export default function BrowseCampaigns({ campaigns, onViewCampaign }: BrowseCam
     });
 
   return (
-    <div className="min-h-screen bg-dreamxec-cream">
-      {/* Subtle Background Decorations */}
-      <div className="absolute top-24 left-8 opacity-10">
-        <StarDecoration className="w-12 h-12" color="#FF7F00" />
-      </div>
-      <div className="absolute top-64 right-16 opacity-10">
-        <StarDecoration className="w-10 h-10" color="#0B9C2C" />
-      </div>
+    <div className="min-h-screen" style={{ background: '#FFF5E4', backgroundImage: 'radial-gradient(circle, #FF7F0018 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
 
-      {/* Header */}
-      <div className="relative bg-gradient-to-r from-dreamxec-navy to-dreamxec-berkeley-blue border-b-8 border-dreamxec-orange shadow-xl">
-        {/* <div className="card-tricolor-tag absolute top-0 right-0"></div> */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      {/* ── HERO HEADER ── */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #0B1F3A 0%, #0a2e5c 100%)',
+          borderBottom: '3px solid #111',
+          boxShadow: '0 6px 0 #111',
+        }}
+      >
+        {/* Grid overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+
+        {/* Orange stripe accent — bottom */}
+        <div
+          className="absolute bottom-0 left-0 right-0"
+          style={{ height: '6px', background: 'repeating-linear-gradient(90deg, #FF7F00, #FF7F00 40px, #111 40px, #111 44px)' }}
+        />
+
+        {/* Star decorations */}
+        <div className="absolute top-8 right-12 opacity-20">
+          <StarDecoration className="w-14 h-14" color="#FF7F00" />
+        </div>
+        <div className="absolute bottom-10 left-10 opacity-10">
+          <StarDecoration className="w-10 h-10" color="#0B9C2C" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          {/* Tag chip */}
           <div
-                    className="absolute inset-0 opacity-[0.04]"
-                    style={{
-                        backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-                        backgroundSize: "48px 48px"
-                    }}
-                />
-          <div className="flex items-start gap-4 mb-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-dreamxec-orange font-display leading-tight">
-              Browse Campaigns
-            </h1>
-            <StarDecoration className="w-12 h-12 mt-2" color="#FF7F00" />
+            className="inline-flex items-center gap-2 mb-5"
+            style={{
+              background: '#FFE066',
+              border: '2px solid #111',
+              borderRadius: '5px',
+              padding: '4px 14px',
+              boxShadow: '3px 3px 0 #111',
+              fontFamily: "'Sora', system-ui, sans-serif",
+              fontSize: '12px',
+              fontWeight: 800,
+              color: '#111',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+            }}
+          >
+            🎯 DreamXec Platform
           </div>
-          <p className="text-dreamxec-cream/95 text-xl sm:text-2xl font-medium max-w-2xl leading-relaxed">
-            Discover and support student-led initiatives across clubs & colleges. 
+
+          <div className="flex items-start gap-4 mb-4">
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl leading-tight"
+              style={{
+                fontFamily: "'Sora', system-ui, sans-serif",
+                fontWeight: 900,
+                color: '#FF7F00',
+                letterSpacing: '-0.03em',
+                textShadow: '4px 4px 0 #FF450044',
+              }}
+            >
+              Explore Campaigns
+            </h1>
+            {/* <StarDecoration className="w-12 h-12 mt-2 flex-shrink-0" color="#FF7F00" /> */}
+          </div>
+
+          <p
+            className="text-xl sm:text-2xl max-w-2xl leading-relaxed"
+            style={{ color: 'rgba(255,245,228,0.90)', fontWeight: 500, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+          >
+            Discover and support student-led initiatives across clubs & colleges.
           </p>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 mb-12">
-          
-          {/* Search */}
-          <div className="relative flex-1 group">
-            <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-dreamxec-navy/60 w-6 h-6 group-focus-within:text-dreamxec-orange transition-colors" />
+      {/* ── CONTROLS ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-5 mb-12">
+
+          {/* Search input */}
+          <div className="relative flex-1">
+            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#111', opacity: 0.5 }} />
             <input
               type="text"
               placeholder="Search campaigns, clubs, colleges..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-16 pr-6 py-4 border-2 border-dreamxec-navy rounded-xl text-lg font-medium text-dreamxec-navy bg-white/80 backdrop-blur-sm focus:outline-none focus:border-dreamxec-orange focus:ring-4 focus:ring-dreamxec-orange/30 shadow-pastel-card hover:shadow-xl transition-all duration-300"
+              style={{
+                width: '100%',
+                paddingLeft: '44px',
+                paddingRight: '20px',
+                paddingTop: '14px',
+                paddingBottom: '14px',
+                border: '2.5px solid #111',
+                borderRadius: '10px',
+                fontSize: '16px',
+                fontWeight: 600,
+                color: '#111',
+                background: '#fff',
+                boxShadow: '4px 4px 0 #111',
+                outline: 'none',
+                fontFamily: "'DM Sans', system-ui, sans-serif",
+                transition: 'box-shadow 0.15s ease, transform 0.15s ease',
+              }}
+              onFocus={e => {
+                e.target.style.boxShadow = '6px 6px 0 #FF7F00';
+                e.target.style.borderColor = '#FF7F00';
+              }}
+              onBlur={e => {
+                e.target.style.boxShadow = '4px 4px 0 #111';
+                e.target.style.borderColor = '#111';
+              }}
             />
           </div>
 
-          {/* Sort */}
-          <div className="relative group">
-            <SlidersIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-dreamxec-navy/60 w-6 h-6 group-focus-within:text-dreamxec-orange transition-colors" />
+          {/* Sort select */}
+          <div className="relative">
+            <SlidersIcon
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none"
+              style ={{ color: '#111', opacity: 0.6, zIndex: 1 }}
+            />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full lg:w-64 pl-16 pr-8 py-4 border-2 border-dreamxec-navy rounded-xl text-lg font-semibold text-dreamxec-navy bg-white/80 backdrop-blur-sm focus:outline-none focus:border-dreamxec-green focus:ring-4 focus:ring-dreamxec-green/30 shadow-pastel-card hover:shadow-xl appearance-none cursor-pointer transition-all duration-300"
+              style={{
+                width: '100%',
+                minWidth: '240px',
+                paddingLeft: '44px',
+                paddingRight: '36px',
+                paddingTop: '14px',
+                paddingBottom: '14px',
+                border: '2.5px solid #111',
+                borderRadius: '10px',
+                fontSize: '15px',
+                fontWeight: 700,
+                color: '#111',
+                background: '#fff',
+                boxShadow: '4px 4px 0 #111',
+                outline: 'none',
+                appearance: 'none',
+                cursor: 'pointer',
+                fontFamily: "'Sora', system-ui, sans-serif",
+                transition: 'box-shadow 0.15s ease',
+              }}
+              onFocus={e => { e.target.style.boxShadow = '6px 6px 0 #0B9C2C'; e.target.style.borderColor = '#0B9C2C'; }}
+              onBlur={e => { e.target.style.boxShadow = '4px 4px 0 #111'; e.target.style.borderColor = '#111'; }}
             >
               <option value="recent">Most Recent First</option>
               <option value="goal">Highest Goals</option>
               <option value="progress">Nearing Completion</option>
             </select>
+            {/* custom arrow */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="3">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
           </div>
         </div>
 
-        {/* Results */}
+        {/* ── RESULTS ── */}
         {filteredCampaigns.length === 0 ? (
-          <div className="card-pastel-offwhite rounded-2xl border-2 border-dreamxec-navy shadow-pastel-card p-16 sm:p-24 text-center max-w-2xl mx-auto">
-            <div className="card-tricolor-tag"></div>
-            <div className="w-28 h-28 mx-auto mb-8 bg-gradient-to-br from-dreamxec-orange/20 to-dreamxec-navy/20 rounded-2xl flex items-center justify-center border-2 border-dreamxec-navy/30">
-              <SearchIcon className="w-14 h-14 text-dreamxec-navy/50" />
+          <div
+            className="text-center max-w-xl mx-auto p-16 sm:p-20"
+            style={{
+              background: '#fff',
+              border: '2.5px solid #111',
+              borderRadius: '16px',
+              boxShadow: '6px 6px 0 #111',
+            }}
+          >
+            <div
+              className="w-24 h-24 mx-auto mb-6 flex items-center justify-center"
+              style={{
+                background: '#FFE066',
+                border: '2.5px solid #111',
+                borderRadius: '12px',
+                boxShadow: '4px 4px 0 #111',
+              }}
+            >
+              <SearchIcon className="w-12 h-12" style={{ color: '#111' }} />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-dreamxec-navy mb-4 font-display">
+            <h2
+              className="text-3xl sm:text-4xl mb-3"
+              style={{
+                fontFamily: "'Sora', system-ui, sans-serif",
+                fontWeight: 900,
+                color: '#111',
+                letterSpacing: '-0.02em',
+              }}
+            >
               No Campaigns Found
             </h2>
-            <p className="text-xl text-dreamxec-navy/70 font-medium leading-relaxed">
+            <p style={{ fontSize: '16px', color: '#555', fontWeight: 500, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
               Try adjusting your search terms or filters
             </p>
           </div>
         ) : (
           <div>
-            {/* Results Count */}
+            {/* Results count badge */}
             <div className="mb-10">
-              <div className="inline-flex items-center gap-3 px-6 py-3 bg-dreamxec-orange text-white rounded-xl border-2 border-dreamxec-navy shadow-pastel-saffron hover:shadow-xl transition-all">
-                <span className="text-2xl font-black font-display">
+              <div
+                className="inline-flex items-center gap-3"
+                style={{
+                  background: '#FF7F00',
+                  border: '2.5px solid #111',
+                  borderRadius: '8px',
+                  padding: '8px 18px',
+                  boxShadow: '4px 4px 0 #111',
+                  fontFamily: "'Sora', system-ui, sans-serif",
+                }}
+              >
+                <span style={{ fontSize: '22px', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
                   {filteredCampaigns.length}
                 </span>
-                <span className="text-lg font-semibold">campaign{filteredCampaigns.length !== 1 ? 's' : ''}</span>
+                <span style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  campaign{filteredCampaigns.length !== 1 ? 's' : ''}
+                </span>
               </div>
             </div>
 
-            {/* Grid */}
+            {/* Campaign Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {filteredCampaigns.map((campaign) => (
                 <CampaignCard

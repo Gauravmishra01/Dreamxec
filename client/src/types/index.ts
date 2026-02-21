@@ -1,9 +1,5 @@
 // src/types/index.ts
-
-import type { Milestone } from "../components/CampaignDetails";
-
 // export type UserRole = "student" | "admin" | "DONOR" | "donor" | "STUDENT_PRESIDENT";
-
 export type AccountStatus = "ACTIVE" | "BLOCKED" | "SUSPENDED" | "UNDER_REVIEW";
 
 export type ProjectStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED" | "PAUSED" | "FROZEN" | "pending" | "approved" | "rejected" | "completed" | "paused" | "frozen";
@@ -25,11 +21,11 @@ export interface PaginatedResponse<T> {
 ========================================================= */
 
 export interface Club {
-    id: string;
-    name: string;
-    college: string;
-    slug: string;
-    verified: boolean;
+  id: string;
+  name: string;
+  college: string;
+  slug: string;
+  verified: boolean;
 }
 
 /* =========================================================
@@ -37,14 +33,14 @@ export interface Club {
 ========================================================= */
 
 export interface TeamMember {
-    name: string;
-    role: string;
-    image?: string; // Cloudinary URL
+  name: string;
+  role: string;
+  image?: string; // Cloudinary URL
 }
 
 export interface FAQ {
-    question: string;
-    answer: string;
+  question: string;
+  answer: string;
 }
 
 /* =========================================================
@@ -52,31 +48,31 @@ export interface FAQ {
 ========================================================= */
 
 export type UserRole =
-    | "student"
-    | "admin"
-    | "donor"
-    | "DONOR"
-    | "STUDENT_PRESIDENT";
+  | "student"
+  | "admin"
+  | "donor"
+  | "DONOR"
+  | "STUDENT_PRESIDENT";
 
 export interface User {
-    id: string;
-    email: string;
-    name: string;
-    role: UserRole;
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
 
   accountStatus: AccountStatus;
 
   emailVerified: boolean;
   studentVerified: boolean;
 
-    isClubPresident: boolean;
-    isClubMember: boolean;
-    clubVerified: boolean;
+  isClubPresident: boolean;
+  isClubMember: boolean;
+  clubVerified: boolean;
 
-    clubIds: string[];
+  clubIds: string[];
 
-    createdAt: string;
-    updatedAt: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /* =========================================================
@@ -97,50 +93,96 @@ export interface FAQ {
   answer: string;
 }
 
+/* =========================================================
+   Milestones
+========================================================= */
+
+export interface MilestoneSubmission {
+  id: string;
+  milestoneId: string;
+  projectId: string;
+  proofUrl?: string;
+  mediaUrl?: string;
+  notes?: string;
+  version: number;
+  reviewedAt?: string;
+  adminFeedback?: string;
+  createdAt: string;
+}
+
+export type MilestoneStatus =
+  | "PENDING"
+  | "SUBMITTED"
+  | "APPROVED"
+  | "REJECTED";
+
+export interface Milestone {
+  id: string;
+  title: string;
+  description?: string;
+  durationDays: number;
+  budget: number;
+
+  order: number;
+
+  status: MilestoneStatus;
+
+  activatedAt?: string;
+  dueDate?: string;
+  approvedAt?: string;
+
+  reminder3Sent?: boolean;
+  reminder1Sent?: boolean;
+  overdueSent?: boolean;
+  ratingPenaltyDays?: number;
+
+  submissions?: MilestoneSubmission[];
+}
+
 export interface Campaign {
+  id: string;
+  title: string;
+  clubId: string | null;
+  club: {
     id: string;
-    title: string;
-    clubId: string | null;
-    club: {
-        id: string;
-        name: string;
-        college: string;
-        slug: string;
-    };
-    description: string;
+    name: string;
+    college: string;
+    slug: string;
+  };
+  description: string;
 
-    goalAmount: number;
-    currentAmount: number;
+  goalAmount: number;
+  currentAmount: number;
 
-    status: "approved" | "pending" | "rejected";
-    createdAt: Date;
+  status: "approved" | "pending" | "rejected";
+  createdAt: Date;
 
-    rejectionReason?: string;
-    reapprovalCount?: number;
+  rejectionReason?: string;
+  reapprovalCount?: number;
 
-    /* ✅ NEW BACKEND FIELDS */
+  /* ✅ NEW BACKEND FIELDS */
 
-    campaignType?: "INDIVIDUAL" | "TEAM";
+  campaignType?: "INDIVIDUAL" | "TEAM";
 
-    teamMembers?: TeamMember[];
+  teamMembers?: TeamMember[];
 
-    faqs?: FAQ[];
+  faqs?: FAQ[];
+  rating?: number;
+  youtubeUrl?: string;
 
-    youtubeUrl?: string;
+  category?: string;
+  imageUrl?: string;
+  campaignMedia?: string[];
+  presentationDeckUrl?: string | null;
 
-    category?: string;
-    imageUrl?: string;
-    campaignMedia?: string[];
-    presentationDeckUrl?: string | null;
+  createdBy?: string | { id: string };
 
-    createdBy?: string | { id: string };
-
-    userId?: string;
+  userId?: string;
 
 
 
-    // ✅ Milestone-based timeline
-    milestones?: Milestone[];
+  // ✅ Milestone-based timeline
+  milestones?: Milestone[];
 }
 
 /* =========================================================
@@ -178,20 +220,20 @@ export interface Project {
 }
 
 export interface ProjectApplication {
-    id: string;
-    projectId: string;
+  id: string;
+  projectId: string;
 
-    userId: string;
-    userName: string;
-    userEmail: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
 
-    coverLetter: string;
-    skills: string[];
+  coverLetter: string;
+  skills: string[];
 
-    status: "pending" | "accepted" | "rejected";
-    rejectionReason?: string;
+  status: "pending" | "accepted" | "rejected";
+  rejectionReason?: string;
 
-    appliedAt: Date;
+  appliedAt: Date;
 }
 
 /* =========================================================
@@ -199,11 +241,11 @@ export interface ProjectApplication {
 ========================================================= */
 
 export interface Student {
-    id: string;
-    name: string;
-    email: string;
-    university: string;
-    avatar?: string;
+  id: string;
+  name: string;
+  email: string;
+  university: string;
+  avatar?: string;
 }
 
 

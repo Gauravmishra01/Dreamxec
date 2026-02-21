@@ -385,16 +385,16 @@ function AppContent() {
   // ✅ Project filters (same fixes applied)
 
   const donorProjects = projects.filter(
-  (p) => p.createdBy === user?.id
-);
+    (p) => p.createdBy === user?.id
+  );
 
-const approvedProjects = projects.filter(
-  (p) => p.status?.toLowerCase() === "approved"
-);
+  const approvedProjects = projects.filter(
+    (p) => p.status?.toLowerCase() === "approved"
+  );
 
-const pendingProjects = projects.filter(
-  (p) => p.status?.toLowerCase() === "pending"
-);
+  const pendingProjects = projects.filter(
+    (p) => p.status?.toLowerCase() === "pending"
+  );
 
 
 
@@ -443,7 +443,7 @@ const pendingProjects = projects.filter(
 
     milestones: {
       title: string;
-      timeline: string;
+      durationDays: number;
       budget: string | number;
       description?: string;
     }[];
@@ -490,9 +490,11 @@ const pendingProjects = projects.filter(
 
       /* ---------------- MILESTONES ---------------- */
 
-      const cleanMilestones = data.milestones.map(m => ({
-        ...m,
+      const cleanMilestones = data.milestones.map((m, index) => ({
+        title: m.title,
+        durationDays: Number(m.durationDays),
         budget: Number(m.budget),
+        description: m.description || null,
       }));
 
       formData.append("milestones", JSON.stringify(cleanMilestones));
@@ -1328,14 +1330,14 @@ const pendingProjects = projects.filter(
                                 path="/login"
                                 element={
                                   <AuthPage
-                                  onLogin={handleLogin}
-                                  onSignup={handleSignup}
-                                  onGoogleAuth={handleGoogleAuth}
-                                  onLinkedInAuth={handleLinkedInAuth}
-                                  onForgotPassword={handleForgotPassword}
-                                  currentUser={user}
-                                  onHeaderLogin={handleLoginClick}
-                                  onLogout={handleLogout}
+                                    onLogin={handleLogin}
+                                    onSignup={handleSignup}
+                                    onGoogleAuth={handleGoogleAuth}
+                                    onLinkedInAuth={handleLinkedInAuth}
+                                    onForgotPassword={handleForgotPassword}
+                                    currentUser={user}
+                                    onHeaderLogin={handleLoginClick}
+                                    onLogout={handleLogout}
                                   />
                                 }
                               />
@@ -1348,10 +1350,10 @@ const pendingProjects = projects.filter(
                                 path="/check-email"
                                 element={
                                   <CheckEmail
-                                  email={signupEmail}
-                                  onBackToLogin={() => {
-                                    setShowCheckEmail(false);
-                                    navigate('/auth');
+                                    email={signupEmail}
+                                    onBackToLogin={() => {
+                                      setShowCheckEmail(false);
+                                      navigate('/auth');
                                     }}
                                   />
                                 }
@@ -1362,7 +1364,7 @@ const pendingProjects = projects.filter(
                                 path="/verify-email/:token"
                                 element={
                                   <EmailVerification
-                                  onVerificationSuccess={handleEmailVerificationSuccess}
+                                    onVerificationSuccess={handleEmailVerificationSuccess}
                                   />
                                 }
                               />
@@ -1373,9 +1375,9 @@ const pendingProjects = projects.filter(
                                 element={
                                   user ? (
                                     <UserProfile
-                                    user={user}
-                                    onUpdateBankDetails={handleUpdateBankDetails}
-                                    onBack={() => navigate(-1)}
+                                      user={user}
+                                      onUpdateBankDetails={handleUpdateBankDetails}
+                                      onBack={() => navigate(-1)}
                                     />
                                   ) : (
                                     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
@@ -1429,7 +1431,7 @@ const pendingProjects = projects.filter(
                                   )
                                 }
                               />
-                                <Route
+                              <Route
                                 path="/clubs"
                                 element={
                                   <>

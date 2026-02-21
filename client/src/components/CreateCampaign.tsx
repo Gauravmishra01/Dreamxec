@@ -48,12 +48,12 @@ interface CreateCampaignProps {
     teamMembers?: { name: string; role: string; image?: File | null }[];
     faqs?: { question: string; answer: string }[];
     youtubeUrl?: string;
-    milestones: { title: string; timeline: string; budget: string; description?: string }[];
+    milestones: { title: string; durationDays: number; budget: number; description?: string }[];
   }) => Promise<void>;
   initialData?: any; // 🆕 EDIT MODE
 }
 
-type Milestone = { title: string; timeline: string; budget: string; description?: string };
+type Milestone = { title: string; durationDays: string; budget: string; description?: string };
 type ClubOption = {
   id: string;
   name: string;
@@ -92,10 +92,10 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
   const [milestones, setMilestones] = useState<Milestone[]>(
     initialData?.milestones?.map((m: any) => ({
       title: m.title,
-      timeline: m.timeline,
-      budget: m.budget.toString(),
+      durationDays: m.durationDays?.toString() || '',
+      budget: m.budget?.toString() || '',
       description: m.description || ''
-    })) || [{ title: '', timeline: '', budget: '', description: '' }]
+    })) || [{ title: '', durationDays: '', budget: '', description: '' }]
   );
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -169,7 +169,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
           milestones.every(
             m =>
               m.title.trim() &&
-              m.timeline.trim() &&
+              parseInt(m.durationDays) > 0 &&
               parseFloat(m.budget) > 0
           ) &&
           totalMilestoneBudget <= parseFloat(goalAmount)
@@ -212,7 +212,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
     });
   }, []);
 
-  const addMilestone = () => setMilestones(prev => [...prev, { title: '', timeline: '', budget: '', description: '' }]);
+  const addMilestone = () => setMilestones(prev => [...prev, { title: '', durationDays: '', budget: '', description: '' }]);
   const removeMilestone = (index: number) => setMilestones(prev => prev.filter((_, i) => i !== index));
   const updateMilestone = (index: number, field: keyof Milestone, value: string) => {
     setMilestones(prev => prev.map((m, i) => i === index ? { ...m, [field]: value } : m));
@@ -241,7 +241,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
         !milestones.every(
           m =>
             m.title.trim() &&
-            m.timeline.trim() &&
+            parseInt(m.durationDays) > 0 &&
             parseFloat(m.budget) > 0
         ))
     ) {
@@ -272,7 +272,12 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
         youtubeUrl,
         faqs: faqs.filter(f => f.question.trim() && f.answer.trim()),
         teamMembers: campaignType === 'TEAM' ? teamMembers.filter(m => m.name.trim() && m.role.trim()) : undefined,
-        milestones,
+        milestones: milestones.map(m => ({
+          title: m.title,
+          durationDays: Number(m.durationDays),
+          budget: Number(m.budget),
+          description: m.description
+        })),
       });
       setShowSuccess(true);
       setTimeout(() => onBack(), 2000);
@@ -744,9 +749,10 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                           className={inputCls}
                         />
                         <input
-                          placeholder="Timeline (e.g. Week 1-2)"
-                          value={milestone.timeline}
-                          onChange={(e) => updateMilestone(idx, 'timeline', e.target.value)}
+                          type="number"
+                          placeholder="Duration (in days)"
+                          value={milestone.durationDays}
+                          onChange={(e) => updateMilestone(idx, 'durationDays', e.target.value)}
                           className={inputCls}
                         />
                         <div className="sm:col-span-2">

@@ -1,15 +1,144 @@
 import { useState } from 'react';
-import { StarDecoration } from './icons/StarDecoration';
 import type { Project } from '../types';
+import { FooterContent } from '@/sections/Footer/components/FooterContent';
 
 interface BrowseProjectsProps {
   projects: Project[];
   role: string;
   currentUserId?: string;
   onApply: (projectId: string, coverLetter: string, skills: string[]) => Promise<void>;
-  userApplications?: string[]; // Array of project IDs user has applied to
+  userApplications?: string[];
 }
 
+/* ─────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────── */
+const formatDate = (date: Date | string) =>
+  new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+const getTimelineDisplay = (
+  timeline: string | { startDate: Date | string; endDate: Date | string } | null
+) => {
+  if (!timeline) return 'Not specified';
+  if (typeof timeline === 'string') return timeline;
+  return `${formatDate(timeline.startDate)} — ${formatDate(timeline.endDate)}`;
+};
+
+/* ─────────────────────────────────────────────
+   PROJECT CARD
+───────────────────────────────────────────── */
+const cardShadows = ['#FF7F00', '#0B9C2C', '#000080'];
+
+function ProjectCard({
+  project,
+  index,
+  applied,
+  onApply,
+}: {
+  project: Project;
+  index: number;
+  applied: boolean;
+  onApply: (project: Project) => void;
+}) {
+  const shadow = cardShadows[index % 3];
+
+  return (
+    <div
+      className="bg-white flex flex-col transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
+      style={{ border: '3px solid #000080', boxShadow: `6px 6px 0 ${shadow}` }}
+    >
+      {/* Top stripe */}
+      <div className="h-2" style={{ background: shadow }} />
+
+      <div className="flex flex-col flex-1 p-4 sm:p-5 md:p-6">
+
+        {/* Company */}
+        <div className="flex items-center gap-2 mb-3">
+          <div
+            className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white"
+            style={{ background: '#000080', border: '2px solid #000080' }}
+          >
+            🏢 {project.companyName}
+          </div>
+        </div>
+
+        {/* Title */}
+        <h3 className="text-lg sm:text-xl font-black text-dreamxec-navy uppercase tracking-tight leading-snug mb-3">
+          {project.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-xs sm:text-sm text-dreamxec-navy/70 font-medium leading-relaxed mb-4 line-clamp-4">
+          {project.description}
+        </p>
+
+        {/* Skills */}
+        <div className="mb-4">
+          <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest mb-2">Skills Required</p>
+          <div className="flex flex-wrap gap-1.5">
+            {project.skillsRequired.map((skill, i) => (
+              <span
+                key={i}
+                className="px-2 py-1 text-[10px] sm:text-xs font-black text-dreamxec-navy uppercase tracking-wide"
+                style={{ border: '2px solid #0B9C2C', background: '#f0fdf4', color: '#166534' }}
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Timeline + applicants */}
+        <div className="flex flex-col gap-2 mb-5 mt-auto">
+          <div
+            className="flex items-center gap-2 px-3 py-2"
+            style={{ border: '2px dashed #000080', background: '#f9fafb' }}
+          >
+            <span className="text-sm">📅</span>
+            <span className="text-xs font-black text-dreamxec-navy uppercase tracking-wide">
+              {getTimelineDisplay(project.timeline)}
+            </span>
+          </div>
+          <div
+            className="flex items-center gap-2 px-3 py-2"
+            style={{ border: '2px solid #FF7F00', background: '#fff7ed' }}
+          >
+            <span className="text-sm">👥</span>
+            <span className="text-xs font-black text-dreamxec-orange uppercase tracking-wide">
+              {project.interestedUsers?.length ?? 0} student{(project.interestedUsers?.length ?? 0) !== 1 ? 's' : ''} applied
+            </span>
+          </div>
+        </div>
+
+        {/* Apply button */}
+        {applied ? (
+          <div
+            className="w-full py-3 text-center font-black text-xs sm:text-sm uppercase tracking-widest text-green-700"
+            style={{ border: '3px solid #0B9C2C', background: '#f0fdf4' }}
+          >
+            ✓ Already Applied
+          </div>
+        ) : (
+          <button
+            onClick={() => onApply(project)}
+            className="w-full py-3 font-black text-white text-xs sm:text-sm uppercase tracking-widest transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px]"
+            style={{
+              background: 'linear-gradient(135deg, #0B9C2C 0%, #16a34a 100%)',
+              border: '3px solid #000080',
+              boxShadow: '4px 4px 0 #000080',
+            }}
+          >
+            Apply Now →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   MAIN PAGE
+───────────────────────────────────────────── */
 export default function BrowseProjects({
   projects,
   currentUserId: _currentUserId,
@@ -18,324 +147,307 @@ export default function BrowseProjects({
   userApplications = [],
 }: BrowseProjectsProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
   const [skillsInput, setSkillsInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleApplyClick = (project: Project) => {
-    // Prevent opening modal if user has already applied
-    if (hasApplied(project.id)) {
-      console.log('User has already applied to this project');
-      return;
-    }
+  const hasApplied = (id: string) => userApplications.includes(id);
 
+  const handleApplyClick = (project: Project) => {
+    if (hasApplied(project.id)) return;
     setSelectedProject(project);
-    setShowApplicationModal(true);
+    setShowModal(true);
     setCoverLetter('');
     setSkillsInput('');
     setError('');
   };
 
   const handleCloseModal = () => {
-    setShowApplicationModal(false);
+    setShowModal(false);
     setSelectedProject(null);
     setCoverLetter('');
     setSkillsInput('');
     setError('');
   };
 
-  const handleSubmitApplication = async () => {
+  const handleSubmit = async () => {
     if (!selectedProject) return;
-
-    // Double-check if user has already applied
-    if (hasApplied(selectedProject.id)) {
-      setError('You have already applied to this project');
-      return;
-    }
-
-    // Validation
-    if (!coverLetter.trim()) {
-      setError('Cover letter is required');
-      return;
-    }
-
-    if (coverLetter.trim().length < 50) {
-      setError('Cover letter must be at least 50 characters');
-      return;
-    }
+    if (hasApplied(selectedProject.id)) { setError('You have already applied to this project'); return; }
+    if (!coverLetter.trim()) { setError('Cover letter is required'); return; }
+    if (coverLetter.trim().length < 50) { setError('Cover letter must be at least 50 characters'); return; }
 
     setIsSubmitting(true);
     setError('');
-
     try {
-      const skills = skillsInput
-        .split(',')
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-
+      const skills = skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
       await onApply(selectedProject.id, coverLetter, skills);
       handleCloseModal();
-    } catch (error) {
-      console.error('Failed to submit application:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to submit application';
-      setError(errorMessage);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to submit application');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const formatDate = (date: Date | string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  const getTimelineDisplay = (timeline: string | { startDate: Date | string; endDate: Date | string } | null) => {
-    if (!timeline) return 'Not specified';
-    if (typeof timeline === 'string') return timeline;
-    return `${formatDate(timeline.startDate)} - ${formatDate(timeline.endDate)}`;
-  };
-
-  const hasApplied = (projectId: string) => {
-    return userApplications.includes(projectId);
-  };
+  const charCount = coverLetter.trim().length;
+  const charOk = charCount >= 50;
 
   return (
     <div className="min-h-screen bg-dreamxec-cream relative overflow-hidden">
-      {/* Decorative background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <StarDecoration className="absolute top-20 left-10 w-12 h-12 text-dreamxec-saffron opacity-20 animate-spin-slow" />
-        <StarDecoration className="absolute top-40 right-20 w-16 h-16 text-dreamxec-green opacity-15 animate-bounce-slow" />
-        <StarDecoration className="absolute bottom-32 left-1/4 w-10 h-10 text-dreamxec-orange opacity-25" />
 
-        <img
-          src="https://c.animaapp.com/mhd6hm18SGcCN3/assets/image-28.svg"
-          alt="Decorative"
-          className="absolute top-10 right-10 w-24 h-24 opacity-10 animate-float"
-        />
-        <img
-          src="https://c.animaapp.com/mhd6hm18SGcCN3/assets/image-30.svg"
-          alt="Decorative"
-          className="absolute bottom-10 left-10 w-32 h-32 opacity-10 animate-float-delayed"
-        />
+      {/* Decorative raw shapes */}
+      <div className="fixed top-28 left-6 pointer-events-none opacity-10">
+        <div className="w-12 h-12 border-4 border-dreamxec-orange rotate-12" />
+      </div>
+      <div className="fixed bottom-32 right-8 pointer-events-none opacity-10">
+        <div className="w-10 h-10 bg-dreamxec-green rotate-45" />
+      </div>
+      <div className="fixed top-1/2 left-10 pointer-events-none opacity-8">
+        <div className="w-5 h-5 bg-dreamxec-navy" />
       </div>
 
-      {/* Main content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold text-dreamxec-navy font-display mb-4">
-            Browse Projects 🚀
-          </h1>
-          <p className="text-xl text-dreamxec-navy font-sans opacity-80 mb-2">
-            Find exciting project opportunities from companies and donors
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 md:py-12">
+
+        {/* ── HEADER ── */}
+        <div className="mb-8 sm:mb-10 md:mb-12">
+          {/* Eyebrow */}
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-white"
+            style={{ background: '#000080', border: '2px solid #000080' }}
+          >
+            🚀 DreamXec Opportunities
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-5">
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl font-black text-dreamxec-navy uppercase tracking-tight leading-none"
+            >
+              Explore{' '}
+              <span
+                className="inline-block px-2"
+                style={{ background: '#FF7F00', color: '#000080' }}
+              >
+                Opportunities
+              </span>
+            </h1>
+
+            {userApplications.length > 0 && (
+              <div
+                className="inline-flex items-center gap-2 px-3 py-2 self-start sm:self-auto"
+                style={{ border: '3px solid #FF7F00', background: '#fff7ed', boxShadow: '3px 3px 0 #FF7F00' }}
+              >
+                <span className="text-sm">📝</span>
+                <span className="text-xs font-black text-dreamxec-orange uppercase tracking-wide">
+                  {userApplications.length} Applied
+                </span>
+              </div>
+            )}
+          </div>
+
+          <p className="mt-3 text-sm sm:text-base text-dreamxec-navy/60 font-bold max-w-xl">
+            Find exciting project opportunities from companies and donors.
           </p>
-          {userApplications.length > 0 && (
-            <p className="text-dreamxec-orange font-bold font-sans text-lg">
-              📝 You have applied to {userApplications.length} project{userApplications.length !== 1 ? 's' : ''}
-            </p>
+
+          {/* Count strip */}
+          {projects.length > 0 && (
+            <div className="mt-5 flex items-center gap-3">
+              <span className="text-xs font-black text-dreamxec-navy/50 uppercase tracking-widest">Showing</span>
+              <span
+                className="px-3 py-1.5 text-xs font-black text-white uppercase tracking-wide"
+                style={{ background: '#FF7F00', border: '2px solid #000080' }}
+              >
+                {projects.length} Project{projects.length !== 1 ? 's' : ''}
+              </span>
+            </div>
           )}
         </div>
 
-        {/* Projects grid */}
+        {/* ── EMPTY STATE ── */}
         {projects.length === 0 ? (
-          <div className="card-pastel-offwhite rounded-2xl border-5 border-dreamxec-navy p-12 shadow-pastel-card text-center max-w-2xl mx-auto">
-            <div className="card-tricolor-tag"></div>
-            <div className="text-6xl mb-4">📦</div>
-            <h2 className="text-3xl font-bold text-dreamxec-navy font-display mb-4">
-              No Projects Available
+          <div
+            className="py-16 sm:py-20 text-center bg-white max-w-lg mx-auto"
+            style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00' }}
+          >
+            <div className="flex h-2 mb-8">
+              <div className="flex-1 bg-[#FF7F00]" />
+              <div className="flex-1 bg-[#fff] border-y-2 border-[#000080]" />
+              <div className="flex-1 bg-[#0B9C2C]" />
+            </div>
+            <div className="text-5xl mb-4">📦</div>
+            <h2 className="text-2xl sm:text-3xl font-black text-dreamxec-navy uppercase tracking-tight mb-3">
+              No Projects Yet
             </h2>
-            <p className="text-dreamxec-navy font-sans text-lg">
+            <p className="text-dreamxec-navy/60 font-bold text-sm px-6">
               There are no projects available at the moment. Check back soon!
             </p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => {
-              const applied = hasApplied(project.id);
-
-              return (
-                <div
-                  key={project.id}
-                  className="card-pastel-offwhite rounded-2xl border-5 border-dreamxec-navy p-6 shadow-pastel-card hover:shadow-pastel-saffron transition-all duration-300"
-                >
-                  <div className="card-tricolor-tag"></div>
-
-                  {/* Project info */}
-                  <h3 className="text-2xl font-bold text-dreamxec-navy font-display mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-dreamxec-orange font-bold font-sans mb-3 text-lg">
-                    🏢 {project.companyName}
-                  </p>
-                  <p className="text-dreamxec-navy font-sans mb-4 line-clamp-4">
-                    {project.description}
-                  </p>
-
-                  {/* Skills */}
-                  <div className="mb-4">
-                    <p className="text-dreamxec-navy font-bold font-sans text-sm mb-2">
-                      Skills Required:
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.skillsRequired.map((skill, index) => (
-                        <span
-                          key={index}
-                          className="px-3 py-1 bg-dreamxec-green/20 border-2 border-dreamxec-navy rounded-full text-dreamxec-navy font-sans text-sm font-bold"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Timeline */}
-                  <div className="mb-4 p-3 bg-dreamxec-beige/50 border-2 border-dreamxec-navy rounded-lg">
-                    <p className="text-dreamxec-navy font-sans text-sm">
-                      <strong>📅 Timeline:</strong>
-                    </p>
-                    <p className="text-dreamxec-navy font-sans text-sm">
-                      {getTimelineDisplay(project.timeline)}
-                    </p>
-                  </div>
-
-                  {/* Applications count */}
-                  <div className="mb-4 text-dreamxec-navy font-sans text-sm opacity-70">
-                    <p>👥 {project.interestedUsers?.length ?? 0} student(s) applied</p>
-                  </div>
-
-                  {/* Apply button */}
-                  {applied ? (
-                    <button
-                      disabled
-                      className="w-full px-4 py-3 bg-dreamxec-beige border-3 border-dreamxec-navy rounded-xl font-bold text-dreamxec-navy font-display cursor-not-allowed opacity-60"
-                    >
-                      ✓ Already Applied
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleApplyClick(project)}
-                      className="w-full px-4 py-3 bg-dreamxec-green border-3 border-dreamxec-navy rounded-xl font-bold text-white font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-card"
-                    >
-                      Apply Now
-                    </button>
-                  )}
-                </div>
-              );
-            })}
+          /* ── GRID ── */
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
+            {projects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+                applied={hasApplied(project.id)}
+                onApply={handleApplyClick}
+              />
+            ))}
           </div>
         )}
       </div>
 
-      {/* Application Modal */}
-      {showApplicationModal && selectedProject && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
-          <div className="card-pastel-offwhite rounded-2xl border-5 border-dreamxec-navy max-w-2xl w-full max-h-[95vh] overflow-y-auto shadow-pastel-saffron mx-2 sm:mx-4">
-            <div className="card-tricolor-tag"></div>
-
+      {/* ════════════════════════════════
+          APPLICATION MODAL
+      ════════════════════════════════ */}
+      {showModal && selectedProject && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6"
+          style={{ background: 'rgba(0,0,0,0.75)' }}
+          onClick={e => { if (e.target === e.currentTarget) handleCloseModal(); }}
+        >
+          <div
+            className="bg-white w-full max-w-2xl max-h-[92vh] overflow-y-auto"
+            style={{ border: '4px solid #000080', boxShadow: '10px 10px 0 #FF7F00' }}
+          >
             {/* Modal header */}
-            <div className="p-4 sm:p-6 border-b-4 border-dreamxec-navy bg-dreamxec-beige">
-              <div className="flex justify-between items-start">
-                <div className="flex-1 pr-2">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-dreamxec-navy font-display mb-2">
-                    Apply to Project
-                  </h2>
-                  <p className="text-dreamxec-orange font-bold font-sans text-sm sm:text-base lg:text-lg">
-                    {selectedProject.title}
-                  </p>
-                  <p className="text-dreamxec-navy font-sans text-xs sm:text-sm">
-                    {selectedProject.companyName}
-                  </p>
-                </div>
-                <button
-                  onClick={handleCloseModal}
-                  className="text-dreamxec-navy hover:text-dreamxec-orange transition-colors flex-shrink-0"
-                >
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+            <div className="flex items-stretch" style={{ borderBottom: '3px solid #000080' }}>
+              {/* Accent stripe */}
+              <div className="w-2.5 bg-[#FF7F00] flex-shrink-0" />
+
+              <div className="flex-1 px-4 sm:px-5 py-3 sm:py-4">
+                <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-[0.2em] mb-0.5">
+                  Apply to Project
+                </p>
+                <h2 className="text-base sm:text-lg md:text-xl font-black text-dreamxec-navy uppercase tracking-tight leading-snug break-words pr-2">
+                  {selectedProject.title}
+                </h2>
+                <p className="text-xs font-bold text-dreamxec-orange mt-0.5 uppercase tracking-wide">
+                  {selectedProject.companyName}
+                </p>
               </div>
+
+              <button
+                onClick={handleCloseModal}
+                className="flex-shrink-0 w-12 sm:w-14 flex items-center justify-center font-black text-white text-lg transition-colors hover:opacity-80"
+                style={{ background: '#000080', borderLeft: '3px solid #000080' }}
+                aria-label="Close"
+              >
+                ✕
+              </button>
             </div>
 
-            {/* Modal body */}
-            <div className="p-4 sm:p-6">
+            <div className="p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5">
+
+              {/* Error */}
               {error && (
-                <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-red-100 border-3 border-red-500 rounded-xl">
-                  <p className="text-red-700 font-sans font-bold text-sm sm:text-base">{error}</p>
+                <div
+                  className="p-3 flex items-center gap-2 text-red-700 font-bold text-xs sm:text-sm"
+                  style={{ border: '3px solid #dc2626', background: '#fef2f2', boxShadow: '3px 3px 0 #dc2626' }}
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 8v4m0 4h.01" />
+                  </svg>
+                  {error}
                 </div>
               )}
 
-              <div className="mb-4 sm:mb-6">
-                <label htmlFor="coverLetter" className="block text-dreamxec-navy font-bold font-sans text-base sm:text-lg mb-2">
-                  Cover Letter * <span className="text-xs sm:text-sm font-normal opacity-70">(min. 50 characters)</span>
-                </label>
+              {/* Cover Letter */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-black text-dreamxec-navy uppercase tracking-widest">
+                    Cover Letter <span className="text-red-600">*</span>
+                  </label>
+                  <span
+                    className={`text-[10px] font-black px-2 py-0.5 ${charOk
+                      ? 'text-green-700 bg-green-50'
+                      : 'text-dreamxec-orange bg-orange-50'
+                      }`}
+                    style={{ border: `2px solid ${charOk ? '#0B9C2C' : '#FF7F00'}` }}
+                  >
+                    {charCount}/50 min
+                  </span>
+                </div>
                 <textarea
-                  id="coverLetter"
                   value={coverLetter}
-                  onChange={(e) => {
-                    setCoverLetter(e.target.value);
-                    setError('');
-                  }}
-                  placeholder="Tell the company why you're a good fit for this project, your relevant skills, and what you hope to contribute..."
+                  onChange={e => { setCoverLetter(e.target.value); setError(''); }}
+                  placeholder="Tell the company why you're a good fit for this project, your relevant experience, and what you hope to contribute..."
                   rows={6}
-                  minLength={50}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-dreamxec-navy rounded-xl font-sans text-dreamxec-navy text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all resize-none"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium text-dreamxec-navy bg-white resize-none focus:outline-none transition-all"
+                  style={{
+                    border: `3px solid ${charOk ? '#0B9C2C' : '#000080'}`,
+                    boxShadow: `3px 3px 0 ${charOk ? '#0B9C2C' : '#FF7F00'}`,
+                  }}
                 />
-                <p className="mt-1 text-xs sm:text-sm text-dreamxec-navy opacity-60 font-sans">
-                  {coverLetter.length}/50 characters minimum
-                </p>
               </div>
 
-              <div className="mb-4 sm:mb-6">
-                <label htmlFor="skills" className="block text-dreamxec-navy font-bold font-sans text-base sm:text-lg mb-2">
-                  Your Skills <span className="text-xs sm:text-sm font-normal opacity-70">(optional)</span>
+              {/* Skills */}
+              <div>
+                <label className="block text-xs font-black text-dreamxec-navy uppercase tracking-widest mb-2">
+                  Your Skills <span className="text-dreamxec-navy/40 normal-case font-bold text-[10px]">(optional, comma-separated)</span>
                 </label>
                 <input
                   type="text"
-                  id="skills"
                   value={skillsInput}
-                  onChange={(e) => setSkillsInput(e.target.value)}
-                  placeholder="e.g., Teaching, Mentoring, Communication (comma-separated)"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-dreamxec-navy rounded-xl font-sans text-dreamxec-navy text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-dreamxec-orange/30 transition-all"
+                  onChange={e => setSkillsInput(e.target.value)}
+                  placeholder="e.g., Teaching, Mentoring, Communication"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium text-dreamxec-navy bg-white focus:outline-none transition-all"
+                  style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #0B9C2C' }}
                 />
               </div>
 
-              {/* Project details recap */}
-              <div className="bg-dreamxec-cream/50 border-3 border-dreamxec-navy rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-                <h4 className="font-bold text-dreamxec-navy font-sans mb-2 text-sm sm:text-base">Project Summary:</h4>
-                <p className="text-dreamxec-navy font-sans text-xs sm:text-sm mb-2">
-                  <strong>Skills Required:</strong> {selectedProject.skillsRequired.join(', ')}
+              {/* Project recap */}
+              <div
+                className="p-3 sm:p-4"
+                style={{ border: '2px dashed #000080', background: '#f9fafb' }}
+              >
+                <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest mb-2">Project Summary</p>
+                <p className="text-xs sm:text-sm font-bold text-dreamxec-navy mb-1">
+                  <span className="text-dreamxec-navy/50">Skills:</span>{' '}
+                  {selectedProject.skillsRequired.join(', ')}
                 </p>
-                <p className="text-dreamxec-navy font-sans text-xs sm:text-sm">
-                  <strong>Timeline:</strong> {getTimelineDisplay(selectedProject.timeline)}
+                <p className="text-xs sm:text-sm font-bold text-dreamxec-navy">
+                  <span className="text-dreamxec-navy/50">Timeline:</span>{' '}
+                  {getTimelineDisplay(selectedProject.timeline)}
                 </p>
               </div>
 
               {/* Action buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-1">
                 <button
                   onClick={handleCloseModal}
-                  className="w-full sm:flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-cream border-2 border-dreamxec-navy rounded-xl font-bold text-dreamxec-navy font-display hover:bg-dreamxec-beige transition-all text-sm sm:text-base"
+                  className="flex-1 py-2.5 sm:py-3 font-black text-dreamxec-navy text-xs sm:text-sm uppercase tracking-widest transition-all hover:bg-dreamxec-navy hover:text-white"
+                  style={{ border: '3px solid #000080', background: '#fff', boxShadow: '3px 3px 0 #000080' }}
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleSubmitApplication}
-                  disabled={isSubmitting || coverLetter.trim().length < 50}
-                  className="w-full sm:flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-dreamxec-green border-2 border-dreamxec-navy rounded-xl font-bold text-white font-display hover:bg-dreamxec-orange hover:scale-105 transition-all shadow-pastel-saffron disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm sm:text-base"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting || !charOk}
+                  className="flex-1 py-2.5 sm:py-3 font-black text-white text-xs sm:text-sm uppercase tracking-widest transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{
+                    background: !charOk || isSubmitting ? '#9ca3af' : 'linear-gradient(135deg, #0B9C2C, #16a34a)',
+                    border: '3px solid #000080',
+                    boxShadow: charOk && !isSubmitting ? '4px 4px 0 #000080' : 'none',
+                  }}
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                  {isSubmitting ? '⏳ Submitting...' : 'Submit Application →'}
                 </button>
               </div>
+            </div>
+
+            {/* Bottom tricolor bar */}
+            <div className="flex h-1.5">
+              <div className="flex-1 bg-[#FF7F00]" />
+              <div className="flex-1 bg-[#000080]" />
+              <div className="flex-1 bg-[#0B9C2C]" />
             </div>
           </div>
         </div>
       )}
+      <FooterContent />
     </div>
   );
 }

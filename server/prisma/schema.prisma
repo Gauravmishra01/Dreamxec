@@ -100,6 +100,9 @@ model User {
 
   // Relations
   userProjects        UserProject[]
+  milestoneSubmissions MilestoneSubmission[] @relation("MilestoneSubmitter")
+  reviewedMilestones MilestoneSubmission[] @relation("MilestoneReviewer")
+
   bankAccounts        BankAccount[]
   applications        Application[] // Applications to donor projects
   clubsPresided       Club[]               @relation("ClubPresident")
@@ -197,6 +200,8 @@ model UserProject {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments CampaignComment[] @relation("ProjectComments")
 
+  rating Float @default(5.0)
+
 
 
   clubId String? @db.ObjectId
@@ -211,6 +216,7 @@ model UserProject {
   withdrawals  Withdrawal[]
   wishlistedBy Wishlist[]
   milestones   Milestone[]
+  milestoneSubmissions MilestoneSubmission[]
 
   //admin notes
   adminNotes AdminNote[]
@@ -227,17 +233,27 @@ model UserProject {
 model Milestone {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  timeline    String
-  budget      Float
   description String?
+  budget      Float
+  durationDays Int?
 
-  //Verification fields
-  status        MilstoneStatus @default(PENDING)
-  proofUrl      String?
-  adminFeedback String?
-  approvedAt    DateTime?
+  // 🔥 NEW
+  order Int?
 
-  // Relation
+  status MilstoneStatus @default(PENDING)
+
+  activatedAt DateTime?
+  dueDate     DateTime?
+  approvedAt  DateTime?
+
+  // 🔥 Reminder & penalty tracking
+  reminder3Sent Boolean @default(false)
+  reminder1Sent Boolean @default(false)
+  overdueSent   Boolean @default(false)
+  ratingPenaltyDays Int @default(0)
+
+  submissions MilestoneSubmission[]
+
   projectId String      @db.ObjectId
   project   UserProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
@@ -245,7 +261,41 @@ model Milestone {
   updatedAt DateTime @updatedAt
 
   @@index([projectId])
+  @@index([projectId, order])
 }
+//----------------------------
+// MilestoneSubmission model
+//---------------------------
+model MilestoneSubmission {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  milestoneId String @db.ObjectId
+  milestone Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  projectId String @db.ObjectId
+  project UserProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  submittedBy String @db.ObjectId
+  user User @relation("MilestoneSubmitter", fields: [submittedBy], references: [id])
+
+  mediaUrl String?
+  proofUrl String?
+  notes String?
+  version Int
+
+  reviewedAt DateTime?
+  reviewedBy String? @db.ObjectId
+  reviewer User? @relation("MilestoneReviewer", fields: [reviewedBy], references: [id])
+
+  adminFeedback String?
+
+  createdAt DateTime @default(now())
+
+  @@index([milestoneId])
+  @@index([projectId])
+  @@index([submittedBy])
+}
+
 
 // -----------------------------
 // DONOR PROJECT MODEL

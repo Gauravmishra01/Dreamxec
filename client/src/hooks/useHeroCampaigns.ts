@@ -9,6 +9,11 @@ export type HeroCampaign = {
   raised: number;
   goal: number;
   image: string;
+  slug?: string;
+  club?: {
+    name?: string;
+    college?: string;
+  };
 };
 
 export function useHeroCampaigns() {

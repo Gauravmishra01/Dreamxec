@@ -18,6 +18,7 @@ export function addRecentCampaign(campaign: Campaign) {
       category: campaign.category,
       currentAmount: campaign.currentAmount,
       goalAmount: campaign.goalAmount,
+      club: campaign.club?.name || null,
     },
     ...existing.filter(c => c.id !== campaign.id),
   ].slice(0, MAX_ITEMS);

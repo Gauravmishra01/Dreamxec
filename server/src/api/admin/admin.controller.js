@@ -205,48 +205,103 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
   const { status, reason } = req.body;
 
   if (!['APPROVED', 'REJECTED'].includes(status)) {
-    return next(new AppError('Status must be either APPROVED or REJECTED', 400));
+    return next(
+      new AppError('Status must be either APPROVED or REJECTED', 400)
+    );
   }
 
-  const userProject = await prisma.userProject.findUnique({
+  const existingProject = await prisma.userProject.findUnique({
     where: { id: req.params.id },
     include: { user: { select: { email: true, name: true } } }
   });
 
-  if (!userProject) {
+  if (!existingProject) {
     return next(new AppError('User project not found', 404));
   }
 
-  // Update status and save rejection reason if rejected
+  // ------------------------------------------
+  // Prepare update data
+  // ------------------------------------------
   const updateData = { status };
 
-  if (status === 'REJECTED' && reason) {
-    updateData.rejectionReason = reason;
-  } else if (status === 'APPROVED') {
-    updateData.rejectionReason = null;
+  if (status === 'REJECTED') {
+    updateData.rejectionReason = reason || null;
   }
 
-  const updatedUserProject = await prisma.userProject.update({
-    where: { id: req.params.id },
-    data: updateData
-  });
+  if (status === 'APPROVED') {
+    updateData.rejectionReason = null;
+    updateData.rating = 5; // ✅ Initialize rating (0–5 scale)
+  }
 
-  // ✅ ADD THIS: Create Audit Log
-  await prisma.auditLog.create({
-    data: {
-      action: `USER_PROJECT_${status}`, // e.g., USER_PROJECT_APPROVED
-      entity: 'UserProject',
-      entityId: updatedUserProject.id,
-      performedBy: req.user.id,
-      details: {
-        title: updatedUserProject.title,
-        reason: reason || null
+  // ------------------------------------------
+  // TRANSACTION START
+  // ------------------------------------------
+  const updatedUserProject = await prisma.$transaction(async (tx) => {
+
+    const updatedProject = await tx.userProject.update({
+      where: { id: req.params.id },
+      data: updateData
+    });
+
+    // ------------------------------------------
+    // Activate first milestone on approval
+    // ------------------------------------------
+    if (status === 'APPROVED') {
+
+      const firstMilestone = await tx.milestone.findFirst({
+        where: { projectId: updatedProject.id },
+        orderBy: { order: 'asc' } // use order, not createdAt
+      });
+
+      if (firstMilestone && !firstMilestone.activatedAt) {
+
+        const now = new Date();
+
+        const dueDate = new Date();
+        dueDate.setDate(now.getDate() + firstMilestone.durationDays);
+
+        await tx.milestone.update({
+          where: { id: firstMilestone.id },
+          data: {
+            activatedAt: now,
+            dueDate,
+            status: 'PENDING',
+            reminder3Sent: false,
+            reminder1Sent: false,
+            overdueSent: false,
+            ratingPenaltyDays: 0
+          }
+        });
       }
     }
-  });
 
-  // Send email notification to project owner
-  if (userProject.user && userProject.user.email) {
+    // ------------------------------------------
+    // Audit log
+    // ------------------------------------------
+    await tx.auditLog.create({
+      data: {
+        action: `USER_PROJECT_${status}`,
+        entity: 'UserProject',
+        entityId: updatedProject.id,
+        performedBy: req.user.id,
+        details: {
+          title: updatedProject.title,
+          reason: reason || null
+        }
+      }
+    });
+
+    return updatedProject;
+  });
+  // ------------------------------------------
+  // TRANSACTION END
+  // ------------------------------------------
+
+  // ------------------------------------------
+  // Send email notification (outside tx)
+  // ------------------------------------------
+  if (existingProject.user?.email) {
+
     const eventName =
       status === 'APPROVED'
         ? EVENTS.CAMPAIGN_APPROVED
@@ -254,12 +309,12 @@ exports.verifyUserProject = catchAsync(async (req, res, next) => {
 
     try {
       await publishEvent(eventName, {
-        email: userProject.user.email,
-        name: userProject.user.name,
-        campaignTitle: userProject.title,
+        email: existingProject.user.email,
+        name: existingProject.user.name,
+        campaignTitle: existingProject.title,
         status,
         reason: reason || null,
-        campaignUrl: `${process.env.CLIENT_URL}/projects/${userProject.id}`
+        campaignUrl: `${process.env.CLIENT_URL}/projects/${existingProject.id}`
       });
     } catch (err) {
       console.error('Email error:', err);
@@ -851,7 +906,7 @@ exports.getAllMilestones = catchAsync(async (req, res, next) => {
 // ADMIN: Get all pending milestones (Submitted for review)
 exports.getPendingMilestones = catchAsync(async (req, res, next) => {
   const milestones = await prisma.milestone.findMany({
-    where: { status: 'SUBMITTED' }, // Only show milestones waiting for approval
+    where: { status: 'SUBMITTED' },
     include: {
       project: {
         select: {
@@ -859,6 +914,10 @@ exports.getPendingMilestones = catchAsync(async (req, res, next) => {
           title: true,
           user: { select: { name: true, email: true } }
         }
+      },
+      submissions: {
+        orderBy: { version: 'desc' },
+        take: 1
       }
     },
     orderBy: { updatedAt: 'desc' }
@@ -872,12 +931,14 @@ exports.getPendingMilestones = catchAsync(async (req, res, next) => {
 });
 
 
+
 // ADMIN: Verify Milestone (Approve/Reject)
+// ADMIN: Verify Milestone (Approve/Reject - Version Aware)
 exports.verifyMilestone = catchAsync(async (req, res, next) => {
   const { status, feedback } = req.body;
 
-  if (!['APPROVED', 'REJECTED'].includes(status)) {
-    return next(new AppError('Invalid status', 400));
+  if (!["APPROVED", "REJECTED"].includes(status)) {
+    return next(new AppError("Invalid status", 400));
   }
 
   const milestone = await prisma.milestone.findUnique({
@@ -885,34 +946,135 @@ exports.verifyMilestone = catchAsync(async (req, res, next) => {
     include: { project: true }
   });
 
-  if (!milestone) return next(new AppError('Milestone not found', 404));
+  if (!milestone) {
+    return next(new AppError("Milestone not found", 404));
+  }
 
-  const updateData = {
-    status,
-    adminFeedback: feedback || null,
-    approvedAt: status === 'APPROVED' ? new Date() : null
-  };
+  if (milestone.status !== "SUBMITTED") {
+    return next(new AppError("Milestone is not awaiting review", 400));
+  }
 
-  const updatedMilestone = await prisma.milestone.update({
-    where: { id: req.params.id },
-    data: updateData
-  });
+  const result = await prisma.$transaction(async (tx) => {
 
-  // Log Audit
-  await prisma.auditLog.create({
-    data: {
-      action: `MILESTONE_${status}`,
-      entity: 'Milestone',
-      entityId: milestone.id,
-      performedBy: req.user.id,
-      details: { project: milestone.project.title, feedback }
+    // 🔎 Get latest submission
+    const latestSubmission = await tx.milestoneSubmission.findFirst({
+      where: { milestoneId: milestone.id },
+      orderBy: { version: "desc" }
+    });
+
+    if (!latestSubmission) {
+      throw new AppError("No submission found for this milestone", 400);
     }
+
+    // ✅ Update submission review info
+    await tx.milestoneSubmission.update({
+      where: { id: latestSubmission.id },
+      data: {
+        reviewedAt: new Date(),
+        reviewedBy: req.user.id,
+        adminFeedback: feedback || null
+      }
+    });
+
+    // Normalize dates for safe comparison
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    let dueDate = null;
+    if (milestone.dueDate) {
+      dueDate = new Date(milestone.dueDate);
+      dueDate.setUTCHours(0, 0, 0, 0);
+    }
+
+    // ✅ Update milestone status
+    const updatedMilestone = await tx.milestone.update({
+      where: { id: milestone.id },
+      data: {
+        status,
+        adminFeedback: feedback || null,
+        approvedAt: status === "APPROVED" ? new Date() : null,
+        ratingPenaltyDays: 0 // reset penalty tracking on review
+      }
+    });
+
+    // ==========================================
+    // 🔥 IF APPROVED → reward + unlock next
+    // ==========================================
+    if (status === "APPROVED") {
+
+      // ⭐ Reward if approved on or before due date
+      if (dueDate && today <= dueDate) {
+
+        const project = await tx.userProject.findUnique({
+          where: { id: milestone.projectId }
+        });
+
+        const currentRating = project.rating ?? 5;
+
+        const newRating = Math.min(
+          5,
+          currentRating + 0.1
+        );
+
+        await tx.userProject.update({
+          where: { id: milestone.projectId },
+          data: { rating: newRating }
+        });
+      }
+
+      // 🔓 Unlock next milestone using ORDER
+      const nextMilestone = await tx.milestone.findFirst({
+        where: {
+          projectId: milestone.projectId,
+          order: milestone.order + 1
+        }
+      });
+
+      if (nextMilestone && !nextMilestone.activatedAt) {
+
+        const now = new Date();
+        const nextDueDate = new Date();
+        nextDueDate.setDate(now.getDate() + nextMilestone.durationDays);
+
+        await tx.milestone.update({
+          where: { id: nextMilestone.id },
+          data: {
+            activatedAt: now,
+            dueDate: nextDueDate,
+            status: "PENDING",
+            reminder3Sent: false,
+            reminder1Sent: false,
+            overdueSent: false,
+            ratingPenaltyDays: 0
+          }
+        });
+      }
+    }
+
+    // ==========================================
+    // 📝 Audit Log
+    // ==========================================
+    await tx.auditLog.create({
+      data: {
+        action: `MILESTONE_${status}`,
+        entity: "Milestone",
+        entityId: milestone.id,
+        performedBy: req.user.id,
+        details: {
+          project: milestone.project.title,
+          version: latestSubmission.version,
+          feedback
+        }
+      }
+    });
+
+    return updatedMilestone;
   });
 
-  // Notify User (Mock)
-  // sendEmail(milestone.project.userId, `Milestone ${status}`, ...)
-
-  res.status(200).json({ status: 'success', data: { milestone: updatedMilestone } });
+  res.status(200).json({
+    status: "success",
+    data: { milestone: result }
+  });
 });
 
 

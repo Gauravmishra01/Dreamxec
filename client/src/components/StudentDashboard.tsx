@@ -394,6 +394,20 @@ export default function StudentDashboard({
                             )}
                         </button>
 
+                        <button
+                            onClick={() => {
+                                setSelectedTab('milestones');
+                                setSidebarOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${selectedTab === 'milestones'
+                                    ? 'bg-orange-400 text-blue-900 shadow-lg'
+                                    : 'text-orange-100 hover:text-white hover:bg-blue-800'
+                                }`}
+                        >
+                            <ClockIcon className="w-5 h-5" />
+                            <span>Milestones</span>
+                        </button>
+
                         {isClubPresident && (
                             <button
                                 onClick={() => {
@@ -795,10 +809,10 @@ export default function StudentDashboard({
                                             >
                                                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
                                                     <div className="flex-1">
-                                                        <div className="flex items-center gap-3 mb-2">
+                                                        {/* <div className="flex items-center gap-3 mb-2">
                                                             <h3 className="text-base font-semibold text-blue-900">{campaign.title}</h3>
                                                             {getStatusBadge(campaign.status)}
-                                                        </div>
+                                                        </div> */}
                                                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
                                                             <div className="flex-1">
                                                                 <div className="flex items-center gap-3 mb-2">

@@ -5,12 +5,46 @@ import axios from "axios";
    TYPES
 ========================================================= */
 
+export type MilestoneStatus =
+  | "PENDING"
+  | "SUBMITTED"
+  | "APPROVED"
+  | "REJECTED";
+
+export interface MilestoneSubmission {
+  id: string;
+  milestoneId: string;
+  projectId: string;
+  proofUrl?: string;
+  mediaUrl?: string;
+  notes?: string;
+  version: number;
+  reviewedAt?: string;
+  adminFeedback?: string;
+  createdAt: string;
+}
+
 export interface Milestone {
-  id?: string;
+  id: string;
   title: string;
-  timeline: string;
-  budget: number;
   description?: string;
+
+  durationDays: number;
+  budget: number;
+  order: number;
+
+  status: MilestoneStatus;
+
+  activatedAt?: string;
+  dueDate?: string;
+  approvedAt?: string;
+
+  reminder3Sent?: boolean;
+  reminder1Sent?: boolean;
+  overdueSent?: boolean;
+  ratingPenaltyDays?: number;
+
+  submissions?: MilestoneSubmission[];
 }
 
 export interface TeamMember {
@@ -62,6 +96,8 @@ export interface UserProject {
   campaignMedia?: string[];
   presentationDeckUrl?: string | null;
 
+  rating?: number;
+
   rejectionReason?: string;
   reapprovalCount?: number;
   milestones?: any[];
@@ -72,6 +108,12 @@ export interface UserProject {
    CREATE PAYLOAD
 ========================================================= */
 
+export interface CreateMilestone {
+  title: string;
+  durationDays: number;
+  budget: number;
+  description?: string;
+}
 export interface CreateUserProjectData {
   title: string;
   description: string;
@@ -92,12 +134,19 @@ export interface CreateUserProjectData {
   faqs?: FAQ[];
   youtubeUrl?: string;
 
-  milestones: Milestone[];
+  milestones: CreateMilestone[];
 }
 
 /* =========================================================
    UPDATE PAYLOAD
 ========================================================= */
+
+export interface UpdateMilestone {
+  title: string;
+  durationDays: number;
+  budget: number;
+  description?: string;
+}
 
 export interface UpdateUserProjectData {
   title?: string;
@@ -124,7 +173,7 @@ export interface UpdateUserProjectData {
   faqs?: FAQ[];
   youtubeUrl?: string;
 
-  milestones?: Milestone[];
+  milestones?: UpdateMilestone[];
 }
 
 /* =========================================================

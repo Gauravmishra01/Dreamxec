@@ -232,12 +232,13 @@ exports.createUserProject = catchAsync(async (req, res, next) => {
     });
 
     await tx.milestone.createMany({
-      data: parsedMilestones.map((m) => ({
+      data: parsedMilestones.map((m, index) => ({
         title: m.title,
-        timeline: m.timeline,
+        durationDays: Number(m.durationDays),
         budget: Number(m.budget),
         description: m.description || null,
         projectId: createdProject.id,
+        order: index + 1
       })),
     });
 
@@ -318,12 +319,13 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
       });
 
       await tx.milestone.createMany({
-        data: parsedMilestones.map((m) => ({
+        data: parsedMilestones.map((m, index) => ({
           title: m.title,
-          timeline: m.timeline,
+          durationDays: Number(m.durationDays),
           budget: Number(m.budget),
           description: m.description || null,
-          projectId: project.id,
+          projectId: createdProject.id,
+          order: index + 1
         })),
       });
     }
@@ -333,12 +335,12 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
 
   // Publish Event
   if (updatedProject.status === 'APPROVED') {
-     await publishEvent(EVENTS.CAMPAIGN_UPDATE, {
-       email: req.user.email,
-       name: req.user.name,
-       campaignTitle: updatedProject.title,
-       campaignUrl: `${process.env.CLIENT_URL}/projects/${updatedProject.id}`
-     });
+    await publishEvent(EVENTS.CAMPAIGN_UPDATE, {
+      email: req.user.email,
+      name: req.user.name,
+      campaignTitle: updatedProject.title,
+      campaignUrl: `${process.env.CLIENT_URL}/projects/${updatedProject.id}`
+    });
   }
 
   res.status(200).json({
@@ -381,7 +383,15 @@ exports.getUserProject = catchAsync(async (req, res, next) => {
       where: { id: identifier },
       include: {
         club: { select: { id: true, name: true, college: true, slug: true } },
-        milestones: true,
+        milestones: {
+          orderBy: { order: 'asc' },
+          include: {
+            submissions: {
+              orderBy: { version: 'desc' },
+              take: 1
+            }
+          }
+        },
         user: { select: { id: true, name: true } },
         donations: {
           select: {
@@ -398,7 +408,15 @@ exports.getUserProject = catchAsync(async (req, res, next) => {
       where: { slug: identifier },
       include: {
         club: { select: { id: true, name: true, college: true } },
-        milestones: true,
+        milestones: {
+          orderBy: { order: 'asc' },
+          include: {
+            submissions: {
+              orderBy: { version: 'desc' },
+              take: 1
+            }
+          }
+        },
         user: { select: { id: true, name: true } },
         donations: {
           select: {
@@ -427,7 +445,15 @@ exports.getPublicUserProjects = catchAsync(async (req, res) => {
     where: { status: 'APPROVED' },
     include: {
       club: { select: { id: true, name: true, college: true } },
-      milestones: true,
+      milestones: {
+        orderBy: { order: 'asc' },
+        include: {
+          submissions: {
+            orderBy: { version: 'desc' },
+            take: 1
+          }
+        }
+      },
       user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },
     },
@@ -446,8 +472,15 @@ exports.getMyUserProjects = catchAsync(async (req, res) => {
     where: { userId: req.user.id },
     include: {
       club: { select: { id: true, name: true, college: true } },
-      milestones: true,
-      user: { select: { id: true, name: true } },
+      milestones: {
+        orderBy: { order: 'asc' },
+        include: {
+          submissions: {
+            orderBy: { version: 'desc' },
+            take: 1
+          }
+        }
+      }, user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },
     },
     orderBy: { createdAt: 'desc' },
@@ -497,5 +530,102 @@ exports.getStudentAnalytics = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: { analytics }
+  });
+});
+
+exports.submitMilestone = catchAsync(async (req, res, next) => {
+  const { milestoneId } = req.params;
+  const userId = req.user.id;
+  const { mediaUrl, proofUrl, notes } = req.body;
+
+  const milestone = await prisma.milestone.findUnique({
+    where: { id: milestoneId },
+    include: { project: true },
+  });
+
+  if (!milestone) {
+    return next(new AppError("Milestone not found", 404));
+  }
+
+  // 🔐 Ownership check
+  if (milestone.project.userId !== userId) {
+    return next(new AppError("Unauthorized", 403));
+  }
+
+  // ❌ Prevent submission before activation
+  if (!milestone.activatedAt) {
+    return next(new AppError("Milestone is not active yet", 400));
+  }
+
+  // ❌ Prevent submission after approval
+  if (milestone.status === "APPROVED") {
+    return next(new AppError("Milestone already completed", 400));
+  }
+
+  // ❌ Only allow PENDING or REJECTED
+  if (!["PENDING", "REJECTED"].includes(milestone.status)) {
+    return next(
+      new AppError("Milestone cannot be submitted in current state", 400)
+    );
+  }
+
+  // 🔁 Enforce sequential approval using ORDER
+  if (milestone.order > 1) {
+    const previousMilestone = await prisma.milestone.findFirst({
+      where: {
+        projectId: milestone.projectId,
+        order: milestone.order - 1,
+      },
+    });
+
+    if (previousMilestone && previousMilestone.status !== "APPROVED") {
+      return next(
+        new AppError("Previous milestone must be approved first", 400)
+      );
+    }
+  }
+
+  // 🔥 Wrap submission + status update in transaction
+  const submission = await prisma.$transaction(async (tx) => {
+
+    // Get latest version
+    const lastSubmission = await tx.milestoneSubmission.findFirst({
+      where: { milestoneId },
+      orderBy: { version: "desc" },
+    });
+
+    const nextVersion = lastSubmission ? lastSubmission.version + 1 : 1;
+
+    const createdSubmission = await tx.milestoneSubmission.create({
+      data: {
+        milestoneId,
+        projectId: milestone.projectId,
+        submittedBy: userId,
+        mediaUrl: mediaUrl || null,
+        proofUrl: proofUrl || null,
+        notes: notes || null,
+        version: nextVersion,
+      },
+    });
+
+    // Update milestone status
+    await tx.milestone.update({
+      where: { id: milestoneId },
+      data: {
+        status: "SUBMITTED",
+        adminFeedback: null,
+        reminder3Sent: false,
+        reminder1Sent: false,
+        overdueSent: false
+      },
+    });
+
+    return createdSubmission;
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Milestone submitted successfully",
+    data: { submission },
   });
 });

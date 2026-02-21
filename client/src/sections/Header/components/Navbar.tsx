@@ -278,7 +278,7 @@
 
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../../../components/Logo";
 import { MobileMenuButton } from "../../../components/MobileMenuButton";
 import { DesktopMenu } from "./DesktopMenu";
@@ -327,7 +327,7 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
-              
+
             </button>
           </div>
 
@@ -462,12 +462,19 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
                     >
                       CAMPAIGNS
                     </a>
+                    <Link
+                      to="/clubs"
+                      className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
+                    >
+                      CLUBS
+                    </Link>
                     <a
                       href="/projects"
                       className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
                     >
                       OPPORTUNITIES
                     </a>
+
                   </>
                 )}
 
@@ -481,16 +488,22 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
                       DASHBOARD
                     </a>
                     <a
-                      href="/projects"
-                      className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
-                    >
-                      OPPORTUNITIES
-                    </a>
-                    <a
                       href="/campaigns"
                       className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
                     >
                       CAMPAIGNS
+                    </a>
+                    <Link
+                      to="/clubs"
+                      className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
+                    >
+                      CLUBS
+                    </Link>
+                    <a
+                      href="/projects"
+                      className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
+                    >
+                      OPPORTUNITIES
                     </a>
                   </>
                 )}
@@ -528,6 +541,12 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
                     >
                       CAMPAIGNS
                     </a>
+                    <Link
+                      to="/clubs"
+                      className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
+                    >
+                      CLUBS
+                    </Link>
                   </>
                 )}
 
@@ -563,6 +582,12 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
                 >
                   CAMPAIGNS
                 </a>
+                <Link
+                  to="/clubs"
+                  className="text-left px-4 py-3 text-dreamxec-navy hover:bg-dreamxec-cream hover:text-dreamxec-orange font-bold transition-colors rounded-lg font-display border-2 border-transparent hover:border-dreamxec-navy"
+                >
+                  CLUBS
+                </Link>
 
                 {/* Sign In Button for Mobile */}
                 <button

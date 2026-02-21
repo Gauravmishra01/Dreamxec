@@ -30,7 +30,11 @@ const youtubeRegex =
 
 const milestoneSchema = zod.object({
   title: zod.string().min(3).max(100),
-  timeline: zod.string().min(1).max(100),
+
+  durationDays: zod.preprocess(
+    (v) => (typeof v === "string" ? parseInt(v) : v),
+    zod.number().int().positive().max(365)
+  ),
 
   budget: zod.preprocess(
     (v) => (typeof v === "string" ? parseFloat(v) : v),
@@ -208,7 +212,7 @@ const createUserProjectSchema = zod.object({
       /* Duplicate milestone titles */
       /* ------------------ */
 
-      const titles = Array.isArray(data.milestones) 
+      const titles = Array.isArray(data.milestones)
         ? data.milestones.map((m) => m.title.toLowerCase())
         : [];
 
@@ -242,6 +246,24 @@ const createUserProjectSchema = zod.object({
     }),
 });
 
+/* =====================================================
+   SUBMIT MILESTONE SCHEMA
+===================================================== */
+
+const submitMilestoneSchema = zod.object({
+  body: zod.object({
+    proofUrl: zod.string().url().optional(),
+    mediaUrl: zod.string().url().optional(),
+    notes: zod.string().max(2000).optional(),
+  }).refine(
+    (data) => data.proofUrl || data.mediaUrl,
+    {
+      message: "At least one proof link (Drive or YouTube) is required",
+    }
+  ),
+});
+
 module.exports = {
   createUserProjectSchema,
+  submitMilestoneSchema,
 };

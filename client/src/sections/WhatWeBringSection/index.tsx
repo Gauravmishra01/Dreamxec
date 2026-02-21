@@ -26,12 +26,35 @@ export const WhatWeBringSection = () => {
   return (
     <div className="w-full py-16 px-4">
       <div className="max-w-7xl mx-auto text-center">
-        {/* Main Headline */}
-        <h1
-          className="text-center text-dreamxec-berkeley-blue text-4xl md:text-7xl font-extrabold mb-8"
-        >
-          Why 95% of Student Projects Die in College Labs
-        </h1>
+         <div className="flex justify-center mb-4">
+            <span
+              className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white"
+              style={{ background: '#000080', border: '2px solid #000080' }}
+            >
+              ★ DreamXec Insight
+            </span>
+          </div>
+         {/* Main heading with stamp highlight */}
+          <h2 className="font-black leading-tight mb-3">
+            <span className="block text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-dreamxec-navy uppercase tracking-tight">
+              Why 95% of Student Projects 
+            </span>
+            <span className="block mt-1 sm:mt-2">
+              <span className="relative inline-block">
+                <span
+                  className="absolute inset-0 translate-x-[4px] translate-y-[4px] sm:translate-x-[6px] sm:translate-y-[6px]"
+                  style={{ background: '#0B9C2C' }}
+                  aria-hidden
+                />
+                <span
+                  className="relative z-10 inline-block px-3 sm:px-5 py-1 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight"
+                  style={{ background: '#000080', border: '3px solid #000080' }}
+                >
+                  Die in College Labs
+                </span>
+              </span>
+            </span>
+          </h2>
 
         {/* Carousel with Whiteboard Cards */}
         <Swiper

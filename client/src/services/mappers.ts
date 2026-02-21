@@ -9,13 +9,7 @@ import type { DonorProject } from './donorProjectService';
    Shared Types
 ========================================================= */
 
-export type Milestone = {
-  id?: string;
-  title: string;
-  timeline: string;
-  budget: number;
-  description?: string;
-};
+
 
 /* =========================================================
    Role Mapping
@@ -107,24 +101,26 @@ export const mapUserProjectToCampaign = (
     title: userProject.title,
     description: userProject.description,
 
-    // user: userProject.user,
-
     clubId: userProject.clubId,
     club: userProject.club
       ? {
-        id: userProject.club.id,
-        name: userProject.club.name,
-        college: userProject.club.college,
-        slug: userProject.club.slug,
-      }
+          id: userProject.club.id,
+          name: userProject.club.name,
+          college: userProject.club.college,
+          slug: userProject.club.slug,
+        }
       : undefined,
 
     goalAmount: userProject.goalAmount,
     currentAmount: userProject.amountRaised || 0,
-    userId: userProject.userId,
-    status: mapBackendStatus(userProject.status),
-    createdAt: new Date(userProject.createdAt),
 
+    rating: userProject.rating ?? 5, // ⭐ DEFAULT SAFE
+
+    userId: userProject.userId,
+
+    status: mapBackendStatus(userProject.status), // KEEP UPPERCASE
+
+    createdAt: new Date(userProject.createdAt),
 
     campaignType: userProject.campaignType || "INDIVIDUAL",
     teamMembers: userProject.teamMembers || [],
@@ -136,10 +132,23 @@ export const mapUserProjectToCampaign = (
     presentationDeckUrl: userProject.presentationDeckUrl || null,
 
     rejectionReason: userProject.rejectionReason,
-    milestones: userProject.milestones || [],
+
+    milestones:
+      userProject.milestones?.map((m) => ({
+        id: m.id,
+        title: m.title,
+        description: m.description,
+        durationDays: m.durationDays,
+        budget: m.budget,
+        order: m.order,
+        status: m.status,
+        activatedAt: m.activatedAt,
+        dueDate: m.dueDate,
+        approvedAt: m.approvedAt,
+        submissions: m.submissions || [],
+      })) || [],
   };
 };
-
 
 /* =========================================================
    DonorProject (Backend) → Project (Frontend)

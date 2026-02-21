@@ -9,6 +9,7 @@ const {
   getPublicUserProjects,
   getMyUserProjects,
   getStudentAnalytics,
+  submitMilestone,
 } = require('./user-project.controller');
 
 const { protect, restrictTo } = require('../../middleware/auth.middleware');
@@ -16,6 +17,7 @@ const validate = require('../../middleware/validate.middleware');
 const {
   createUserProjectSchema,
   updateUserProjectSchema,
+  submitMilestoneSchema,
 } = require('./user-project.validation');
 
 // 🟢 Import the new middleware
@@ -80,5 +82,15 @@ router.delete(
   validateCampaignEligibility,
   deleteUserProject
 );
+
+router.patch(
+  "/milestones/:milestoneId/submit",
+  protect,
+  restrictTo('USER', 'STUDENT_PRESIDENT'),
+  validate(submitMilestoneSchema),
+  submitMilestone
+);
+
+
 
 module.exports = router;
