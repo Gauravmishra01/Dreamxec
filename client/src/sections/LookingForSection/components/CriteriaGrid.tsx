@@ -25,8 +25,8 @@ const criteria = [
     title: "Gurukul Spirit",
     text: "Like ancient Gurukuls where teachers and students co-created knowledge, DreamXec connects generations — alumni mentoring students, corporates enabling research.",
     icon: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg",
-    shadow: "#000080",
-    stripe: "#000080",
+    shadow: "#003366",
+    stripe: "#003366",
     num: "03",
   },
   {
@@ -49,8 +49,8 @@ const criteria = [
     title: "Community First",
     text: "Students aren't 'users,' donors aren't 'customers'—we're all stakeholders in India's future.",
     icon: "/assets/icon-pack/DX-ILLUSTRATION-PACK/20.svg",
-    shadow: "#000080",
-    stripe: "#000080",
+    shadow: "#003366",
+    stripe: "#003366",
     num: "06",
   },
 ];
@@ -67,7 +67,7 @@ export const CriteriaGrid = () => {
           <div className="flex justify-center mb-4">
             <span
               className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white"
-              style={{ background: '#000080', border: '2px solid #000080' }}
+              style={{ background: '#003366', border: '2px solid #003366' }}
             >
               ★ DreamXec Principles
             </span>
@@ -87,7 +87,7 @@ export const CriteriaGrid = () => {
                 />
                 <span
                   className="relative z-10 inline-block px-3 sm:px-5 py-1 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight"
-                  style={{ background: '#000080', border: '3px solid #000080' }}
+                  style={{ background: '#003366', border: '3px solid #003366' }}
                 >
                   & Principles
                 </span>
@@ -97,7 +97,7 @@ export const CriteriaGrid = () => {
 
           <p
             className="inline-block mt-5 sm:mt-6 px-4 sm:px-5 py-2 text-xs sm:text-sm md:text-base font-black text-dreamxec-navy uppercase tracking-wide"
-            style={{ border: '2px dashed #000080', background: '#fff7ed' }}
+            style={{ border: '2px dashed #003366', background: '#fff7ed' }}
           >
             We seek students and young professionals whose projects embody these principles
           </p>
@@ -125,7 +125,7 @@ export const CriteriaGrid = () => {
               <div
                 className="bg-white flex flex-col h-full transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
                 style={{
-                  border: '3px solid #000080',
+                  border: '3px solid #003366',
                   boxShadow: `6px 6px 0 ${item.shadow}`,
                 }}
               >
@@ -140,7 +140,7 @@ export const CriteriaGrid = () => {
                     {/* Number badge */}
                     <div
                       className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center font-black text-white text-xs sm:text-sm mb-3 flex-shrink-0"
-                      style={{ background: item.stripe, border: '2px solid #000080' }}
+                      style={{ background: item.stripe, border: '2px solid #003366' }}
                     >
                       {item.num}
                     </div>
@@ -188,9 +188,9 @@ export const CriteriaGrid = () => {
             width: 36px;
             height: 36px;
             background: #fff;
-            border: 3px solid #000080;
+            border: 3px solid #003366;
             box-shadow: 3px 3px 0 #FF7F00;
-            color: #000080;
+            color: #003366;
             border-radius: 0;
             top: 45%;
           }
@@ -201,7 +201,7 @@ export const CriteriaGrid = () => {
           }
           .criteria-carousel .swiper-button-next:hover,
           .criteria-carousel .swiper-button-prev:hover {
-            background: #000080;
+            background: #003366;
             color: #fff;
             transform: translate(-1px, -1px);
           }
@@ -209,13 +209,13 @@ export const CriteriaGrid = () => {
             width: 10px;
             height: 10px;
             background: #fff;
-            border: 2px solid #000080;
+            border: 2px solid #003366;
             border-radius: 0;
             opacity: 1;
           }
           .criteria-carousel .swiper-pagination-bullet-active {
             background: #FF7F00;
-            border-color: #000080;
+            border-color: #003366;
             transform: scale(1.2);
           }
           .criteria-carousel .swiper-pagination {

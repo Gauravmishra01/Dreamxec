@@ -169,7 +169,7 @@ module.exports = {
           "4px 4px 0px #FF7F00, 8px 8px 0px rgba(255, 127, 0, 0.3)",
         "pastel-green":
           "4px 4px 0px #0B9C2C, 8px 8px 0px rgba(11, 156, 44, 0.3)",
-        "pastel-navy": "4px 4px 0px #000080, 8px 8px 0px rgba(0, 0, 128, 0.3)",
+        "pastel-navy": "4px 4px 0px #003366, 8px 8px 0px rgba(0, 0, 128, 0.3)",
         "pastel-card":
           "6px 6px 0px #FF7F00, 12px 12px 0px rgba(0, 0, 128, 0.2)",
         "pastel-glow-saffron": "0 0 20px rgba(255, 127, 0, 0.4)",

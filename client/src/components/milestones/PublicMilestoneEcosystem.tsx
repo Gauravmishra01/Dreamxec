@@ -39,7 +39,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
       {/* ── OVERALL PROGRESS HEADER ── */}
       <div
         className="p-4 sm:p-5 bg-white"
-        style={{ border: '3px solid #000080', boxShadow: '6px 6px 0 #FF7F00' }}
+        style={{ border: '3px solid #003366', boxShadow: '6px 6px 0 #FF7F00' }}
       >
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
@@ -55,7 +55,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
           {/* Donut-style count badge */}
           <div
             className="flex items-center gap-1 px-3 py-2"
-            style={{ border: '3px solid #000080', background: completedMilestones === totalMilestones && totalMilestones > 0 ? '#0B9C2C' : '#000080' }}
+            style={{ border: '3px solid #003366', background: completedMilestones === totalMilestones && totalMilestones > 0 ? '#0B9C2C' : '#003366' }}
           >
             <span className="text-xl sm:text-2xl font-black text-white">{completedMilestones}</span>
             <span className="text-white/60 font-black text-lg">/</span>
@@ -74,7 +74,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
                   key={i}
                   className="flex-1 h-3 transition-all duration-500"
                   style={{
-                    border: '2px solid #000080',
+                    border: '2px solid #003366',
                     background: done ? '#0B9C2C' : active ? '#FF7F00' : '#e5e7eb',
                   }}
                   title={m.title}
@@ -94,9 +94,9 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
           const countdown = formatCountdown(milestone.dueDate);
 
           /* accent colours per state */
-          const borderColor = isCompleted ? '#0B9C2C' : isActive ? '#FF7F00' : '#000080';
-          const shadowColor = isCompleted ? '#0B9C2C' : isActive ? '#FF7F00' : '#000080';
-          const numBg       = isCompleted ? '#0B9C2C' : isActive ? '#FF7F00' : '#000080';
+          const borderColor = isCompleted ? '#0B9C2C' : isActive ? '#FF7F00' : '#003366';
+          const shadowColor = isCompleted ? '#0B9C2C' : isActive ? '#FF7F00' : '#003366';
+          const numBg       = isCompleted ? '#0B9C2C' : isActive ? '#FF7F00' : '#003366';
 
           return (
             <div
@@ -121,7 +121,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
                   {/* Number badge */}
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0 font-black text-white text-base sm:text-lg"
-                    style={{ background: numBg, border: '2px solid #000080', minWidth: '2.25rem' }}
+                    style={{ background: numBg, border: '2px solid #003366', minWidth: '2.25rem' }}
                   >
                     {index + 1}
                   </div>
@@ -160,7 +160,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
                   {/* Budget */}
                   <div
                     className="flex items-center gap-1.5 px-2.5 py-1.5"
-                    style={{ border: '2px solid #000080', background: '#fff' }}
+                    style={{ border: '2px solid #003366', background: '#fff' }}
                   >
                     <span className="text-base leading-none">💰</span>
                     <span className="text-xs sm:text-sm font-black text-dreamxec-navy">
@@ -172,7 +172,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
                   {milestone.durationDays && (
                     <div
                       className="flex items-center gap-1.5 px-2.5 py-1.5"
-                      style={{ border: '2px solid #000080', background: '#fff' }}
+                      style={{ border: '2px solid #003366', background: '#fff' }}
                     >
                       <span className="text-base leading-none">⏳</span>
                       <span className="text-xs sm:text-sm font-black text-dreamxec-navy">
@@ -216,7 +216,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
       {/* ── TOTAL BUDGET ── */}
       <div
         className="flex items-center justify-between p-4 sm:p-5 bg-white"
-        style={{ border: '3px solid #000080', boxShadow: '5px 5px 0 #0B9C2C' }}
+        style={{ border: '3px solid #003366', boxShadow: '5px 5px 0 #0B9C2C' }}
       >
         <div className="flex items-center gap-2">
           <span className="inline-block w-2 h-5 bg-dreamxec-green flex-shrink-0" />
@@ -226,7 +226,7 @@ export default function PublicMilestoneEcosystem({ campaign }: Props) {
         </div>
         <span
           className="text-lg sm:text-xl md:text-2xl font-black text-white px-3 py-1.5"
-          style={{ background: '#0B9C2C', border: '2px solid #000080' }}
+          style={{ background: '#0B9C2C', border: '2px solid #003366' }}
         >
           ₹{totalBudget.toLocaleString()}
         </span>

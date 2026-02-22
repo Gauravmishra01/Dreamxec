@@ -7,6 +7,8 @@ interface Props {
   milestone: any;
 }
 
+
+
 const getYoutubeId = (url?: string) => {
   if (!url) return null;
   const regExp = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
@@ -26,7 +28,15 @@ const getEmbedUrl = (url?: string) => {
 
 export default function MilestoneProofModal({ isOpen, onClose, milestone }: Props) {
   if (!isOpen || !milestone) return null;
+  const submission =
+    milestone.submissions?.find((s: any) => s.status === "APPROVED") ||
+    milestone.submissions?.[0];
 
+  const mediaUrl = submission?.mediaUrl;
+  const proofUrl = submission?.proofUrl;
+
+  const youtubeId = getYoutubeId(mediaUrl);
+  const embedUrl = getEmbedUrl(proofUrl);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6"
@@ -35,10 +45,10 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
     >
       <div
         className="bg-white w-full max-w-4xl relative"
-        style={{ border: '4px solid #000080', boxShadow: '10px 10px 0 #FF7F00' }}
+        style={{ border: '4px solid #003366', boxShadow: '10px 10px 0 #FF7F00' }}
       >
         {/* ── Top bar ── */}
-        <div className="flex items-stretch" style={{ borderBottom: '3px solid #000080' }}>
+        <div className="flex items-stretch" style={{ borderBottom: '3px solid #003366' }}>
           {/* Color stripe */}
           <div className="flex w-2 flex-col">
             <div className="flex-1 bg-[#0B9C2C]" />
@@ -58,7 +68,7 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
           <button
             onClick={onClose}
             className="flex-shrink-0 w-12 sm:w-14 flex items-center justify-center font-black text-white text-lg sm:text-xl transition-colors hover:opacity-80"
-            style={{ background: '#000080', borderLeft: '3px solid #000080' }}
+            style={{ background: '#003366', borderLeft: '3px solid #003366' }}
             aria-label="Close"
           >
             ✕
@@ -66,22 +76,23 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
         </div>
 
         {/* ── Body ── */}
+        {/* ── Body ── */}
         <div className="overflow-y-auto max-h-[80vh] p-4 sm:p-5 md:p-6 space-y-5 sm:space-y-6">
 
-          {/* YouTube */}
-          {milestone.youtubeUrl && (
+          {/* Video (YouTube) */}
+          {youtubeId && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span
                   className="px-2.5 py-1 text-[10px] sm:text-xs font-black text-white uppercase tracking-widest"
-                  style={{ background: '#FF7F00', border: '2px solid #000080' }}
+                  style={{ background: '#FF7F00', border: '2px solid #003366' }}
                 >
                   🎬 Video Demonstration
                 </span>
               </div>
-              <div style={{ border: '3px solid #000080', boxShadow: '4px 4px 0 #000080' }}>
+              <div style={{ border: '3px solid #003366', boxShadow: '4px 4px 0 #003366' }}>
                 <YouTube
-                  videoId={getYoutubeId(milestone.youtubeUrl) || ""}
+                  videoId={youtubeId}
                   className="w-full"
                   iframeClassName="w-full aspect-video"
                   opts={{ width: "100%", height: "auto", playerVars: { autoplay: 0 } }}
@@ -90,23 +101,23 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
             </div>
           )}
 
-          {/* PDF / Presentation */}
-          {milestone.presentationDeckUrl && (
+          {/* PDF / Drive / Presentation */}
+          {embedUrl && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span
                   className="px-2.5 py-1 text-[10px] sm:text-xs font-black text-white uppercase tracking-widest"
-                  style={{ background: '#000080', border: '2px solid #000080' }}
+                  style={{ background: '#003366', border: '2px solid #003366' }}
                 >
                   📄 Presentation / Report
                 </span>
               </div>
               <div
                 className="overflow-hidden"
-                style={{ height: 520, border: '3px solid #000080', boxShadow: '4px 4px 0 #000080' }}
+                style={{ height: 520, border: '3px solid #003366', boxShadow: '4px 4px 0 #003366' }}
               >
                 <iframe
-                  src={getEmbedUrl(milestone.presentationDeckUrl) || undefined}
+                  src={embedUrl}
                   className="w-full h-full"
                   title="Milestone Proof"
                 />
@@ -114,11 +125,11 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
             </div>
           )}
 
-          {/* Empty state */}
-          {!milestone.youtubeUrl && !milestone.presentationDeckUrl && (
+          {/* Empty State */}
+          {!youtubeId && !embedUrl && (
             <div
               className="py-10 px-6 text-center"
-              style={{ border: '2px dashed #000080', background: '#f9fafb' }}
+              style={{ border: '2px dashed #003366', background: '#f9fafb' }}
             >
               <p className="text-2xl mb-2">📭</p>
               <p className="font-black text-dreamxec-navy/50 uppercase tracking-widest text-xs sm:text-sm">
@@ -131,7 +142,7 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
         {/* ── Footer ── */}
         <div
           className="flex items-center justify-between px-4 sm:px-5 py-3"
-          style={{ borderTop: '3px solid #000080', background: '#f9fafb' }}
+          style={{ borderTop: '3px solid #003366', background: '#f9fafb' }}
         >
           <div
             className="flex items-center gap-1.5 px-2.5 py-1"
@@ -142,7 +153,7 @@ export default function MilestoneProofModal({ isOpen, onClose, milestone }: Prop
           <button
             onClick={onClose}
             className="px-4 py-2 font-black text-white text-xs sm:text-sm uppercase tracking-widest transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px]"
-            style={{ background: '#000080', border: '2px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+            style={{ background: '#003366', border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
           >
             Close
           </button>

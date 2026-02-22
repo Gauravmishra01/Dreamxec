@@ -7,7 +7,7 @@ export const Hero = () => {
         <div
           className="absolute -inset-2 xs:-inset-2.5 sm:-inset-3 md:-inset-5 lg:-inset-6 xl:-inset-8"
           style={{
-            border: '3px solid #000080',
+            border: '3px solid #003366',
             boxShadow: '8px 8px 0 #FF7F00, -4px -4px 0 #0B9C2C',
             background: 'transparent',
           }}
@@ -52,7 +52,7 @@ export const Hero = () => {
               {/* Main text block */}
               <span
                 className="relative z-10 inline-block px-2 xs:px-3 sm:px-4 md:px-5 py-0.5 sm:py-1 font-black text-white uppercase tracking-tight transition-transform duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px]"
-                style={{ background: '#000080', border: '2px solid #000080' }}
+                style={{ background: '#003366', border: '2px solid #003366' }}
               >
                 Research Karega India
               </span>
@@ -65,7 +65,7 @@ export const Hero = () => {
               {/* Big offset shadow — most prominent */}
               <span
                 className="absolute inset-0 translate-x-[4px] translate-y-[4px] sm:translate-x-[6px] sm:translate-y-[6px] md:translate-x-[8px] md:translate-y-[8px]"
-                style={{ background: '#000080', zIndex: 0 }}
+                style={{ background: '#003366', zIndex: 0 }}
                 aria-hidden
               />
               {/* Orange fill — hottest element on page */}
@@ -73,8 +73,8 @@ export const Hero = () => {
                 className="relative z-10 inline-block px-4 xs:px-5 sm:px-7 md:px-8 lg:px-10 py-0.5 sm:py-1 md:py-2 font-black uppercase tracking-widest text-[clamp(1rem,3.5vw,1.25rem)] xs:text-[clamp(1.25rem,4vw,1.5rem)] sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl transition-transform duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px]"
                 style={{
                   background: '#FF7F00',
-                  border: '3px solid #000080',
-                  color: '#000080',
+                  border: '3px solid #003366',
+                  color: '#003366',
                   letterSpacing: '0.15em',
                 }}
               >
@@ -95,7 +95,7 @@ export const Hero = () => {
               {/* Green fill — growth / forward motion */}
               <span
                 className="relative z-10 inline-block px-2 xs:px-3 sm:px-4 md:px-5 py-0.5 sm:py-1 font-black text-white uppercase tracking-tight transition-transform duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px]"
-                style={{ background: '#0B9C2C', border: '2px solid #000080' }}
+                style={{ background: '#0B9C2C', border: '2px solid #003366' }}
               >
                 Badhega India
               </span>

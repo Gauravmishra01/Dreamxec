@@ -89,7 +89,7 @@ export default function AdminClubVerifications() {
           <StarDecoration className="w-16 h-16" color="#FF7F00" />
         </div>
         <div className="absolute bottom-32 left-10 z-0 opacity-15 pointer-events-none">
-          <StarDecoration className="w-20 h-20" color="#000080" />
+          <StarDecoration className="w-20 h-20" color="#003366" />
         </div>
 
         {/* Content Wrapper */}

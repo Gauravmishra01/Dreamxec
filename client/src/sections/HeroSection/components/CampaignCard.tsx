@@ -13,7 +13,7 @@ export const CampaignCard = ({ campaign }: Props) => {
   return (
     <article
       className="w-full h-full bg-white flex flex-col transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
-      style={{ border: '3px solid #000080', boxShadow: '6px 6px 0 #FF7F00' }}
+      style={{ border: '3px solid #003366', boxShadow: '6px 6px 0 #FF7F00' }}
     >
       {/* Orange top stripe — same on every card */}
       <div className="h-2 flex-shrink-0" style={{ background: '#FF7F00' }} />
@@ -34,7 +34,7 @@ export const CampaignCard = ({ campaign }: Props) => {
         <div className="mb-2">
           <span
             className="inline-block px-2 py-1 text-[10px] font-black text-white uppercase tracking-widest"
-            style={{ background: '#FF7F00', border: '2px solid #000080' }}
+            style={{ background: '#FF7F00', border: '2px solid #003366' }}
           >
             {campaign.category}
           </span>
@@ -78,7 +78,7 @@ export const CampaignCard = ({ campaign }: Props) => {
         {/* Progress bar — flat, bordered */}
         <div
           className="w-full h-3 mb-4 overflow-hidden"
-          style={{ border: '2px solid #000080', background: '#f3f4f6' }}
+          style={{ border: '2px solid #003366', background: '#f3f4f6' }}
         >
           <div
             className="h-full transition-all duration-500"
@@ -91,8 +91,8 @@ export const CampaignCard = ({ campaign }: Props) => {
           onClick={() => navigate(`/campaign/${campaign.id}`)}
           className="w-full py-2.5 text-xs sm:text-sm font-black text-white uppercase tracking-widest transition-all hover:opacity-90 active:translate-x-[2px] active:translate-y-[2px]"
           style={{
-            background: '#000080',
-            border: '2px solid #000080',
+            background: '#003366',
+            border: '2px solid #003366',
             boxShadow: '3px 3px 0 #FF7F00',
           }}
         >

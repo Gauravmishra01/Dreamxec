@@ -15,7 +15,7 @@ export const LightBulbIcon = ({ className = "w-12 h-12" }: { className?: string 
           rx="22"
           ry="25"
           fill="#FF9933"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
           strokeLinecap="round"
         />
@@ -36,15 +36,15 @@ export const LightBulbIcon = ({ className = "w-12 h-12" }: { className?: string 
           width="16"
           height="8"
           fill="#138808"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="3"
           rx="2"
         />
         
         {/* Bottom screw thread lines */}
-        <line x1="40" y1="72" x2="60" y2="72" stroke="#000080" strokeWidth="3" />
-        <line x1="40" y1="76" x2="60" y2="76" stroke="#000080" strokeWidth="3" />
-        <line x1="40" y1="80" x2="60" y2="80" stroke="#000080" strokeWidth="3" />
+        <line x1="40" y1="72" x2="60" y2="72" stroke="#003366" strokeWidth="3" />
+        <line x1="40" y1="76" x2="60" y2="76" stroke="#003366" strokeWidth="3" />
+        <line x1="40" y1="80" x2="60" y2="80" stroke="#003366" strokeWidth="3" />
         
         {/* Idea rays - hand-drawn style */}
         <g stroke="#FF9933" strokeWidth="4" strokeLinecap="round">

@@ -45,7 +45,7 @@ export default function AdminAuditLogs() {
         
         {/* Decorative Background Elements */}
         <div className="absolute top-10 left-10 z-0 opacity-10 pointer-events-none">
-          <StarDecoration className="w-24 h-24" color="#000080" />
+          <StarDecoration className="w-24 h-24" color="#003366" />
         </div>
 
         {/* Content Wrapper */}

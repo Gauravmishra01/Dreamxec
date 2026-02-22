@@ -161,7 +161,7 @@ export default function AdminDashboard() {
         {/* Decorative Stars */}
         <div className="absolute top-20 left-10 z-0 opacity-20 pointer-events-none"><StarDecoration className="w-16 h-16" color="#FF7F00" /></div>
         <div className="absolute top-40 right-20 z-0 opacity-20 pointer-events-none"><StarDecoration className="w-12 h-12" color="#0B9C2C" /></div>
-        <div className="absolute bottom-32 left-1/4 z-0 opacity-15 pointer-events-none"><StarDecoration className="w-20 h-20" color="#000080" /></div>
+        <div className="absolute bottom-32 left-1/4 z-0 opacity-15 pointer-events-none"><StarDecoration className="w-20 h-20" color="#003366" /></div>
 
         {/* Header Section - CHANGED: Removed max-w-7xl mx-auto, Replaced with w-full px-6 lg:px-10 */}
         <div className="relative bg-dreamxec-navy border-b-8 border-dreamxec-orange shadow-pastel-saffron z-10">

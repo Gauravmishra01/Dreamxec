@@ -44,7 +44,7 @@ const FAQItem = ({ faq }: { faq: { question: string; answer: string } }) => {
   return (
     <div
       className="bg-white rounded-none overflow-hidden transition-all"
-      style={{ border: '3px solid #000080', boxShadow: open ? '5px 5px 0 #FF7F00' : '4px 4px 0 #000080' }}
+      style={{ border: '3px solid #003366', boxShadow: open ? '5px 5px 0 #FF7F00' : '4px 4px 0 #003366' }}
     >
       <button
         onClick={() => setOpen(!open)}
@@ -152,8 +152,8 @@ const TabBtn = ({
         : 'bg-white text-dreamxec-navy hover:bg-dreamxec-orange hover:text-white'
     }`}
     style={{
-      border: '3px solid #000080',
-      boxShadow: active ? '4px 4px 0 #FF7F00' : '2px 2px 0 #000080',
+      border: '3px solid #003366',
+      boxShadow: active ? '4px 4px 0 #FF7F00' : '2px 2px 0 #003366',
       transform: active ? 'translate(-2px,-2px)' : 'none',
     }}
   >
@@ -165,11 +165,11 @@ const TabBtn = ({
    SECTION CARD – neobrutalist wrapper
 ───────────────────────────────────────────── */
 const NeoCard = ({
-  children, className = '', accentColor = '#000080',
+  children, className = '', accentColor = '#003366',
 }: { children: React.ReactNode; className?: string; accentColor?: string }) => (
   <div
     className={`bg-white ${className}`}
-    style={{ border: '3px solid #000080', boxShadow: `6px 6px 0 ${accentColor}` }}
+    style={{ border: '3px solid #003366', boxShadow: `6px 6px 0 ${accentColor}` }}
   >
     {children}
   </div>
@@ -269,7 +269,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   /* ── Loading ── */
   if (loading) return (
     <div className="min-h-screen bg-dreamxec-cream flex items-center justify-center">
-      <div className="text-center p-8" style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00', background: '#fff' }}>
+      <div className="text-center p-8" style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00', background: '#fff' }}>
         <div className="w-10 h-10 border-4 border-dreamxec-navy border-t-dreamxec-orange rounded-full animate-spin mx-auto mb-4" />
         <p className="font-black uppercase tracking-widest text-dreamxec-navy text-sm">Loading campaign...</p>
       </div>
@@ -279,7 +279,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   /* ── Error ── */
   if (error || !campaign) return (
     <div className="min-h-screen bg-dreamxec-cream flex items-center justify-center px-4">
-      <div className="text-center p-8 max-w-sm w-full" style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00', background: '#fff' }}>
+      <div className="text-center p-8 max-w-sm w-full" style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00', background: '#fff' }}>
         <div className="w-14 h-14 bg-dreamxec-navy rounded-none flex items-center justify-center mx-auto mb-4">
           <span className="text-white font-black text-2xl">!</span>
         </div>
@@ -288,7 +288,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
         <button
           onClick={() => navigate('/campaigns')}
           className="px-6 py-2.5 bg-dreamxec-orange text-white font-black uppercase tracking-wide text-sm transition-all hover:translate-x-[-2px] hover:translate-y-[-2px]"
-          style={{ border: '3px solid #000080', boxShadow: '4px 4px 0 #000080' }}
+          style={{ border: '3px solid #003366', boxShadow: '4px 4px 0 #003366' }}
         >
           Browse Campaigns
         </button>
@@ -365,7 +365,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
         <button
           onClick={() => navigate(-1)}
           className="mb-4 sm:mb-6 flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white text-dreamxec-navy font-black uppercase tracking-wider text-xs sm:text-sm transition-all hover:bg-dreamxec-navy hover:text-white"
-          style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #000080' }}
+          style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #003366' }}
         >
           <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
@@ -381,7 +381,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
           <div className="w-full flex-1 min-w-0 space-y-5 sm:space-y-6">
 
             {/* Hero Image */}
-            <div style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00' }}>
+            <div style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00' }}>
               <img
                 src={campaign.imageUrl}
                 alt={campaign.title}
@@ -401,9 +401,9 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                       onClick={handleWishlistToggle}
                       disabled={wishlistLoading}
                       className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center transition-all hover:scale-110"
-                      style={{ border: '2px solid #000080', background: isWishlisted ? '#fee2e2' : '#fff' }}
+                      style={{ border: '2px solid #003366', background: isWishlisted ? '#fee2e2' : '#fff' }}
                     >
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill={isWishlisted ? '#ef4444' : 'none'} stroke={isWishlisted ? '#ef4444' : '#000080'} viewBox="0 0 24 24" strokeWidth={2}>
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill={isWishlisted ? '#ef4444' : 'none'} stroke={isWishlisted ? '#ef4444' : '#003366'} viewBox="0 0 24 24" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                       </svg>
                     </button>
@@ -432,7 +432,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     key={i}
                     onClick={chip.onClick}
                     className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-bold bg-white ${chip.onClick ? 'cursor-pointer hover:bg-dreamxec-orange hover:text-white' : ''} transition-colors`}
-                    style={{ border: '2px solid #000080' }}
+                    style={{ border: '2px solid #003366' }}
                   >
                     <span>{chip.emoji}</span>
                     <span className="truncate max-w-[120px] sm:max-w-none text-dreamxec-navy">{chip.label}</span>
@@ -460,7 +460,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             {activeTab === 'video' && campaign.youtubeUrl && (
               <NeoCard className="p-4 sm:p-5 md:p-6" accentColor="#0B9C2C">
                 <SectionHeading>Campaign Video</SectionHeading>
-                <div style={{ border: '3px solid #000080', boxShadow: '5px 5px 0 #000080' }}>
+                <div style={{ border: '3px solid #003366', boxShadow: '5px 5px 0 #003366' }}>
                   <YouTube
                     videoId={getYoutubeId(campaign.youtubeUrl) || ''}
                     className="w-full"
@@ -476,12 +476,12 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
             {/* ── Media ── */}
             {activeTab === 'media' && (
-              <NeoCard className="p-4 sm:p-5 md:p-6" accentColor="#000080">
+              <NeoCard className="p-4 sm:p-5 md:p-6" accentColor="#003366">
                 <SectionHeading>Campaign Media</SectionHeading>
                 {campaign?.campaignMedia && campaign.campaignMedia.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     {campaign.campaignMedia.map((url, index) => (
-                      <div key={index} className="aspect-square overflow-hidden" style={{ border: '3px solid #000080', boxShadow: '4px 4px 0 #FF7F00' }}>
+                      <div key={index} className="aspect-square overflow-hidden" style={{ border: '3px solid #003366', boxShadow: '4px 4px 0 #FF7F00' }}>
                         {isVideo(url)
                           ? <video src={url} controls className="w-full h-full object-cover" />
                           : <img src={url} alt={`Campaign media ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
@@ -514,7 +514,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                           ← Drag right edge to resize →
                         </span>
                       </div>
-                      <div style={{ height: 700, border: '3px solid #000080', boxShadow: '5px 5px 0 #000080' }}>
+                      <div style={{ height: 700, border: '3px solid #003366', boxShadow: '5px 5px 0 #003366' }}>
                         <iframe src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined} className="w-full h-full" title="Presentation Deck" />
                       </div>
                     </NeoCard>
@@ -522,7 +522,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 ) : (
                   <NeoCard className="p-3 sm:p-4" accentColor="#FF7F00">
                     <SectionHeading>Presentation Deck</SectionHeading>
-                    <div style={{ height: deckIframeHeight, border: '3px solid #000080' }}>
+                    <div style={{ height: deckIframeHeight, border: '3px solid #003366' }}>
                       <iframe src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined} className="w-full h-full" title="Presentation Deck" />
                     </div>
                     <p className="mt-2 text-[10px] text-dreamxec-navy/50 font-bold uppercase tracking-widest text-center">
@@ -546,7 +546,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             )}
 
             {/* ── Timeline ── */}
-            <NeoCard className="p-4 sm:p-5 md:p-6 lg:p-8" accentColor="#000080">
+            <NeoCard className="p-4 sm:p-5 md:p-6 lg:p-8" accentColor="#003366">
               <SectionHeading>Campaign Timeline &amp; Fund Allocation</SectionHeading>
               <PublicMilestoneEcosystem campaign={campaign} />
               <p className="mt-4 pt-4 text-[10px] sm:text-xs text-dreamxec-navy/50 font-bold uppercase tracking-wide border-t-2 border-dashed border-dreamxec-navy/20">
@@ -585,7 +585,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
 
               {/* Progress Bar */}
               <div className="mb-4 sm:mb-5">
-                <div className="w-full h-5 sm:h-6 bg-gray-100 overflow-hidden" style={{ border: '3px solid #000080' }}>
+                <div className="w-full h-5 sm:h-6 bg-gray-100 overflow-hidden" style={{ border: '3px solid #003366' }}>
                   <div
                     className="h-full bg-dreamxec-green relative flex items-center justify-end pr-1 transition-all duration-700"
                     style={{ width: `${Math.max(progressPercentage, 4)}%` }}
@@ -599,7 +599,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
               <div className="mb-4 sm:mb-5">
                 <div
                   className="p-3 sm:p-4 text-center"
-                  style={{ border: '3px solid #FF7F00', boxShadow: '4px 4px 0 #000080', background: '#fff7ed' }}
+                  style={{ border: '3px solid #FF7F00', boxShadow: '4px 4px 0 #003366', background: '#fff7ed' }}
                 >
                   <p className="text-xl sm:text-2xl font-black text-dreamxec-navy">₹{remainingAmount.toLocaleString()}</p>
                   <p className="text-[10px] sm:text-xs text-dreamxec-navy/60 font-black uppercase tracking-widest mt-0.5">Remaining</p>
@@ -627,8 +627,8 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                   className="w-full py-3 sm:py-4 font-black uppercase tracking-widest text-sm sm:text-base text-white transition-all active:translate-x-[3px] active:translate-y-[3px] flex items-center justify-center gap-2 group hover:opacity-90"
                   style={{
                     background: 'linear-gradient(135deg, #FF7F00 0%, #ef4444 100%)',
-                    border: '3px solid #000080',
-                    boxShadow: '5px 5px 0 #000080',
+                    border: '3px solid #003366',
+                    boxShadow: '5px 5px 0 #003366',
                   }}
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
@@ -673,7 +673,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                       key={i}
                       onClick={action}
                       className="p-2.5 sm:p-3 text-white flex items-center justify-center transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px]"
-                      style={{ background: bg, border: '2px solid #000080', boxShadow: '3px 3px 0 #000080' }}
+                      style={{ background: bg, border: '2px solid #003366', boxShadow: '3px 3px 0 #003366' }}
                     >
                       {icon}
                     </button>
@@ -691,7 +691,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     <div
                       key={index}
                       className="flex items-center gap-3 p-2.5 sm:p-3 bg-white transition-all hover:translate-x-[-2px] hover:translate-y-[-2px]"
-                      style={{ border: '2px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+                      style={{ border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
                     >
                       <img
                         src={member.image || 'https://via.placeholder.com/100'}

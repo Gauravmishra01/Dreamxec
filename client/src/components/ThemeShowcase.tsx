@@ -52,7 +52,7 @@ export const ThemeShowcase = () => {
           <div className="card-pastel p-6 text-center">
             <div className="bg-dreamxec-navy h-24 mb-4 rounded-lg border-2 border-dreamxec-navy"></div>
             <h3 className="font-bold text-dreamxec-navy">Navy</h3>
-            <p className="text-sm text-dreamxec-navy opacity-70">#000080</p>
+            <p className="text-sm text-dreamxec-navy opacity-70">#003366</p>
           </div>
         </div>
       </section>

@@ -66,7 +66,7 @@ const NeoInput = ({ icon, type, value, onChange, onBlur, placeholder, required, 
   const borderColor =
     state === 'success' ? '#16a34a' :
     state === 'error'   ? '#dc2626' :
-                          '#000080';
+                          '#003366';
   const shadowColor =
     state === 'success' ? '#16a34a' :
     state === 'error'   ? '#dc2626' :
@@ -249,13 +249,13 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
           {/* Stacked shadow layers for depth */}
           <div
             className="bg-white relative"
-            style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00' }}
+            style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00' }}
           >
 
             {/* Top tricolor bar */}
             <div className="flex h-2">
               <div className="flex-1 bg-[#FF7F00]" />
-              <div className="flex-1 bg-white border-y-2 border-[#000080]" />
+              <div className="flex-1 bg-white border-y-2 border-[#003366]" />
               <div className="flex-1 bg-[#0B9C2C]" />
             </div>
 
@@ -269,7 +269,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                   </h1>
                   <div
                     className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-dreamxec-orange flex-shrink-0"
-                    style={{ border: '2px solid #000080' }}
+                    style={{ border: '2px solid #003366' }}
                   >
                     <span className="text-white font-black text-base">★</span>
                   </div>
@@ -292,10 +292,10 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                           onClick={() => setRole(r)}
                           className="py-2.5 font-black uppercase tracking-wider text-sm transition-all"
                           style={{
-                            border: '3px solid #000080',
+                            border: '3px solid #003366',
                             background: active ? activeColor : '#fff',
-                            color: active ? '#fff' : '#000080',
-                            boxShadow: active ? `4px 4px 0 #000080` : '2px 2px 0 #000080',
+                            color: active ? '#fff' : '#003366',
+                            boxShadow: active ? `4px 4px 0 #003366` : '2px 2px 0 #003366',
                             transform: active ? 'translate(-1px,-1px)' : 'none',
                           }}
                         >
@@ -324,7 +324,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                         onClick={handleGoogleAuth}
                         disabled={isSubmitting}
                         className="flex items-center justify-center gap-2 py-2.5 font-black text-xs sm:text-sm text-dreamxec-navy uppercase tracking-wide bg-white transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50"
-                        style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #000080' }}
+                        style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #003366' }}
                       >
                         <GoogleIcon className="w-4 h-4" />
                         Google
@@ -336,7 +336,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                         onClick={handleLinkedInAuth}
                         disabled={isSubmitting}
                         className="flex items-center justify-center gap-2 py-2.5 font-black text-xs sm:text-sm text-dreamxec-navy uppercase tracking-wide bg-white transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50"
-                        style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #0A66C2' }}
+                        style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #0A66C2' }}
                       >
                         <LinkedInIcon className="w-4 h-4" />
                         LinkedIn
@@ -455,7 +455,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                       />
                       {/* Password rules */}
                       {isSignup && (
-                        <div className="mt-2.5 p-2.5 bg-gray-50" style={{ border: '2px dashed #000080' }}>
+                        <div className="mt-2.5 p-2.5 bg-gray-50" style={{ border: '2px dashed #003366' }}>
                           <p className="text-[10px] font-black text-dreamxec-navy/60 uppercase tracking-widest mb-1.5">Must include:</p>
                           <div className="grid grid-cols-2 gap-x-3 gap-y-1">
                             <PasswordRule met={pv.minLength}      label="8+ chars"        touched={passwordTouched} hasValue={!!password} />
@@ -507,8 +507,8 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
                       background: !isFormValid || isSubmitting
                         ? '#9ca3af'
                         : 'linear-gradient(135deg, #0B9C2C 0%, #16a34a 100%)',
-                      border: '3px solid #000080',
-                      boxShadow: !isFormValid || isSubmitting ? 'none' : '5px 5px 0 #000080',
+                      border: '3px solid #003366',
+                      boxShadow: !isFormValid || isSubmitting ? 'none' : '5px 5px 0 #003366',
                       cursor: !isFormValid || isSubmitting ? 'not-allowed' : 'pointer',
                       opacity: isSubmitting ? 0.75 : 1,
                     }}
@@ -548,7 +548,7 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
               {/* ── Bottom tricolor divider ── */}
               <div className="mt-5 mb-3 flex h-1">
                 <div className="flex-1 bg-[#FF7F00]" />
-                <div className="flex-1 bg-[#000080]" />
+                <div className="flex-1 bg-[#003366]" />
                 <div className="flex-1 bg-[#0B9C2C]" />
               </div>
 
@@ -564,11 +564,11 @@ export default function AuthPage({ onLogin, onSignup, onGoogleAuth, onLinkedInAu
           {/* ── Info strip below card ── */}
           <div
             className="mt-3 flex items-center gap-3 p-3 sm:p-4 bg-white"
-            style={{ border: '3px solid #000080', boxShadow: '5px 5px 0 #FF7F00' }}
+            style={{ border: '3px solid #003366', boxShadow: '5px 5px 0 #FF7F00' }}
           >
             <div
               className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0 bg-dreamxec-orange"
-              style={{ border: '2px solid #000080' }}
+              style={{ border: '2px solid #003366' }}
             >
               <span className="text-white font-black text-base">💡</span>
             </div>

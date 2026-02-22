@@ -29,7 +29,7 @@ export const WhatWeBringSection = () => {
          <div className="flex justify-center mb-4">
             <span
               className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white"
-              style={{ background: '#000080', border: '2px solid #000080' }}
+              style={{ background: '#003366', border: '2px solid #003366' }}
             >
               ★ DreamXec Insight
             </span>
@@ -48,7 +48,7 @@ export const WhatWeBringSection = () => {
                 />
                 <span
                   className="relative z-10 inline-block px-3 sm:px-5 py-1 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight"
-                  style={{ background: '#000080', border: '3px solid #000080' }}
+                  style={{ background: '#003366', border: '3px solid #003366' }}
                 >
                   Die in College Labs
                 </span>

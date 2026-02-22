@@ -84,7 +84,7 @@ export default function FloatingDoodles({ count = 8 }: { count?: number }) {
               <path
                 d="M 20,5 L 23,15 L 34,15 L 25,22 L 28,33 L 20,26 L 12,33 L 15,22 L 6,15 L 17,15 Z"
                 fill="#FF7F00"
-                stroke="#000080"
+                stroke="#003366"
                 strokeWidth="2"
                 strokeLinejoin="round"
               />
@@ -92,13 +92,13 @@ export default function FloatingDoodles({ count = 8 }: { count?: number }) {
             </svg>
           ) : (
             <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
-              <g fill="#FF7F00" stroke="#000080" strokeWidth="2">
+              <g fill="#FF7F00" stroke="#003366" strokeWidth="2">
                 <path d="M 15,2 L 16,12 L 14,12 Z" />
                 <path d="M 28,15 L 18,16 L 18,14 Z" />
                 <path d="M 15,28 L 14,18 L 16,18 Z" />
                 <path d="M 2,15 L 12,14 L 12,16 Z" />
               </g>
-              <circle cx="15" cy="15" r="4" fill="#0B9C2C" stroke="#000080" strokeWidth="2" />
+              <circle cx="15" cy="15" r="4" fill="#0B9C2C" stroke="#003366" strokeWidth="2" />
               <circle cx="13" cy="13" r="1.5" fill="#FFFFFF" opacity="0.8" />
             </svg>
           )}

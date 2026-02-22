@@ -73,13 +73,13 @@ export const CampaignCarousel = () => {
         <button
           onClick={() => scroll('left')}
           className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-white transition-all hover:bg-dreamxec-navy hover:translate-x-[-1px] hover:translate-y-[-1px] group"
-          style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+          style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
           aria-label="Scroll left"
         >
           <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
             <path
               d="M8 2L2 8L8 14"
-              stroke="#000080"
+              stroke="#003366"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -94,13 +94,13 @@ export const CampaignCarousel = () => {
         <button
           onClick={() => scroll('right')}
           className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-white transition-all hover:bg-dreamxec-navy hover:translate-x-[-1px] hover:translate-y-[-1px] group"
-          style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+          style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
           aria-label="Scroll right"
         >
           <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
             <path
               d="M2 2L8 8L2 14"
-              stroke="#000080"
+              stroke="#003366"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"

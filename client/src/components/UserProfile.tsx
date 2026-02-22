@@ -128,7 +128,7 @@ export default function UserProfile({ user, onBack, onUpdateBankDetails, onLogou
         <StarDecoration className="w-12 h-12" color="#0B9C2C" />
       </div>
       <div className="absolute bottom-32 left-1/4 z-0 opacity-15">
-        <StarDecoration className="w-20 h-20" color="#000080" />
+        <StarDecoration className="w-20 h-20" color="#003366" />
       </div>
 
       {/* Header */}

@@ -15,7 +15,7 @@ export const LabFlaskIcon = ({ className = "w-12 h-12" }: { className?: string }
           width="16"
           height="25"
           fill="#FFFFFF"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
           rx="2"
         />
@@ -24,7 +24,7 @@ export const LabFlaskIcon = ({ className = "w-12 h-12" }: { className?: string }
         <path
           d="M 42 40 L 25 75 Q 25 82, 32 85 L 68 85 Q 75 82, 75 75 L 58 40 Z"
           fill="#138808"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -48,13 +48,13 @@ export const LabFlaskIcon = ({ className = "w-12 h-12" }: { className?: string }
           y1="15"
           x2="58"
           y2="15"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
           strokeLinecap="round"
         />
         
         {/* Measurement lines on side */}
-        <g stroke="#000080" strokeWidth="2" opacity="0.6">
+        <g stroke="#003366" strokeWidth="2" opacity="0.6">
           <line x1="28" y1="50" x2="33" y2="50" />
           <line x1="28" y1="60" x2="33" y2="60" />
           <line x1="28" y1="70" x2="33" y2="70" />

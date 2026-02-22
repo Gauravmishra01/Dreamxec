@@ -28,7 +28,7 @@ export default function SimilarCampaigns({ campaigns, currentCampaign }: Props) 
         </div>
         <span
           className="text-[10px] font-black uppercase tracking-widest text-dreamxec-navy/50 px-2.5 py-1"
-          style={{ border: '2px dashed #000080' }}
+          style={{ border: '2px dashed #003366' }}
         >
           You may also like
         </span>
@@ -46,7 +46,7 @@ export default function SimilarCampaigns({ campaigns, currentCampaign }: Props) 
               key={campaign.id}
               onClick={() => navigate(`/campaign/${campaign.id}`)}
               className="bg-white flex flex-col cursor-pointer transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
-              style={{ border: '3px solid #000080', boxShadow: '5px 5px 0 #FF7F00' }}
+              style={{ border: '3px solid #003366', boxShadow: '5px 5px 0 #FF7F00' }}
             >
               {/* Top stripe */}
               <div className="h-1.5 flex-shrink-0" style={{ background: '#FF7F00' }} />
@@ -64,7 +64,7 @@ export default function SimilarCampaigns({ campaigns, currentCampaign }: Props) 
                   className="absolute top-2.5 right-2.5 px-2 py-0.5 text-[10px] font-black text-white"
                   style={{
                     background: progress >= 80 ? '#FF7F00' : '#0B9C2C',
-                    border: '2px solid #000080',
+                    border: '2px solid #003366',
                   }}
                 >
                   {progress.toFixed(0)}%
@@ -82,7 +82,7 @@ export default function SimilarCampaigns({ campaigns, currentCampaign }: Props) 
                   {/* Category chip */}
                   <span
                     className="inline-block px-2 py-0.5 text-[10px] font-black text-white uppercase tracking-widest flex-shrink-0"
-                    style={{ background: '#FF7F00', border: '2px solid #000080' }}
+                    style={{ background: '#FF7F00', border: '2px solid #003366' }}
                   >
                     {campaign.category || 'Technology'}
                   </span>
@@ -108,10 +108,10 @@ export default function SimilarCampaigns({ campaigns, currentCampaign }: Props) 
                     {totalMilestones > 0 && (
                       <div
                         className="flex items-center gap-1 px-2 py-0.5"
-                        style={{ border: '2px solid #000080', background: '#fff' }}
+                        style={{ border: '2px solid #003366', background: '#fff' }}
                         title={`${completedMilestones} of ${totalMilestones} milestones completed`}
                       >
-                        <svg className="w-2.5 h-2.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#000080" strokeWidth="2.5">
+                        <svg className="w-2.5 h-2.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#003366" strokeWidth="2.5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span className="text-[10px] font-black text-dreamxec-navy whitespace-nowrap">
@@ -133,7 +133,7 @@ export default function SimilarCampaigns({ campaigns, currentCampaign }: Props) 
                   {/* Progress bar */}
                   <div
                     className="w-full h-2.5 overflow-hidden"
-                    style={{ border: '2px solid #000080', background: '#f3f4f6' }}
+                    style={{ border: '2px solid #003366', background: '#f3f4f6' }}
                   >
                     <div
                       className="h-full bg-dreamxec-orange transition-all duration-500"

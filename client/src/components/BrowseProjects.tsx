@@ -27,7 +27,7 @@ const getTimelineDisplay = (
 /* ─────────────────────────────────────────────
    PROJECT CARD
 ───────────────────────────────────────────── */
-const cardShadows = ['#FF7F00', '#0B9C2C', '#000080'];
+const cardShadows = ['#FF7F00', '#0B9C2C', '#003366'];
 
 function ProjectCard({
   project,
@@ -45,7 +45,7 @@ function ProjectCard({
   return (
     <div
       className="bg-white flex flex-col transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
-      style={{ border: '3px solid #000080', boxShadow: `6px 6px 0 ${shadow}` }}
+      style={{ border: '3px solid #003366', boxShadow: `6px 6px 0 ${shadow}` }}
     >
       {/* Top stripe */}
       <div className="h-2" style={{ background: shadow }} />
@@ -56,7 +56,7 @@ function ProjectCard({
         <div className="flex items-center gap-2 mb-3">
           <div
             className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white"
-            style={{ background: '#000080', border: '2px solid #000080' }}
+            style={{ background: '#003366', border: '2px solid #003366' }}
           >
             🏢 {project.companyName}
           </div>
@@ -92,7 +92,7 @@ function ProjectCard({
         <div className="flex flex-col gap-2 mb-5 mt-auto">
           <div
             className="flex items-center gap-2 px-3 py-2"
-            style={{ border: '2px dashed #000080', background: '#f9fafb' }}
+            style={{ border: '2px dashed #003366', background: '#f9fafb' }}
           >
             <span className="text-sm">📅</span>
             <span className="text-xs font-black text-dreamxec-navy uppercase tracking-wide">
@@ -124,8 +124,8 @@ function ProjectCard({
             className="w-full py-3 font-black text-white text-xs sm:text-sm uppercase tracking-widest transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px]"
             style={{
               background: 'linear-gradient(135deg, #0B9C2C 0%, #16a34a 100%)',
-              border: '3px solid #000080',
-              boxShadow: '4px 4px 0 #000080',
+              border: '3px solid #003366',
+              boxShadow: '4px 4px 0 #003366',
             }}
           >
             Apply Now →
@@ -215,7 +215,7 @@ export default function BrowseProjects({
           {/* Eyebrow */}
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-white"
-            style={{ background: '#000080', border: '2px solid #000080' }}
+            style={{ background: '#003366', border: '2px solid #003366' }}
           >
             🚀 DreamXec Opportunities
           </div>
@@ -227,7 +227,7 @@ export default function BrowseProjects({
               Explore{' '}
               <span
                 className="inline-block px-2"
-                style={{ background: '#FF7F00', color: '#000080' }}
+                style={{ background: '#FF7F00', color: '#003366' }}
               >
                 Opportunities
               </span>
@@ -256,7 +256,7 @@ export default function BrowseProjects({
               <span className="text-xs font-black text-dreamxec-navy/50 uppercase tracking-widest">Showing</span>
               <span
                 className="px-3 py-1.5 text-xs font-black text-white uppercase tracking-wide"
-                style={{ background: '#FF7F00', border: '2px solid #000080' }}
+                style={{ background: '#FF7F00', border: '2px solid #003366' }}
               >
                 {projects.length} Project{projects.length !== 1 ? 's' : ''}
               </span>
@@ -268,11 +268,11 @@ export default function BrowseProjects({
         {projects.length === 0 ? (
           <div
             className="py-16 sm:py-20 text-center bg-white max-w-lg mx-auto"
-            style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00' }}
+            style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00' }}
           >
             <div className="flex h-2 mb-8">
               <div className="flex-1 bg-[#FF7F00]" />
-              <div className="flex-1 bg-[#fff] border-y-2 border-[#000080]" />
+              <div className="flex-1 bg-[#fff] border-y-2 border-[#003366]" />
               <div className="flex-1 bg-[#0B9C2C]" />
             </div>
             <div className="text-5xl mb-4">📦</div>
@@ -310,10 +310,10 @@ export default function BrowseProjects({
         >
           <div
             className="bg-white w-full max-w-2xl max-h-[92vh] overflow-y-auto"
-            style={{ border: '4px solid #000080', boxShadow: '10px 10px 0 #FF7F00' }}
+            style={{ border: '4px solid #003366', boxShadow: '10px 10px 0 #FF7F00' }}
           >
             {/* Modal header */}
-            <div className="flex items-stretch" style={{ borderBottom: '3px solid #000080' }}>
+            <div className="flex items-stretch" style={{ borderBottom: '3px solid #003366' }}>
               {/* Accent stripe */}
               <div className="w-2.5 bg-[#FF7F00] flex-shrink-0" />
 
@@ -332,7 +332,7 @@ export default function BrowseProjects({
               <button
                 onClick={handleCloseModal}
                 className="flex-shrink-0 w-12 sm:w-14 flex items-center justify-center font-black text-white text-lg transition-colors hover:opacity-80"
-                style={{ background: '#000080', borderLeft: '3px solid #000080' }}
+                style={{ background: '#003366', borderLeft: '3px solid #003366' }}
                 aria-label="Close"
               >
                 ✕
@@ -377,7 +377,7 @@ export default function BrowseProjects({
                   rows={6}
                   className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium text-dreamxec-navy bg-white resize-none focus:outline-none transition-all"
                   style={{
-                    border: `3px solid ${charOk ? '#0B9C2C' : '#000080'}`,
+                    border: `3px solid ${charOk ? '#0B9C2C' : '#003366'}`,
                     boxShadow: `3px 3px 0 ${charOk ? '#0B9C2C' : '#FF7F00'}`,
                   }}
                 />
@@ -394,14 +394,14 @@ export default function BrowseProjects({
                   onChange={e => setSkillsInput(e.target.value)}
                   placeholder="e.g., Teaching, Mentoring, Communication"
                   className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium text-dreamxec-navy bg-white focus:outline-none transition-all"
-                  style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #0B9C2C' }}
+                  style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #0B9C2C' }}
                 />
               </div>
 
               {/* Project recap */}
               <div
                 className="p-3 sm:p-4"
-                style={{ border: '2px dashed #000080', background: '#f9fafb' }}
+                style={{ border: '2px dashed #003366', background: '#f9fafb' }}
               >
                 <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest mb-2">Project Summary</p>
                 <p className="text-xs sm:text-sm font-bold text-dreamxec-navy mb-1">
@@ -419,7 +419,7 @@ export default function BrowseProjects({
                 <button
                   onClick={handleCloseModal}
                   className="flex-1 py-2.5 sm:py-3 font-black text-dreamxec-navy text-xs sm:text-sm uppercase tracking-widest transition-all hover:bg-dreamxec-navy hover:text-white"
-                  style={{ border: '3px solid #000080', background: '#fff', boxShadow: '3px 3px 0 #000080' }}
+                  style={{ border: '3px solid #003366', background: '#fff', boxShadow: '3px 3px 0 #003366' }}
                 >
                   Cancel
                 </button>
@@ -429,8 +429,8 @@ export default function BrowseProjects({
                   className="flex-1 py-2.5 sm:py-3 font-black text-white text-xs sm:text-sm uppercase tracking-widest transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{
                     background: !charOk || isSubmitting ? '#9ca3af' : 'linear-gradient(135deg, #0B9C2C, #16a34a)',
-                    border: '3px solid #000080',
-                    boxShadow: charOk && !isSubmitting ? '4px 4px 0 #000080' : 'none',
+                    border: '3px solid #003366',
+                    boxShadow: charOk && !isSubmitting ? '4px 4px 0 #003366' : 'none',
                   }}
                 >
                   {isSubmitting ? '⏳ Submitting...' : 'Submit Application →'}
@@ -441,7 +441,7 @@ export default function BrowseProjects({
             {/* Bottom tricolor bar */}
             <div className="flex h-1.5">
               <div className="flex-1 bg-[#FF7F00]" />
-              <div className="flex-1 bg-[#000080]" />
+              <div className="flex-1 bg-[#003366]" />
               <div className="flex-1 bg-[#0B9C2C]" />
             </div>
           </div>

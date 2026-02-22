@@ -45,7 +45,7 @@ export const ArrowDecoration = ({
         {/* Outline for oil pastel effect */}
         <path
           d="M 5 20 L 42 20 M 35 10 L 50 20 L 35 30"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

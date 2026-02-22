@@ -324,7 +324,7 @@ exports.updateUserProject = catchAsync(async (req, res, next) => {
           durationDays: Number(m.durationDays),
           budget: Number(m.budget),
           description: m.description || null,
-          projectId: createdProject.id,
+          projectId: project.id,
           order: index + 1
         })),
       });

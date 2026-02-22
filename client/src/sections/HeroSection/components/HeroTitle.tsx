@@ -37,7 +37,7 @@ export const HeroTitle = ({ user }) => {
         else if (role === "STUDENT") navigate("/projects");
         else if (role === "DONOR") navigate("/donor/dashboard");
       },
-      shadow: "#000080",
+      shadow: "#003366",
       bg: "#fff",
     },
   ];
@@ -66,7 +66,7 @@ export const HeroTitle = ({ user }) => {
               />
               <span
                 className="relative z-10 inline-block px-3 sm:px-5 py-1 sm:py-1.5 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight"
-                style={{ background: '#000080', border: '3px solid #000080' }}
+                style={{ background: '#003366', border: '3px solid #003366' }}
               >
                 Generation of
               </span>
@@ -79,15 +79,15 @@ export const HeroTitle = ({ user }) => {
               {/* big navy shadow */}
               <span
                 className="absolute inset-0 translate-x-[5px] translate-y-[5px] sm:translate-x-[8px] sm:translate-y-[8px]"
-                style={{ background: '#000080' }}
+                style={{ background: '#003366' }}
                 aria-hidden
               />
               <span
                 className="relative z-10 inline-block px-4 sm:px-6 md:px-8 py-1 sm:py-2 text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight"
                 style={{
                   background: '#FAF9F6',
-                  border: '3px solid #000080',
-                  color: '#000080',
+                  border: '3px solid #003366',
+                  color: '#003366',
                   minWidth: '12ch',
                 }}
               >
@@ -101,7 +101,7 @@ export const HeroTitle = ({ user }) => {
         <div className="mt-8 sm:mt-10 flex justify-center">
           <p
             className="inline-block px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base md:text-lg lg:text-xl font-black text-dreamxec-navy uppercase tracking-wide"
-            style={{ border: '2px dashed #000080', background: '#fff7ed' }}
+            style={{ border: '2px dashed #003366', background: '#fff7ed' }}
           >
             Invest in the Minds That Will Define Our Tomorrow
           </p>
@@ -116,7 +116,7 @@ export const HeroTitle = ({ user }) => {
             onClick={pill.onClick}
             className="group relative transition-all duration-150 hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-[2px] active:translate-y-[2px]"
             style={{
-              border: '3px solid #000080',
+              border: '3px solid #003366',
               boxShadow: `4px 4px 0 ${pill.shadow}`,
               background: pill.bg,
             }}

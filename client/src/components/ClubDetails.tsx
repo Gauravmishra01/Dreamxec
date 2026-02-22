@@ -31,7 +31,7 @@ export default function ClubDetails() {
     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
       <div
         className="p-8 text-center bg-white"
-        style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00' }}
+        style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00' }}
       >
         <div className="w-10 h-10 border-4 border-dreamxec-navy border-t-dreamxec-orange rounded-full animate-spin mx-auto mb-3" />
         <p className="font-black uppercase tracking-widest text-dreamxec-navy text-xs">Loading club...</p>
@@ -44,7 +44,7 @@ export default function ClubDetails() {
     <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream px-4">
       <div
         className="p-8 text-center bg-white max-w-sm w-full"
-        style={{ border: '4px solid #000080', boxShadow: '8px 8px 0 #FF7F00' }}
+        style={{ border: '4px solid #003366', boxShadow: '8px 8px 0 #FF7F00' }}
       >
         <p className="text-4xl mb-3">🏛️</p>
         <h1 className="text-2xl font-black text-dreamxec-navy uppercase tracking-tight">Club Not Found</h1>
@@ -130,7 +130,7 @@ export default function ClubDetails() {
                         className="relative inline-block px-1 sm:px-2"
                         style={{
                           background: '#FF7F00',
-                          color: '#000080',
+                          color: '#003366',
                           WebkitTextStroke: '0px',
                           marginRight: '0.2em',
                         }}
@@ -185,16 +185,16 @@ export default function ClubDetails() {
           {[
             { value: club.totalCampaigns, label: 'Active Campaigns', emoji: '📢', accent: '#FF7F00' },
             { value: raisedDisplay, label: 'Total Raised', emoji: '💰', accent: '#0B9C2C' },
-            { value: meta?.total || club.campaigns.length, label: 'Campaigns Listed', emoji: '📋', accent: '#000080' },
+            { value: meta?.total || club.campaigns.length, label: 'Campaigns Listed', emoji: '📋', accent: '#003366' },
           ].map(({ value, label, emoji, accent }, i) => (
             <div
               key={i}
               className="bg-white flex items-center gap-3 sm:flex-col sm:items-start p-4 sm:p-5 md:p-6 transition-all hover:translate-x-[-2px] hover:translate-y-[-2px]"
-              style={{ border: '3px solid #000080', boxShadow: `5px 5px 0 ${accent}` }}
+              style={{ border: '3px solid #003366', boxShadow: `5px 5px 0 ${accent}` }}
             >
               <div
                 className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 text-xl sm:text-2xl"
-                style={{ border: '2px solid #000080', background: `${accent}18` }}
+                style={{ border: '2px solid #003366', background: `${accent}18` }}
               >
                 {emoji}
               </div>
@@ -228,7 +228,7 @@ export default function ClubDetails() {
           {meta?.total > 0 && (
             <span
               className="px-2.5 py-1 text-xs font-black text-white uppercase tracking-wide"
-              style={{ background: '#000080', border: '2px solid #000080' }}
+              style={{ background: '#003366', border: '2px solid #003366' }}
             >
               {meta.total}
             </span>
@@ -238,7 +238,7 @@ export default function ClubDetails() {
         {club.campaigns.length === 0 ? (
           <div
             className="py-16 text-center bg-white"
-            style={{ border: '3px dashed #000080' }}
+            style={{ border: '3px dashed #003366' }}
           >
             <p className="text-3xl mb-3">📭</p>
             <p className="font-black text-dreamxec-navy/50 uppercase tracking-widest text-sm">
@@ -264,7 +264,7 @@ export default function ClubDetails() {
                   disabled={page === 1}
                   onClick={() => setPage(p => p - 1)}
                   className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 font-black text-xs sm:text-sm uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:translate-x-[-1px] hover:translate-y-[-1px]"
-                  style={{ border: '3px solid #000080', background: '#fff', boxShadow: '3px 3px 0 #000080', color: '#000080' }}
+                  style={{ border: '3px solid #003366', background: '#fff', boxShadow: '3px 3px 0 #003366', color: '#003366' }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6" /></svg>
                   Prev
@@ -272,7 +272,7 @@ export default function ClubDetails() {
 
                 <div
                   className="px-4 py-2 font-black text-sm"
-                  style={{ border: '3px solid #000080', background: '#000080', color: '#fff', boxShadow: '3px 3px 0 #FF7F00' }}
+                  style={{ border: '3px solid #003366', background: '#003366', color: '#fff', boxShadow: '3px 3px 0 #FF7F00' }}
                 >
                   {meta.page} <span className="text-white/40">/</span> {meta.totalPages}
                 </div>
@@ -281,7 +281,7 @@ export default function ClubDetails() {
                   disabled={page === meta.totalPages}
                   onClick={() => setPage(p => p + 1)}
                   className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 font-black text-xs sm:text-sm uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:translate-x-[-1px] hover:translate-y-[-1px]"
-                  style={{ border: '3px solid #000080', background: '#fff', boxShadow: '3px 3px 0 #000080', color: '#000080' }}
+                  style={{ border: '3px solid #003366', background: '#fff', boxShadow: '3px 3px 0 #003366', color: '#003366' }}
                 >
                   Next
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6" /></svg>

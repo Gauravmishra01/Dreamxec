@@ -46,7 +46,7 @@ export default function RecentlyViewedCarousel() {
         </div>
         <span
           className="text-[10px] font-black uppercase tracking-widest text-dreamxec-navy/50 px-2.5 py-1"
-          style={{ border: '2px dashed #000080' }}
+          style={{ border: '2px dashed #003366' }}
         >
           Continue exploring
         </span>
@@ -60,7 +60,7 @@ export default function RecentlyViewedCarousel() {
           <button
             onClick={() => scroll('left')}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center bg-white transition-all hover:bg-dreamxec-navy hover:translate-x-[-1px] hover:translate-y-[-1px] group"
-            style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+            style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-4 h-4 text-dreamxec-navy group-hover:text-white transition-colors" />
@@ -72,7 +72,7 @@ export default function RecentlyViewedCarousel() {
           <button
             onClick={() => scroll('right')}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center bg-white transition-all hover:bg-dreamxec-navy hover:translate-x-[-1px] hover:translate-y-[-1px] group"
-            style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+            style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
             aria-label="Scroll right"
           >
             <ChevronRight className="w-4 h-4 text-dreamxec-navy group-hover:text-white transition-colors" />
@@ -94,7 +94,7 @@ export default function RecentlyViewedCarousel() {
                 key={campaign.id}
                 onClick={() => navigate(`/campaign/${campaign.id}`)}
                 className="min-w-[260px] max-w-[260px] sm:min-w-[280px] sm:max-w-[280px] bg-white flex flex-col cursor-pointer transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px] flex-shrink-0"
-                style={{ border: '3px solid #000080', boxShadow: '5px 5px 0 #FF7F00' }}
+                style={{ border: '3px solid #003366', boxShadow: '5px 5px 0 #FF7F00' }}
               >
                 {/* Top stripe */}
                 <div className="h-1.5 bg-dreamxec-orange flex-shrink-0" />
@@ -110,7 +110,7 @@ export default function RecentlyViewedCarousel() {
                   {/* Progress chip */}
                   <div
                     className="absolute top-2.5 right-2.5 px-2 py-0.5 text-[10px] font-black text-white"
-                    style={{ background: '#0B9C2C', border: '2px solid #000080' }}
+                    style={{ background: '#0B9C2C', border: '2px solid #003366' }}
                   >
                     {progress.toFixed(0)}%
                   </div>
@@ -122,7 +122,7 @@ export default function RecentlyViewedCarousel() {
                   {/* Category */}
                   <span
                     className="inline-block mb-2 px-2 py-0.5 text-[10px] font-black text-white uppercase tracking-widest self-start"
-                    style={{ background: '#FF7F00', border: '2px solid #000080' }}
+                    style={{ background: '#FF7F00', border: '2px solid #003366' }}
                   >
                     {campaign.club?.college || 'Dreamxec'}
                   </span>
@@ -136,7 +136,7 @@ export default function RecentlyViewedCarousel() {
                     {/* Progress bar */}
                     <div
                       className="w-full h-2.5 overflow-hidden"
-                      style={{ border: '2px solid #000080', background: '#f3f4f6' }}
+                      style={{ border: '2px solid #003366', background: '#f3f4f6' }}
                     >
                       <div
                         className="h-full bg-dreamxec-orange transition-all duration-500"

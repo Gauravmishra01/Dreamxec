@@ -56,7 +56,7 @@ export default function AdminApplications() {
         
         {/* Decorative Background Elements */}
         <div className="absolute top-20 right-20 z-0 opacity-20 pointer-events-none">
-          <StarDecoration className="w-24 h-24" color="#000080" />
+          <StarDecoration className="w-24 h-24" color="#003366" />
         </div>
 
         {/* Content Wrapper */}

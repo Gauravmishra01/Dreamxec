@@ -10,7 +10,7 @@ export const StarDecoration = ({ className = "w-8 h-8", color = "#FF9933" }: { c
       <path
         d="M 25 5 L 28 18 L 42 18 L 31 26 L 35 40 L 25 32 L 15 40 L 19 26 L 8 18 L 22 18 Z"
         fill={color}
-        stroke="#000080"
+        stroke="#003366"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"

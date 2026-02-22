@@ -12,7 +12,7 @@ export const HandshakeIcon = ({ className = "w-12 h-12" }: { className?: string 
         <path
           d="M 15 50 Q 20 40, 30 45 L 35 50 L 38 55 L 35 60 Q 25 65, 18 58 Z"
           fill="#FF9933"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -22,7 +22,7 @@ export const HandshakeIcon = ({ className = "w-12 h-12" }: { className?: string 
         <path
           d="M 85 50 Q 80 40, 70 45 L 65 50 L 62 55 L 65 60 Q 75 65, 82 58 Z"
           fill="#138808"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -35,12 +35,12 @@ export const HandshakeIcon = ({ className = "w-12 h-12" }: { className?: string 
           rx="18"
           ry="12"
           fill="#FFFFFF"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="4"
         />
         
         {/* Fingers detail lines */}
-        <g stroke="#000080" strokeWidth="2">
+        <g stroke="#003366" strokeWidth="2">
           <line x1="32" y1="48" x2="35" y2="45" />
           <line x1="30" y1="52" x2="33" y2="50" />
           <line x1="68" y1="48" x2="65" y2="45" />
@@ -51,7 +51,7 @@ export const HandshakeIcon = ({ className = "w-12 h-12" }: { className?: string 
         <path
           d="M 50 25 L 52 32 L 59 32 L 53 37 L 55 44 L 50 39 L 45 44 L 47 37 L 41 32 L 48 32 Z"
           fill="#FF9933"
-          stroke="#000080"
+          stroke="#003366"
           strokeWidth="2"
         />
       </g>

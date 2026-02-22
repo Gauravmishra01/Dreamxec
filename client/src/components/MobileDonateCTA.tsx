@@ -43,7 +43,7 @@ export default function MobileDonateCTA({
           <div
             className="mx-3 mb-3 bg-white overflow-hidden"
             style={{
-              border: '3px solid #000080',
+              border: '3px solid #003366',
               boxShadow: '4px 4px 0 #FF7F00',
               borderRadius: '12px',
             }}
@@ -77,7 +77,7 @@ export default function MobileDonateCTA({
               {/* Progress bar — flat, hard bordered */}
               <div
                 className="w-full h-2.5 overflow-hidden"
-                style={{ border: '2px solid #000080', background: '#f3f4f6', borderRadius: '6px' }}
+                style={{ border: '2px solid #003366', background: '#f3f4f6', borderRadius: '6px' }}
               >
                 <motion.div
                   className="h-full"

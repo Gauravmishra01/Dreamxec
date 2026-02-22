@@ -73,7 +73,7 @@ export const PartnersSection = () => {
           <div className="flex justify-center mb-4">
             <span
               className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white"
-              style={{ background: '#000080', border: '2px solid #000080' }}
+              style={{ background: '#003366', border: '2px solid #003366' }}
             >
               ★ DreamXec At Your Service
             </span>
@@ -93,7 +93,7 @@ export const PartnersSection = () => {
                 />
                 <span
                   className="relative z-10 inline-block px-3 sm:px-5 py-1 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight"
-                  style={{ background: '#000080', border: '3px solid #000080' }}
+                  style={{ background: '#003366', border: '3px solid #003366' }}
                 >
                   Questions
                 </span>
@@ -103,7 +103,7 @@ export const PartnersSection = () => {
 
           <p
             className="inline-block mt-5 sm:mt-6 px-4 sm:px-5 py-2 text-xs sm:text-sm md:text-base font-black text-dreamxec-navy uppercase tracking-wide"
-            style={{ border: '2px dashed #000080', background: '#fff7ed' }}
+            style={{ border: '2px dashed #003366', background: '#fff7ed' }}
           >
            Everything you need to know — honest, transparent, no fluff.
           </p>

@@ -46,7 +46,7 @@ const SortIcon = () => (
 const cardAccents = [
   { stripe: '#FF7F00', shadow: '#FF7F00', statBg: '#fff7ed', statBorder: '#FF7F00', statText: '#FF7F00' },
   { stripe: '#0B9C2C', shadow: '#0B9C2C', statBg: '#f0fdf4', statBorder: '#0B9C2C', statText: '#0B9C2C' },
-  { stripe: '#000080', shadow: '#000080', statBg: '#eff6ff', statBorder: '#000080', statText: '#000080' },
+  { stripe: '#003366', shadow: '#003366', statBg: '#eff6ff', statBorder: '#003366', statText: '#003366' },
 ];
 
 function ClubCard({ club, index }: { club: any; index: number }) {
@@ -62,7 +62,7 @@ function ClubCard({ club, index }: { club: any; index: number }) {
       to={`/clubs/${club.slug}`}
       className="group relative flex flex-col bg-white transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
       style={{
-        border: '3px solid #000080',
+        border: '3px solid #003366',
         boxShadow: `6px 6px 0 ${acc.shadow}`,
         animationDelay: `${index * 60}ms`,
       }}
@@ -74,7 +74,7 @@ function ClubCard({ club, index }: { club: any; index: number }) {
       {isTopRaiser && (
         <div
           className="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 text-[10px] sm:text-xs font-black uppercase tracking-wide text-white z-10"
-          style={{ background: '#FF7F00', border: '2px solid #000080' }}
+          style={{ background: '#FF7F00', border: '2px solid #003366' }}
         >
           <TrophyIcon />
           Top Raiser
@@ -97,7 +97,7 @@ function ClubCard({ club, index }: { club: any; index: number }) {
         </div>
 
         {/* Hard divider */}
-        <div className="my-4" style={{ borderTop: '2px dashed #000080', opacity: 0.15 }} />
+        <div className="my-4" style={{ borderTop: '2px dashed #003366', opacity: 0.15 }} />
 
         {/* Description */}
         {club.description && (
@@ -138,7 +138,7 @@ function ClubCard({ club, index }: { club: any; index: number }) {
         {/* CTA row */}
         <div
           className="mt-4 flex items-center justify-between px-3 py-2 bg-white group-hover:bg-dreamxec-navy transition-colors duration-150"
-          style={{ border: '2px solid #000080' }}
+          style={{ border: '2px solid #003366' }}
         >
           <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-dreamxec-navy group-hover:text-white transition-colors">
             View Club
@@ -157,7 +157,7 @@ function ClubCard({ club, index }: { club: any; index: number }) {
 ───────────────────────────────────────────── */
 function SkeletonCard() {
   return (
-    <div className="bg-white animate-pulse" style={{ border: '3px solid #000080', boxShadow: '6px 6px 0 #e5e7eb' }}>
+    <div className="bg-white animate-pulse" style={{ border: '3px solid #003366', boxShadow: '6px 6px 0 #e5e7eb' }}>
       <div className="h-2 bg-gray-200" />
       <div className="p-5 sm:p-6 space-y-4">
         <div className="h-5 bg-gray-200 rounded w-3/4" />
@@ -244,7 +244,7 @@ export default function ClubDiscovery() {
             Explore{" "}
             <span
               className="inline-block px-2 sm:px-3"
-              style={{ background: '#FF7F00', color: '#000080' }}
+              style={{ background: '#FF7F00', color: '#003366' }}
             >
               College
             </span>{" "}
@@ -273,7 +273,7 @@ export default function ClubDiscovery() {
       {/* ── CONTROLS ── */}
       <div
         className="sticky top-0 z-30 bg-dreamxec-cream"
-        style={{ borderBottom: '3px solid #000080', boxShadow: '0 3px 0 #FF7F00' }}
+        style={{ borderBottom: '3px solid #003366', boxShadow: '0 3px 0 #FF7F00' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -289,7 +289,7 @@ export default function ClubDiscovery() {
                 value={searchQuery}
                 onChange={(e) => { setPage(1); setSearchQuery(e.target.value); }}
                 className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm font-bold text-dreamxec-navy bg-white placeholder:text-dreamxec-navy/40 focus:outline-none transition-all"
-                style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #FF7F00' }}
+                style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
               />
             </div>
 
@@ -302,7 +302,7 @@ export default function ClubDiscovery() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="w-full pl-9 pr-8 py-2.5 sm:py-3 text-sm font-bold text-dreamxec-navy bg-white focus:outline-none appearance-none cursor-pointer transition-all"
-                style={{ border: '3px solid #000080', boxShadow: '3px 3px 0 #0B9C2C' }}
+                style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #0B9C2C' }}
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -327,7 +327,7 @@ export default function ClubDiscovery() {
           <div className="flex flex-col items-center justify-center py-20 sm:py-28 text-center">
             <div
               className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-5 bg-white"
-              style={{ border: '3px solid #000080', boxShadow: '5px 5px 0 #FF7F00' }}
+              style={{ border: '3px solid #003366', boxShadow: '5px 5px 0 #FF7F00' }}
             >
               <span className="text-3xl">🔍</span>
             </div>
@@ -346,7 +346,7 @@ export default function ClubDiscovery() {
               <span className="text-xs font-black text-dreamxec-navy/50 uppercase tracking-widest">Showing</span>
               <span
                 className="px-3 py-1.5 text-xs sm:text-sm font-black text-white uppercase tracking-wide"
-                style={{ background: '#FF7F00', border: '2px solid #000080' }}
+                style={{ background: '#FF7F00', border: '2px solid #003366' }}
               >
                 {meta?.total} Club{meta?.total !== 1 ? "s" : ""}
               </span>
@@ -367,7 +367,7 @@ export default function ClubDiscovery() {
                   disabled={page === 1}
                   onClick={() => setPage(p => p - 1)}
                   className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 font-black text-xs sm:text-sm uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:translate-x-[-1px] hover:translate-y-[-1px]"
-                  style={{ border: '3px solid #000080', background: '#fff', boxShadow: '3px 3px 0 #000080', color: '#000080' }}
+                  style={{ border: '3px solid #003366', background: '#fff', boxShadow: '3px 3px 0 #003366', color: '#003366' }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6" /></svg>
                   Prev
@@ -388,10 +388,10 @@ export default function ClubDiscovery() {
                         onClick={() => setPage(p)}
                         className="w-9 h-9 sm:w-10 sm:h-10 font-black text-sm transition-all"
                         style={{
-                          border: '3px solid #000080',
-                          background: isCurrent ? '#000080' : '#fff',
-                          color: isCurrent ? '#fff' : '#000080',
-                          boxShadow: isCurrent ? '3px 3px 0 #FF7F00' : '2px 2px 0 #000080',
+                          border: '3px solid #003366',
+                          background: isCurrent ? '#003366' : '#fff',
+                          color: isCurrent ? '#fff' : '#003366',
+                          boxShadow: isCurrent ? '3px 3px 0 #FF7F00' : '2px 2px 0 #003366',
                           transform: isCurrent ? 'translate(-1px,-1px)' : 'none',
                         }}
                       >
@@ -405,7 +405,7 @@ export default function ClubDiscovery() {
                   disabled={page === meta.totalPages}
                   onClick={() => setPage(p => p + 1)}
                   className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 font-black text-xs sm:text-sm uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:translate-x-[-1px] hover:translate-y-[-1px]"
-                  style={{ border: '3px solid #000080', background: '#fff', boxShadow: '3px 3px 0 #000080', color: '#000080' }}
+                  style={{ border: '3px solid #003366', background: '#fff', boxShadow: '3px 3px 0 #003366', color: '#003366' }}
                 >
                   Next
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6" /></svg>
