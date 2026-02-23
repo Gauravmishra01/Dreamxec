@@ -85,13 +85,13 @@ const AboutUs = () => {
 
 
                 <div className="relative">
-                  <button
+                  {/* <button
                     onClick={() => valuesSwiper?.slidePrev()}
                     className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
                     aria-label="Previous"
                   >
                     <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </button>
+                  </button> */}
                   <Swiper
                     modules={[Pagination, Keyboard, A11y, Autoplay]}
                     spaceBetween={32}
@@ -149,13 +149,13 @@ const AboutUs = () => {
                     </div>
                   </SwiperSlide>
                   </Swiper>
-                  <button
+                  {/* <button
                     onClick={() => valuesSwiper?.slideNext()}
                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-3 border-dreamxec-navy shadow-lg flex items-center justify-center hover:bg-dreamxec-orange hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
                     aria-label="Next"
                   >
                     <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </button>
+                  </button> */}
                 </div>
 
                 {/* HOW DREAMXEC IS DIFFERENT */}
