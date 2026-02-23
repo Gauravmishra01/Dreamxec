@@ -54,6 +54,8 @@ import FAQ from './sections/Pages/company/FAQ';
 import PressMedia from './sections/Pages/company/PressMedia';
 import AboutUs from './components/AboutUs';
 import TermsAndConditions from './sections/Pages/legal/TermsAndConditions';
+import BlogListing from './sections/Pages/blog/BlogListing';
+import BlogPost from './sections/Pages/blog/BlogPost';
 import VerifyPresident from './components/VerifyPresident';
 import { LoaderProvider, useLoader } from './context/LoaderContext';
 import { AuthProvider } from './context/AuthContext';
@@ -1392,6 +1394,8 @@ function AppContent() {
                               <Route path="/success-stories" element={<SuccessStories />} />
                               <Route path="/press" element={<PressMedia />} />
                               <Route path="/terms-And-Conditions" element={<TermsAndConditions />} />
+                              <Route path="/blog" element={<BlogListing />} />
+                              <Route path="/blog/:slug" element={<BlogPost />} />
                               {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                */}
                               <Route path="/how-it-works/students" element={<HowItWorksStudents />} />

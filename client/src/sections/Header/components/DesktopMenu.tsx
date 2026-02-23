@@ -71,6 +71,13 @@ export const DesktopMenu = ({ currentUser, onLogin }: DesktopMenuProps) => {
       )}
 
       <a
+        href="/blog"
+        className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
+      >
+        BLOG
+      </a>
+
+      <a
         href="/about"
         className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
       >
