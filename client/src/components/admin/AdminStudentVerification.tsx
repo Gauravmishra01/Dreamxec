@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
-import { getStudentVerifications, approveStudentVerification, rejectStudentVerification } from '../services/adminService';
-import { StarDecoration } from './icons';
+import { getStudentVerifications, approveStudentVerification, rejectStudentVerification } from '../../services/adminService';
+import { StarDecoration } from '../icons';
 
 // Icons
 const Icons = {

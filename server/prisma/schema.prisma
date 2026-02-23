@@ -275,7 +275,7 @@ model UserProject {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments CampaignComment[] @relation("ProjectComments")
 
-  rating Float @default(5.0)
+  rating Float? @default(5.0)
 
 
 
@@ -727,8 +727,8 @@ model AuditLog {
   entity   String
   entityId String
 
-  performedBy String @db.ObjectId
-  admin       User   @relation("AuditLogPerformer", fields: [performedBy], references: [id])
+  performedBy String? @db.ObjectId
+  admin       User?   @relation("AuditLogPerformer", fields: [performedBy], references: [id])
 
   details   Json?
   ipAddress String?

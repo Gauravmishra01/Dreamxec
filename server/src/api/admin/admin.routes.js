@@ -34,13 +34,18 @@ router.get('/club-verifications/verifications', adminController.getPendingClubVe
 router.post('/club-verifications/verifications/:id/approve', adminController.verifyClub);
 router.post('/club-verifications/verifications/:id/reject', adminController.verifyClub);
 
-// --------------------
-// FINANCIALS
-// --------------------
-router.get('/financials/donations', adminController.getAllDonations);
-router.get('/financials/withdrawals', adminController.getWithdrawals);
-router.patch('/financials/withdrawals/:id', adminController.manageWithdrawal);
+// ==========================================
+// FINANCIAL MANAGEMENT ROUTES
+// ==========================================
 
+// Get paginated donations
+router.get('/donations', adminController.getAllDonations);
+
+// Get pending/completed withdrawals
+router.get('/withdrawals', adminController.getWithdrawals);
+
+// Approve/Reject a withdrawal
+router.patch('/withdrawals/:id/status', adminController.manageWithdrawal);
 
 // --------------------
 // MILESTONES

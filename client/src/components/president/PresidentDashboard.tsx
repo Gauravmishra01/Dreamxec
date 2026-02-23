@@ -1,4 +1,5 @@
 import React from "react";
+import { StarDecoration } from "../icons/StarDecoration";
 
 interface PresidentDashboardProps {
   stats?: {
@@ -10,6 +11,30 @@ interface PresidentDashboardProps {
     pendingCampaigns: number;
     rejectedCampaigns: number;
   };
+}
+
+// Custom Stat Card
+function StatCard({ title, value, icon, colorTheme }: { title: string, value: number, icon: React.ReactNode, colorTheme: 'orange' | 'green' | 'blue' | 'purple' | 'red' | 'navy' }) {
+  const themes = {
+    orange: 'bg-orange-50 text-orange-700 border-dreamxec-orange shadow-pastel-saffron',
+    green: 'bg-green-50 text-green-700 border-dreamxec-green shadow-pastel-green',
+    blue: 'bg-blue-50 text-blue-700 border-blue-400 shadow-pastel-navy',
+    purple: 'bg-purple-50 text-purple-700 border-purple-400 shadow-pastel-purple',
+    red: 'bg-red-50 text-red-700 border-red-400 shadow-pastel-red',
+    navy: 'bg-dreamxec-cream text-dreamxec-navy border-dreamxec-navy shadow-pastel-navy',
+  };
+
+  return (
+    <div className={`rounded-xl p-6 border-3 hover:scale-105 transition-transform flex flex-col justify-between ${themes[colorTheme]}`}>
+      <div className="flex justify-between items-start mb-4">
+        <p className="text-sm font-bold uppercase tracking-wider opacity-80">{title}</p>
+        <div className="p-2 bg-white/50 rounded-full shadow-sm backdrop-blur-sm">
+          {icon}
+        </div>
+      </div>
+      <p className="text-4xl sm:text-5xl font-bold font-display">{value.toLocaleString()}</p>
+    </div>
+  );
 }
 
 export default function PresidentDashboard({
@@ -24,131 +49,79 @@ export default function PresidentDashboard({
   },
 }: PresidentDashboardProps) {
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-dreamxec-navy">
-          Club Overview
-        </h1>
-        <div className="text-sm text-gray-500 hidden lg:block">
-          Last updated just now • Auto-refresh enabled
+    <div className="w-full relative z-10">
+      
+      {/* Background Decor */}
+      <div className="absolute top-0 right-10 z-0 opacity-20 pointer-events-none">
+        <StarDecoration className="w-20 h-20" color="#FF7F00" />
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 relative z-10">
+        <div>
+          <h1 className="text-4xl font-bold text-dreamxec-navy font-display flex items-center gap-3">
+            Club Overview <StarDecoration className="w-8 h-8 hidden sm:block" color="#0B9C2C" />
+          </h1>
+          <p className="text-gray-600 mt-2 font-sans text-lg">Manage your members and oversee club campaigns.</p>
+        </div>
+        <div className="px-4 py-2 bg-white rounded-lg border-2 border-gray-200 text-sm font-bold text-gray-500 shadow-sm">
+          Live Updates Enabled
         </div>
       </div>
 
-      {/* Unified Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
-        {/* Members Section */}
-        <StatCard
-          title="Total Members"
-          value={stats.totalMembers}
-          trend="+12%"
-          icon="👥"
-          color="from-blue-500 to-blue-600"
-        />
-        <StatCard
-          title="Verified Members"
-          value={stats.verifiedMembers}
-          trend="+8%"
-          icon="✅"
-          color="from-green-500 to-green-600"
-        />
-        <StatCard
-          title="Pending Members"
-          value={stats.pendingMembers}
-          trend="+3%"
-          icon="⏳"
-          color="from-yellow-500 to-yellow-600"
-        />
-        <StatCard
-          title="Total Campaigns"
-          value={stats.totalCampaigns}
-          trend="+5%"
-          icon="🎯"
-          color="from-purple-500 to-purple-600"
-        />
+      <div className="mb-10">
+        <h2 className="text-2xl font-bold text-dreamxec-navy font-display mb-4 border-b-2 border-dreamxec-navy/10 pb-2">Membership Stats</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StatCard 
+            title="Total Members" 
+            value={stats.totalMembers} 
+            colorTheme="navy" 
+            icon={<span className="text-xl">👥</span>} 
+          />
+          <StatCard 
+            title="Verified Members" 
+            value={stats.verifiedMembers} 
+            colorTheme="green" 
+            icon={<span className="text-xl">✅</span>} 
+          />
+          <StatCard 
+            title="Pending Approval" 
+            value={stats.pendingMembers} 
+            colorTheme="orange" 
+            icon={<span className="text-xl">⏳</span>} 
+          />
+        </div>
       </div>
 
-      {/* Campaign Status Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 mb-8">
-        <StatCard
-          title="Approved Campaigns"
-          value={stats.approvedCampaigns}
-          trend="+15%"
-          icon="✓"
-          color="from-emerald-500 to-emerald-600"
-          className="border-l-8 border-emerald-500"
-        />
-        <StatCard
-          title="Pending Campaigns"
-          value={stats.pendingCampaigns}
-          trend="+2%"
-          icon="⏳"
-          color="from-amber-500 to-amber-600"
-          className="border-l-8 border-amber-500"
-        />
-        <StatCard
-          title="Rejected Campaigns"
-          value={stats.rejectedCampaigns}
-          trend="-1%"
-          icon="✕"
-          color="from-red-500 to-red-600"
-          className="border-l-8 border-red-500"
-        />
+      <div>
+        <h2 className="text-2xl font-bold text-dreamxec-navy font-display mb-4 border-b-2 border-dreamxec-navy/10 pb-2">Campaign Performance</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard 
+            title="Total Campaigns" 
+            value={stats.totalCampaigns} 
+            colorTheme="blue" 
+            icon={<span className="text-xl">🎯</span>} 
+          />
+          <StatCard 
+            title="Approved" 
+            value={stats.approvedCampaigns} 
+            colorTheme="green" 
+            icon={<span className="text-xl">🏆</span>} 
+          />
+          <StatCard 
+            title="In Review" 
+            value={stats.pendingCampaigns} 
+            colorTheme="orange" 
+            icon={<span className="text-xl">👀</span>} 
+          />
+          <StatCard 
+            title="Rejected" 
+            value={stats.rejectedCampaigns} 
+            colorTheme="red" 
+            icon={<span className="text-xl">❌</span>} 
+          />
+        </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center sm:text-left text-sm text-gray-500 pt-4 border-t border-gray-100">
-        Last updated just now • Analytics refresh automatically every 5 minutes
-      </div>
-    </div>
-  );
-}
-
-interface StatCardProps {
-  title: string;
-  value: number;
-  trend: string;
-  icon: string;
-  color: string;
-  className?: string;
-}
-
-function StatCard({ title, value, trend, icon, color, className = "" }: StatCardProps) {
-  return (
-    <div
-      className={`
-        group bg-gradient-to-br ${color} bg-white/60 backdrop-blur-sm
-        border border-white/20 rounded-2xl p-6 shadow-lg hover:shadow-2xl
-        transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]
-        relative overflow-hidden ${className}
-      `}
-    >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      
-      {/* Icon */}
-      <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">
-        <span className="text-2xl">{icon}</span>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10">
-        <p className="text-sm font-medium text-white/90 mb-2 tracking-wide uppercase">
-          {title}
-        </p>
-        <p className="text-3xl sm:text-4xl lg:text-3xl font-black text-white mb-2 leading-tight">
-          {value.toLocaleString()}
-        </p>
-        <p className={`text-xs font-semibold px-2 py-1 rounded-full inline-block ${
-          trend.startsWith('+') 
-            ? 'bg-white/20 text-emerald-200' 
-            : 'bg-white/20 text-rose-200'
-        }`}>
-          {trend}
-        </p>
-      </div>
-
-      {/* Shine Effect */}
-      <div className="absolute -top-2 -right-2 w-20 h-20 bg-white/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-all rotate-12" />
     </div>
   );
 }
