@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { StarDecoration } from './icons';
+import { StarDecoration } from '../icons';
 // --- Icons ---
 const Icons = {
   Dashboard: ({ className }: { className?: string }) => (
@@ -54,6 +54,7 @@ export default function AdminSidebar() {
 
   const menuItems = [
     { label: 'Command Center', path: '/admin', icon: <Icons.Dashboard /> },
+    { label: 'Campaigns', path: '/admin/campaigns', icon: <Icons.Flag /> },
     { label: 'User Management', path: '/admin/users', icon: <Icons.Users /> },
     { label: 'Donor Management', path: '/admin/donors', icon: <Icons.Briefcase /> },
     { label: 'Club Management', path: '/admin/clubs', icon: <Icons.Clubs /> },

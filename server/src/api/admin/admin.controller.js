@@ -1100,8 +1100,8 @@ exports.getAuditLogs = catchAsync(async (req, res, next) => {
   // Search by Action Name or Entity ID
   if (search) {
     where.OR = [
-      { action: { contains: search, mode: 'insensitive' } },
-      { entityId: { contains: search, mode: 'insensitive' } }
+      { action: { contains: search } },
+      { entityId: { contains: search } }
     ];
   }
 

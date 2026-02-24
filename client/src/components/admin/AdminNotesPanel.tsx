@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getEntityNotes, createEntityNote } from '../services/adminService';
+import { getEntityNotes, createEntityNote } from '../../services/adminService';
 
 interface AdminNotesPanelProps {
   entityType: 'user' | 'club' | 'project' | 'donor' | 'donor_project';
