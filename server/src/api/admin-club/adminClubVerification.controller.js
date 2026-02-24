@@ -1,6 +1,7 @@
 const prisma = require("../../config/prisma");
 const { publishEvent } = require('../../services/eventPublisher.service');
 const EVENTS = require('../../config/events');
+const generateClubSlug = require("../../utils/generateClubSlug")
 
 exports.listVerifications = async (req, res) => {
   const { status, skip = 0, take = 50 } = req.query;
@@ -49,12 +50,18 @@ exports.approveVerification = async (req, res) => {
         },
       });
 
-      // 3. Create the Club FIRST (Crucial step: we need club.id for the user update)
+      // ✅ 2.5 Generate a Unique Slug using your utility function
+      // We pass the club name (or a fallback) and the college name
+      const safeClubName = verification.clubName || `${verification.collegeName} Club`;
+      const uniqueSlug = await generateClubSlug(safeClubName, verification.collegeName);
+
+      // 3. Create the Club FIRST (Add fallback values to prevent Prisma crash)
       const club = await tx.club.create({
         data: {
-          name: verification.clubName,
+          name: safeClubName,
+          slug: uniqueSlug, // ✅ Pass the generated slug to satisfy the unique constraint
           college: verification.collegeName,
-          description: verification.clubDescription,
+          description: verification.clubDescription || 'Student Club',
           presidentEmail: verification.studentEmail,
           presidentUserId: verification.userId,
         },
@@ -68,10 +75,10 @@ exports.approveVerification = async (req, res) => {
           clubVerified: true,
           isClubPresident: true,
           isClubMember: true,
-          canCreateCampaign: true, // Enable campaign creation immediately
-          // ✅ Correctly push the new Club ID into the array
-          clubIds: {
-            push: club.id 
+          canCreateCampaign: true,
+          // Use 'connect' for Prisma Many-to-Many relations
+          clubs: {
+            connect: [{ id: club.id }]
           }
         },
       });
@@ -135,25 +142,25 @@ exports.rejectVerification = async (req, res) => {
       },
     });
 
-    res.json({ 
-      success: true, 
-      message: "Verification rejected successfully", 
-      data: updated 
+    res.json({
+      success: true,
+      message: "Verification rejected successfully",
+      data: updated
     });
 
     // Publish Event (Non-blocking)
     try {
-        if (updated.studentEmail) {
-            await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
-                email: updated.studentEmail,
-                clubName: updated.clubName || 'Your Club',
-                status: 'REJECTED',
-                reason: reason || "No reason specified",
-                dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
-            });
-        }
+      if (updated.studentEmail) {
+        await publishEvent(EVENTS.CLUB_VERIFICATION_STATUS, {
+          email: updated.studentEmail,
+          clubName: updated.clubName || 'Your Club',
+          status: 'REJECTED',
+          reason: reason || "No reason specified",
+          dashboardUrl: `${process.env.CLIENT_URL}/dashboard`
+        });
+      }
     } catch (err) {
-        console.error("Event Publish Error:", err);
+      console.error("Event Publish Error:", err);
     }
 
   } catch (error) {
@@ -161,15 +168,15 @@ exports.rejectVerification = async (req, res) => {
 
     // Handle "Record not found" error from Prisma
     if (error.code === 'P2025') {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Verification request not found" 
+      return res.status(404).json({
+        success: false,
+        message: "Verification request not found"
       });
     }
 
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to reject verification" 
+    res.status(500).json({
+      success: false,
+      message: "Failed to reject verification"
     });
   }
 };
