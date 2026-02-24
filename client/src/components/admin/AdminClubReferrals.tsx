@@ -37,7 +37,7 @@ export default function AdminClubReferrals() {
     const notes = prompt(`Enter notes for ${status} (Optional):`);
     // If they cancel the prompt, do nothing
     if (notes === null) return;
-    
+
     try {
       await updateReferralStatus(id, status as any, notes || '');
       loadReferrals();
@@ -54,21 +54,31 @@ export default function AdminClubReferrals() {
   };
 
   // Sort Logic
+  // Sort Logic
   const sortedReferrals = useMemo(() => {
     let sortable = [...referrals];
     sortable.sort((a, b) => {
       if (sortConfig.key === 'clubName') {
-        return sortConfig.direction === 'asc' ? (a.clubName || '').localeCompare(b.clubName || '') : (b.clubName || '').localeCompare(a.clubName || '');
+        return sortConfig.direction === 'asc'
+          ? (a.clubName || '').localeCompare(b.clubName || '')
+          : (b.clubName || '').localeCompare(a.clubName || '');
       }
       if (sortConfig.key === 'user') {
-        return sortConfig.direction === 'asc' ? (a.referrerEmail || '').localeCompare(b.referrerEmail || '') : (b.referrerEmail || '').localeCompare(a.referrerEmail || '');
+        return sortConfig.direction === 'asc'
+          ? (a.referrerEmail || '').localeCompare(b.referrerEmail || '')
+          : (b.referrerEmail || '').localeCompare(a.referrerEmail || '');
       }
       if (sortConfig.key === 'status') {
-        return sortConfig.direction === 'asc' ? a.status.localeCompare(b.status) : b.status.localeCompare(a.status);
+        // Safe locale compare in case status is somehow undefined
+        const statusA = a.status || '';
+        const statusB = b.status || '';
+        return sortConfig.direction === 'asc'
+          ? statusA.localeCompare(statusB)
+          : statusB.localeCompare(statusA);
       }
       // Default: Date
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
       return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
     });
     return sortable;
@@ -83,7 +93,7 @@ export default function AdminClubReferrals() {
   return (
     <div className="flex min-h-screen bg-transparent relative">
       <AdminSidebar />
-      
+
       <div className="flex-1 relative min-h-screen w-full px-6 lg:px-10 py-8">
         <div className="absolute top-10 left-10 z-0 opacity-10 pointer-events-none">
           <StarDecoration className="w-24 h-24" color="#0B9C2C" />
@@ -155,7 +165,7 @@ export default function AdminClubReferrals() {
                               <button onClick={() => setSelectedReferral(ref)} className="p-2 bg-gray-100 text-gray-700 rounded-lg border hover:bg-gray-200" title="View Full Details">
                                 <EyeIcon className="w-5 h-5" />
                               </button>
-                              
+
                               {/* ACTION BUTTONS (Requirement #6) */}
                               {ref.status === 'PENDING' && (
                                 <>
@@ -181,8 +191,8 @@ export default function AdminClubReferrals() {
       </div>
 
       {selectedReferral && (
-        <ReferralDetailsModal 
-          referral={selectedReferral} 
+        <ReferralDetailsModal
+          referral={selectedReferral}
           onClose={() => setSelectedReferral(null)}
           onApprove={() => handleStatusUpdate(selectedReferral.id, 'APPROVED')}
           onReject={() => handleStatusUpdate(selectedReferral.id, 'REJECTED')}
