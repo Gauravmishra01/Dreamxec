@@ -115,7 +115,7 @@ export const CriteriaGrid = () => {
           grabCursor={true}
           autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
           breakpoints={{
-            768:  { slidesPerView: 2, spaceBetween: 24 },
+            768: { slidesPerView: 2, spaceBetween: 24 },
             1024: { slidesPerView: 2, spaceBetween: 28 },
           }}
           className="criteria-carousel pb-12"
@@ -132,7 +132,7 @@ export const CriteriaGrid = () => {
                 {/* Top color stripe */}
                 <div className="h-2" style={{ background: item.stripe }} />
 
-                <div className="flex items-stretch flex-1 p-4 sm:p-5 md:p-6 gap-4">
+                <div className="flex items-center justify-center flex-1 p-4 sm:p-5 md:p-6 gap-2">
 
                   {/* Left: number + text */}
                   <div className="flex-1 flex flex-col min-w-0">
@@ -163,15 +163,29 @@ export const CriteriaGrid = () => {
                   </div>
 
                   {/* Right: SVG icon in bordered box */}
-                  <div className="flex-shrink-0 flex items-center justify-center">
+                  <div className="flex-1 flex items-center justify-center">
                     <div
-                      className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex items-center justify-center"
+                      className="
+                                w-24 h-24        /* mobile */
+                                sm:w-28 sm:h-28  /* small phones / large phones */
+                                md:w-36 md:h-36  /* tablets */
+                                lg:w-40 lg:h-40  /* small laptops */
+                                xl:w-44 xl:h-44  /* desktops */
+                                flex items-center justify-center
+                              "
                       style={{ border: `2px solid ${item.stripe}`, background: `${item.stripe}10` }}
                     >
                       <img
                         src={item.icon}
                         alt={`${item.title} icon`}
-                        className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
+                        className="
+                                  w-14 h-14
+                                  sm:w-16 sm:h-16
+                                  md:w-20 md:h-20
+                                  lg:w-24 lg:h-24
+                                  xl:w-28 xl:h-28
+                                  object-contain
+                                "
                       />
                     </div>
                   </div>
