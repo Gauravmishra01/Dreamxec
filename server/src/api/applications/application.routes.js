@@ -15,20 +15,20 @@ router.use(protect);
 // STUDENT routes (USER role)
 router.post(
   '/',
-  restrictTo('USER'),
+  restrictTo('USER' , 'STUDENT_PRESIDENT'),
   validate(applyToDonorProjectSchema),
   applicationController.applyToDonorProject
 );
 
 router.get(
   '/my',
-  restrictTo('USER'),
+  restrictTo('USER' , 'STUDENT_PRESIDENT'),
   applicationController.getMyApplications
 );
 
 router.delete(
   '/:applicationId',
-  restrictTo('USER'),
+  restrictTo('USER' , 'STUDENT_PRESIDENT'),
   applicationController.withdrawApplication
 );
 

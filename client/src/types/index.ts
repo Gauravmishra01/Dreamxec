@@ -192,6 +192,7 @@ export interface Campaign {
 export interface Project {
   id: string;
   title: string;
+  imageUrl?: string;
   description: string;
   organization?: string; // mapped from organizationName
   companyName?: string; // Alias for organization used by components

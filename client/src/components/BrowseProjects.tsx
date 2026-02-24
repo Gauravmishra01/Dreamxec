@@ -4,6 +4,7 @@ import { FooterContent } from '@/sections/Footer/components/FooterContent';
 
 interface BrowseProjectsProps {
   projects: Project[];
+  imageUrl?: string;
   role: string;
   currentUserId?: string;
   onApply: (projectId: string, coverLetter: string, skills: string[]) => Promise<void>;
@@ -47,8 +48,63 @@ function ProjectCard({
       className="bg-white flex flex-col transition-all duration-200 hover:translate-x-[-3px] hover:translate-y-[-3px]"
       style={{ border: '3px solid #003366', boxShadow: `6px 6px 0 ${shadow}` }}
     >
-      {/* Top stripe */}
-      <div className="h-2" style={{ background: shadow }} />
+      {/* Project Image */}
+      <div className="relative w-full h-48 overflow-hidden bg-gray-100 flex-shrink-0">
+        {project.imageUrl ? (
+          <img
+            src={project.imageUrl}
+            alt={project.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          /* Fallback: project title in neobrutalism style */
+          <div
+            className="w-full h-full flex flex-col items-center justify-center gap-3 px-4 relative overflow-hidden"
+            style={{ background: '#003366' }}
+          >
+            {/* Decorative background shapes */}
+            <div
+              className="absolute -top-4 -right-4 w-20 h-20 rotate-12 opacity-20"
+              style={{ background: shadow, border: '3px solid #fff' }}
+            />
+            <div
+              className="absolute -bottom-5 -left-5 w-16 h-16 rotate-45 opacity-20"
+              style={{ background: shadow }}
+            />
+            <div
+              className="absolute top-3 left-3 w-5 h-5 opacity-30"
+              style={{ border: `3px solid ${shadow}` }}
+            />
+
+            {/* Title text block */}
+            <div className="relative z-10 text-center">
+              <div
+                className="inline-block px-1 mb-1"
+                style={{ background: shadow }}
+              >
+                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white opacity-90">
+                  Project
+                </span>
+              </div>
+              <h3
+                className="font-black uppercase leading-tight text-white break-words"
+                style={{
+                  fontSize: project.title.length > 30 ? '0.85rem' : project.title.length > 18 ? '1rem' : '1.25rem',
+                  textShadow: `3px 3px 0 ${shadow}`,
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {project.title}
+              </h3>
+            </div>
+          </div>
+        )}
+        {/* Overlay top stripe */}
+        <div
+          className="absolute top-0 left-0 right-0 h-2"
+          style={{ background: shadow }}
+        />
+      </div>
 
       <div className="flex flex-col flex-1 p-4 sm:p-5 md:p-6">
 
@@ -339,7 +395,92 @@ export default function BrowseProjects({
               </button>
             </div>
 
+            {/* ── PROJECT IMAGE IN MODAL ── */}
+            {selectedProject.imageUrl && (
+              <div className="relative w-full h-52 overflow-hidden" style={{ borderBottom: '3px solid #003366' }}>
+                <img
+                  src={selectedProject.imageUrl}
+                  alt={selectedProject.title}
+                  className="w-full h-full object-cover"
+                />
+                {/* Gradient overlay for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className="absolute bottom-3 left-4">
+                  <span
+                    className="px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-widest"
+                    style={{ background: 'rgba(0,51,102,0.85)', border: '2px solid #fff' }}
+                  >
+                    🏢 {selectedProject.companyName}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5">
+
+              {/* ── FULL PROJECT DESCRIPTION ── */}
+              <div
+                className="p-4"
+                style={{ border: '3px solid #003366', background: '#f9fafb', boxShadow: '4px 4px 0 #FF7F00' }}
+              >
+                <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest mb-2">
+                  📋 Project Description
+                </p>
+                <p className="text-sm font-medium text-dreamxec-navy leading-relaxed whitespace-pre-line">
+                  {selectedProject.description}
+                </p>
+              </div>
+
+              {/* Skills required */}
+              <div
+                className="p-3 sm:p-4"
+                style={{ border: '2px dashed #0B9C2C', background: '#f0fdf4' }}
+              >
+                <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest mb-2">
+                  🛠 Skills Required
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedProject.skillsRequired.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-1 text-[10px] font-black uppercase tracking-wide"
+                      style={{ border: '2px solid #0B9C2C', background: '#fff', color: '#166534' }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div
+                className="flex items-center gap-3 px-4 py-3"
+                style={{ border: '2px dashed #003366', background: '#f9fafb' }}
+              >
+                <span className="text-base">📅</span>
+                <div>
+                  <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest">Timeline</p>
+                  <p className="text-xs font-black text-dreamxec-navy uppercase tracking-wide">
+                    {getTimelineDisplay(selectedProject.timeline)}
+                  </p>
+                </div>
+                <div className="ml-auto flex items-center gap-2 pl-4" style={{ borderLeft: '2px dashed #003366' }}>
+                  <span className="text-base">👥</span>
+                  <div>
+                    <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest">Applicants</p>
+                    <p className="text-xs font-black text-dreamxec-orange uppercase tracking-wide">
+                      {selectedProject.interestedUsers?.length ?? 0} applied
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="flex h-1">
+                <div className="flex-1 bg-[#FF7F00]" />
+                <div className="flex-1 bg-[#003366]" />
+                <div className="flex-1 bg-[#0B9C2C]" />
+              </div>
 
               {/* Error */}
               {error && (
@@ -396,22 +537,6 @@ export default function BrowseProjects({
                   className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium text-dreamxec-navy bg-white focus:outline-none transition-all"
                   style={{ border: '3px solid #003366', boxShadow: '3px 3px 0 #0B9C2C' }}
                 />
-              </div>
-
-              {/* Project recap */}
-              <div
-                className="p-3 sm:p-4"
-                style={{ border: '2px dashed #003366', background: '#f9fafb' }}
-              >
-                <p className="text-[10px] font-black text-dreamxec-navy/50 uppercase tracking-widest mb-2">Project Summary</p>
-                <p className="text-xs sm:text-sm font-bold text-dreamxec-navy mb-1">
-                  <span className="text-dreamxec-navy/50">Skills:</span>{' '}
-                  {selectedProject.skillsRequired.join(', ')}
-                </p>
-                <p className="text-xs sm:text-sm font-bold text-dreamxec-navy">
-                  <span className="text-dreamxec-navy/50">Timeline:</span>{' '}
-                  {getTimelineDisplay(selectedProject.timeline)}
-                </p>
               </div>
 
               {/* Action buttons */}

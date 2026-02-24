@@ -1208,12 +1208,82 @@ function AppContent() {
                               />
 
 
-                              <Route path="/admin/referrals" element={<AdminClubReferrals />} />
-                              <Route path="/admin/club-referrals" element={<AdminClubReferrals />} />
+                              <Route
+                                path="/admin/referrals"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminClubReferrals />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
+                              <Route
+                                path="/admin/club-referrals"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminClubReferrals />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
 
-                              <Route path="/admin/verifications" element={<AdminClubVerifications />} />
-                              <Route path="/admin/club-verifications" element={<AdminClubVerifications />} />
-                              <Route path="/admin/financials" element={<AdminFinancials />} />
+                              <Route
+                                path="/admin/verifications"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminClubVerifications />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
+                              <Route
+                                path="/admin/club-verifications"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminClubVerifications />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
+                              <Route
+                                path="/admin/financials"
+                                element={
+                                  user?.role === 'admin' ? (
+                                    <>
+                                      <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                      <AdminFinancials />
+                                    </>
+                                  ) : (
+                                    <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                      <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                    </div>
+                                  )
+                                }
+                              />
                               <Route path="/admin/milestones" element={
                                 user?.role === 'admin' ? (
                                   <>

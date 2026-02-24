@@ -160,6 +160,7 @@ export const mapDonorProjectToProject = (
   return {
     id: donorProject.id,
     title: donorProject.title,
+    imageUrl: donorProject.imageUrl,
     companyName: donorProject.organization,
     organization: donorProject.organization,
     description: donorProject.description,

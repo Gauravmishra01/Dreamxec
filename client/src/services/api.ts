@@ -56,35 +56,30 @@ async function apiRequest<T>(
 
   const token = getToken();
 
-  // Headers
+  // ✅ Handle FormData correctly
+  const isFormData = options.body instanceof FormData;
+
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...(options.headers as Record<string, string> ?? {}),
   };
 
-  // Attach JWT automatically
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  console.log("📡 API CALL:", endpoint);
-
-  // ===============================
-  // BUILD QUERY STRING (NEW)
-  // ===============================
   const queryString = options.params
     ? "?" +
-    new URLSearchParams(
-      Object.entries(options.params)
-        .filter(([_, value]) => value !== undefined && value !== null)
-        .reduce((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {} as Record<string, string>)
-    ).toString()
+      new URLSearchParams(
+        Object.entries(options.params)
+          .filter(([_, value]) => value !== undefined && value !== null)
+          .reduce((acc, [key, value]) => {
+            acc[key] = String(value);
+            return acc;
+          }, {} as Record<string, string>)
+      ).toString()
     : "";
 
-  // Remove params before sending to fetch
   const { params, ...fetchOptions } = options;
 
   try {
@@ -99,50 +94,48 @@ async function apiRequest<T>(
     const data = await response.json().catch(() => ({}));
 
     // ===============================
-    // HANDLE 401 AUTH ERRORS
+    // 🔐 HANDLE 401
     // ===============================
     if (response.status === 401) {
-      console.warn("🔒 Not authenticated");
-
-      return {
-        success: false,
-        message: "Not authenticated",
-      } as ApiResponse<T>;
+      removeToken();
+      throw new Error("Your session has expired. Please login again.");
     }
 
     // ===============================
-    // HANDLE OTHER ERRORS
+    // ❌ HANDLE BACKEND ERRORS
     // ===============================
     if (!response.ok) {
-      console.error("❌ API Error:", data);
 
-      return {
-        success: false,
-        message:
-          data?.message ||
-          data?.error ||
-          "Something went wrong",
-      } as ApiResponse<T>;
+      // 🔥 Handle Zod structured errors
+      if (data?.errors && Array.isArray(data.errors)) {
+        const combinedMessage = data.errors
+          .map((e: any) => e.message)
+          .join("\n");
+
+        throw new Error(combinedMessage);
+      }
+
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        "Something went wrong"
+      );
     }
 
     // ===============================
-    // SUCCESS
+    // ✅ SUCCESS
     // ===============================
     return data as ApiResponse<T>;
 
+  } catch (error: any) {
 
-    // ===============================
-    // SUCCESS
-    // ===============================
-    return data as ApiResponse<T>;
+    // If already proper Error → rethrow
+    if (error instanceof Error) {
+      throw error;
+    }
 
-  } catch (error) {
-    console.error("🚨 Network Error:", error);
-
-    return {
-      success: false,
-      message: "Network error. Please try again.",
-    } as ApiResponse<T>;
+    // Real network failure
+    throw new Error("Network error. Please check your connection.");
   }
 }
 

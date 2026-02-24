@@ -59,15 +59,15 @@ export const PartnersSection = () => {
 
       {/* Neobrutalism background texture dots */}
       <div className="absolute inset-0 pointer-events-none opacity-10"
-      
+
       />
 
       <div className="relative max-w-7xl mx-auto">
 
         {/* ── Header ── */}
-        
 
-         <div className="text-center mb-10 sm:mb-12 md:mb-14">
+
+        <div className="text-center mb-10 sm:mb-12 md:mb-14">
 
           {/* Eyebrow stamp */}
           <div className="flex justify-center mb-4">
@@ -105,102 +105,105 @@ export const PartnersSection = () => {
             className="inline-block mt-5 sm:mt-6 px-4 sm:px-5 py-2 text-xs sm:text-sm md:text-base font-black text-dreamxec-navy uppercase tracking-wide"
             style={{ border: '2px dashed #003366', background: '#fff7ed' }}
           >
-           Everything you need to know — honest, transparent, no fluff.
+            Everything you need to know — honest, transparent, no fluff.
           </p>
         </div>
 
         {/* ── FAQ Carousel ── */}
-        <div className="mb-14">
+        <div className="mb-14 relative">
+          {/* Custom nav buttons at screen ends */}
+          <button
+            className="swiper-faq-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center font-black text-sm text-white transition-all hover:translate-x-[-2px]"
+            style={{ background: '#003366', border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
+          >
+            ←
+          </button>
+          <button
+            className="swiper-faq-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center font-black text-sm text-white transition-all hover:translate-x-[2px]"
+            style={{ background: '#003366', border: '3px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
+          >
+            →
+          </button>
+
           <Swiper
             modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={20}
+            spaceBetween={16}
             slidesPerView={1}
             speed={700}
-            navigation
+            navigation={{
+              prevEl: '.swiper-faq-prev',
+              nextEl: '.swiper-faq-next',
+            }}
             pagination={{ clickable: true }}
             keyboard={{ enabled: true }}
             grabCursor={true}
             autoplay={{ delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }}
             breakpoints={{
-              520: { slidesPerView: 1, spaceBetween: 20 },
-              768: { slidesPerView: 2, spaceBetween: 24 },
-              1024: { slidesPerView: 3, spaceBetween: 28 },
+              520: { slidesPerView: 2, spaceBetween: 14 },
+              768: { slidesPerView: 3, spaceBetween: 16 },
+              1024: { slidesPerView: 4, spaceBetween: 16 },
             }}
-            className="faq-carousel !pb-12"
+            className="faq-carousel !pb-10 !px-10"
           >
-            {partners.map((partner, index) => (
-              <SwiperSlide key={partner.name} className="h-auto">
-                <div
-                  className="
-                    group
-                    bg-white
-                    border-[3px] border-dreamxec-navy
-                    rounded-none
-                    shadow-[5px_5px_0px_#003366]
-                    hover:shadow-[8px_8px_0px_#FF6600]
-                    hover:-translate-y-1 hover:-translate-x-1
-                    transition-all duration-200 ease-in-out
-                    p-4 sm:p-5
-                    flex flex-col
-                    h-full
-                    cursor-pointer
-                    relative
-                    overflow-hidden
-                  "
-                >
-                  {/* Neobrutalism corner accent */}
-                  <div className="absolute top-0 right-0 w-8 h-8 bg-dreamxec-orange border-l-[3px] border-b-[3px] border-dreamxec-navy" />
-
-                  {/* Index badge */}
-                  <div className="absolute top-2 left-2 bg-dreamxec-navy text-white text-xs font-bold w-6 h-6 flex items-center justify-center border-2 border-dreamxec-navy rounded-none">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-
-                  {/* Logo */}
-                  <div className="
-                    mt-6 mb-4
-                    bg-dreamxec-cream
-                    border-[3px] border-dreamxec-navy
-                    group-hover:border-dreamxec-orange
-                    transition-colors duration-200
-                    p-3
-                    flex items-center justify-center
-                    rounded-none
-                    flex-shrink-0
-                  ">
-                    <img
-                      src={partner.logo}
-                      alt={`FAQ ${index + 1} illustration`}
-                      className="w-full h-24 sm:h-28 md:h-32 object-contain group-hover:scale-105 transition-transform duration-300"
+            {partners.map((partner, index) => {
+              const shadowAccents = ['#FF7F00', '#0B9C2C', '#003366'];
+              const accent = shadowAccents[index % 3];
+              return (
+                <SwiperSlide key={partner.name} className="h-auto">
+                  <div
+                    className="group bg-white flex flex-col h-full cursor-pointer relative overflow-hidden transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                    style={{
+                      border: '3px solid #003366',
+                      boxShadow: `5px 5px 0 ${accent}`,
+                    }}
+                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.boxShadow = `7px 7px 0 ${accent}`)}
+                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.boxShadow = `5px 5px 0 ${accent}`)}
+                  >
+                    {/* Corner accent */}
+                    <div
+                      className="absolute top-0 right-0 w-6 h-6"
+                      style={{ background: accent, borderLeft: '3px solid #003366', borderBottom: '3px solid #003366' }}
                     />
+
+                    {/* Index badge */}
+                    <div
+                      className="absolute top-2 left-2 w-5 h-5 flex items-center justify-center text-[9px] font-black text-white"
+                      style={{ background: '#003366', border: '2px solid #003366' }}
+                    >
+                      {String(index + 1).padStart(2, '0')}
+                    </div>
+
+                    {/* Logo */}
+                    <div
+                      className="mt-5 mx-3 mb-3 flex items-center justify-center p-2 flex-shrink-0 transition-colors duration-200"
+                      style={{ background: '#fffbf5', border: '2px solid #003366' }}
+                    >
+                      <img
+                        src={partner.logo}
+                        alt={`FAQ ${index + 1} illustration`}
+                        className="w-full h-16 object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+
+                    {/* Question */}
+                    <h3
+                      className="text-xs font-black text-[#003366] uppercase tracking-tight mx-3 mb-2 leading-snug"
+                      style={{ borderLeft: `3px solid ${accent}`, paddingLeft: '6px' }}
+                    >
+                      {partner.name}
+                    </h3>
+
+                    {/* Answer */}
+                    <p
+                      className="mt-auto mx-3 mb-3 text-[11px] font-medium text-[#003366]/70 leading-relaxed px-2 py-1.5 transition-colors duration-200"
+                      style={{ background: '#fffbf5', border: '2px solid #003366' }}
+                    >
+                      {partner.category}
+                    </p>
                   </div>
-
-                  {/* Question */}
-                  <h3 className="
-                    text-sm sm:text-base font-extrabold text-dreamxec-navy font-display
-                    mb-3 leading-snug
-                    border-l-4 border-dreamxec-orange pl-2
-                  ">
-                    {partner.name}
-                  </h3>
-
-                  {/* Answer */}
-                  <p className="
-                    mt-auto
-                    text-xs sm:text-sm text-dreamxec-berkeley-blue font-sans
-                    bg-dreamxec-cream
-                    border-[2px] border-dreamxec-navy
-                    group-hover:border-dreamxec-orange
-                    px-3 py-2
-                    rounded-none
-                    leading-relaxed
-                    transition-colors duration-200
-                  ">
-                    {partner.category}
-                  </p>
-                </div>
-              </SwiperSlide>
-            ))}
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </div>
 
