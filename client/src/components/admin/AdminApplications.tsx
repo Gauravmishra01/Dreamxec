@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
-import { getAdminApplications, overrideApplicationStatus } from '../services/adminService';
-import { StarDecoration } from './icons';
+import { getAdminApplications, overrideApplicationStatus } from '../../services/adminService';
+import { StarDecoration } from '../icons';
 
 export default function AdminApplications() {
   const [applications, setApplications] = useState<any[]>([]);

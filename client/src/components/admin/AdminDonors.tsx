@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
-import { getAllDonors, toggleDonorVerification, manageDonorStatus } from '../services/adminService';
-import { StarDecoration } from './icons';
+import { getAllDonors, toggleDonorVerification, manageDonorStatus } from '../../services/adminService';
+import { StarDecoration } from '../icons';
 
 // Icons
 const Icons = {

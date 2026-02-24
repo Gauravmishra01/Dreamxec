@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getUserFullDetails } from '../services/adminService';
+import { getUserFullDetails } from '../../services/adminService';
 import AdminNotesPanel from './AdminNotesPanel';
-import { StarDecoration } from './icons';
+import { StarDecoration } from '../icons';
 
 interface Props {
   userId: string;

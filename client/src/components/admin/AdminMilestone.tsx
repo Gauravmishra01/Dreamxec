@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import AdminSidebar from './AdminSidebar';
-import { getAllMilestones, verifyMilestone } from '../services/adminService';
-import { StarDecoration } from './icons';
+import { getAllMilestones, verifyMilestone } from '../../services/adminService';
+import { StarDecoration } from '../icons';
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
 const Icons = {

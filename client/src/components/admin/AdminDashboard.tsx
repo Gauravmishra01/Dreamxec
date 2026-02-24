@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdminSidebar from '../components/AdminSidebar';
-import AdminProjectDetails from '../components/AdminProjectDetails';
+import AdminSidebar from './AdminSidebar';
+import AdminProjectDetails from './AdminProjectDetails';
 import {
   getDashboardStats,
   getAllProjects,
   verifyUserProject,
   verifyDonorProject
-} from '../services/adminService';
-import { mapUserProjectToCampaign, mapDonorProjectToProject } from '../services/mappers';
-import type { Campaign, Project, DashboardStats } from '../types';
-import { StarDecoration } from './icons/StarDecoration';
+} from '../../services/adminService';
+import { mapUserProjectToCampaign, mapDonorProjectToProject } from '../../services/mappers';
+import type { Campaign, Project, DashboardStats } from '../../types';
+import { StarDecoration } from '../icons';
 
 // --- Icons ---
 const ClockIcon = ({ className }: { className?: string }) => (
@@ -61,9 +61,8 @@ const RejectionModal = ({ campaignTitle, onClose, onSubmit }: { campaignTitle: s
   );
 };
 
-// --- KPI Stat Card ---
-const KPIStatCard = ({ label, value, icon, color }: any) => (
-  <div className="card-pastel bg-white rounded-xl p-5 flex items-center gap-4 hover:scale-105 transition-transform border-3 border-dreamxec-navy shadow-sm">
+const KPIStatCard = ({ label, value, icon, color, onClick }: any) => (
+  <div onClick={onClick} className="card-pastel bg-white rounded-xl p-5 flex items-center gap-4 hover:scale-105 transition-transform border-3 border-dreamxec-navy shadow-sm cursor-pointer">
     <div className={`p-3 rounded-full border-2 border-dreamxec-navy ${color === 'blue' ? 'bg-blue-50 text-blue-700' : color === 'purple' ? 'bg-purple-50 text-purple-700' : color === 'orange' ? 'bg-orange-50 text-orange-700' : 'bg-green-50 text-green-700'}`}>
       {icon}
     </div>
@@ -188,10 +187,10 @@ export default function AdminDashboard() {
 
           {/* 1. Global KPIs Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <KPIStatCard label="Total Users" value={stats.kpi.totalUsers} icon={<UsersIcon className="w-6 h-6" />} color="blue" />
-            <KPIStatCard label="Total Donors" value={stats.kpi.totalDonors} icon={<UsersIcon className="w-6 h-6" />} color="purple" />
-            <KPIStatCard label="Active Clubs" value={stats.kpi.totalClubs} icon={<StarDecoration className="w-6 h-6" />} color="orange" />
-            <KPIStatCard label="Total Raised" value={`₹${stats.kpi.totalDonations.toLocaleString()}`} icon={<TrendingUpIcon className="w-6 h-6" />} color="green" />
+            <KPIStatCard onClick={() => navigate('/admin/users')} label="Total Users" value={stats.kpi.totalUsers} icon={<UsersIcon className="w-6 h-6" />} color="blue" />
+            <KPIStatCard onClick={() => navigate('/admin/donors')} label="Total Donors" value={stats.kpi.totalDonors} icon={<UsersIcon className="w-6 h-6" />} color="purple" />
+            <KPIStatCard onClick={() => navigate('/admin/clubs')} label="Active Clubs" value={stats.kpi.totalClubs} icon={<StarDecoration className="w-6 h-6" />} color="orange" />
+            <KPIStatCard onClick={() => navigate('/admin/financials')} label="Total Raised" value={`₹${stats.kpi.totalDonations.toLocaleString()}`} icon={<TrendingUpIcon className="w-6 h-6" />} color="green" />
           </div>
 
           {/* 2. System Alerts (Attention Panel) */}
@@ -219,62 +218,41 @@ export default function AdminDashboard() {
           )}
 
           {/* 3. Original Workflow Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
-            <div className="card-pastel rounded-xl p-6 card-pastel-tilt-left hover:scale-105 transition-transform bg-white">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <div onClick={() => navigate('/admin/campaigns?status=PENDING')} className="card-pastel rounded-xl p-6 card-pastel-tilt-left hover:scale-105 transition-transform bg-white cursor-pointer">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-dreamxec-navy text-lg font-bold font-display">Pending Campaigns</p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
-                  <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
-                </div>
+                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron"><ClockIcon className="w-8 h-8 text-dreamxec-orange" /></div>
               </div>
-              <p className="text-5xl font-bold text-dreamxec-navy font-display">{stats.kpi.campaigns.PENDING}</p>
+              <p className="text-5xl font-bold text-dreamxec-navy font-display">{pendingCampaigns.length}</p>
               <div className="mt-2 h-1 bg-dreamxec-orange rounded"></div>
             </div>
 
-            <div className="card-pastel rounded-xl p-6 hover:scale-105 transition-transform bg-white">
+            <div onClick={() => navigate('/admin/applications')} className="card-pastel rounded-xl p-6 hover:scale-105 transition-transform bg-white cursor-pointer">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-dreamxec-navy text-lg font-bold font-display">Pending Projects</p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
-                  <ClockIcon className="w-8 h-8 text-dreamxec-orange" />
-                </div>
+                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron"><ClockIcon className="w-8 h-8 text-dreamxec-orange" /></div>
               </div>
               <p className="text-5xl font-bold text-dreamxec-navy font-display">{pendingDonorProjects.length}</p>
               <div className="mt-2 h-1 bg-dreamxec-orange rounded"></div>
             </div>
 
-            <div className="card-pastel rounded-xl p-6 hover:scale-105 transition-transform bg-white">
+            <div onClick={() => navigate('/admin/campaigns?status=APPROVED')} className="card-pastel rounded-xl p-6 hover:scale-105 transition-transform bg-white cursor-pointer">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-dreamxec-navy text-lg font-bold font-display">Total Approved</p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green">
-                  <CheckCircleIcon className="w-8 h-8 text-dreamxec-green" />
-                </div>
+                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-green"><CheckCircleIcon className="w-8 h-8 text-dreamxec-green" /></div>
               </div>
               <p className="text-5xl font-bold text-dreamxec-navy font-display">{approvedCount}</p>
               <div className="mt-2 h-1 bg-dreamxec-green rounded"></div>
             </div>
 
-            <div className="card-pastel rounded-xl p-6 card-pastel-tilt-right hover:scale-105 transition-transform bg-white">
+            <div onClick={() => navigate('/admin/campaigns')} className="card-pastel rounded-xl p-6 card-pastel-tilt-right hover:scale-105 transition-transform bg-white cursor-pointer">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-dreamxec-navy text-lg font-bold font-display">Total Submissions</p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-navy">
-                  <EyeIcon className="w-8 h-8 text-dreamxec-navy" />
-                </div>
+                <p className="text-dreamxec-navy text-lg font-bold font-display">All Campaigns</p>
+                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-navy"><EyeIcon className="w-8 h-8 text-dreamxec-navy" /></div>
               </div>
               <p className="text-5xl font-bold text-dreamxec-navy font-display">{totalSubmissions}</p>
               <div className="mt-2 h-1 bg-gradient-to-r from-dreamxec-orange via-white to-dreamxec-green rounded"></div>
-            </div>
-
-            {/* Pending Milestones */}
-            <div onClick={() => navigate('/admin/milestones')} className="card-pastel rounded-xl p-6 hover:scale-105 transition-transform bg-white cursor-pointer group">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-dreamxec-navy text-lg font-bold font-display group-hover:text-dreamxec-orange transition-colors">Milestones</p>
-                <div className="bg-white border-4 border-dreamxec-navy rounded-full w-14 h-14 flex items-center justify-center shadow-pastel-saffron">
-                  <svg className="w-8 h-8 text-dreamxec-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" /></svg>
-                </div>
-              </div>
-              <p className="text-5xl font-bold text-dreamxec-navy font-display">{stats.kpi.milestones?.total || 0}</p>
-              <p className="text-xs text-gray-500 mt-1 font-bold">{stats.kpi.milestones?.SUBMITTED || 0} awaiting review</p>
-              <div className="mt-2 h-1 bg-dreamxec-orange rounded"></div>
             </div>
           </div>
 

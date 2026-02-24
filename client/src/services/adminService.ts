@@ -178,9 +178,7 @@ export const uploadClubMembers = async (file: File, clubId: string, token?: stri
 ========================================================= */
 
 export const getAdminDonations = async (page = 1, limit = 20): Promise<ApiResponse<any>> => {
-  return apiRequest(`/admin/financials/donations?page=${page}&limit=${limit}`, {
-    method: 'GET',
-  });
+  return apiRequest(`/admin/donations?page=${page}&limit=${limit}`, { method: 'GET' });
 };
 
 export const getAdminWithdrawals = async (status = 'pending'): Promise<ApiResponse<any>> => {

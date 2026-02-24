@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
-import apiRequest from '../services/api'; // Adjusted path if needed based on your structure
-import { StarDecoration } from './icons';
+import apiRequest from '../../services/api'; // Adjusted path if needed based on your structure
+import { StarDecoration } from '../icons';
 
 interface Club {
   id: string;

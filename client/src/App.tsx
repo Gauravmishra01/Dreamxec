@@ -9,7 +9,7 @@ import StudentDashboard from './components/StudentDashboard';
 import CreateCampaign from './components/CreateCampaign';
 import EditCampaign from './components/EditCampaign';
 import CreateCampaignDemo from './components/CreateCampaignDemo';
-import AdminDashboard from './components/AdminDashboard';
+import AdminDashboard from './components/admin/AdminDashboard';
 import AuthPage from './components/AuthPage';
 import UserProfile from './components/UserProfile';
 import DonorDashboard from './components/DonorDashboard';
@@ -69,16 +69,16 @@ import { LoaderProvider, useLoader } from './context/LoaderContext';
 import { AuthProvider } from './context/AuthContext';
 import LoadingAnimation from './components/LoadingAnimation';
 // Add these imports with the others
-import AdminUsers from './components/AdminUser';
-import AdminClubs from './components/AdminClubs';
-import AdminFinancials from './components/AdminFinancials';
-import AdminMilestones from './components/AdminMilestone';
-import AdminStudentVerifications from './components/AdminStudentVerification';
-import AdminAuditLogs from './components/AdminAuditLogs';
-import AdminDonors from './components/AdminDonors';
-import AdminApplications from './components/AdminApplications';
+import AdminUsers from './components/admin/AdminUser';
+import AdminClubs from './components/admin/AdminClubs';
+import AdminFinancials from './components/admin/AdminFinancials';
+import AdminMilestones from './components/admin/AdminMilestone';
+import AdminStudentVerifications from './components/admin/AdminStudentVerification';
+import AdminAuditLogs from './components/admin/AdminAuditLogs';
+import AdminDonors from './components/admin/AdminDonors';
+import AdminApplications from './components/admin/AdminApplications';
 import apiRequest from './services/api';
-
+import AdminCampaigns from './components/admin/AdminCampaigns';
 
 type UserProjectsResponse = {
   userProjects: any;
@@ -1267,6 +1267,19 @@ function AppContent() {
                                   <>
                                     <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
                                     <AdminApplications />
+                                  </>
+                                ) : (
+                                  <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
+                                    <p className="text-dreamxec-navy text-xl font-bold">Access Restricted</p>
+                                  </div>
+                                )
+                              } />
+
+                              <Route path="/admin/campaigns" element={
+                                user?.role === 'admin' ? (
+                                  <>
+                                    <Header currentUser={user} onLogin={handleLoginClick} onLogout={handleLogout} />
+                                    <AdminCampaigns />
                                   </>
                                 ) : (
                                   <div className="min-h-screen flex items-center justify-center bg-dreamxec-cream">
