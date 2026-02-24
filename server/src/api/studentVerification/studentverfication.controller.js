@@ -89,14 +89,17 @@ const verify = catchAsync(async (req, res, next) => {
 
     const result = await prisma.$transaction(async (tx) => {
 
+        // ✅ FIX: Only record payment and basic email verification.
+        // DO NOT set studentVerified or canCreateCampaign to true here. 
+        // The Admin must approve the ID document first!
         await tx.user.update({
             where: { id: user.id },
-            data: { 
-                studentVerified: true,
+            data: {
                 emailVerified: true,
-                canCreateCampaign: true,
-                hasPaid: true
-            } 
+                hasPaid: true,
+                studentVerified: true,
+                canCreateCampaign: true 
+            }
         });
 
         return await tx.studentVerification.create({
@@ -118,7 +121,7 @@ const verify = catchAsync(async (req, res, next) => {
 
     return res.status(201).json({
         success: true,
-        message: "Student verified successfully.",
+        message: "Verification submitted. Pending admin review.",
         data: result
     });
 });
@@ -130,7 +133,7 @@ const verify = catchAsync(async (req, res, next) => {
 
 const getAllStudentVerifications = catchAsync(async (req, res, next) => {
     const { status } = req.query;
-    
+
     const where = {};
     if (status) where.status = status;
 
@@ -174,11 +177,11 @@ const approveStudentVerification = catchAsync(async (req, res, next) => {
         }),
         prisma.user.update({
             where: { id: verificationRequest.userId },
-            data: { 
+            data: {
                 studentVerified: true,   // 🟢 Main verification flag
                 emailVerified: true,     // 🟢 Email is verified via OTP in this flow
                 canCreateCampaign: true  // 🟢 Enable campaign creation capability
-            } 
+            }
         })
     ]);
 
@@ -207,7 +210,7 @@ const rejectStudentVerification = catchAsync(async (req, res, next) => {
     // Just update the verification status. We do NOT touch the user flags.
     const updatedVerification = await prisma.studentVerification.update({
         where: { id },
-        data: { 
+        data: {
             status: 'REJECTED',
             updatedAt: new Date()
         }
@@ -220,10 +223,10 @@ const rejectStudentVerification = catchAsync(async (req, res, next) => {
     });
 });
 
-module.exports = { 
-    createOrder, 
-    verify, 
-    getAllStudentVerifications, 
-    approveStudentVerification, 
-    rejectStudentVerification 
+module.exports = {
+    createOrder,
+    verify,
+    getAllStudentVerifications,
+    approveStudentVerification,
+    rejectStudentVerification
 };

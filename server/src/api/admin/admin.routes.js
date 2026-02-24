@@ -30,9 +30,9 @@ router.get('/clubs/members/:clubId', adminController.getClubMembers);
 router.post('/clubs/members/upload', upload.single('file'), adminController.uploadClubMembers);
 
 // --- VERIFICATIONS ---
-router.get('/club-verifications/verifications', adminController.getPendingClubVerifications);
-router.post('/club-verifications/verifications/:id/approve', adminController.verifyClub);
-router.post('/club-verifications/verifications/:id/reject', adminController.verifyClub);
+// router.get('/club-verifications/verifications', adminController.getPendingClubVerifications);
+// router.post('/club-verifications/verifications/:id/approve', adminController.verifyClub);
+// router.post('/club-verifications/verifications/:id/reject', adminController.verifyClub);
 
 // ==========================================
 // FINANCIAL MANAGEMENT ROUTES

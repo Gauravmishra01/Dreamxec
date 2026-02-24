@@ -22,29 +22,35 @@ exports.getReferral = async (req, res) => {
 };
 
 // Unified status update endpoint
+// Unified status update endpoint
 exports.updateReferralStatus = async (req, res) => {
   const { id } = req.params;
   const { status, notes } = req.body;
   
-  if (!['APPROVED', 'REJECTED'].includes(status)) {
+  // Added 'DISABLED' to match your frontend action buttons
+  if (!['APPROVED', 'REJECTED', 'DISABLED'].includes(status)) {
     return res.status(400).json({ success: false, message: "Invalid status" });
   }
   
   const data = {
     status,
-    reviewedBy: req.user.id,
-    reviewedAt: new Date(),
   };
   
-  if (status === 'REJECTED') {
-    data.rejectionReason = notes || null;
+  // Use adminNotes instead of rejectionReason because that's what is in your Prisma Schema
+  if (notes) {
+    data.adminNotes = notes;
   }
   
-  const updated = await prisma.clubReferralRequest.update({
-    where: { id },
-    data,
-  });
-  res.json({ success: true, data: updated });
+  try {
+    const updated = await prisma.clubReferralRequest.update({
+      where: { id },
+      data,
+    });
+    res.json({ success: true, data: updated });
+  } catch (error) {
+    console.error("Update Referral Status Error:", error);
+    res.status(500).json({ success: false, message: "Failed to update status" });
+  }
 };
 
 exports.approveReferral = async (req, res) => {

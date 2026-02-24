@@ -21,12 +21,22 @@ export default function AdminStudentVerifications() {
     loadData();
   }, [filter]);
 
-  const loadData = async () => {
+const loadData = async () => {
     try {
       setLoading(true);
       // Pass 'VERIFIED' or 'PENDING' or empty for all
       const res = await getStudentVerifications(filter === 'ALL' ? '' : filter);
-      setVerifications(res.data.verifications);
+      
+      // ✅ Resilient data extraction
+      const payload = res as any;
+      let itemsList = [];
+      
+      if (Array.isArray(payload)) itemsList = payload;
+      else if (Array.isArray(payload?.data)) itemsList = payload.data;
+      else if (Array.isArray(payload?.verifications)) itemsList = payload.verifications;
+      else if (payload?.data && Array.isArray(payload.data.verifications)) itemsList = payload.data.verifications;
+      
+      setVerifications(itemsList);
     } catch (error) {
       console.error("Fetch error", error);
     } finally {
@@ -74,7 +84,7 @@ export default function AdminStudentVerifications() {
             
             {/* Filter Toggle */}
             <div className="flex bg-white rounded-xl p-1.5 border-2 border-dreamxec-navy/20 shadow-sm w-full md:w-auto overflow-x-auto">
-              {['PENDING', 'VERIFIED', 'REJECTED', 'ALL'].map((status) => (
+              {['ALL','PENDING', 'VERIFIED', 'REJECTED'].map((status) => (
                 <button
                   key={status}
                   onClick={() => setFilter(status)}
