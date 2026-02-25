@@ -137,7 +137,7 @@ export const Hero = () => {
       {/* ════════════════════════════════
           MAIN HEADING — highlighted with shadow blocks
       ════════════════════════════════ */}
-      <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-center tracking-tight leading-[1.15] mb-6">
+      <h1 className="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-center tracking-tight leading-[1.15] mb-6">
 
         {/* "Research Karega India" — orange slab with green shadow */}
         <span className="inline-block relative mb-3">
@@ -176,7 +176,7 @@ export const Hero = () => {
       {/* ════════════════════════════════
           SUBHEADING
       ════════════════════════════════ */}
-      <p className="text-lg sm:text-xl md:text-2xl text-center max-w-3xl mb-12 font-medium text-gray-800">
+      <p className="text-lg sm:text-xl md:text-2xl text-center max-w-3xl mb-12 font-bold text-gray-800">
         DreamXec is India's crowdfunding platform dedicated to turning student projects into real-world innovations.
       </p>
 
