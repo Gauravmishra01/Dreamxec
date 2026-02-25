@@ -281,13 +281,19 @@
 //   );
 // };
 
+import { useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  Navigation,
+  Pagination,
+  Keyboard,
+  A11y,
+  Autoplay,
+} from "swiper/modules";
 
-import { useNavigate } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export const PartnersSection = () => {
   const navigate = useNavigate();
@@ -296,33 +302,39 @@ export const PartnersSection = () => {
     {
       name: "Q: Is my donation tax-deductible? (Corporate/Foundation)",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734236/23_sqrtii.png",
-      category: "A: Yes! 80G certificate auto-generated. 50% deduction."
+      category:
+        "A: Yes! 80G certificate auto-generated. 50% deduction.",
     },
     {
       name: "Q: Can I donate anonymously?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734218/22_uadpdn.png",
-      category: "A: Yes, you can choose to remain anonymous when making a donation."
+      category:
+        "A: Yes, you can choose to remain anonymous when making a donation.",
     },
     {
       name: "Q: What's the minimum pledge amount?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734249/24_ikcg3l.png",
-      category: "A: ₹100. Even small amounts add up and show the team they have community support."
+      category:
+        "A: ₹100. Even small amounts add up and show the team they have community support.",
     },
     {
       name: "Q: What if the project fails?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734189/21_apvr2t.png",
-      category: "A: Rare (95% completion rate). If it happens, we transparently share reasons. Funds already used can't be refunded, but unused funds can be redirected."
+      category:
+        "A: Rare (95% completion rate). If it happens, we transparently share reasons. Funds already used can't be refunded, but unused funds can be redirected.",
     },
     {
       name: "Q. What is a Donor Opportunity?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734256/25_x3uyod.png",
-      category: "A. A Donor Opportunity is a post created by a donor that students can apply to, such as internships, scholarships, projects, or mentorships."
+      category:
+        "A. A Donor Opportunity is a post created by a donor that students can apply to, such as internships, scholarships, projects, or mentorships.",
     },
     {
       name: "Q: How do I know my impact is real?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734263/26_wedmyg.png",
-      category: "A: We track outcomes through 6-month, 1-year, and 3-year follow-ups. You receive clear impact reports on career outcomes, patents filed, and real-world impact."
-    }
+      category:
+        "A: We track outcomes through 6-month, 1-year, and 3-year follow-ups. You receive clear impact reports on career outcomes, patents filed, and real-world impact.",
+    },
   ];
 
   const handleGetStarted = () => {
@@ -339,7 +351,7 @@ export const PartnersSection = () => {
       <div className="relative max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="text-center mb-10 sm:mb-12 md:mb-14">
+        <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white bg-[#003366] border-2 border-[#003366]">
               ★ DreamXec At Your Service
@@ -350,7 +362,8 @@ export const PartnersSection = () => {
             <span className="block text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-dreamxec-navy uppercase tracking-tight">
               Frequently Asked
             </span>
-            <span className="block mt-1 sm:mt-2">
+
+            <span className="block mt-2">
               <span className="relative inline-block">
                 <span className="absolute inset-0 translate-x-[6px] translate-y-[6px] bg-[#0B9C2C]" />
                 <span className="relative z-10 inline-block px-5 py-1 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight bg-[#003366] border-[3px] border-[#003366]">
@@ -366,72 +379,81 @@ export const PartnersSection = () => {
         </div>
 
         {/* Carousel */}
-        <div className="mb-14">
+        <div className="mb-14 relative">
           <Swiper
             modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={16}
+            spaceBetween={18}
             slidesPerView={1}
-            speed={700}
-            navigation={{
-              prevEl: '.swiper-faq-prev',
-              nextEl: '.swiper-faq-next',
-            }}
+            speed={600}
+            navigation
             pagination={{ clickable: true }}
             keyboard={{ enabled: true }}
             grabCursor
             autoplay={{ delay: 3200, disableOnInteraction: false }}
             breakpoints={{
-              520: { slidesPerView: 1 },
+              640: { slidesPerView: 1 },
               768: { slidesPerView: 2 },
               1024: { slidesPerView: 3 },
             }}
             className="
-            faq-carousel !pb-12
+              faq-carousel !pb-12
 
-            [&_.swiper-button-prev]:!w-10
-            [&_.swiper-button-prev]:!h-10
-            [&_.swiper-button-prev]:!bg-white
-            [&_.swiper-button-prev]:!border-[3px]
-            [&_.swiper-button-prev]:!border-dreamxec-navy
-            [&_.swiper-button-prev]:!shadow-[4px_4px_0px_#003366]
-            [&_.swiper-button-prev]:!rounded-none
+              [&_.swiper-button-prev]:!absolute
+              [&_.swiper-button-next]:!absolute
+              [&_.swiper-button-prev]:!top-1/2
+              [&_.swiper-button-next]:!top-1/2
+              [&_.swiper-button-prev]:!-translate-y-1/2
+              [&_.swiper-button-next]:!-translate-y-1/2
+              [&_.swiper-button-prev]:!left-0
+              [&_.swiper-button-next]:!right-0
+              lg:[&_.swiper-button-prev]:!-left-10
+              lg:[&_.swiper-button-next]:!-right-10
 
-            [&_.swiper-button-next]:!w-10
-            [&_.swiper-button-next]:!h-10
-            [&_.swiper-button-next]:!bg-white
-            [&_.swiper-button-next]:!border-[3px]
-            [&_.swiper-button-next]:!border-dreamxec-navy
-            [&_.swiper-button-next]:!shadow-[4px_4px_0px_#003366]
-            [&_.swiper-button-next]:!rounded-none
+              [&_.swiper-button-prev]:!w-10
+              [&_.swiper-button-prev]:!h-10
+              [&_.swiper-button-prev]:!bg-white
+              [&_.swiper-button-prev]:!border-[3px]
+              [&_.swiper-button-prev]:!border-dreamxec-navy
+              [&_.swiper-button-prev]:!shadow-[4px_4px_0px_#003366]
+              [&_.swiper-button-prev]:!rounded-none
 
-            [&_.swiper-button-prev:after]:!text-sm
-            [&_.swiper-button-next:after]:!text-sm
-
-            md:[&_.swiper-button-prev]:!-left-3
-            md:[&_.swiper-button-next]:!-right-3
-            lg:[&_.swiper-button-prev]:!-left-6
-            lg:[&_.swiper-button-next]:!-right-6
+              [&_.swiper-button-next]:!w-10
+              [&_.swiper-button-next]:!h-10
+              [&_.swiper-button-next]:!bg-white
+              [&_.swiper-button-next]:!border-[3px]
+              [&_.swiper-button-next]:!border-dreamxec-navy
+              [&_.swiper-button-next]:!shadow-[4px_4px_0px_#003366]
+              [&_.swiper-button-next]:!rounded-none
             "
-          > 
+          >
             {partners.map((partner, index) => (
               <SwiperSlide key={index}>
-                <div className="group bg-white border-[3px] border-dreamxec-navy shadow-[5px_5px_0px_#003366] hover:shadow-[8px_8px_0px_#FF6600] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-200 p-5 flex flex-col h-full relative">
-                  
+                <div className="group bg-white border-[3px] border-dreamxec-navy shadow-[4px_4px_0px_#003366] hover:shadow-[6px_6px_0px_#FF6600] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-200 p-3 flex flex-col h-[320px] relative">
+
+                  {/* Corner Accent */}
                   <div className="absolute top-0 right-0 w-8 h-8 bg-dreamxec-orange border-l-[3px] border-b-[3px] border-dreamxec-navy" />
 
+                  {/* Number Badge */}
                   <div className="absolute top-2 left-2 bg-dreamxec-navy text-white text-xs font-bold w-6 h-6 flex items-center justify-center border-2 border-dreamxec-navy">
-                    {String(index + 1).padStart(2, '0')}
+                    {String(index + 1).padStart(2, "0")}
                   </div>
 
-                  <div className="mt-6 mb-4 bg-dreamxec-cream border-[3px] border-dreamxec-navy group-hover:border-dreamxec-orange p-10 flex justify-center">
-                    <img src={partner.logo} alt="" className="h-28 object-contain" />
+                  {/* Logo Section */}
+                  <div className="mt-5 mb-3 bg-dreamxec-cream border-[3px] border-dreamxec-navy group-hover:border-dreamxec-orange p-6 flex justify-center items-center h-[150px]">
+                    <img
+                      src={partner.logo}
+                      alt=""
+                      className="h-36 object-contain"
+                    />
                   </div>
 
-                  <h3 className="text-sm font-extrabold text-dreamxec-navy mb-3 border-l-4 border-dreamxec-orange pl-2">
+                  {/* Question */}
+                  <h3 className="text-xs font-extrabold text-dreamxec-navy mb-2 border-l-4 border-dreamxec-orange pl-2">
                     {partner.name}
                   </h3>
 
-                  <p className="mt-auto text-sm text-dreamxec-berkeley-blue bg-dreamxec-cream border-[2px] border-dreamxec-navy group-hover:border-dreamxec-orange px-3 py-2">
+                  {/* Answer */}
+                  <p className="mt-auto text-xs text-dreamxec-berkeley-blue bg-dreamxec-cream border-[2px] border-dreamxec-navy group-hover:border-dreamxec-orange px-3 py-2">
                     {partner.category}
                   </p>
                 </div>
@@ -439,9 +461,7 @@ export const PartnersSection = () => {
             ))}
           </Swiper>
         </div>
-
       </div>
     </section>
   );
 };
-
