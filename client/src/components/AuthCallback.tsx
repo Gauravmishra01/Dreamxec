@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleGoogleCallback } from '../services/authService';
-import { getProfile } from '../services/profileService';
+import { setToken } from '../services/api';
+import { getCurrentUser } from '../services/authService';
+import { mapBackendRole } from '../services/mappers';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -9,21 +10,52 @@ export default function AuthCallback() {
   useEffect(() => {
     const completeAuth = async () => {
       try {
-        await handleGoogleCallback();
+        // 1. Extract token from URL query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
 
-        // Check if profile is complete — redirect to setup if not
-        const profileRes = await getProfile();
-        if (
-          profileRes.status === 'success' &&
-          profileRes.data &&
-          !profileRes.data.profile.profileComplete
-        ) {
+        if (!token) {
+          console.error('AuthCallback: No token in URL');
+          navigate('/auth');
+          return;
+        }
+
+        // 2. Store the token
+        setToken(token);
+
+        // 3. Fetch the current user using the stored token
+        const response = await getCurrentUser();
+
+        if (!response.data?.user) {
+          console.error('AuthCallback: Could not fetch user');
+          navigate('/auth');
+          return;
+        }
+
+        const user = response.data.user;
+        const frontendRole = mapBackendRole(user.role);
+
+        // 4. Check profile completion — redirect to setup if incomplete
+        const profileComplete = (user as any).profileComplete;
+        if (profileComplete === false) {
           navigate('/profile/setup');
+          return;
+        }
+
+        // 5. Role-based redirect
+        if (frontendRole === 'student') {
+          navigate('/dashboard');
+        } else if (frontendRole === 'donor') {
+          navigate('/donor/dashboard');
+        } else if (frontendRole === 'admin') {
+          navigate('/admin');
+        } else if (frontendRole === 'STUDENT_PRESIDENT') {
+          navigate('/president');
         } else {
-          navigate('/');
+          navigate('/dashboard');
         }
       } catch (e) {
-        console.error(e);
+        console.error('AuthCallback error:', e);
         navigate('/auth');
       }
     };
