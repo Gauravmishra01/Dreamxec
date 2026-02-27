@@ -1,8 +1,10 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+
+
+
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import type { Campaign, User } from '../types';
-import { StarDecoration } from './icons/StarDecoration';
 import { FooterContent } from '../sections/Footer/components/FooterContent';
 import { getUserProject } from '../services/userProjectService';
 import { mapUserProjectToCampaign } from '../services/mappers';
@@ -212,16 +214,6 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
-  const getEmbedUrl = (url: string) => {
-    if (!url) return null;
-    if (url.includes('drive.google.com')) {
-      const fileIdMatch = url.match(/\/d\/(.*?)(\/|$)/);
-      if (fileIdMatch?.[1]) return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
-    }
-    if (url.endsWith('.pdf')) return url;
-    return null;
-  };
 
   useEffect(() => { if (campaign) addRecentCampaign(campaign); }, [campaign]);
 
@@ -498,38 +490,140 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             {/* ── Presentation ── */}
             {activeTab === 'presentation' && (
               <div className="w-full">
-                {isDesktop ? (
-                  <Resizable
-                    size={{ width: deckWidth, height: 'auto' }}
-                    minWidth={600}
-                    maxWidth={window.innerWidth * 0.95}
-                    enable={{ right: true }}
-                    onResizeStop={(e, direction, ref) => setDeckWidth(ref.offsetWidth)}
-                    style={{ overflow: 'visible' }}
-                  >
-                    <NeoCard className="p-5 md:p-6" accentColor="#FF7F00">
-                      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                {(() => {
+                  const url = campaign.presentationDeckUrl;
+
+                  if (!url) {
+                    return (
+                      <NeoCard className="p-10 text-center" accentColor="#FF7F00">
+                        <p className="text-2xl mb-2">📭</p>
+                        <p className="font-black text-dreamxec-navy/50 uppercase tracking-widest text-sm">No presentation deck uploaded.</p>
+                      </NeoCard>
+                    );
+                  }
+
+                  // 🚀 SMART DOCUMENT ENGINE (Supports Google Links, Cloudinary, etc.)
+                  const renderDocument = (fileUrl: string) => {
+                    const lowerUrl = fileUrl.toLowerCase();
+                    const isCloudinary = fileUrl.includes('cloudinary.com');
+                    const isGoogleLink = lowerUrl.includes('drive.google.com') || lowerUrl.includes('docs.google.com');
+
+                    // 1. GOOGLE DRIVE / DOCS / SLIDES LINKS
+                    if (isGoogleLink) {
+                      // Extract the unique File ID from any Google link format
+                      const fileIdMatch = fileUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+                      
+                      if (fileIdMatch && fileIdMatch[1]) {
+                        const drivePreviewUrl = `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+                        return (
+                          <iframe 
+                            src={drivePreviewUrl} 
+                            className="w-full h-full border-none bg-white" 
+                            title="Google Document Preview" 
+                            allow="autoplay"
+                          />
+                        );
+                      }
+                    }
+
+                    // 2. NATIVE IMAGES
+                    if (lowerUrl.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
+                      return (
+                        <div className="w-full h-full flex items-center justify-center p-4 bg-gray-50 overflow-y-auto">
+                          <img src={fileUrl} alt="Presentation" className="max-w-full h-auto object-contain shadow-md border-2 border-dreamxec-navy" />
+                        </div>
+                      );
+                    }
+
+                    // 3. CLOUDINARY PDF THUMBNAIL
+                    if (lowerUrl.endsWith('.pdf') && isCloudinary) {
+                      const thumbnailUrl = fileUrl
+                        .replace('/upload/', '/upload/w_800,pg_1/')
+                        .replace(/\.pdf$/i, '.jpg');
+
+                      return (
+                        <div className="relative w-full h-full group bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden" onClick={() => window.open(fileUrl, '_blank')}>
+                          <img src={thumbnailUrl} alt="PDF Preview" className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+                          <div className="absolute inset-0 bg-dreamxec-navy/30 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm">
+                            <span className="p-4 bg-white rounded-full shadow-xl mb-3 text-2xl">📄</span>
+                            <span className="px-6 py-2 bg-dreamxec-orange text-white font-black uppercase tracking-widest text-sm border-2 border-dreamxec-navy shadow-[4px_4px_0px_0px_#003366]">
+                              Read Full PDF
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    // 4. MICROSOFT OFFICE VIEWER (For raw .docx or .pptx files hosted on Cloudinary/AWS)
+                    if (lowerUrl.match(/\.(doc|docx|ppt|pptx|xls|xlsx)$/) && !isGoogleLink) {
+                      const msUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+                      return <iframe src={msUrl} className="w-full h-full border-none bg-white" title="Office Presentation Deck" />;
+                    }
+
+                    // 5. FALLBACK / RAW PDFS
+                    return (
+                      <div className="relative w-full h-full flex items-center justify-center bg-dreamxec-cream p-6 border-4 border-transparent hover:border-dreamxec-orange transition-colors">
+                        <div className="text-center bg-white p-10 max-w-sm w-full border-3 border-dreamxec-navy shadow-[6px_6px_0px_0px_#003366]">
+                          <p className="text-6xl mb-4">📎</p>
+                          <h4 className="text-xl font-black text-dreamxec-navy uppercase tracking-tight mb-2">
+                            Document Available
+                          </h4>
+                          <p className="text-dreamxec-navy/60 text-sm mb-6 font-bold">
+                            Click below to securely open and view this file.
+                          </p>
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block px-6 py-3 bg-dreamxec-green text-white font-black uppercase tracking-widest text-sm transition-all hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                            style={{ border: '3px solid #003366', boxShadow: '4px 4px 0 #003366' }}
+                          >
+                            Open File
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  };
+
+                  return isDesktop ? (
+                    <Resizable
+                      size={{ width: deckWidth, height: 'auto' }}
+                      minWidth={600}
+                      maxWidth={window.innerWidth * 0.95}
+                      enable={{ right: true }}
+                      onResizeStop={(e, direction, ref) => setDeckWidth(ref.offsetWidth)}
+                      style={{ overflow: 'visible' }}
+                    >
+                      <NeoCard className="p-5 md:p-6 flex flex-col" accentColor="#FF7F00">
+                        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                          <SectionHeading>Presentation Deck</SectionHeading>
+                          <div className="flex items-center gap-4">
+                            <a href={url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-600 hover:underline">Open Externally ↗</a>
+                            <span className="text-xs text-dreamxec-navy/50 font-bold uppercase tracking-wide flex items-center gap-1">
+                              ← Drag right edge to resize →
+                            </span>
+                          </div>
+                        </div>
+                        <div style={{ height: 700, border: '3px solid #003366', boxShadow: '5px 5px 0 #003366' }}>
+                          {renderDocument(url)}
+                        </div>
+                      </NeoCard>
+                    </Resizable>
+                  ) : (
+                    <NeoCard className="p-3 sm:p-4" accentColor="#FF7F00">
+                      <div className="flex items-center justify-between mb-3">
                         <SectionHeading>Presentation Deck</SectionHeading>
-                        <span className="text-xs text-dreamxec-navy/50 font-bold uppercase tracking-wide flex items-center gap-1">
-                          ← Drag right edge to resize →
-                        </span>
+                        <a href={url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-600 hover:underline">Open ↗</a>
                       </div>
-                      <div style={{ height: 700, border: '3px solid #003366', boxShadow: '5px 5px 0 #003366' }}>
-                        <iframe src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined} className="w-full h-full" title="Presentation Deck" />
+                      <div style={{ height: deckIframeHeight, border: '3px solid #003366' }}>
+                         {renderDocument(url)}
                       </div>
+                      <p className="mt-2 text-[10px] text-dreamxec-navy/50 font-bold uppercase tracking-widest text-center">
+                        View on larger screen for best experience
+                      </p>
                     </NeoCard>
-                  </Resizable>
-                ) : (
-                  <NeoCard className="p-3 sm:p-4" accentColor="#FF7F00">
-                    <SectionHeading>Presentation Deck</SectionHeading>
-                    <div style={{ height: deckIframeHeight, border: '3px solid #003366' }}>
-                      <iframe src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined} className="w-full h-full" title="Presentation Deck" />
-                    </div>
-                    <p className="mt-2 text-[10px] text-dreamxec-navy/50 font-bold uppercase tracking-widest text-center">
-                      View on larger screen for best experience
-                    </p>
-                  </NeoCard>
-                )}
+                  );
+                })()}
               </div>
             )}
 
