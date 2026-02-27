@@ -58,12 +58,10 @@ body {
 ───────────────────────────────────────────── */
 @layer base {
 
-  /* ── Merge the shadcn wildcard rule here ── */
   * {
     @apply border-border;
   }
 
-  /* ── CSS custom properties ── */
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -89,7 +87,8 @@ body {
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    --radius: 0rem;
+    /* neobrutalism = no radius */
   }
 
   .dark {
@@ -119,65 +118,67 @@ body {
     --chart-5: 340 75% 55%;
   }
 
-  /* ── Body — background defined here, NOT overridden anywhere else ── */
-  body {
-    @apply text-dreamxec-navy;
+  /* ════════════════════════════════════════════════════════
+     BODY — Neobrutalism background
+     
+     Philosophy: neobrutalism wants a background that feels
+     like paper / graph paper / ruled notebook. The grid
+     should be SUBTLE — just enough to give the hard-shadow
+     cards something to "land" on without competing with them.
 
-    /* Keep shadcn foreground color */
+     Layers (top → bottom):
+       1. Fine dot-grid  — gives a "blueprint / graph paper" feel
+       2. Loose 40px rule-lines — horizontal only, very faint
+       3. Solid warm cream base
+  ════════════════════════════════════════════════════════ */
+  body {
     color: hsl(var(--foreground));
 
-    /* Layer order (top → bottom):
-       1. Cream wash over everything
-       2. Horizontal grid lines
-       3. Vertical grid lines
-       4. Your texture image                */
+    /* ── Base colour ── */
+    background-color: #fdf8f0;
+
+    /* ── Three-layer pattern ──
+       Layer 1 (topmost): 4px dot every 24px  →  subtle graph feel
+       Layer 2: thin horizontal rules every 48px  →  ruled-paper feel
+       Layer 3: nothing — just the base color
+    */
     background-image:
-      linear-gradient(
-        rgba(255, 248, 235, 0.82),
-        rgba(255, 248, 235, 0.82)
-      ),
-      repeating-linear-gradient(
-        0deg,
+      /* Dot grid */
+      radial-gradient(circle,
+        rgba(0, 51, 102, 0.12) 1px,
+        transparent 1px),
+      /* Horizontal rules */
+      repeating-linear-gradient(0deg,
         transparent 0px,
-        transparent 39px,
-        rgba(27, 58, 107, 0.08) 39px,
-        rgba(27, 58, 107, 0.08) 40px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent 0px,
-        transparent 39px,
-        rgba(27, 58, 107, 0.08) 39px,
-        rgba(27, 58, 107, 0.08) 40px
-      ),
-      url("/assets/textures/tri-bg.png");
+        transparent 47px,
+        rgba(0, 51, 102, 0.06) 47px,
+        rgba(0, 51, 102, 0.06) 48px);
 
     background-size:
-      100% 100%,   /* cream layer */
-      40px 40px,   /* h-grid      */
-      40px 40px,   /* v-grid      */
-      100% 100%;   /* texture     */
+      24px 24px,
+      /* dot grid cell */
+      100% 48px;
+    /* rule line repeat */
 
     background-repeat: repeat;
     background-attachment: fixed;
+
     overflow-x: hidden;
     overflow-y: auto;
     min-height: 100vh;
     position: relative;
   }
 
-  /* Rough-edge mask overlay */
-  body::before {
+  /* ── Optional: very faint vignette so edges feel "printed" ── */
+  body::after {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    -webkit-mask-image: url("/assets/masks/rough-edge-mask.svg");
-    mask-image: url("/assets/masks/rough-edge-mask.svg");
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    background: inherit;
+    background: radial-gradient(ellipse at center,
+        transparent 60%,
+        rgba(0, 51, 102, 0.04) 100%);
   }
 
   main {
@@ -192,6 +193,13 @@ body {
     width: 100%;
     overflow: visible;
   }
+
+  /* ════════════════════════════════════════════════════════
+     ACCENT STRIPE — tricolor top-of-page bar
+     Gives the page an instant brand anchor.
+     Remove if you have a navbar that already does this.
+  ════════════════════════════════════════════════════════ */
+  
 }
 
 
@@ -550,13 +558,29 @@ body {
    Keyframes & global animations
 ───────────────────────────────────────────── */
 @keyframes float-updown {
-  0%, 100% { transform: translateY(0);     opacity: 0.9; }
-  50%       { transform: translateY(-12px); opacity: 1;   }
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translateY(-12px);
+    opacity: 1;
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0);    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-float-slow {
@@ -572,7 +596,10 @@ img {
 }
 
 /* Scrollbar hide */
-.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -590,11 +617,25 @@ img {
   transform: translateY(0);
 }
 
-.reveal-delay-1 { transition-delay: 120ms; }
-.reveal-delay-2 { transition-delay: 240ms; }
-.reveal-delay-3 { transition-delay: 360ms; }
-.reveal-delay-4 { transition-delay: 480ms; }
-.reveal-delay-5 { transition-delay: 600ms; }
+.reveal-delay-1 {
+  transition-delay: 120ms;
+}
+
+.reveal-delay-2 {
+  transition-delay: 240ms;
+}
+
+.reveal-delay-3 {
+  transition-delay: 360ms;
+}
+
+.reveal-delay-4 {
+  transition-delay: 480ms;
+}
+
+.reveal-delay-5 {
+  transition-delay: 600ms;
+}
 
 
 /* ─────────────────────────────────────────────
@@ -613,7 +654,7 @@ img {
 }
 
 /* Uniform card heights */
-.swiper-slide > div {
+.swiper-slide>div {
   width: 100%;
   min-height: 280px;
 }
@@ -622,6 +663,7 @@ img {
    Carousel responsive padding
 ───────────────────────────────────────────── */
 @media (max-width: 768px) {
+
   .criteria-carousel,
   .whiteboard-carousel,
   .faq-carousel,
@@ -642,6 +684,7 @@ img {
 }
 
 @media (max-width: 480px) {
+
   .criteria-carousel,
   .whiteboard-carousel,
   .faq-carousel,
@@ -664,8 +707,14 @@ img {
 /* ─────────────────────────────────────────────
    Criteria Carousel
 ───────────────────────────────────────────── */
-.criteria-carousel { padding: 40px 70px 60px; }
-.criteria-carousel .swiper-slide { height: auto; display: flex; }
+.criteria-carousel {
+  padding: 40px 70px 60px;
+}
+
+.criteria-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
 
 .criteria-carousel .swiper-button-next,
 .criteria-carousel .swiper-button-prev {
@@ -678,10 +727,21 @@ img {
   box-shadow: 0 4px 12px rgba(0, 0, 128, 0.2);
   transition: all 0.3s ease-in-out;
 }
-.criteria-carousel .swiper-button-prev { left: 0; }
-.criteria-carousel .swiper-button-next { right: 0; }
+
+.criteria-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.criteria-carousel .swiper-button-next {
+  right: 0;
+}
+
 .criteria-carousel .swiper-button-next:after,
-.criteria-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
+.criteria-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .criteria-carousel .swiper-button-next:hover,
 .criteria-carousel .swiper-button-prev:hover {
   background: #FF7F00;
@@ -689,124 +749,231 @@ img {
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(255, 127, 0, 0.4);
 }
+
 .criteria-carousel .swiper-pagination-bullet {
-  width: 12px; height: 12px;
-  background: #003366; opacity: 0.3;
+  width: 12px;
+  height: 12px;
+  background: #003366;
+  opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
-.criteria-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+
+.criteria-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .criteria-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
 }
 
 /* ─────────────────────────────────────────────
    Whiteboard Carousel
 ───────────────────────────────────────────── */
-.whiteboard-carousel { padding: 40px 70px 60px; }
-.whiteboard-carousel .swiper-slide { height: auto; display: flex; }
+.whiteboard-carousel {
+  padding: 40px 70px 60px;
+}
+
+.whiteboard-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
 
 .whiteboard-carousel .swiper-button-next,
 .whiteboard-carousel .swiper-button-prev {
   color: #003366;
   background: rgba(255, 255, 255, 0.95);
-  width: 50px; height: 50px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 3px solid #003366;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
 }
-.whiteboard-carousel .swiper-button-prev { left: 0; }
-.whiteboard-carousel .swiper-button-next { right: 0; }
+
+.whiteboard-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.whiteboard-carousel .swiper-button-next {
+  right: 0;
+}
+
 .whiteboard-carousel .swiper-button-next:after,
-.whiteboard-carousel .swiper-button-prev:after { font-size: 22px; font-weight: bold; }
+.whiteboard-carousel .swiper-button-prev:after {
+  font-size: 22px;
+  font-weight: bold;
+}
+
 .whiteboard-carousel .swiper-button-next:hover,
 .whiteboard-carousel .swiper-button-prev:hover {
-  background: #FF7F00; color: white;
+  background: #FF7F00;
+  color: white;
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #003366, 0 8px 20px rgba(255, 127, 0, 0.35);
 }
+
 .whiteboard-carousel .swiper-pagination-bullet {
-  width: 12px; height: 12px;
-  background: #003366; opacity: 0.3;
+  width: 12px;
+  height: 12px;
+  background: #003366;
+  opacity: 0.3;
   border: 2px solid transparent;
   transition: all 0.3s ease-in-out;
 }
-.whiteboard-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+
+.whiteboard-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .whiteboard-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px; border-color: #003366;
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
+  border-color: #003366;
 }
 
 /* ─────────────────────────────────────────────
    FAQ Carousel
 ───────────────────────────────────────────── */
-.faq-carousel { padding: 40px 70px 60px; }
-.faq-carousel .swiper-slide { height: auto; display: flex; }
+.faq-carousel {
+  padding: 40px 70px 60px;
+}
+
+.faq-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
 
 .faq-carousel .swiper-button-next,
 .faq-carousel .swiper-button-prev {
   color: #003366;
   background: #FAFAF8;
-  width: 48px; height: 48px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 4px solid #003366;
   box-shadow: 4px 4px 0 #FF7F00;
   transition: all 0.2s ease-in-out;
 }
-.faq-carousel .swiper-button-prev { left: 0; }
-.faq-carousel .swiper-button-next { right: 0; }
+
+.faq-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.faq-carousel .swiper-button-next {
+  right: 0;
+}
+
 .faq-carousel .swiper-button-next:after,
-.faq-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
+.faq-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .faq-carousel .swiper-button-next:hover,
 .faq-carousel .swiper-button-prev:hover {
-  background: #0B9C2C; color: white;
+  background: #0B9C2C;
+  color: white;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 #FF7F00;
 }
+
 .faq-carousel .swiper-pagination-bullet {
-  width: 14px; height: 14px;
-  background: #003366; opacity: 0.4;
+  width: 14px;
+  height: 14px;
+  background: #003366;
+  opacity: 0.4;
   border: 2px solid #003366;
   transition: all 0.3s ease-in-out;
 }
-.faq-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+
+.faq-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .faq-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 36px; border-radius: 7px;
+  background: #FF7F00;
+  opacity: 1;
+  width: 36px;
+  border-radius: 7px;
   box-shadow: 2px 2px 0 rgba(0, 0, 128, 0.3);
 }
 
 /* ─────────────────────────────────────────────
    FAQ Page Carousel
 ───────────────────────────────────────────── */
-.faq-page-carousel { padding: 40px 70px 60px; }
-.faq-page-carousel .swiper-slide { height: auto; display: flex; }
+.faq-page-carousel {
+  padding: 40px 70px 60px;
+}
+
+.faq-page-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
 
 .faq-page-carousel .swiper-button-next,
 .faq-page-carousel .swiper-button-prev {
-  color: #003366; background: #FAFAF8;
-  width: 48px; height: 48px;
+  color: #003366;
+  background: #FAFAF8;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 4px solid #003366;
   box-shadow: 4px 4px 0 #FF7F00;
   transition: all 0.2s ease-in-out;
 }
-.faq-page-carousel .swiper-button-prev { left: 0; }
-.faq-page-carousel .swiper-button-next { right: 0; }
+
+.faq-page-carousel .swiper-button-prev {
+  left: 0;
+}
+
+.faq-page-carousel .swiper-button-next {
+  right: 0;
+}
+
 .faq-page-carousel .swiper-button-next:after,
-.faq-page-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
+.faq-page-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .faq-page-carousel .swiper-button-next:hover,
 .faq-page-carousel .swiper-button-prev:hover {
-  background: #0B9C2C; color: white;
+  background: #0B9C2C;
+  color: white;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 #FF7F00;
 }
+
 .faq-page-carousel .swiper-pagination-bullet {
-  width: 12px; height: 12px;
-  background: #003366; opacity: 0.4;
+  width: 12px;
+  height: 12px;
+  background: #003366;
+  opacity: 0.4;
   transition: all 0.3s ease-in-out;
 }
-.faq-page-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+
+.faq-page-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .faq-page-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
 }
 
 /* ─────────────────────────────────────────────
@@ -815,12 +982,17 @@ img {
 .fund-innovation-carousel,
 .donor-stories-carousel,
 .how-it-works-carousel,
-.how-it-works-faq-carousel { padding: 40px 70px 60px; }
+.how-it-works-faq-carousel {
+  padding: 40px 70px 60px;
+}
 
 .fund-innovation-carousel .swiper-slide,
 .donor-stories-carousel .swiper-slide,
 .how-it-works-carousel .swiper-slide,
-.how-it-works-faq-carousel .swiper-slide { height: auto; display: flex; }
+.how-it-works-faq-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
 
 .fund-innovation-carousel .swiper-button-next,
 .fund-innovation-carousel .swiper-button-prev,
@@ -832,20 +1004,27 @@ img {
 .how-it-works-faq-carousel .swiper-button-prev {
   color: #003366;
   background: rgba(255, 255, 255, 0.95);
-  width: 48px; height: 48px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 4px solid #003366;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
 }
+
 .fund-innovation-carousel .swiper-button-prev,
 .donor-stories-carousel .swiper-button-prev,
 .how-it-works-carousel .swiper-button-prev,
-.how-it-works-faq-carousel .swiper-button-prev { left: 0; }
+.how-it-works-faq-carousel .swiper-button-prev {
+  left: 0;
+}
+
 .fund-innovation-carousel .swiper-button-next,
 .donor-stories-carousel .swiper-button-next,
 .how-it-works-carousel .swiper-button-next,
-.how-it-works-faq-carousel .swiper-button-next { right: 0; }
+.how-it-works-faq-carousel .swiper-button-next {
+  right: 0;
+}
 
 .fund-innovation-carousel .swiper-button-next:after,
 .fund-innovation-carousel .swiper-button-prev:after,
@@ -854,7 +1033,10 @@ img {
 .how-it-works-carousel .swiper-button-next:after,
 .how-it-works-carousel .swiper-button-prev:after,
 .how-it-works-faq-carousel .swiper-button-next:after,
-.how-it-works-faq-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
+.how-it-works-faq-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
 
 .fund-innovation-carousel .swiper-button-next:hover,
 .fund-innovation-carousel .swiper-button-prev:hover,
@@ -864,27 +1046,40 @@ img {
 .how-it-works-carousel .swiper-button-prev:hover,
 .how-it-works-faq-carousel .swiper-button-next:hover,
 .how-it-works-faq-carousel .swiper-button-prev:hover {
-  background: #FF7F00; color: white;
+  background: #FF7F00;
+  color: white;
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #003366, 0 8px 20px rgba(255, 127, 0, 0.35);
 }
+
 .fund-innovation-carousel .swiper-pagination-bullet,
 .donor-stories-carousel .swiper-pagination-bullet,
 .how-it-works-carousel .swiper-pagination-bullet,
 .how-it-works-faq-carousel .swiper-pagination-bullet {
-  width: 12px; height: 12px;
-  background: #003366; opacity: 0.3;
+  width: 12px;
+  height: 12px;
+  background: #003366;
+  opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
+
 .fund-innovation-carousel .swiper-pagination,
 .donor-stories-carousel .swiper-pagination,
 .how-it-works-carousel .swiper-pagination,
-.how-it-works-faq-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+.how-it-works-faq-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .fund-innovation-carousel .swiper-pagination-bullet-active,
 .donor-stories-carousel .swiper-pagination-bullet-active,
 .how-it-works-carousel .swiper-pagination-bullet-active,
 .how-it-works-faq-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
 }
 
 /* ─────────────────────────────────────────────
@@ -896,7 +1091,9 @@ img {
 .mentor-benefits-carousel,
 .mentor-stories-carousel,
 .contact-carousel,
-.about-values-carousel { padding: 40px 70px 60px; }
+.about-values-carousel {
+  padding: 40px 70px 60px;
+}
 
 .start-project-carousel .swiper-slide,
 .eligibility-carousel .swiper-slide,
@@ -904,7 +1101,10 @@ img {
 .mentor-benefits-carousel .swiper-slide,
 .mentor-stories-carousel .swiper-slide,
 .contact-carousel .swiper-slide,
-.about-values-carousel .swiper-slide { height: auto; display: flex; }
+.about-values-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
 
 .start-project-carousel .swiper-button-next,
 .start-project-carousel .swiper-button-prev,
@@ -922,19 +1122,23 @@ img {
 .about-values-carousel .swiper-button-prev {
   color: #003366;
   background: rgba(255, 255, 255, 0.95);
-  width: 48px; height: 48px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 4px solid #003366;
   box-shadow: 3px 3px 0 #FF7F00, 0 6px 16px rgba(0, 0, 128, 0.15);
   transition: all 0.3s ease-in-out;
 }
+
 .start-project-carousel .swiper-button-prev,
 .eligibility-carousel .swiper-button-prev,
 .corporate-benefits-carousel .swiper-button-prev,
 .mentor-benefits-carousel .swiper-button-prev,
 .mentor-stories-carousel .swiper-button-prev,
 .contact-carousel .swiper-button-prev,
-.about-values-carousel .swiper-button-prev { left: 0; }
+.about-values-carousel .swiper-button-prev {
+  left: 0;
+}
 
 .start-project-carousel .swiper-button-next,
 .eligibility-carousel .swiper-button-next,
@@ -942,7 +1146,9 @@ img {
 .mentor-benefits-carousel .swiper-button-next,
 .mentor-stories-carousel .swiper-button-next,
 .contact-carousel .swiper-button-next,
-.about-values-carousel .swiper-button-next { right: 0; }
+.about-values-carousel .swiper-button-next {
+  right: 0;
+}
 
 .start-project-carousel .swiper-button-next:after,
 .start-project-carousel .swiper-button-prev:after,
@@ -957,7 +1163,10 @@ img {
 .contact-carousel .swiper-button-next:after,
 .contact-carousel .swiper-button-prev:after,
 .about-values-carousel .swiper-button-next:after,
-.about-values-carousel .swiper-button-prev:after { font-size: 20px; font-weight: bold; }
+.about-values-carousel .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
 
 .start-project-carousel .swiper-button-next:hover,
 .start-project-carousel .swiper-button-prev:hover,
@@ -973,10 +1182,12 @@ img {
 .contact-carousel .swiper-button-prev:hover,
 .about-values-carousel .swiper-button-next:hover,
 .about-values-carousel .swiper-button-prev:hover {
-  background: #FF7F00; color: white;
+  background: #FF7F00;
+  color: white;
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #003366, 0 8px 20px rgba(255, 127, 0, 0.35);
 }
+
 .start-project-carousel .swiper-pagination-bullet,
 .eligibility-carousel .swiper-pagination-bullet,
 .corporate-benefits-carousel .swiper-pagination-bullet,
@@ -984,17 +1195,24 @@ img {
 .mentor-stories-carousel .swiper-pagination-bullet,
 .contact-carousel .swiper-pagination-bullet,
 .about-values-carousel .swiper-pagination-bullet {
-  width: 12px; height: 12px;
-  background: #003366; opacity: 0.3;
+  width: 12px;
+  height: 12px;
+  background: #003366;
+  opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
+
 .start-project-carousel .swiper-pagination,
 .eligibility-carousel .swiper-pagination,
 .corporate-benefits-carousel .swiper-pagination,
 .mentor-benefits-carousel .swiper-pagination,
 .mentor-stories-carousel .swiper-pagination,
 .contact-carousel .swiper-pagination,
-.about-values-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+.about-values-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
 
 .start-project-carousel .swiper-pagination-bullet-active,
 .eligibility-carousel .swiper-pagination-bullet-active,
@@ -1003,29 +1221,46 @@ img {
 .mentor-stories-carousel .swiper-pagination-bullet-active,
 .contact-carousel .swiper-pagination-bullet-active,
 .about-values-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
 }
 
 /* Touch feedback */
 @media (hover: none) and (pointer: coarse) {
+
   .criteria-carousel .swiper-button-next:active,
   .criteria-carousel .swiper-button-prev:active,
   .whiteboard-carousel .swiper-button-next:active,
   .whiteboard-carousel .swiper-button-prev:active,
   .faq-carousel .swiper-button-next:active,
-  .faq-carousel .swiper-button-prev:active { transform: scale(0.95); }
+  .faq-carousel .swiper-button-prev:active {
+    transform: scale(0.95);
+  }
 }
 
 /* ─────────────────────────────────────────────
    Eligibility FAQ Carousel
 ───────────────────────────────────────────── */
-.eligibility-faq-carousel { padding: 0 60px 50px; }
-.eligibility-faq-carousel .swiper-slide { height: auto; display: flex; }
-.eligibility-faq-carousel .swiper-slide > div { width: 100%; min-height: 280px; }
+.eligibility-faq-carousel {
+  padding: 0 60px 50px;
+}
+
+.eligibility-faq-carousel .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.eligibility-faq-carousel .swiper-slide>div {
+  width: 100%;
+  min-height: 280px;
+}
 
 .eligibility-faq-carousel .swiper-button-next,
 .eligibility-faq-carousel .swiper-button-prev {
-  width: 48px; height: 48px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(6px);
@@ -1034,22 +1269,38 @@ img {
   border: 2px solid rgba(0, 0, 128, 0.4);
   transition: all 0.3s ease-in-out;
 }
+
 .eligibility-faq-carousel .swiper-button-next:after,
 .eligibility-faq-carousel .swiper-button-prev:after {
-  font-size: 20px; font-weight: 900; color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 900;
+  color: #FFFFFF;
 }
+
 .eligibility-faq-carousel .swiper-button-next:hover,
 .eligibility-faq-carousel .swiper-button-prev:hover {
   background: #003366;
   box-shadow: 0 6px 20px rgba(0, 0, 128, 0.4);
   transform: scale(1.1);
 }
+
 .eligibility-faq-carousel .swiper-pagination-bullet {
-  width: 12px; height: 12px;
-  background: #003366; opacity: 0.3;
+  width: 12px;
+  height: 12px;
+  background: #003366;
+  opacity: 0.3;
   transition: all 0.3s ease-in-out;
 }
-.eligibility-faq-carousel .swiper-pagination { position: relative; bottom: 0; margin-top: 24px; }
+
+.eligibility-faq-carousel .swiper-pagination {
+  position: relative;
+  bottom: 0;
+  margin-top: 24px;
+}
+
 .eligibility-faq-carousel .swiper-pagination-bullet-active {
-  background: #FF7F00; opacity: 1; width: 32px; border-radius: 6px;
+  background: #FF7F00;
+  opacity: 1;
+  width: 32px;
+  border-radius: 6px;
 }

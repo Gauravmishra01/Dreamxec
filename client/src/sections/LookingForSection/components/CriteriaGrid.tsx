@@ -157,7 +157,7 @@ export const CriteriaGrid = () => {
                     />
 
                     {/* Text */}
-                    <p className="text-xs sm:text-sm text-dreamxec-navy/70 font-medium leading-relaxed flex-1">
+                    <p className="text-xs sm:text-sm text-dreamxec-navy/70 font-medium text-justify leading-relaxed flex-1">
                       {item.text}
                     </p>
                   </div>

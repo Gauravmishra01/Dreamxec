@@ -86,12 +86,12 @@ export const DesktopMenu = ({ currentUser, onLogin }: DesktopMenuProps) => {
         </a>
       )}
 
-      <a
+      {/* <a
         href="/about"
         className="text-dreamxec-berkeley-blue font-bold text-lg hover:text-dreamxec-orange transition-colors font-display"
       >
         ABOUT US
-      </a>
+      </a> */}
 
       {/* Sign In Button for guests */}
       {!currentUser && (

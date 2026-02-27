@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPublicClubBySlug } from "../services/clubService";
 import CampaignCard from "./CampaignCard";
+import type { Campaign } from '../types';
 import { FooterContent } from "../sections/Footer/components/FooterContent";
 
 export default function ClubDetails() {
@@ -169,7 +170,7 @@ export default function ClubDetails() {
 
           {/* Description */}
           {club.description && (
-            <p className="text-white/60 text-sm sm:text-base font-bold max-w-2xl leading-relaxed">
+            <p className="text-white/60 text-sm sm:text-base font-bold max-w-2xl text-justify leading-relaxed">
               {club.description}
             </p>
           )}
@@ -251,7 +252,7 @@ export default function ClubDetails() {
               {club.campaigns.map((campaign: any) => (
                 <CampaignCard
                   key={campaign.id}
-                  campaign={{ ...campaign, currentAmount: campaign.amountRaised ?? 0 }}
+                  campaign={{ ...campaign, currentAmount: campaign.amountRaised ?? 0 , milestones: campaign.milestones ?? [] } as Campaign}
                   href={`/campaign/${campaign.id}`}
                 />
               ))}

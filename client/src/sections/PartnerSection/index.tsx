@@ -1,356 +1,237 @@
-// import { useNavigate } from 'react-router-dom';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Navigation, Pagination, Keyboard, A11y, Autoplay } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-
-// export const PartnersSection = () => {
-//   const navigate = useNavigate();
-
-//   const partners = [
-//     {
-//       name: "Q: Is my donation tax-deductible? (Corporate/Foundation)",
-//       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734236/23_sqrtii.png",
-//       category: "A: Yes! 80G certificate auto-generated. 50% deduction."
-//     },
-//     {
-//       name: "Q: Can I donate anonymously?",
-//       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734218/22_uadpdn.png",
-//       category: "A: Yes, you can choose to remain anonymous when making a donation."
-//     },
-//     {
-//       name: "Q: What's the minimum pledge amount?",
-//       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734249/24_ikcg3l.png",
-//       category: "A: ₹100. Even small amounts add up and show the team they have community support."
-//     },
-//     {
-//       name: "Q: What if the project fails?",
-//       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734189/21_apvr2t.png",
-//       category: "A: Rare (95% completion rate). If it happens, we transparently share reasons. Funds already used can't be refunded, but unused funds can be redirected."
-//     },
-//     {
-//       name: "Q. What is a Donor Opportunity?",
-//       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734256/25_x3uyod.png",
-//       category: "A. A Donor Opportunity is a post created by a donor that students can apply to, such as internships, scholarships, projects, or mentorships."
-//     },
-//     {
-//       name: "Q: How do I know my impact is real?",
-//       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734263/26_wedmyg.png",
-//       category: "A: We track outcomes through 6-month, 1-year, and 3-year follow-ups. You receive clear impact reports on career outcomes, patents filed, and real-world impact."
-//     }
-//   ];
-
-//   const handleGetStarted = () => {
-//     const storedUser = localStorage.getItem("user");
-//     const user = storedUser ? JSON.parse(storedUser) : null;
-
-//     if (!user) {
-//       navigate("/auth");
-//     } else if (user.role === "DONOR") {
-//       navigate("/donor/dashboard");
-//     } else {
-//       navigate("/dashboard");
-//     }
-//   };
-
-//   return (
-//     <section className="relative py-14 sm:py-20 px-4  overflow-hidden">
-
-//       {/* Neobrutalism background texture dots */}
-//       <div className="absolute inset-0 pointer-events-none opacity-10"
-      
-//       />
-
-//       <div className="relative max-w-7xl mx-auto">
-
-//         {/* ── Header ── */}
-        
-
-//          <div className="text-center mb-10 sm:mb-12 md:mb-14">
-
-//           {/* Eyebrow stamp */}
-//           <div className="flex justify-center mb-4">
-//             <span
-//               className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white"
-//               style={{ background: '#003366', border: '2px solid #003366' }}
-//             >
-//               ★ DreamXec At Your Service
-//             </span>
-//           </div>
-
-//           {/* Main heading with stamp highlight */}
-//           <h2 className="font-black leading-tight mb-3">
-//             <span className="block text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-dreamxec-navy uppercase tracking-tight">
-//               Frequently Asked
-//             </span>
-//             <span className="block mt-1 sm:mt-2">
-//               <span className="relative inline-block">
-//                 <span
-//                   className="absolute inset-0 translate-x-[4px] translate-y-[4px] sm:translate-x-[6px] sm:translate-y-[6px]"
-//                   style={{ background: '#0B9C2C' }}
-//                   aria-hidden
-//                 />
-//                 <span
-//                   className="relative z-10 inline-block px-3 sm:px-5 py-1 text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-white font-black uppercase tracking-tight"
-//                   style={{ background: '#003366', border: '3px solid #003366' }}
-//                 >
-//                   Questions
-//                 </span>
-//               </span>
-//             </span>
-//           </h2>
-
-//           <p
-//             className="inline-block mt-5 sm:mt-6 px-4 sm:px-5 py-2 text-xs sm:text-sm md:text-base font-black text-dreamxec-navy uppercase tracking-wide"
-//             style={{ border: '2px dashed #003366', background: '#fff7ed' }}
-//           >
-//            Everything you need to know — honest, transparent, no fluff.
-//           </p>
-//         </div>
-
-//         {/* ── FAQ Carousel ── */}
-//         <div className="mb-14">
-//           <Swiper
-//             modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-//             spaceBetween={20}
-//             slidesPerView={1}
-//             speed={700}
-//             navigation
-//             pagination={{ clickable: true }}
-//             keyboard={{ enabled: true }}
-//             grabCursor={true}
-//             autoplay={{ delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }}
-//             breakpoints={{
-//               520: { slidesPerView: 1, spaceBetween: 20 },
-//               768: { slidesPerView: 2, spaceBetween: 24 },
-//               1024: { slidesPerView: 3, spaceBetween: 28 },
-//             }}
-//             className="faq-carousel !pb-12"
-//           >
-//             {partners.map((partner, index) => (
-//               <SwiperSlide key={partner.name} className="h-auto">
-//                 <div
-//                   className="
-//                     group
-//                     bg-white
-//                     border-[3px] border-dreamxec-navy
-//                     rounded-none
-//                     shadow-[5px_5px_0px_#003366]
-//                     hover:shadow-[8px_8px_0px_#FF6600]
-//                     hover:-translate-y-1 hover:-translate-x-1
-//                     transition-all duration-200 ease-in-out
-//                     p-4 sm:p-5
-//                     flex flex-col
-//                     h-full
-//                     cursor-pointer
-//                     relative
-//                     overflow-hidden
-//                   "
-//                 >
-//                   {/* Neobrutalism corner accent */}
-//                   <div className="absolute top-0 right-0 w-8 h-8 bg-dreamxec-orange border-l-[3px] border-b-[3px] border-dreamxec-navy" />
-
-//                   {/* Index badge */}
-//                   <div className="absolute top-2 left-2 bg-dreamxec-navy text-white text-xs font-bold w-6 h-6 flex items-center justify-center border-2 border-dreamxec-navy rounded-none">
-//                     {String(index + 1).padStart(2, '0')}
-//                   </div>
-
-//                   {/* Logo */}
-//                   <div className="
-//                     mt-6 mb-4
-//                     bg-dreamxec-cream
-//                     border-[3px] border-dreamxec-navy
-//                     group-hover:border-dreamxec-orange
-//                     transition-colors duration-200
-//                     p-3
-//                     flex items-center justify-center
-//                     rounded-none
-//                     flex-shrink-0
-//                   ">
-//                     <img
-//                       src={partner.logo}
-//                       alt={`FAQ ${index + 1} illustration`}
-//                       className="w-full h-24 sm:h-28 md:h-32 object-contain group-hover:scale-105 transition-transform duration-300"
-//                     />
-//                   </div>
-
-//                   {/* Question */}
-//                   <h3 className="
-//                     text-sm sm:text-base font-extrabold text-dreamxec-navy font-display
-//                     mb-3 leading-snug
-//                     border-l-4 border-dreamxec-orange pl-2
-//                   ">
-//                     {partner.name}
-//                   </h3>
-
-//                   {/* Answer */}
-//                   <p className="
-//                     mt-auto
-//                     text-xs sm:text-sm text-dreamxec-berkeley-blue font-sans
-//                     bg-dreamxec-cream
-//                     border-[2px] border-dreamxec-navy
-//                     group-hover:border-dreamxec-orange
-//                     px-3 py-2
-//                     rounded-none
-//                     leading-relaxed
-//                     transition-colors duration-200
-//                   ">
-//                     {partner.category}
-//                   </p>
-//                 </div>
-//               </SwiperSlide>
-//             ))}
-//           </Swiper>
-//         </div>
-
-//         {/* ── Call to Action ── */}
-//         <div className="flex justify-center">
-//           <div className="
-//             bg-white
-//             border-[3px] border-dreamxec-navy
-//             shadow-[8px_8px_0px_#003366]
-//             rounded-none
-//             p-6 sm:p-10
-//             w-full max-w-2xl
-//             relative
-//             overflow-hidden
-//           ">
-//             {/* Decorative stripe top */}
-//             <div className="absolute top-0 left-0 w-full h-2 bg-tricolor-horizontal" />
-
-//             {/* Decorative corner block */}
-//             <div className="absolute bottom-0 right-0 w-14 h-14 bg-dreamxec-orange border-t-[3px] border-l-[3px] border-dreamxec-navy" />
-
-//             <h3 className="
-//               text-xl sm:text-2xl md:text-3xl font-extrabold text-dreamxec-berkeley-blue font-display
-//               mb-1 mt-3
-//               inline-block
-//               border-b-4 border-dreamxec-orange
-//               pb-1
-//             ">
-//               Partner With Us
-//             </h3>
-
-//             <p className="text-dreamxec-navy font-sans text-sm sm:text-base md:text-lg mt-4 mb-6 leading-relaxed max-w-lg">
-//               Join our mission to empower student innovation and drive technological advancement across India.
-//             </p>
-
-//             <div className="flex flex-col sm:flex-row justify-start gap-4 relative z-10">
-//               <button
-//                 onClick={handleGetStarted}
-//                 className="
-//                   px-6 sm:px-8 py-3
-//                   bg-dreamxec-orange text-white
-//                   font-extrabold text-sm sm:text-base
-//                   border-[3px] border-dreamxec-navy
-//                   rounded-none
-//                   shadow-[4px_4px_0px_#003366]
-//                   hover:shadow-[6px_6px_0px_#003366]
-//                   hover:-translate-y-0.5 hover:-translate-x-0.5
-//                   active:shadow-none active:translate-x-0 active:translate-y-0
-//                   transition-all duration-150
-//                 "
-//               >
-//                 Get Started →
-//               </button>
-//               <button
-//                 onClick={() => navigate('/campaigns')}
-//                 className="
-//                   px-6 sm:px-8 py-3
-//                   bg-white text-dreamxec-navy
-//                   font-extrabold text-sm sm:text-base
-//                   border-[3px] border-dreamxec-navy
-//                   rounded-none
-//                   shadow-[4px_4px_0px_#003366]
-//                   hover:shadow-[6px_6px_0px_#FF6600]
-//                   hover:border-dreamxec-orange hover:text-dreamxec-orange
-//                   hover:-translate-y-0.5 hover:-translate-x-0.5
-//                   active:shadow-none active:translate-x-0 active:translate-y-0
-//                   transition-all duration-150
-//                 "
-//               >
-//                 Explore Campaigns
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-
-//       </div>
-//     </section>
-//   );
-// };
-
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  Navigation,
-  Pagination,
-  Keyboard,
-  A11y,
-  Autoplay,
-} from "swiper/modules";
 
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+/* ─────────────────────────────────────────
+   ACCORDION ITEM
+───────────────────────────────────────── */
+function AccordionItem({ index, partner, isOpen, onToggle }) {
+  const bodyRef = useRef(null);
+  const [height, setHeight] = useState(0);
 
+  const accents = ["#FF7F00", "#003262", "#0B9C2C", "#FF7F00", "#003262", "#0B9C2C"];
+  const accent = accents[index % accents.length];
+
+  useEffect(() => {
+    if (bodyRef.current) {
+      setHeight(isOpen ? bodyRef.current.scrollHeight : 0);
+    }
+  }, [isOpen]);
+
+  // Strip "Q: " / "Q. " prefix from name, and "A: " / "A. " from category
+  const question = partner.name.replace(/^Q[:.]\s*/i, "");
+  const answer   = partner.category.replace(/^A[:.]\s*/i, "");
+
+  return (
+    <div
+      style={{
+        background: "#fff",
+        border: "3px solid #003366",
+        boxShadow: isOpen ? `5px 5px 0 ${accent}` : "3px 3px 0 #003366",
+        marginBottom: "0.75rem",
+        transition: "box-shadow 0.15s",
+      }}
+    >
+      {/* top accent bar — shows on open */}
+      <div style={{ height: 4, background: isOpen ? accent : "transparent", transition: "background 0.2s" }} />
+
+      {/* ── QUESTION ROW ── */}
+      <button
+        onClick={onToggle}
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.85rem",
+          padding: "1rem 1.25rem",
+          background: isOpen ? "#fff7ed" : "#fff",
+          border: "none",
+          borderBottom: isOpen ? "3px solid #003366" : "3px solid transparent",
+          cursor: "pointer",
+          textAlign: "left",
+          transition: "background 0.15s, border-color 0.15s",
+          fontFamily: "inherit",
+        }}
+      >
+        {/* Number badge */}
+        <span style={{
+          flexShrink: 0,
+          width: 34, height: 34,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: isOpen ? accent : "#003366",
+          color: "#fff",
+          fontSize: "0.7rem", fontWeight: 900,
+          border: "3px solid #003366",
+          transition: "background 0.15s",
+        }}>
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        {/* Q badge */}
+        <span style={{
+          flexShrink: 0,
+          fontSize: "0.58rem", fontWeight: 900,
+          color: "#fff", padding: "0.12rem 0.4rem",
+          background: accent, border: "2px solid #003366",
+          textTransform: "uppercase", letterSpacing: 2,
+        }}>Q</span>
+
+        {/* Vector thumbnail — visible always */}
+        <img
+          src={partner.logo}
+          alt=""
+          style={{
+            width: 38, height: 38,
+            objectFit: "contain",
+            flexShrink: 0,
+            border: `2px solid ${isOpen ? accent : "#003366"}`,
+            background: "#fff7ed",
+            padding: 3,
+            transition: "border-color 0.15s",
+          }}
+        />
+
+        {/* Question text */}
+        <span style={{
+          flex: 1,
+          fontSize: "clamp(0.88rem, 1.6vw, 1rem)",
+          fontWeight: 900,
+          color: "#003366",
+          textTransform: "uppercase",
+          letterSpacing: "-0.3px",
+          lineHeight: 1.35,
+        }}>
+          {question}
+        </span>
+
+        {/* Corner accent decoration */}
+        <span style={{
+          flexShrink: 0,
+          width: 0, height: 0,
+          borderLeft: "8px solid transparent",
+          borderRight: "8px solid transparent",
+          borderTop: isOpen ? `10px solid ${accent}` : "none",
+          borderBottom: isOpen ? "none" : `10px solid #003366`,
+          transition: "border 0.2s",
+        }} />
+
+        {/* Toggle + */}
+        <span style={{
+          flexShrink: 0,
+          width: 30, height: 30,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: isOpen ? accent : "#fff7ed",
+          border: "3px solid #003366",
+          fontSize: "1.1rem", fontWeight: 900,
+          color: "#003366",
+          transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+          transition: "transform 0.25s cubic-bezier(.16,1,.3,1), background 0.15s",
+        }}>
+          +
+        </span>
+      </button>
+
+      {/* ── ANSWER — animated height ── */}
+      <div style={{ overflow: "hidden", height, transition: "height 0.35s cubic-bezier(.16,1,.3,1)" }}>
+        <div ref={bodyRef}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "1.1rem 1.25rem" }}>
+            {/* A badge */}
+            <span style={{
+              flexShrink: 0,
+              fontSize: "0.58rem", fontWeight: 900,
+              color: "#fff", padding: "0.12rem 0.4rem",
+              background: "#003366", border: "2px solid #003366",
+              textTransform: "uppercase", letterSpacing: 2,
+              marginTop: "0.2rem",
+            }}>A</span>
+
+            {/* Vector — larger in answer */}
+            <img
+              src={partner.logo}
+              alt=""
+              style={{
+                width: 56, height: 56,
+                objectFit: "contain",
+                flexShrink: 0,
+                border: `3px solid ${accent}`,
+                background: "#fff7ed",
+                padding: 4,
+              }}
+            />
+
+            <p style={{
+              fontSize: "clamp(0.9rem, 1.6vw, 1.05rem)",
+              fontWeight: 600,
+              color: "rgba(0,51,102,0.72)",
+              lineHeight: 1.8,
+              textAlign: "justify",
+              margin: 0,
+            }}>
+              {answer}
+            </p>
+          </div>
+          {/* bottom accent bar */}
+          <div style={{ height: 5, background: accent }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────── */
 export const PartnersSection = () => {
   const navigate = useNavigate();
+  const [openIndex, setOpenIndex] = useState(null);
 
   const partners = [
     {
       name: "Q: Is my donation tax-deductible? (Corporate/Foundation)",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734236/23_sqrtii.png",
-      category:
-        "A: Yes! 80G certificate auto-generated. 50% deduction.",
+      category: "A: Yes! 80G certificate auto-generated. 50% deduction.",
     },
     {
       name: "Q: Can I donate anonymously?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734218/22_uadpdn.png",
-      category:
-        "A: Yes, you can choose to remain anonymous when making a donation.",
+      category: "A: Yes, you can choose to remain anonymous when making a donation.",
     },
     {
       name: "Q: What's the minimum pledge amount?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734249/24_ikcg3l.png",
-      category:
-        "A: ₹100. Even small amounts add up and show the team they have community support.",
+      category: "A: ₹100. Even small amounts add up and show the team they have community support.",
     },
     {
       name: "Q: What if the project fails?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734189/21_apvr2t.png",
-      category:
-        "A: Rare (95% completion rate). If it happens, we transparently share reasons. Funds already used can't be refunded, but unused funds can be redirected.",
+      category: "A: Rare (95% completion rate). If it happens, we transparently share reasons. Funds already used can't be refunded, but unused funds can be redirected.",
     },
     {
       name: "Q. What is a Donor Opportunity?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734256/25_x3uyod.png",
-      category:
-        "A. A Donor Opportunity is a post created by a donor that students can apply to, such as internships, scholarships, projects, or mentorships.",
+      category: "A. A Donor Opportunity is a post created by a donor that students can apply to, such as internships, scholarships, projects, or mentorships.",
     },
     {
       name: "Q: How do I know my impact is real?",
       logo: "https://res.cloudinary.com/dvqeeun29/image/upload/v1767734263/26_wedmyg.png",
-      category:
-        "A: We track outcomes through 6-month, 1-year, and 3-year follow-ups. You receive clear impact reports on career outcomes, patents filed, and real-world impact.",
+      category: "A: We track outcomes through 6-month, 1-year, and 3-year follow-ups. You receive clear impact reports on career outcomes, patents filed, and real-world impact.",
     },
   ];
 
   const handleGetStarted = () => {
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
-
     if (!user) navigate("/auth");
     else if (user.role === "DONOR") navigate("/donor/dashboard");
     else navigate("/dashboard");
   };
 
+  const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
+
   return (
     <section className="relative py-14 sm:py-20 px-4 overflow-hidden">
       <div className="relative max-w-7xl mx-auto">
 
-        {/* Header */}
+        {/* ── HEADER (unchanged) ── */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white bg-[#003366] border-2 border-[#003366]">
@@ -378,89 +259,19 @@ export const PartnersSection = () => {
           </p>
         </div>
 
-        {/* Carousel */}
-        <div className="mb-14 relative">
-          <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={18}
-            slidesPerView={1}
-            speed={600}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            grabCursor
-            autoplay={{ delay: 3200, disableOnInteraction: false }}
-            breakpoints={{
-              640: { slidesPerView: 1 },
-              768: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-            }}
-            className="
-              faq-carousel !pb-12
-
-              [&_.swiper-button-prev]:!absolute
-              [&_.swiper-button-next]:!absolute
-              [&_.swiper-button-prev]:!top-1/2
-              [&_.swiper-button-next]:!top-1/2
-              [&_.swiper-button-prev]:!-translate-y-1/2
-              [&_.swiper-button-next]:!-translate-y-1/2
-              [&_.swiper-button-prev]:!left-0
-              [&_.swiper-button-next]:!right-0
-              lg:[&_.swiper-button-prev]:!-left-10
-              lg:[&_.swiper-button-next]:!-right-10
-
-              [&_.swiper-button-prev]:!w-10
-              [&_.swiper-button-prev]:!h-10
-              [&_.swiper-button-prev]:!bg-white
-              [&_.swiper-button-prev]:!border-[3px]
-              [&_.swiper-button-prev]:!border-dreamxec-navy
-              [&_.swiper-button-prev]:!shadow-[4px_4px_0px_#003366]
-              [&_.swiper-button-prev]:!rounded-none
-
-              [&_.swiper-button-next]:!w-10
-              [&_.swiper-button-next]:!h-10
-              [&_.swiper-button-next]:!bg-white
-              [&_.swiper-button-next]:!border-[3px]
-              [&_.swiper-button-next]:!border-dreamxec-navy
-              [&_.swiper-button-next]:!shadow-[4px_4px_0px_#003366]
-              [&_.swiper-button-next]:!rounded-none
-            "
-          >
-            {partners.map((partner, index) => (
-              <SwiperSlide key={index}>
-                <div className="group bg-white border-[3px] border-dreamxec-navy shadow-[4px_4px_0px_#003366] hover:shadow-[6px_6px_0px_#FF6600] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-200 p-3 flex flex-col h-[320px] relative">
-
-                  {/* Corner Accent */}
-                  <div className="absolute top-0 right-0 w-8 h-8 bg-dreamxec-orange border-l-[3px] border-b-[3px] border-dreamxec-navy" />
-
-                  {/* Number Badge */}
-                  <div className="absolute top-2 left-2 bg-dreamxec-navy text-white text-xs font-bold w-6 h-6 flex items-center justify-center border-2 border-dreamxec-navy">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-
-                  {/* Logo Section */}
-                  <div className="mt-5 mb-3 bg-dreamxec-cream border-[3px] border-dreamxec-navy group-hover:border-dreamxec-orange p-6 flex justify-center items-center h-[150px]">
-                    <img
-                      src={partner.logo}
-                      alt=""
-                      className="h-36 object-contain"
-                    />
-                  </div>
-
-                  {/* Question */}
-                  <h3 className="text-xs font-extrabold text-dreamxec-navy mb-2 border-l-4 border-dreamxec-orange pl-2">
-                    {partner.name}
-                  </h3>
-
-                  {/* Answer */}
-                  <p className="mt-auto text-xs text-dreamxec-berkeley-blue bg-dreamxec-cream border-[2px] border-dreamxec-navy group-hover:border-dreamxec-orange px-3 py-2">
-                    {partner.category}
-                  </p>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        {/* ── ACCORDION (replaces Swiper) ── */}
+        <div className="mb-14">
+          {partners.map((partner, index) => (
+            <AccordionItem
+              key={index}
+              index={index}
+              partner={partner}
+              isOpen={openIndex === index}
+              onToggle={() => toggle(index)}
+            />
+          ))}
         </div>
+
       </div>
     </section>
   );

@@ -7,466 +7,552 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+/* ─────────────────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────────────────── */
+const HOW_IT_WORKS = [
+  {
+    step: "01",
+    title: "Create Your Project",
+    text: "Write a compelling project description, set your funding goal (₹5K–₹50L), upload your video/ppt pitch, and explain project milestones and impact vision.",
+    accent: "#FF7F00",
+    icon: "✏️",
+  },
+  {
+    step: "02",
+    title: "Campaign & Community",
+    text: "Launch your campaign. Supporters pledge funds. Mentors guide your execution. Build momentum with updates and milestone celebrations.",
+    accent: "#003366",
+    icon: "🚀",
+  },
+  {
+    step: "03",
+    title: "Deliver Impact",
+    text: "Once funded, execute with mentor support. Track outcomes—internships, jobs, patents, social impact—and celebrate every milestone.",
+    accent: "#0B9C2C",
+    icon: "🎯",
+  },
+];
+
+const WHAT_YOU_GET = [
+  {
+    title: "Funding",
+    range: "₹5K – ₹50L",
+    text: "Access capital from passionate supporters. No interference in the research process — you own the journey completely.",
+    accent: "#FF7F00",
+    icon: "💰",
+  },
+  {
+    title: "Mentorship",
+    range: "1,000+ Experts",
+    text: "Paired with mentors across engineering, business, social impact, and product design — weekly guidance calls from day one.",
+    accent: "#003366",
+    icon: "🎓",
+  },
+  {
+    title: "Exposure",
+    range: "Build Your Network",
+    text: "Featured on platform homepage, media coverage for standout projects, and LinkedIn visibility for your entire team.",
+    accent: "#0B9C2C",
+    icon: "📡",
+  },
+];
+
+const SUCCESS_METRICS = [
+  { icon: "🚀", text: "Fund over 500 student-led projects by 2026", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg" },
+  { icon: "💰", text: "Raise a minimum of ₹10 crore in total funding", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg" },
+  { icon: "🧠", text: "Engage more than 1,000 industry and academic mentors", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg" },
+  { icon: "📈", text: "Achieve at least a 70% success rate for projects reaching their funding goals", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg" },
+  { icon: "🤝", text: "Build strong collaborations between academia, industry, and government to enhance employability", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/18.svg" },
+  { icon: "🎓", text: "Enable 50,000+ students to access real-world opportunities through funded projects and mentorship", vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/2.svg" },
+];
+
+const FAQ = [
+  { q: "How long does the campaign run?", a: "30 to 60 days. You choose the duration and goal. If you reach your goal before deadline, celebrate early. If not, you can extend by 30 days." },
+  { q: "What happens if I don't reach my funding goal?", a: "With flexible funding enabled (which DreamXec supports), you keep whatever you raised. If all-or-nothing, funds are returned to backers. No penalties to you." },
+  { q: "Can I have multiple projects running?", a: "Yes! A club can have multiple research projects. You must report milestones on time. Strong milestone delivery builds donor trust and helps raise funds for future stages." },
+  { q: "How do clubs with challenges get supported?", a: "Clubs showing delivery receive higher visibility, while those facing challenges are actively supported by the DreamXec team to move forward." },
+  { q: "What does the project lifecycle look like?", a: "List your projects → Outline milestones → Raise funds → Start → Execute → Share outcomes → Raise funds for the next stage of research." },
+  { q: "How do I use the mentor marketplace?", a: "Post your project → select mentor matches → weekly mentorship calls begin immediately, even before your campaign launches." },
+];
+
+const ELIGIBILITY_YES = [
+  "Currently enrolled in any Indian college or university",
+  "Team of 1–6 members (mixed backgrounds welcome)",
+  "Project in ideation, prototype, or execution stage",
+  "Any field: tech, biotech, defence, education, environment, art, social sciences, etc.",
+];
+
+const ELIGIBILITY_NO = [
+  "Personal expenses or lifestyle funding",
+  "Projects violating Indian laws or ethical standards",
+];
+
+/* ─────────────────────────────────────────────────────────
+   REUSABLE SECTION LABEL
+───────────────────────────────────────────────────────── */
+function SectionLabel({ children, accent = '#FF7F00' }: { children: React.ReactNode; accent?: string }) {
+  return (
+    <div className="flex items-center gap-0 mb-5">
+      <div className="w-3 h-3 flex-shrink-0" style={{ background: accent }} />
+      <div className="px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-white"
+        style={{ background: '#003366', border: `2px solid #003366` }}>
+        {children}
+      </div>
+      <div className="w-3 h-3 flex-shrink-0" style={{ background: '#0B9C2C' }} />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   MAIN PAGE
+───────────────────────────────────────────────────────── */
 const StartAProject = () => {
-  const columns = [
-    {
-      title: "Step 1: Create Your Project",
-      text: "Write a compelling project description, set your funding goal (₹5K–₹50L), upload your video/ppt pitch, and explain project milestones and impact vision.",
-    },
-    {
-      title: "Step 2: Campaign & Community",
-      text: "Launch your campaign. Supporters pledge funds. Mentors guide your execution. Build momentum with updates and milestone celebrations.",
-    },
-    {
-      title: "Step 3: Deliver Impact",
-      text: "Once funded, execute with mentor support. Track outcomes (internships, jobs, patents, social impact) and celebrate success.",
-    },
-  ];
-
-  const FAQ = [
-    {
-      q: "How long does the campaign run?",
-      a: "30 to 60 days. You choose the duration and goal. If you reach your goal before deadline, great—celebrate early. If not, you can extend by 30 days.",
-    },
-    {
-      q: "What happens if I don't reach my funding goal?",
-      a: "With flexible funding enabled (which DreamXec supports), you keep whatever you raised. If all-or-nothing, funds are returned to backers. No penalties to you.",
-    },
-    {
-      q: "Can I have multiple projects running?",
-      a: "Yes! A club can have multiple research projects. You must report milestones on time. Strong milestone delivery builds donor trust and helps raise funds for future stages.",
-    },
-    {
-      q: "How do clubs with challenges get supported?",
-      a: "Clubs showing delivery receive higher visibility, while those facing challenges are actively supported by the DreamXec team to move forward.",
-    },
-    {
-      q: "What does the project lifecycle look like?",
-      a: "List your projects → Outline milestones → Raise funds → Start → Execute → Share outcomes → Raise funds for the next stage of research.",
-    },
-    {
-      q: "How do I use platform features like the mentor marketplace?",
-      a: "Post your project → select mentor matches → weekly mentorship calls begin immediately, even before your campaign launches.",
-    },
-  ];
-
   return (
     <>
-      {/* SEO */}
       <title>Start a Project | DreamXec</title>
-      <meta
-        name="description"
-        content="Turn your innovation into reality with DreamXec. Get funded, mentored, and supported to launch your student project."
-      />
+      <meta name="description" content="Turn your innovation into reality with DreamXec. Get funded, mentored, and supported to launch your student project." />
 
       <Header />
 
-      <main className="space-y-20 relative self-start box-border caret-transparent w-full py-12">
-        {/* Hero Section */}
-        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center overflow-hidden">
-          {/* Background */}
-          <div className="absolute inset-0 -z-10 bg-[url('/your-bg-image.png')] bg-cover bg-center" />
+      <main className="relative w-full overflow-x-hidden" style={{ background: '#fffbf5' }}>
 
-          <h1 className="text-dreamxec-berkeley-blue text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 animate-fade-in">
-            Turn Your Innovation Into Reality
-          </h1>
+        {/* ══════════════════════════════════════════════════
+            §1 — HERO  (full-width stamp)
+            Golden ratio: headline ~61.8% of viewport width
+        ══════════════════════════════════════════════════ */}
+        <section className="relative w-full pt-28 pb-20 overflow-hidden" style={{ borderBottom: '4px solid #003366' }}>
 
-          <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12">
-            Get funded. Get mentored. Make an impact. Launch your next big idea
-            with
-            <span className="font-semibold text-dreamxec-berkeley-blue">
-              {" "}
-              DreamXec
-            </span>{" "}
-            — India’s fastest-growing student innovation platform.
-          </p>
+          {/* Background accent shapes */}
+          <div className="absolute top-0 right-0 w-64 h-64 -rotate-12 opacity-[0.04] pointer-events-none" style={{ background: '#FF7F00' }} />
+          <div className="absolute bottom-0 left-0 w-48 h-48 rotate-6 opacity-[0.04] pointer-events-none" style={{ background: '#0B9C2C' }} />
 
-          <div className="flex flex-wrap justify-center gap-4">
-            <span className="px-5 py-2 rounded-full bg-dreamxec-berkeley-blue/10 text-dreamxec-berkeley-blue text-sm font-semibold">
-              Student-first platform
-            </span>
-            <span className="px-5 py-2 rounded-full bg-dreamxec-berkeley-blue/10 text-dreamxec-berkeley-blue text-sm font-semibold">
-              Funding + mentorship
-            </span>
-            <span className="px-5 py-2 rounded-full bg-dreamxec-berkeley-blue/10 text-dreamxec-berkeley-blue text-sm font-semibold">
-              Built for real impact
-            </span>
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+
+            {/* Eyebrow */}
+            <div className="flex justify-center mb-8">
+              <SectionLabel>🇮🇳 Student Innovation Platform</SectionLabel>
+            </div>
+
+            {/* Headline — two stamped slabs */}
+            <div className="flex flex-col items-center gap-3 mb-10 text-center">
+              {/* Slab 1 */}
+              <div className="relative inline-block">
+                <div className="absolute inset-0 translate-x-[7px] translate-y-[7px]" style={{ background: '#0B9C2C' }} aria-hidden />
+                <h1 className="relative z-10 inline-block px-6 py-2 font-black text-white uppercase tracking-tight leading-none"
+                  style={{ fontSize: 'clamp(1.8rem,5.5vw,4.2rem)', background: '#FF7F00', border: '4px solid #003366' }}>
+                  Turn Your Innovation
+                </h1>
+              </div>
+              {/* Slab 2 */}
+              <div className="relative inline-block">
+                <div className="absolute inset-0 translate-x-[7px] translate-y-[7px]" style={{ background: '#FF7F00' }} aria-hidden />
+                <h1 className="relative z-10 inline-block px-6 py-2 font-black text-white uppercase tracking-tight leading-none"
+                  style={{ fontSize: 'clamp(1.8rem,5.5vw,4.2rem)', background: '#003366', border: '4px solid #003366' }}>
+                  Into Reality
+                </h1>
+              </div>
+            </div>
+
+            {/* Sub — max-width ~61.8% of 7xl container = the golden column */}
+            <p className="mx-auto text-sm sm:text-base md:text-lg font-bold text-[#003366]/70 leading-relaxed text-justify mb-10"
+              style={{ maxWidth: '680px' }}>
+              Get funded. Get mentored. Make an impact. Launch your next big idea with{' '}
+              <span className="font-black text-[#003366]">DreamXec</span> — India's fastest-growing student innovation platform dedicated to turning curiosity into real-world change.
+            </p>
+
+            {/* Tag pills */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {['Student-first Platform', 'Funding + Mentorship', 'Built for Real Impact'].map((tag, i) => {
+                const bgs = ['#FF7F00', '#003366', '#0B9C2C'];
+                return (
+                  <div key={tag} className="px-4 py-2 text-[10px] sm:text-xs font-black uppercase tracking-widest text-white"
+                    style={{ background: bgs[i], border: '2px solid #003366' }}>
+                    {tag}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* CTA */}
+            <div className="flex justify-center">
+              <a href="/dashboard"
+                className="inline-flex items-center gap-2 px-10 py-4 font-black text-sm uppercase tracking-widest text-[#003366] transition-all duration-150 hover:translate-x-[-3px] hover:translate-y-[-3px]"
+                style={{ background: '#FF7F00', border: '4px solid #003366', boxShadow: '7px 7px 0 #003366' }}>
+                Start Your Project →
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* Divider */}
         <RopeDivider />
-        {/* What is DreamXec */}
-        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
-          <img
-            src="/assets/doodles/sparkle.svg"
-            alt=""
-            className="absolute -top-8 left-6 w-10 h-10 opacity-70 pointer-events-none hidden sm:block"
-          />
-          <img
-            src="/assets/doodles/lightbulb.svg"
-            alt=""
-            className="absolute top-10 right-4 w-12 h-12 opacity-70 pointer-events-none hidden md:block"
-          />
-          <h2 className="text-dreamxec-berkeley-blue text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
-            What is DreamXec for Innovators?
-          </h2>
 
-          <p className="text-dreamxec-navy text-base sm:text-lg md:text-xl leading-relaxed max-w-4xl mx-auto text-center">
-            DreamXec is a crowdfunding platform built exclusively for student
-            innovators. Whether you’re working on a research project, building a
-            tech product, creating a social enterprise, or shaping a startup
-            idea — DreamXec connects you with funding, mentors, and a community
-            that believes in your vision.
-          </p>
+        {/* ══════════════════════════════════════════════════
+            §2 — WHAT IS DREAMXEC
+            Golden layout: 61.8% text col + 38.2% feature cards
+        ══════════════════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-20">
 
-          {/* Feature Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-12">
-            {[
-              {
-                title: "Get Funded",
-                desc: "Access capital without needing VC backing",
-                vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
-              },
-              {
-                title: "Get Mentored",
-                desc: "Learn directly from industry & academic experts",
-                vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
-              },
-              {
-                title: "Create Impact",
-                desc: "Turn ideas into real-world solutions",
-                vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="card-glass p-4 md:p-6 text-center space-y-3 hover:scale-105 transition-transform duration-300"
-              >
-                <h3 className="text-xl font-bold text-dreamxec-berkeley-blue">
-                  {item.title}
-                </h3>
-                <p className="text-dreamxec-navy text-base">{item.desc}</p>
-                <div className="flex justify-center pt-2">
-                  <img 
-                    src={item.vector} 
-                    alt="" 
-                    className="w-24 h-24 opacity-50"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-16 items-start">
 
-          {/* Closing Line */}
-          <p className="text-dreamxec-navy text-lg md:text-xl font-semibold text-center max-w-3xl mx-auto mt-12">
-            Your idea doesn’t need venture capital backing — it needs{" "}
-            <span className="text-dreamxec-berkeley-blue">DreamXec</span>{" "}
-            backing.
-          </p>
-        </section>
-
-        {/* Why DreamXec – Whiteboard Cards */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
-            How It Works
-          </h2>
-
-          <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={48}
-            slidesPerView={1}
-            speed={800}
-            navigation
-            pagination={{ clickable: false }}
-            keyboard={{ enabled: true }}
-            grabCursor={false}
-            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            breakpoints={{
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 48,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 48,
-              },
-            }}
-            className="start-project-carousel"
-          >
-            {columns.map((col, index) => (
-              <SwiperSlide key={index}>
-                <div
-                  className="card-whiteboard h-full"
-                >
-                  <div className="whiteboard-content pt-14">
-                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-2 p-2">
-                      {col.title}
-                    </h3>
-                    <p className="text-xs text-left md:text-sm lg:text-base text-slate-600 leading-relaxed p-2">
-                      {col.text}
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </section>
-
-        {/* CTA Section */}
-        <section className="flex  items-center justify-center gap-4">
-          {/* Pill-style CTA: Primary */}
-          <a href="/dashboard" className="flex justify-center">
-            <div className="relative self-start caret-transparent">
-              <div className="card-pastel px-10 py-4 rounded-full hover:scale-105 transition-transform">
-                <h2 className="text-dreamxec-navy text-base md:text-xl font-sans font-bold leading-tight text-center whitespace-nowrap">
-                  <span className="">Start Your Project</span>
-                </h2>
-              </div>
-            </div>
-          </a>
-
-          {/* Pill-style CTA: Secondary */}
-          {/* <a href="/innovators/success-stories" className="flex justify-center">
-            <div className="relative self-start caret-transparent">
-              <div className="card-pastel-offwhite px-10 py-4 rounded-full hover:scale-105 transition-transform">
-                <h2 className="text-dreamxec-berkeley-blue text-sm md:text-lg font-sans font-bold leading-tight text-center whitespace-nowrap">
-                  Explore Success Stories
-                </h2>
-              </div>
-            </div>
-          </a> */}
-        </section>
-
-        {/* What You Get */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
-            What You Get
-          </h2>
-
-          <Swiper
-            modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
-            spaceBetween={32}
-            slidesPerView={1}
-            speed={800}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            grabCursor={true}
-            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            breakpoints={{
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 32,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 32,
-              },
-            }}
-            className="start-project-carousel"
-          >
-            <SwiperSlide>
-              <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                  Funding (₹5K–₹50L)
-                </h3>
-                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                  Access capital from passionate supporters. No interference in
-                  the research process—you own the journey completely!.
-                </p>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                  Mentorship (Expert Guidance)
-                </h3>
-                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                  Paired with 1,000+ mentors across engineering, business, social
-                  impact, product with weekly guidance calls.
-                </p>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <div className="card-pastel p-6 md:p-8 rounded-xl border-2 border-dreamxec-navy shadow-pastel-card hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] h-full">
-                <h3 className="text-xl md:text-2xl font-bold text-dreamxec-berkeley-blue mb-2">
-                  Exposure (Build Your Network)
-                </h3>
-                <p className="text-sm md:text-base lg:text-lg text-dreamxec-navy leading-relaxed">
-                  Featured on platform homepage, media coverage for standout
-                  projects, and LinkedIn visibility for your team.
-                </p>
-              </div>
-            </SwiperSlide>
-          </Swiper>
-        </section>
-
-        {/* Eligibility Snapshot */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center">
-            Eligibility Snapshot
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {/* Who Can Apply */}
-            <div className="card-pastel rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
-                Who Can Apply
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg">
-                <li>• Currently enrolled in an Indian college/university</li>
-                <li>• Team of 1–6 members (mix of backgrounds welcome)</li>
-                <li>• Project in ideation, prototype, or execution stage</li>
-                <li>
-                  • Any field: tech, biotech, defence, education, environment,
-                  art, social sciences etc.
-                </li>
-              </ul>
-            </div>
-
-            {/* What Doesn't Qualify */}
-            <div className="card-pastel rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
-              <h3 className="text-2xl md:text-3xl font-bold text-dreamxec-berkeley-blue mb-4">
-                What Doesn&apos;t Qualify
-              </h3>
-              <ul className="space-y-2 text-dreamxec-navy text-base md:text-lg">
-                <li>• Personal expenses</li>
-                <li>• Projects violating laws or ethical standards</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Success Metrics – CriteriaGrid Theme */}
-        <section className="relative w-full px-4 sm:px-6 lg:px-8 py-16">
-          <img
-            src="/assets/doodles/star.svg"
-            alt=""
-            className="absolute -top-6 left-4 w-10 h-10 opacity-70 pointer-events-none hidden sm:block"
-          />
-          <img
-            src="/assets/doodles/handshake.svg"
-            alt=""
-            className="absolute top-6 right-6 w-12 h-12 opacity-70 pointer-events-none hidden md:block"
-          />
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-12">
-              <h2 className="text-dreamxec-berkeley-blue text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
-                What does "success" look like for us?
+            {/* Left: text block */}
+            <div>
+              <SectionLabel accent="#003366">What Is DreamXec for Innovators?</SectionLabel>
+              <h2 className="font-black text-[#003366] uppercase leading-tight mb-6"
+                style={{ fontSize: 'clamp(1.6rem,3.5vw,2.8rem)' }}>
+                A Platform Built{' '}
+                <span className="inline-block px-1" style={{ background: '#FF7F00', color: '#003366' }}>
+                  Exclusively
+                </span>{' '}
+                for Student Innovators
               </h2>
+              <div className="space-y-4">
+                <p className="text-sm md:text-base font-bold text-[#003366]/70 leading-relaxed text-justify">
+                  DreamXec is a crowdfunding platform built exclusively for student innovators. Whether you're working on a research project, building a tech product, creating a social enterprise, or shaping a startup idea — DreamXec connects you with funding, mentors, and a community that believes in your vision.
+                </p>
+                <p className="text-sm md:text-base font-bold text-[#003366]/70 leading-relaxed text-justify">
+                  Your idea doesn't need venture capital backing. It needs a community of believers, a structured funding path, and expert guidance at every step. That's exactly what DreamXec provides — nothing more, nothing less.
+                </p>
+              </div>
+
+              {/* Tricolor strip */}
+              <div className="flex h-1.5 mt-8 w-32">
+                <div className="flex-1" style={{ background: '#FF7F00' }} />
+                <div className="flex-1" style={{ background: '#003366' }} />
+                <div className="flex-1" style={{ background: '#0B9C2C' }} />
+              </div>
             </div>
 
-            {/* Success Items */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-6">
+            {/* Right: 3 feature cards stacked */}
+            <div className="space-y-4">
               {[
-                {
-                  icon: "🚀",
-                  text: "Fund over 500 student-led projects by 2026",
-                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
-                },
-                {
-                  icon: "💰",
-                  text: "Raise a minimum of ₹10 crore in total funding",
-                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg"
-                },
-                {
-                  icon: "🧠",
-                  text: "Engage more than 1,000 industry and academic mentors",
-                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg"
-                },
-                {
-                  icon: "📈",
-                  text: "Achieve at least a 70% success rate for projects reaching their funding goals",
-                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/15.svg"
-                },
-                {
-                  icon: "🤝",
-                  text: "Build strong collaborations between academia, industry, and government to enhance employability and job creation",
-                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/18.svg"
-                },
-                {
-                  icon: "🎓",
-                  text: "Enable 50,000+ students to access real-world opportunities through funded projects, mentorship, and industry collaborations",
-                  vector: "/assets/icon-pack/DX-ILLUSTRATION-PACK/2.svg"
-                },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  style={{ animationDelay: `${index * 120}ms` }}
-                  className="card-glass animate-fade-in p-3 hover:shadow-lg transition-shadow duration-300 min-h-[120px]"
-                >
-                  {/* Top content with icon and text */}
-                  <div className="flex items-start gap-3 mb-3">
-                    {/* Icon Badge */}
-                    <div className="w-8 h-8 rounded-full bg-dreamxec-berkeley-blue/10 flex items-center justify-center shrink-0">
-                      <span className="text-sm">{item.icon}</span>
-                    </div>
-
-                    {/* Text */}
-                    <p className="text-sm md:text-base font-semibold text-dreamxec-gray-250 leading-relaxed">
-                      {item.text}
-                    </p>
+                { title: 'Get Funded', desc: 'Access capital without needing VC backing or investor approval.', accent: '#FF7F00', icon: '💸', vector: '/assets/icon-pack/DX-ILLUSTRATION-PACK/5.svg' },
+                { title: 'Get Mentored', desc: 'Learn directly from industry & academic experts through weekly calls.', accent: '#003366', icon: '🎓', vector: '/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg' },
+                { title: 'Create Impact', desc: 'Turn raw ideas into real-world solutions with measurable outcomes.', accent: '#0B9C2C', icon: '🌍', vector: '/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg' },
+              ].map(({ title, desc, accent, icon, vector }) => (
+                <div key={title}
+                  className="flex items-center gap-4 p-4 bg-white transition-all duration-150 hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                  style={{ border: '3px solid #003366', boxShadow: `5px 5px 0 ${accent}` }}>
+                  <div className="w-12 h-12 flex items-center justify-center text-xl flex-shrink-0"
+                    style={{ background: accent, border: '2px solid #003366' }}>
+                    {icon}
                   </div>
-
-                  {/* Bottom image */}
-                  <div className="flex justify-center">
-                    <img 
-                      src={item.vector} 
-                      alt="" 
-                      className="w-48 h-48 opacity-40"
-                    />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-black text-xs uppercase tracking-widest text-[#003366] mb-0.5">{title}</p>
+                    <p className="text-xs font-bold text-[#003366]/60 leading-snug">{desc}</p>
                   </div>
+                  <img src={vector} alt="" className="w-12 h-12 opacity-30 flex-shrink-0 hidden sm:block" />
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <section className="relative py-16 px-4 sm:px-6 lg:px-8">
-          <div className="relative max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="text-center mb-16">
-              <div className="flex justify-center mb-6">
-                <div className="bg-tricolor-horizontal h-3 w-48 rounded-full"></div>
+        {/* ══════════════════════════════════════════════════
+            §3 — HOW IT WORKS (Numbered steps carousel)
+        ══════════════════════════════════════════════════ */}
+        <section className="py-20" style={{ background: '#003366', borderTop: '4px solid #003366', borderBottom: '4px solid #003366' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+
+            <div className="flex flex-col items-center mb-12">
+              <div className="flex items-center gap-0 mb-5">
+                <div className="w-3 h-3" style={{ background: '#FF7F00' }} />
+                <div className="px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-[#003366]"
+                  style={{ background: '#FF7F00', border: '2px solid #FF7F00' }}>
+                  Step by Step
+                </div>
+                <div className="w-3 h-3" style={{ background: '#0B9C2C' }} />
+              </div>
+              <h2 className="font-black text-white uppercase text-center leading-tight"
+                style={{ fontSize: 'clamp(1.8rem,4vw,3.2rem)' }}>
+                How It{' '}
+                <span className="inline-block px-2" style={{ background: '#FF7F00', color: '#003366' }}>Works</span>
+              </h2>
+            </div>
+
+            {/* Custom nav */}
+            <div className="relative">
+              <button className="swiper-how-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center font-black text-sm text-[#003366]"
+                style={{ background: '#FF7F00', border: '3px solid #fff', boxShadow: '3px 3px 0 #fff' }}>←</button>
+              <button className="swiper-how-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center font-black text-sm text-[#003366]"
+                style={{ background: '#FF7F00', border: '3px solid #fff', boxShadow: '3px 3px 0 #fff' }}>→</button>
+
+              <Swiper
+                modules={[Navigation, Pagination, Keyboard, A11y, Autoplay]}
+                spaceBetween={20} slidesPerView={1} speed={800}
+                navigation={{ prevEl: '.swiper-how-prev', nextEl: '.swiper-how-next' }}
+                pagination={{ clickable: true }} keyboard={{ enabled: true }} grabCursor
+                autoplay={{ delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                breakpoints={{ 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 } }}
+                className="!pb-10 !px-10"
+              >
+                {HOW_IT_WORKS.map(({ step, title, text, accent, icon }) => (
+                  <SwiperSlide key={step} className="h-auto">
+                    <div className="h-full bg-white flex flex-col transition-all duration-150 hover:translate-x-[-3px] hover:translate-y-[-3px]"
+                      style={{ border: '3px solid #fff', boxShadow: `6px 6px 0 ${accent}` }}>
+                      {/* Top accent bar */}
+                      <div className="h-1.5 flex">
+                        <div className="flex-1" style={{ background: accent }} />
+                      </div>
+                      <div className="p-5 flex flex-col flex-1">
+                        {/* Step badge + icon */}
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="font-black text-4xl leading-none" style={{ color: `${accent}33` }}>{step}</span>
+                          <div className="w-10 h-10 flex items-center justify-center text-xl"
+                            style={{ background: accent, border: '2px solid #003366' }}>{icon}</div>
+                        </div>
+                        <h3 className="font-black text-sm uppercase tracking-tight text-[#003366] mb-3"
+                          style={{ borderLeft: `3px solid ${accent}`, paddingLeft: '8px' }}>
+                          {title}
+                        </h3>
+                        <p className="text-xs font-bold text-[#003366]/70 leading-relaxed text-justify mt-auto px-3 py-2"
+                          style={{ background: '#fffbf5', border: '2px solid #003366' }}>
+                          {text}
+                        </p>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            §4 — WHAT YOU GET
+            Golden layout: 3-col grid, full bleed cards
+        ══════════════════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-20">
+
+          <div className="flex flex-col items-center mb-12">
+            <SectionLabel accent="#0B9C2C">Benefits</SectionLabel>
+            <h2 className="font-black text-[#003366] uppercase text-center leading-tight"
+              style={{ fontSize: 'clamp(1.8rem,4vw,3.2rem)' }}>
+              What You{' '}
+              <span className="inline-block px-2" style={{ background: '#0B9C2C', color: '#fff' }}>Get</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {WHAT_YOU_GET.map(({ title, range, text, accent, icon }) => (
+              <div key={title}
+                className="bg-white flex flex-col transition-all duration-150 hover:translate-x-[-3px] hover:translate-y-[-3px]"
+                style={{ border: '3px solid #003366', boxShadow: `7px 7px 0 ${accent}` }}>
+                {/* Header */}
+                <div className="px-5 py-4 flex items-center gap-3" style={{ borderBottom: '3px solid #003366', background: '#fffbf5' }}>
+                  <div className="w-10 h-10 flex items-center justify-center text-xl flex-shrink-0"
+                    style={{ background: accent, border: '2px solid #003366' }}>{icon}</div>
+                  <div>
+                    <p className="font-black text-xs uppercase tracking-widest text-[#003366] leading-none">{title}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest mt-0.5" style={{ color: accent }}>{range}</p>
+                  </div>
+                </div>
+                {/* Body */}
+                <p className="p-5 text-sm font-bold text-[#003366]/70 leading-relaxed text-justify flex-1">{text}</p>
+                {/* Bottom strip */}
+                <div className="h-1.5" style={{ background: accent }} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            §5 — ELIGIBILITY  (2-col split, golden ratio)
+        ══════════════════════════════════════════════════ */}
+        <section className="py-20" style={{ background: '#fffbf5', borderTop: '4px solid #003366', borderBottom: '4px solid #003366' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+
+            <div className="flex flex-col items-center mb-12">
+              <SectionLabel accent="#FF7F00">Eligibility Snapshot</SectionLabel>
+              <h2 className="font-black text-[#003366] uppercase text-center leading-tight"
+                style={{ fontSize: 'clamp(1.8rem,4vw,3.2rem)' }}>
+                Who Can{' '}
+                <span className="inline-block px-2" style={{ background: '#FF7F00', color: '#003366' }}>Apply?</span>
+              </h2>
+            </div>
+
+            {/* Golden split: 61.8 / 38.2 */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6">
+
+              {/* Yes column */}
+              <div className="bg-white" style={{ border: '3px solid #003366', boxShadow: '7px 7px 0 #0B9C2C' }}>
+                <div className="px-5 py-4 flex items-center gap-3" style={{ borderBottom: '3px solid #003366', background: '#f0fdf4' }}>
+                  <div className="w-8 h-8 flex items-center justify-center text-base" style={{ background: '#0B9C2C', border: '2px solid #003366', color: '#fff' }}>✓</div>
+                  <p className="font-black text-sm uppercase tracking-widest text-[#003366]">Who Can Apply</p>
+                </div>
+                <ul className="p-5 space-y-3">
+                  {ELIGIBILITY_YES.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="w-5 h-5 flex items-center justify-center text-[10px] font-black text-white flex-shrink-0 mt-0.5"
+                        style={{ background: '#0B9C2C', border: '2px solid #003366' }}>✓</span>
+                      <span className="text-sm font-bold text-[#003366]/80 leading-snug text-justify">{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-display font-extrabold text-dreamxec-berkeley-blue mb-4">
-                Frequently Asked Questions
-              </h2>
+              {/* No column */}
+              <div className="bg-white" style={{ border: '3px solid #003366', boxShadow: '7px 7px 0 #dc2626' }}>
+                <div className="px-5 py-4 flex items-center gap-3" style={{ borderBottom: '3px solid #003366', background: '#fef2f2' }}>
+                  <div className="w-8 h-8 flex items-center justify-center text-base" style={{ background: '#dc2626', border: '2px solid #003366', color: '#fff' }}>✕</div>
+                  <p className="font-black text-sm uppercase tracking-widest text-[#003366]">Doesn't Qualify</p>
+                </div>
+                <ul className="p-5 space-y-3">
+                  {ELIGIBILITY_NO.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="w-5 h-5 flex items-center justify-center text-[10px] font-black text-white flex-shrink-0 mt-0.5"
+                        style={{ background: '#dc2626', border: '2px solid #003366' }}>✕</span>
+                      <span className="text-sm font-bold text-[#003366]/80 leading-snug">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
 
-              <p className="text-lg md:text-xl text-dreamxec-berkeley-blue font-sans max-w-3xl mx-auto leading-relaxed">
-                Everything you need to know before launching your project on
-                DreamXec
+        {/* ══════════════════════════════════════════════════
+            §6 — SUCCESS METRICS  (3-col grid)
+        ══════════════════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-20">
+
+          <div className="flex flex-col items-center mb-12">
+            <SectionLabel accent="#003366">Our Goals</SectionLabel>
+            <h2 className="font-black text-[#003366] uppercase text-center leading-tight"
+              style={{ fontSize: 'clamp(1.8rem,4vw,3.2rem)' }}>
+              What Does{' '}
+              <span className="inline-block px-2" style={{ background: '#003366', color: '#FF7F00' }}>"Success"</span>{' '}
+              Look Like?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {SUCCESS_METRICS.map(({ icon, text, vector }, i) => {
+              const accents = ['#FF7F00', '#0B9C2C', '#003366', '#FF7F00', '#0B9C2C', '#003366'];
+              const accent = accents[i];
+              return (
+                <div key={i}
+                  className="bg-white flex flex-col transition-all duration-150 hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                  style={{ border: '3px solid #003366', boxShadow: `5px 5px 0 ${accent}` }}>
+                  {/* Icon header */}
+                  <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: '2px solid #003366', background: '#fffbf5' }}>
+                    <div className="w-9 h-9 flex items-center justify-center text-lg flex-shrink-0"
+                      style={{ background: accent, border: '2px solid #003366' }}>{icon}</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40">Goal {String(i + 1).padStart(2, '0')}</div>
+                  </div>
+                  {/* Text */}
+                  <p className="px-4 py-4 text-sm font-bold text-[#003366]/70 leading-relaxed text-justify flex-1">{text}</p>
+                  {/* Illustration */}
+                  <div className="flex justify-end px-4 pb-3">
+                    <img src={vector} alt="" className="w-16 h-16 opacity-20" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            §7 — FAQ  (3-col grid)
+        ══════════════════════════════════════════════════ */}
+        <section className="py-20" style={{ background: '#003366', borderTop: '4px solid #003366' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+
+            <div className="flex flex-col items-center mb-12">
+              <div className="flex items-center gap-0 mb-5">
+                <div className="w-3 h-3" style={{ background: '#FF7F00' }} />
+                <div className="px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-[#003366]"
+                  style={{ background: '#FF7F00' }}>Frequently Asked Questions</div>
+                <div className="w-3 h-3" style={{ background: '#0B9C2C' }} />
+              </div>
+              <h2 className="font-black text-white uppercase text-center leading-tight"
+                style={{ fontSize: 'clamp(1.8rem,4vw,3.2rem)' }}>
+                Got Questions?{' '}
+                <span className="inline-block px-2" style={{ background: '#FF7F00', color: '#003366' }}>We've Got Answers.</span>
+              </h2>
+              <p className="text-sm font-bold text-orange-200 mt-4 text-center max-w-xl">
+                Everything you need to know before launching your project on DreamXec.
               </p>
             </div>
 
-            {/* FAQ Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
-              {FAQ.map((item, index) => (
-                <div
-                  key={index}
-                  className="card-pastel-offwhite rounded-xl border-2 border-dreamxec-navy shadow-pastel-card p-6 hover:scale-105 transition-all duration-300"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="card-tricolor-tag"></div>
-
-                  <h3 className="text-xl font-bold text-dreamxec-navy font-display mb-3">
-                    Q: {item.q}
-                  </h3>
-
-                  <p className="text-dreamxec-gray-250 font-sans text-sm md:text-base leading-relaxed bg-dreamxec-cream px-4 py-3 rounded-lg">
-                    A: {item.a}
-                  </p>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {FAQ.map(({ q, a }, i) => {
+                const accents = ['#FF7F00', '#0B9C2C', '#FF7F00', '#0B9C2C', '#FF7F00', '#0B9C2C'];
+                const accent = accents[i];
+                return (
+                  <div key={i} className="bg-white flex flex-col transition-all duration-150 hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                    style={{ border: '3px solid #fff', boxShadow: `5px 5px 0 ${accent}` }}>
+                    {/* Top accent */}
+                    <div className="h-1.5" style={{ background: accent }} />
+                    {/* Q */}
+                    <div className="px-4 pt-4 pb-3" style={{ borderBottom: '2px solid #003366' }}>
+                      <div className="flex items-start gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white px-1.5 py-0.5 flex-shrink-0"
+                          style={{ background: accent, border: `2px solid #003366` }}>Q</span>
+                        <p className="font-black text-xs uppercase tracking-tight text-[#003366] leading-snug">{q}</p>
+                      </div>
+                    </div>
+                    {/* A */}
+                    <div className="px-4 py-4 flex-1">
+                      <div className="flex items-start gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white px-1.5 py-0.5 flex-shrink-0"
+                          style={{ background: '#003366', border: '2px solid #003366' }}>A</span>
+                        <p className="text-xs font-bold text-[#003366]/70 leading-relaxed text-justify">{a}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
+
+        {/* ══════════════════════════════════════════════════
+            §8 — FINAL CTA BANNER
+        ══════════════════════════════════════════════════ */}
+        <section className="relative overflow-hidden py-20"
+          style={{ background: '#fffbf5', borderTop: '4px solid #003366' }}>
+
+          {/* Decorative shapes */}
+          <div className="absolute -top-8 -right-8 w-32 h-32 rotate-12 opacity-10 pointer-events-none" style={{ background: '#FF7F00', border: '4px solid #003366' }} />
+          <div className="absolute -bottom-8 -left-8 w-24 h-24 -rotate-12 opacity-10 pointer-events-none" style={{ background: '#0B9C2C' }} />
+
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center">
+            <SectionLabel accent="#FF7F00">Ready?</SectionLabel>
+
+            <h2 className="font-black text-[#003366] uppercase leading-tight mb-6"
+              style={{ fontSize: 'clamp(1.8rem,4.5vw,3.5rem)' }}>
+              Your Idea Deserves{' '}
+              <span className="inline-block px-2" style={{ background: '#FF7F00', color: '#003366' }}>Backing,</span>{' '}
+              Not Waiting.
+            </h2>
+
+            <p className="text-sm md:text-base font-bold text-[#003366]/70 leading-relaxed text-justify max-w-2xl mx-auto mb-8">
+              Thousands of Indian students have already taken the first step. The only thing standing between your idea and its impact is the decision to begin. DreamXec handles the rest — funding, mentors, community, and visibility.
+            </p>
+
+            {/* Tricolor strip */}
+            <div className="flex h-1.5 max-w-xs mx-auto mb-8">
+              <div className="flex-1" style={{ background: '#FF7F00' }} />
+              <div className="flex-1" style={{ background: '#003366' }} />
+              <div className="flex-1" style={{ background: '#0B9C2C' }} />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/dashboard"
+                className="px-10 py-4 font-black text-sm uppercase tracking-widest text-[#003366] transition-all hover:translate-x-[-3px] hover:translate-y-[-3px]"
+                style={{ background: '#FF7F00', border: '4px solid #003366', boxShadow: '7px 7px 0 #003366' }}>
+                Start Your Project →
+              </a>
+              <a href="/campaigns"
+                className="px-10 py-4 font-black text-sm uppercase tracking-widest text-white transition-all hover:translate-x-[-3px] hover:translate-y-[-3px]"
+                style={{ background: '#003366', border: '4px solid #003366', boxShadow: '7px 7px 0 #FF7F00' }}>
+                Explore Campaigns
+              </a>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <Footer />

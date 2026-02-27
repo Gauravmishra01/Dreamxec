@@ -96,7 +96,7 @@ function CleanDescription({ description }: CleanDescriptionProps) {
         {paragraphs.map((paragraph, index) => (
           <p
             key={index}
-            className="text-dreamxec-navy font-medium text-sm sm:text-base md:text-lg leading-relaxed"
+            className="text-dreamxec-navy font-medium text-sm sm:text-base text-justify md:text-lg leading-relaxed"
             style={{ fontFamily: "'Georgia', serif" }}
           >
             {paragraph}
@@ -426,7 +426,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                     label: campaign.club?.name,
                     onClick: campaign.club?.slug ? () => navigate(`/clubs/${campaign.club?.slug}`) : undefined,
                   },
-                  { emoji: '🏷️', label: campaign.category },
+                  { emoji: '🏷️', label: campaign.category || 'Technology'},
                 ].map((chip, i) => (
                   <div
                     key={i}

@@ -45,7 +45,7 @@ export const DesktopFooter = () => {
             <h3 className="text-dreamxec-orange text-xl font-bold">
               Research Karega India Toh Badhega India
             </h3>
-            <p className="text-dreamxec-cream text-sm leading-relaxed">
+            <p className="text-dreamxec-cream text-sm leading-relaxed text-justify">
               DreamXec is India's crowdfunding platform dedicated to turning
               student projects into real-world innovations. We connect the
               brightest young minds with the capital and mentorship they need to

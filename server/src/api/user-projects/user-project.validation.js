@@ -129,7 +129,7 @@ const createUserProjectSchema = zod.object({
           if (typeof v === "string") return safeJSONParse(v, "faqs");
           return v;
         }, zod.array(faqSchema).max(MAX_FAQS))
-        .optional(),
+        .default([]),
 
       /* ------------------ */
       /* YOUTUBE */

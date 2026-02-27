@@ -77,6 +77,11 @@ function NeoInput({ focus, ...props }: any) {
       style={f
         ? { border: '2px solid #FF7F00', boxShadow: '3px 3px 0 #003366' }
         : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
+      onKeyDown={(e) => {
+        if (e.key === '-' || e.key === 'e') {
+          e.preventDefault();
+        }
+      }}
     />
   );
 }
@@ -489,6 +494,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-[#003366] text-base">₹</span>
                     <NeoInput
                       type="number"
+                      min={0}
                       value={goalAmount}
                       onChange={(e: any) => setGoalAmount(e.target.value)}
                       placeholder="50000"
@@ -563,7 +569,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                   <span className="text-lg flex-shrink-0">🎯</span>
                   <p className="text-xs font-bold text-[#003366]/80 leading-relaxed">
                     Campaigns with a pitch video raise <strong>2x more</strong> on average. FAQs reduce donor hesitation.
-                    Team profiles build trust. All fields here are optional but <strong>highly recommended</strong>.
+                    Team profiles build trust. All fields here are <strong>highly recommended</strong>.
                   </p>
                 </div>
 
@@ -623,7 +629,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                               onChange={(e: any) => { const c = [...teamMembers]; c[idx].role = e.target.value; setTeamMembers(c); }} />
                           </div>
                           <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#003366]/50 mb-1">Profile Photo (optional)</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#003366]/50 mb-1">Profile Photo ()</p>
                             <label className="flex items-center gap-2 px-3 py-2 cursor-pointer transition-all"
                               style={{ border: '2px dashed #003366', background: '#fff' }}>
                               <input type="file" accept="image/*" className="hidden"
@@ -810,14 +816,14 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                           <p className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40 mb-1">Budget Allocated (₹) *</p>
                           <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-[#003366]">₹</span>
-                            <NeoInput type="number" placeholder="15000" value={m.budget}
+                            <NeoInput type="number" placeholder="15000" value={m.budget} min={0}
                               style={{ paddingLeft: '1.75rem' }}
                               onChange={(e: any) => setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, budget: e.target.value } : ms))} />
                           </div>
                         </div>
 
                         <div>
-                          <p className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40 mb-1">Description (optional)</p>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40 mb-1">Description ()</p>
                           <NeoTextarea placeholder="What will happen in this milestone? What will be delivered?" value={m.description || ''} rows={2}
                             onChange={(e: any) => setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, description: e.target.value } : ms))} />
                         </div>
@@ -890,7 +896,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                   </div>
 
                   <div className="p-5 space-y-3" style={{ background: '#fffbf5', border: '3px solid #003366', boxShadow: '5px 5px 0 #FF7F00' }}>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-[#003366]/40 border-b-2 pb-2" style={{ borderColor: '#003366' }}>Pitch Deck (Optional)</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[#003366]/40 border-b-2 pb-2" style={{ borderColor: '#003366' }}>Pitch Deck ()</p>
                     <p className="text-[11px] font-bold text-[#003366]/60 leading-relaxed">
                       Add a Google Drive, Canva, or Notion link to your presentation. Share with "Anyone with link can view". This increases approval chances significantly.
                     </p>
