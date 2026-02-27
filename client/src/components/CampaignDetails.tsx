@@ -19,6 +19,8 @@ import {
 import CommentSection from "./comments/CommentSection";
 import { Resizable } from "re-resizable";
 import PublicMilestoneEcosystem from './milestones/PublicMilestoneEcosystem';
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import "@cyntler/react-doc-viewer/dist/index.css";
 
 interface CampaignDetailsProps {
   currentUser: User | null;
@@ -213,14 +215,22 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-  const getEmbedUrl = (url: string) => {
+  // const getEmbedUrl = (url: string) => {
+  //   if (!url) return null;
+  //   if (url.includes('drive.google.com')) {
+  //     const fileIdMatch = url.match(/\/d\/(.*?)(\/|$)/);
+  //     if (fileIdMatch?.[1]) return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+  //   }
+  //   if (url.endsWith('.pdf')) return url;
+  //   return null;
+  // };
+  const getEmbedUrl = (url?: string | null) => {
     if (!url) return null;
     if (url.includes('drive.google.com')) {
       const fileIdMatch = url.match(/\/d\/(.*?)(\/|$)/);
       if (fileIdMatch?.[1]) return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
     }
-    if (url.endsWith('.pdf')) return url;
-    return null;
+    return url; // Returns raw url for DocViewer fallback
   };
 
   useEffect(() => { if (campaign) addRecentCampaign(campaign); }, [campaign]);
@@ -496,7 +506,44 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
             )}
 
             {/* ── Presentation ── */}
-            {activeTab === 'presentation' && (
+            {/* {activeTab === 'presentation' && (
+              <div className="w-full">
+                {isDesktop ? (
+                  <Resizable
+                    size={{ width: deckWidth, height: 'auto' }}
+                    minWidth={600}
+                    maxWidth={window.innerWidth * 0.95}
+                    enable={{ right: true }}
+                    onResizeStop={(e, direction, ref) => setDeckWidth(ref.offsetWidth)}
+                    style={{ overflow: 'visible' }}
+                  >
+                    <NeoCard className="p-5 md:p-6" accentColor="#FF7F00">
+                      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                        <SectionHeading>Presentation Deck</SectionHeading>
+                        <span className="text-xs text-dreamxec-navy/50 font-bold uppercase tracking-wide flex items-center gap-1">
+                          ← Drag right edge to resize →
+                        </span>
+                      </div>
+                      <div style={{ height: 700, border: '3px solid #003366', boxShadow: '5px 5px 0 #003366' }}>
+                        <iframe src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined} className="w-full h-full" title="Presentation Deck" />
+                      </div>
+                    </NeoCard>
+                  </Resizable>
+                ) : (
+                  <NeoCard className="p-3 sm:p-4" accentColor="#FF7F00">
+                    <SectionHeading>Presentation Deck</SectionHeading>
+                    <div style={{ height: deckIframeHeight, border: '3px solid #003366' }}>
+                      <iframe src={getEmbedUrl(campaign.presentationDeckUrl!) ?? undefined} className="w-full h-full" title="Presentation Deck" />
+                    </div>
+                    <p className="mt-2 text-[10px] text-dreamxec-navy/50 font-bold uppercase tracking-widest text-center">
+                      View on larger screen for best experience
+                    </p>
+                  </NeoCard>
+                )}
+              </div>
+            )} */}
+
+                        {activeTab === 'presentation' && (
               <div className="w-full">
                 {isDesktop ? (
                   <Resizable
@@ -532,6 +579,7 @@ export default function CampaignDetails({ currentUser, campaigns, onLogin, onLog
                 )}
               </div>
             )}
+
 
             {/* ── FAQs ── */}
             {activeTab === 'faqs' && campaign.faqs?.length > 0 && (
