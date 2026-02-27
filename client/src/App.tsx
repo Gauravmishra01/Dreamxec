@@ -115,96 +115,9 @@ function AppContent() {
     initialize();
   }, []);
 
-  // Handle OAuth callbacks (Google and LinkedIn)
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const error = urlParams.get('error');
-    const provider = urlParams.get('provider');
+  // NOTE: OAuth callback handling (/auth/callback?token=...) is delegated
+  // entirely to the AuthCallback component. No duplicate useEffect needed here.
 
-    const isOAuthCallback = window.location.pathname === '/' ||
-      window.location.pathname === '/auth/callback';
-
-    if (!isOAuthCallback) {
-      return;
-    }
-
-    if (error) {
-      console.error(`${provider || 'OAuth'} error:`, error);
-      alert(`${provider || 'OAuth'} authentication failed: ${error}`);
-      window.history.replaceState({}, '', '/auth');
-      navigate('/auth');
-      setLoading(false);
-      return;
-    }
-
-    if (token) {
-      const processOAuthCallback = async () => {
-        try {
-          console.log(`📥 Processing ${provider || 'OAuth'} callback...`);
-
-          let response;
-          if (provider === 'linkedin') {
-            response = await handleLinkedInCallback();
-          } else {
-            response = await handleGoogleCallback();
-          }
-
-          console.log(`✅ ${provider || 'OAuth'} callback response:`, response);
-
-          if (response.data?.user) {
-            // ✅ FIX: Include all fields required by User type
-            const userData: User = {
-              id: response.data.user.id,
-              email: response.data.user.email,
-              role: mapBackendRole(response.data.user.role),
-              emailVerified: response.data.user.emailVerified || false,
-              clubIds: response.data.user?.clubIds || [],
-              createdAt: response.data.user.createdAt || new Date().toISOString(),
-              updatedAt: response.data.user.updatedAt || new Date().toISOString(),
-              isClubPresident: response.data.user?.isClubPresident || false,
-              isClubMember: response.data.user?.isClubMember || false,
-              clubVerified: response.data.user?.clubVerified || false,
-              name: response.data.user.name,
-              studentVerified: response.data.user?.studentVerified,
-              accountStatus: response.data.user?.accountStatus || 'ACTIVE',
-            };
-
-            setUser(userData);
-
-            if (userData.role === 'student') {
-              navigate('/dashboard');
-            } else if (userData.role === 'donor') {
-              navigate('/donor/dashboard');
-            } else if (userData.role === 'admin') {
-              navigate('/admin');
-            } else if (userData.role === 'STUDENT_PRESIDENT') {
-              navigate('/president');
-            }
-          } else {
-            const needsVerification =
-              Boolean((response as any).verificationRequired) ||
-              Boolean(response.data && (response.data as any).verificationRequired) ||
-              (response.message && /verification/i.test(response.message));
-
-            if (needsVerification) {
-              const foundEmail = response.data?.user?.email || '';
-              setSignupEmail(foundEmail);
-              setShowCheckEmail(true);
-              navigate('/check-email');
-            } else {
-              alert(`${provider || 'OAuth'} authentication failed. Please try again.`);
-              navigate('/auth');
-            }
-          }
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      processOAuthCallback();
-    }
-  }, [navigate]);
 
   // Load user from token on mount
   useEffect(() => {
@@ -657,6 +570,8 @@ function AppContent() {
           navigate('/donor/dashboard');
         } else if (userData.role === 'admin') {
           navigate('/admin');
+        } else if (userData.role === 'STUDENT_PRESIDENT') {
+          navigate('/president');
         }
       }
     } catch (error) {
@@ -979,6 +894,9 @@ function AppContent() {
                         <div className="relative box-border caret-transparent grid grid-cols-[minmax(0px,1fr)] grid-rows-[auto] pointer-events-none">
                           <div className="pointer-events-auto">
                             <Routes>
+                              {/* OAuth Callback — MUST be first */}
+                              <Route path="/auth/callback" element={<AuthCallback />} />
+
                               {/* Homepage */}
                               <Route
                                 path="/"

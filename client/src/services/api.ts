@@ -70,14 +70,14 @@ async function apiRequest<T>(
 
   const queryString = options.params
     ? "?" +
-      new URLSearchParams(
-        Object.entries(options.params)
-          .filter(([_, value]) => value !== undefined && value !== null)
-          .reduce((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          }, {} as Record<string, string>)
-      ).toString()
+    new URLSearchParams(
+      Object.entries(options.params)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .reduce((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {} as Record<string, string>)
+    ).toString()
     : "";
 
   const { params, ...fetchOptions } = options;
