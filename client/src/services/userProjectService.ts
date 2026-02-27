@@ -215,18 +215,39 @@ export const createUserProject = async (
   if (data instanceof FormData) {
     const token = localStorage.getItem("token");
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/user-projects`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user-projects`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (err: any) {
+      // Extract backend validation / business-logic error messages
+      const responseData = err?.response?.data;
+      if (responseData) {
+        // Structured Zod errors array: [{ field, message }, ...]
+        if (Array.isArray(responseData.errors) && responseData.errors.length > 0) {
+          const combinedMsg = responseData.errors
+            .map((e: any) => e.message || String(e))
+            .join("\n");
+          throw new Error(combinedMsg);
+        }
+        // Plain message string from AppError
+        if (responseData.message) {
+          throw new Error(responseData.message);
+        }
       }
-    );
-
-    return response.data;
+      // Network / unknown error
+      throw new Error(
+        err?.message || "Network error — please check your connection."
+      );
+    }
   }
 
   // JSON fallback (rare)

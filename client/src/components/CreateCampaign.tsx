@@ -65,8 +65,18 @@ function FL({ children, required, tip }: { children: React.ReactNode; required?:
   );
 }
 
+// ─── Field Error ─────────────────────────────────────────────────────────────
+function FieldError({ msg }: { msg?: string }) {
+  if (!msg) return null;
+  return (
+    <p className="text-[10px] font-black text-red-600 uppercase tracking-widest mt-1 flex items-center gap-1">
+      <span>⚠</span> {msg}
+    </p>
+  );
+}
+
 // ─── Neo Input ────────────────────────────────────────────────────────────────
-function NeoInput({ focus, ...props }: any) {
+function NeoInput({ error, ...props }: any) {
   const [f, setF] = useState(false);
   return (
     <input
@@ -76,7 +86,9 @@ function NeoInput({ focus, ...props }: any) {
       className="w-full px-4 py-2.5 text-sm font-bold text-[#003366] bg-white focus:outline-none transition-all"
       style={f
         ? { border: '2px solid #FF7F00', boxShadow: '3px 3px 0 #003366' }
-        : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
+        : error
+          ? { border: '2px solid #dc2626', boxShadow: '3px 3px 0 #dc2626' }
+          : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
       onKeyDown={(e) => {
         if (e.key === '-' || e.key === 'e') {
           e.preventDefault();
@@ -86,7 +98,7 @@ function NeoInput({ focus, ...props }: any) {
   );
 }
 
-function NeoTextarea({ rows = 4, ...props }: any) {
+function NeoTextarea({ rows = 4, error, ...props }: any) {
   const [f, setF] = useState(false);
   return (
     <textarea
@@ -97,12 +109,14 @@ function NeoTextarea({ rows = 4, ...props }: any) {
       className="w-full px-4 py-2.5 text-sm font-bold text-[#003366] bg-white focus:outline-none transition-all resize-none"
       style={f
         ? { border: '2px solid #FF7F00', boxShadow: '3px 3px 0 #003366' }
-        : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
+        : error
+          ? { border: '2px solid #dc2626', boxShadow: '3px 3px 0 #dc2626' }
+          : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
     />
   );
 }
 
-function NeoSelect({ ...props }: any) {
+function NeoSelect({ error, ...props }: any) {
   const [f, setF] = useState(false);
   return (
     <select
@@ -112,7 +126,9 @@ function NeoSelect({ ...props }: any) {
       className="w-full px-4 py-2.5 text-sm font-bold text-[#003366] bg-white focus:outline-none transition-all appearance-none"
       style={f
         ? { border: '2px solid #FF7F00', boxShadow: '3px 3px 0 #003366' }
-        : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
+        : error
+          ? { border: '2px solid #dc2626', boxShadow: '3px 3px 0 #dc2626' }
+          : { border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}
     />
   );
 }
@@ -200,6 +216,7 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [bannerPreview, setBannerPreview] = useState(initialData?.imageUrl || '');
@@ -265,6 +282,57 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
     return true;
   })();
 
+  // ─── Client-Side Validation Per Step ─────────────────────────────────────
+  const validateStep = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (step === 1) {
+      if (!title.trim()) errors.title = 'Campaign title is required';
+      if (!clubId.trim()) errors.clubId = 'Please select a club';
+      if (!goalAmount || isNaN(parseFloat(goalAmount))) errors.goalAmount = 'Please enter a valid funding goal';
+      else if (parseFloat(goalAmount) <= 0) errors.goalAmount = 'Funding goal must be greater than ₹0';
+      if (!description.trim()) errors.description = 'Campaign description is required';
+    }
+
+    if (step === 2) {
+      // Validate team members if TEAM campaign
+      if (campaignType === 'TEAM') {
+        if (teamMembers.length === 0) {
+          errors.teamMembers = 'Team campaigns must have at least one team member';
+        } else {
+          teamMembers.forEach((m, i) => {
+            if (!m.name.trim()) errors[`teamMember_${i}_name`] = `Member #${i + 1}: Full name is required`;
+            if (!m.role.trim()) errors[`teamMember_${i}_role`] = `Member #${i + 1}: Role is required`;
+            if (!m.image) errors[`teamMember_${i}_image`] = `Member #${i + 1}: Profile photo is required`;
+          });
+        }
+      }
+      // Validate no duplicate FAQ questions
+      const faqsToValidate = faqs.filter(f => f.question.trim());
+      const questions = faqsToValidate.map(f => f.question.trim().toLowerCase());
+      if (new Set(questions).size !== questions.length) {
+        errors.faqs = 'Duplicate FAQ questions detected — each question must be unique';
+      }
+    }
+
+    if (step === 3) {
+      if (!bannerFile && !initialData?.imageUrl) {
+        errors.bannerFile = 'A banner image is required for your campaign';
+      }
+      milestones.forEach((m, i) => {
+        if (!m.title.trim()) errors[`milestone_${i}_title`] = `Milestone #${i + 1}: Title is required`;
+        if (!m.durationDays || parseInt(m.durationDays) <= 0) errors[`milestone_${i}_duration`] = `Milestone #${i + 1}: Duration must be at least 1 day`;
+        if (!m.budget || parseFloat(m.budget) <= 0) errors[`milestone_${i}_budget`] = `Milestone #${i + 1}: Budget must be greater than ₹0`;
+      });
+      if (totalMilestoneBudget > parseFloat(goalAmount || '0')) {
+        errors.milestoneBudget = `Total milestone budget (₹${totalMilestoneBudget.toLocaleString()}) exceeds your funding goal (₹${parseFloat(goalAmount || '0').toLocaleString()})`;
+      }
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleBannerSelect = (file: File) => {
     setBannerFile(file);
     if (bannerPreview && !bannerPreview.startsWith('http')) URL.revokeObjectURL(bannerPreview);
@@ -282,13 +350,18 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
   }, []);
 
   const nextStep = () => {
-    if (step === 1 && !isFormValid) { toast.error('Please fill all required fields'); return; }
-    if (step === 3 && !isFormValid) { toast.error('Complete all milestones and upload a banner. Budget must not exceed goal.'); return; }
+    if (!validateStep()) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    setFieldErrors({});
     if (step < 4) setStep(s => s + 1);
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true); setSubmitError('');
+    setIsSubmitting(true);
+    setSubmitError('');
+    setFieldErrors({});
     try {
       await onSubmit({
         title, description, goalAmount: parseFloat(goalAmount), clubId,
@@ -300,9 +373,37 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
       setShowSuccess(true);
       setTimeout(() => onBack(), 2500);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Submission failed';
-      setSubmitError(msg); toast.error(msg);
-    } finally { setIsSubmitting(false); }
+      const raw = err instanceof Error ? err.message : 'Submission failed. Please try again.';
+
+      // Map known backend field keywords to friendly section labels
+      const sectionMap: Record<string, string> = {
+        teamMembers: '👥 Team Members',
+        faqs: '❓ FAQs',
+        milestones: '🎯 Milestones',
+        goalAmount: '💰 Funding Goal',
+        title: '📝 Campaign Title',
+        description: '📝 Description',
+        banner: '🖼 Banner',
+        youtube: '🎥 Pitch Video',
+      };
+
+      // Build per-field errors from multi-line backend messages
+      const lines = raw.split('\n').filter(Boolean);
+      if (lines.length > 1) {
+        const mapped: Record<string, string> = {};
+        lines.forEach(line => {
+          const key = Object.keys(sectionMap).find(k => line.toLowerCase().includes(k.toLowerCase()));
+          if (key) mapped[key] = line;
+        });
+        if (Object.keys(mapped).length > 0) setFieldErrors(mapped);
+      }
+
+      setSubmitError(raw);
+      toast.error(lines[0] || raw);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ─── Success ───────────────────────────────────────────────────────────────
@@ -461,11 +562,13 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                       Campaign Title
                     </FL>
                     <NeoInput
+                      error={!!fieldErrors.title}
                       value={title}
-                      onChange={(e: any) => setTitle(e.target.value)}
+                      onChange={(e: any) => { setTitle(e.target.value); if (fieldErrors.title) setFieldErrors(p => ({ ...p, title: '' })); }}
                       placeholder="e.g., Build Solar-Powered Water Purifier for Villages"
                     />
-                    <p className="text-[10px] font-bold text-[#003366]/40 uppercase tracking-widest mt-1">{title.length}/80 recommended</p>
+                    <FieldError msg={fieldErrors.title} />
+                    {!fieldErrors.title && <p className="text-[10px] font-bold text-[#003366]/40 uppercase tracking-widest mt-1">{title.length}/80 recommended</p>}
                   </div>
 
                   <div>
@@ -473,12 +576,13 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                       Select Club
                     </FL>
                     <div className="relative">
-                      <NeoSelect value={clubId} onChange={(e: any) => setClubId(e.target.value)}>
+                      <NeoSelect error={!!fieldErrors.clubId} value={clubId} onChange={(e: any) => { setClubId(e.target.value); if (fieldErrors.clubId) setFieldErrors(p => ({ ...p, clubId: '' })); }}>
                         <option value="">— Choose your verified club —</option>
                         {clubs.map(c => <option key={c.id} value={c.id}>{c.name} · {c.college}</option>)}
                       </NeoSelect>
                       <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none font-black text-[#003366]">▾</div>
                     </div>
+                    <FieldError msg={fieldErrors.clubId} />
                     {clubs.length === 0 && (
                       <p className="text-[10px] font-black text-red-600 uppercase tracking-widest mt-1">⚠ No verified clubs found. Get your club verified first.</p>
                     )}
@@ -495,13 +599,15 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                     <NeoInput
                       type="number"
                       min={0}
+                      error={!!fieldErrors.goalAmount}
                       value={goalAmount}
-                      onChange={(e: any) => setGoalAmount(e.target.value)}
+                      onChange={(e: any) => { setGoalAmount(e.target.value); if (fieldErrors.goalAmount) setFieldErrors(p => ({ ...p, goalAmount: '' })); }}
                       placeholder="50000"
                       style={{ paddingLeft: '2rem' }}
                     />
                   </div>
-                  {goalAmount && parseFloat(goalAmount) > 0 && (
+                  <FieldError msg={fieldErrors.goalAmount} />
+                  {goalAmount && parseFloat(goalAmount) > 0 && !fieldErrors.goalAmount && (
                     <div className="mt-2 flex gap-3">
                       {[25000, 50000, 100000, 200000].map(amt => (
                         <button key={amt} type="button" onClick={() => setGoalAmount(amt.toString())}
@@ -522,14 +628,18 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                     Campaign Description
                   </FL>
                   <NeoTextarea
+                    error={!!fieldErrors.description}
                     value={description}
-                    onChange={(e: any) => setDescription(e.target.value)}
+                    onChange={(e: any) => { setDescription(e.target.value); if (fieldErrors.description) setFieldErrors(p => ({ ...p, description: '' })); }}
                     placeholder="Tell your story... What problem are you solving? What will you build? What impact will it create? Be specific and passionate — donors fund people they believe in."
                     rows={6}
                   />
-                  <p className="text-[10px] font-bold text-[#003366]/40 uppercase tracking-widest mt-1">
-                    {description.split(' ').filter(Boolean).length} words · Recommended: 200–400
-                  </p>
+                  <FieldError msg={fieldErrors.description} />
+                  {!fieldErrors.description && (
+                    <p className="text-[10px] font-bold text-[#003366]/40 uppercase tracking-widest mt-1">
+                      {description.split(' ').filter(Boolean).length} words · Recommended: 200–400
+                    </p>
+                  )}
                 </div>
 
                 {/* Campaign Type */}
@@ -612,9 +722,14 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                         Team Members
                       </FL>
                     </div>
+                    {fieldErrors.teamMembers && (
+                      <div className="mb-3 px-4 py-2" style={{ background: '#fef2f2', border: '2px solid #dc2626' }}>
+                        <FieldError msg={fieldErrors.teamMembers} />
+                      </div>
+                    )}
                     <div className="space-y-3">
                       {teamMembers.map((member, idx) => (
-                        <div key={idx} className="p-4 space-y-3" style={{ background: '#fffbf5', border: '2px solid #003366', boxShadow: '3px 3px 0 #FF7F00' }}>
+                        <div key={idx} className="p-4 space-y-3" style={{ background: '#fffbf5', border: `2px solid ${(fieldErrors[`teamMember_${idx}_name`] || fieldErrors[`teamMember_${idx}_role`] || fieldErrors[`teamMember_${idx}_image`]) ? '#dc2626' : '#003366'}`, boxShadow: '3px 3px 0 #FF7F00' }}>
                           <div className="flex items-center justify-between">
                             <span className="text-[10px] font-black uppercase tracking-widest text-white px-2 py-0.5"
                               style={{ background: '#003366' }}>Member #{idx + 1}</span>
@@ -623,24 +738,31 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                               style={{ border: '2px solid #dc2626', background: '#fef2f2' }}>✕ Remove</button>
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <NeoInput placeholder="Full Name" value={member.name}
-                              onChange={(e: any) => { const c = [...teamMembers]; c[idx].name = e.target.value; setTeamMembers(c); }} />
-                            <NeoInput placeholder="Role (e.g., Lead Engineer)" value={member.role}
-                              onChange={(e: any) => { const c = [...teamMembers]; c[idx].role = e.target.value; setTeamMembers(c); }} />
+                            <div>
+                              <NeoInput error={!!fieldErrors[`teamMember_${idx}_name`]} placeholder="Full Name" value={member.name}
+                                onChange={(e: any) => { const c = [...teamMembers]; c[idx].name = e.target.value; setTeamMembers(c); setFieldErrors(p => ({ ...p, [`teamMember_${idx}_name`]: '' })); }} />
+                              <FieldError msg={fieldErrors[`teamMember_${idx}_name`]} />
+                            </div>
+                            <div>
+                              <NeoInput error={!!fieldErrors[`teamMember_${idx}_role`]} placeholder="Role (e.g., Lead Engineer)" value={member.role}
+                                onChange={(e: any) => { const c = [...teamMembers]; c[idx].role = e.target.value; setTeamMembers(c); setFieldErrors(p => ({ ...p, [`teamMember_${idx}_role`]: '' })); }} />
+                              <FieldError msg={fieldErrors[`teamMember_${idx}_role`]} />
+                            </div>
                           </div>
                           <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#003366]/50 mb-1">Profile Photo ()</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#003366]/50 mb-1">Profile Photo <span className="text-red-500">*</span></p>
                             <label className="flex items-center gap-2 px-3 py-2 cursor-pointer transition-all"
-                              style={{ border: '2px dashed #003366', background: '#fff' }}>
+                              style={{ border: `2px dashed ${fieldErrors[`teamMember_${idx}_image`] ? '#dc2626' : '#003366'}`, background: '#fff' }}>
                               <input type="file" accept="image/*" className="hidden"
-                                onChange={e => { const f = e.target.files?.[0]; if (!f) return; const c = [...teamMembers]; c[idx].image = f; setTeamMembers(c); }} />
+                                onChange={e => { const f = e.target.files?.[0]; if (!f) return; const c = [...teamMembers]; c[idx].image = f; setTeamMembers(c); setFieldErrors(p => ({ ...p, [`teamMember_${idx}_image`]: '' })); }} />
                               {member.image
                                 ? <img src={URL.createObjectURL(member.image)} alt="preview" className="w-8 h-8 object-cover" style={{ border: '2px solid #003366' }} />
-                                : <UploadIcon className="w-4 h-4 text-[#003366]/40" />}
+                                : <UploadIcon className={`w-4 h-4 ${fieldErrors[`teamMember_${idx}_image`] ? 'text-red-400' : 'text-[#003366]/40'}`} />}
                               <span className="text-[10px] font-black uppercase tracking-widest text-[#003366]/50">
-                                {member.image ? member.image.name : 'Upload photo'}
+                                {member.image ? member.image.name : 'Upload photo (required)'}
                               </span>
                             </label>
+                            <FieldError msg={fieldErrors[`teamMember_${idx}_image`]} />
                           </div>
                         </div>
                       ))}
@@ -658,18 +780,23 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                   <FL tip="FAQs answer common donor questions before they ask. Good FAQs cover: How will the money be spent? What's the timeline? What happens if you don't reach the goal? What's your team's background?">
                     Frequently Asked Questions (FAQs)
                   </FL>
+                  {fieldErrors.faqs && (
+                    <div className="mb-3 px-4 py-2" style={{ background: '#fef2f2', border: '2px solid #dc2626' }}>
+                      <FieldError msg={fieldErrors.faqs} />
+                    </div>
+                  )}
                   <div className="space-y-3">
                     {faqs.map((faq, idx) => (
                       <div key={idx} className="p-4 space-y-3" style={{ background: '#fffbf5', border: '2px solid #003366', boxShadow: '3px 3px 0 #0B9C2C' }}>
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-black uppercase tracking-widest text-white px-2 py-0.5"
                             style={{ background: '#0B9C2C' }}>FAQ #{idx + 1}</span>
-                          <button type="button" onClick={() => setFaqs(prev => prev.filter((_, i) => i !== idx))}
+                          <button type="button" onClick={() => { setFaqs(prev => prev.filter((_, i) => i !== idx)); setFieldErrors(p => ({ ...p, faqs: '' })); }}
                             className="text-[10px] font-black text-red-600 uppercase tracking-widest px-2 py-1"
                             style={{ border: '2px solid #dc2626', background: '#fef2f2' }}>✕ Remove</button>
                         </div>
                         <NeoInput placeholder="Question (e.g. What happens if you don't hit your goal?)" value={faq.question}
-                          onChange={(e: any) => { const c = [...faqs]; c[idx].question = e.target.value; setFaqs(c); }} />
+                          onChange={(e: any) => { const c = [...faqs]; c[idx].question = e.target.value; setFaqs(c); setFieldErrors(p => ({ ...p, faqs: '' })); }} />
                         <NeoTextarea placeholder="Answer (be honest and detailed — donors appreciate transparency)" value={faq.answer} rows={2}
                           onChange={(e: any) => { const c = [...faqs]; c[idx].answer = e.target.value; setFaqs(c); }} />
                       </div>
@@ -727,13 +854,15 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                       </>
                     )}
                   </div>
-                  {bannerFile && (
+                  {bannerFile ? (
                     <div className="mt-2 flex items-center justify-between px-3 py-2"
                       style={{ background: '#f0fdf4', border: '2px solid #0B9C2C' }}>
                       <span className="text-[10px] font-black uppercase tracking-widest text-[#166534]">✓ {bannerFile.name}</span>
-                      <button type="button" onClick={() => { setBannerFile(null); setBannerPreview(''); }}
+                      <button type="button" onClick={() => { setBannerFile(null); setBannerPreview(''); setFieldErrors(p => ({ ...p, bannerFile: '' })); }}
                         className="text-[10px] font-black text-red-600 uppercase tracking-widest">Remove</button>
                     </div>
+                  ) : (
+                    <FieldError msg={fieldErrors.bannerFile} />
                   )}
                 </div>
 
@@ -802,13 +931,15 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <p className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40 mb-1">Milestone Title *</p>
-                            <NeoInput placeholder="e.g., Procure Materials" value={m.title}
-                              onChange={(e: any) => setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, title: e.target.value } : ms))} />
+                            <NeoInput error={!!fieldErrors[`milestone_${idx}_title`]} placeholder="e.g., Procure Materials" value={m.title}
+                              onChange={(e: any) => { setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, title: e.target.value } : ms)); setFieldErrors(p => ({ ...p, [`milestone_${idx}_title`]: '' })); }} />
+                            <FieldError msg={fieldErrors[`milestone_${idx}_title`]} />
                           </div>
                           <div>
                             <p className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40 mb-1">Duration (days) *</p>
-                            <NeoInput type="number" placeholder="e.g., 14" value={m.durationDays}
-                              onChange={(e: any) => setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, durationDays: e.target.value } : ms))} />
+                            <NeoInput error={!!fieldErrors[`milestone_${idx}_duration`]} type="number" placeholder="e.g., 14" value={m.durationDays}
+                              onChange={(e: any) => { setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, durationDays: e.target.value } : ms)); setFieldErrors(p => ({ ...p, [`milestone_${idx}_duration`]: '' })); }} />
+                            <FieldError msg={fieldErrors[`milestone_${idx}_duration`]} />
                           </div>
                         </div>
 
@@ -816,10 +947,11 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                           <p className="text-[9px] font-black uppercase tracking-widest text-[#003366]/40 mb-1">Budget Allocated (₹) *</p>
                           <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-[#003366]">₹</span>
-                            <NeoInput type="number" placeholder="15000" value={m.budget} min={0}
+                            <NeoInput error={!!fieldErrors[`milestone_${idx}_budget`]} type="number" placeholder="15000" value={m.budget} min={0}
                               style={{ paddingLeft: '1.75rem' }}
-                              onChange={(e: any) => setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, budget: e.target.value } : ms))} />
+                              onChange={(e: any) => { setMilestones(prev => prev.map((ms, i) => i === idx ? { ...ms, budget: e.target.value } : ms)); setFieldErrors(p => ({ ...p, [`milestone_${idx}_budget`]: '' })); }} />
                           </div>
+                          <FieldError msg={fieldErrors[`milestone_${idx}_budget`]} />
                         </div>
 
                         <div>
@@ -836,6 +968,12 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
                     style={{ border: '2px dashed #003366', background: '#fff' }}>
                     + Add Milestone
                   </button>
+
+                  {fieldErrors.milestoneBudget && (
+                    <div className="mt-2 px-4 py-2" style={{ background: '#fef2f2', border: '2px solid #dc2626' }}>
+                      <FieldError msg={fieldErrors.milestoneBudget} />
+                    </div>
+                  )}
 
                   {/* Budget summary */}
                   <div className="mt-4 p-4" style={{ background: '#003366', border: '3px solid #003366', boxShadow: '4px 4px 0 #FF7F00' }}>
@@ -920,9 +1058,22 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
 
             {/* ── Error ── */}
             {submitError && (
-              <div className="p-4 flex items-start gap-2" style={{ background: '#fef2f2', border: '3px solid #dc2626', boxShadow: '4px 4px 0 #003366' }}>
+              <div className="p-4 flex items-start gap-3" style={{ background: '#fef2f2', border: '3px solid #dc2626', boxShadow: '4px 4px 0 #003366' }}>
                 <XIcon className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-sm font-black text-red-700 uppercase tracking-wide">{submitError}</p>
+                <div className="flex-1">
+                  <p className="text-[10px] font-black text-red-800 uppercase tracking-widest mb-1">Submission Failed — Please Fix the Following:</p>
+                  {submitError.includes('\n') ? (
+                    <ul className="space-y-1">
+                      {submitError.split('\n').filter(Boolean).map((line, i) => (
+                        <li key={i} className="text-xs font-bold text-red-700 flex items-start gap-1">
+                          <span className="text-red-500 flex-shrink-0">•</span> {line}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm font-black text-red-700">{submitError}</p>
+                  )}
+                </div>
               </div>
             )}
 
@@ -945,9 +1096,9 @@ export default function CreateCampaign({ onBack, onSubmit, initialData }: Create
               <div className="flex-1" />
 
               {step < 4 ? (
-                <button type="button" onClick={nextStep} disabled={!isFormValid || isSubmitting}
+                <button type="button" onClick={nextStep} disabled={isSubmitting}
                   className="px-6 py-2.5 text-xs font-black uppercase tracking-widest text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:translate-x-[-2px] hover:translate-y-[-2px]"
-                  style={isFormValid && !isSubmitting
+                  style={!isSubmitting
                     ? { background: '#003366', border: '3px solid #003366', boxShadow: '4px 4px 0 #FF7F00' }
                     : { background: '#9ca3af', border: '3px solid #6b7280', cursor: 'not-allowed' }}>
                   Next Step →
