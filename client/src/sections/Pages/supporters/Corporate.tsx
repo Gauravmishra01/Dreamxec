@@ -309,7 +309,7 @@ const CorporateCSRPartnerships = () => {
         </section>
 
         {/* §2  STATS BAND */}
-        <div className="nb-stats-band">
+        {/* <div className="nb-stats-band">
           <div className="nb-stats-inner">
             {[
               { icon: "🏢", num: "120+",  label: "Corporate Partners"  },
@@ -324,7 +324,7 @@ const CorporateCSRPartnerships = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* ══════════════════════════════════════
             §3  CSR ALIGNMENT — SDG GRID

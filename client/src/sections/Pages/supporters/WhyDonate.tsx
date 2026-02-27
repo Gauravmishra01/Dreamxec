@@ -72,12 +72,12 @@ const stories = [
   },
 ];
 
-const impactStats = [
-  { icon: "🎯", label: "Students Funded",    value: "12,400+", accent: "#FF7F00" },
-  { icon: "💡", label: "Projects Launched",  value: "840+",    accent: "#FF7F00" },
-  { icon: "🌍", label: "States Reached",     value: "28",      accent: "#FF7F00" },
-  { icon: "📚", label: "Crores Disbursed",   value: "₹3Cr+",   accent: "#FF7F00" },
-];
+// const impactStats = [
+//   { icon: "🎯", label: "Students Funded",    value: "12,400+", accent: "#FF7F00" },
+//   { icon: "💡", label: "Projects Launched",  value: "840+",    accent: "#FF7F00" },
+//   { icon: "🌍", label: "States Reached",     value: "28",      accent: "#FF7F00" },
+//   { icon: "📚", label: "Crores Disbursed",   value: "₹3Cr+",   accent: "#FF7F00" },
+// ];
 
 /* ─────────────────────────────────────────
    HELPERS
@@ -261,7 +261,7 @@ export default function WhyDonate() {
         </section>
 
         {/* §2  STATS BAND */}
-        <div className="stats-band">
+        {/* <div className="stats-band">
           <div className="stats-inner">
             {impactStats.map(({ icon, label, value, accent }) => (
               <div className="stat-item" key={label}>
@@ -271,7 +271,7 @@ export default function WhyDonate() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* §3  WHY YOUR SUPPORT MATTERS */}
         <div className="section">

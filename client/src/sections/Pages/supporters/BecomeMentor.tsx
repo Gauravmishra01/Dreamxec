@@ -353,7 +353,7 @@ const BecomeMentor = () => {
         </section>
 
         {/* §2  STATS BAND */}
-        <div className="nb-stats">
+        {/* <div className="nb-stats">
           <div className="nb-stats-inner">
             {[
               { icon: "🧑‍🏫", num: "1,000+", label: "Active Mentors"     },
@@ -368,7 +368,7 @@ const BecomeMentor = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* ══════════════════════════════════════
             §3  WHO CAN MENTOR
