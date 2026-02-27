@@ -441,7 +441,9 @@ exports.getUserProject = catchAsync(async (req, res, next) => {
 
 
 exports.getPublicUserProjects = catchAsync(async (req, res) => {
-  const userProjects = await prisma.userProject.findMany({
+  // Step 1: Fetch projects without the user relation to avoid the crash
+  // caused by orphaned userId references (user deleted but project remains).
+  const rawProjects = await prisma.userProject.findMany({
     where: { status: 'APPROVED' },
     include: {
       club: { select: { id: true, name: true, college: true } },
@@ -454,11 +456,23 @@ exports.getPublicUserProjects = catchAsync(async (req, res) => {
           }
         }
       },
-      user: { select: { id: true, name: true } },
       donations: { select: { amount: true } },
     },
     orderBy: { createdAt: 'desc' },
   });
+
+  // Step 2: Collect unique userIds and bulk-fetch users
+  const userIds = [...new Set(rawProjects.map(p => p.userId).filter(Boolean))];
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, name: true },
+  });
+  const userMap = Object.fromEntries(users.map(u => [u.id, u]));
+
+  // Step 3: Attach user and filter out orphaned projects (no matching user)
+  const userProjects = rawProjects
+    .map(p => ({ ...p, user: userMap[p.userId] || null }))
+    .filter(p => p.user !== null);
 
   res.status(200).json({
     status: 'success',
@@ -466,6 +480,7 @@ exports.getPublicUserProjects = catchAsync(async (req, res) => {
     data: { userProjects },
   });
 });
+
 
 exports.getMyUserProjects = catchAsync(async (req, res) => {
   const userProjects = await prisma.userProject.findMany({

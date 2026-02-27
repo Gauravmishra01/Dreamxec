@@ -9,6 +9,7 @@ const RedisStore = require('connect-redis').default;
 const redis = require('./src/services/redis.service');
 const cleanupOtpRedisKeys = require("./src/utils/redisOTPCleanup");
 
+const prisma=require("./src/config/prisma")
 
 // Load env
 dotenv.config();
@@ -203,5 +204,11 @@ redis.on("ready", async () => {
 // --------------------------------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
+  prisma.$connect()
+  .then(() => {console.log('Database connected successfully')
   console.log(`🚀 Server running on port ${PORT}`);
+  }
+  )
+  .catch((err) => console.error('Database connection failed:', err));
+
 });
