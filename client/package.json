@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cyntler/react-doc-viewer": "^1.17.1",
+    "@cyntler/react-doc-viewer": "^1.14.1",
     "@tiptap/extension-character-count": "^3.18.0",
     "@tiptap/extension-image": "^3.18.0",
     "@tiptap/extension-link": "^3.18.0",
