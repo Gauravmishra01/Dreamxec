@@ -245,7 +245,7 @@ export const Hero = () => {
           }}
         >
           <img
-            src="/assets/icon-pack/DX-ILLUSTRATION-PACK/19.svg"
+            src="https://res.cloudinary.com/dvqeeun29/image/upload/v1772204809/1_lqj1mv.svg"
             alt="Student Project 1"
             className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
           />
@@ -264,7 +264,7 @@ export const Hero = () => {
           }}
         >
           <img
-            src="/assets/icon-pack/DX-ILLUSTRATION-PACK/20.svg"
+            src="https://res.cloudinary.com/dvqeeun29/image/upload/v1772204809/20_m2hvf1.svg"
             alt="Student Project 2"
             className="w-full h-full object-cover"
           />
@@ -284,7 +284,7 @@ export const Hero = () => {
           }}
         >
           <img
-            src="/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg"
+            src="https://res.cloudinary.com/dvqeeun29/image/upload/v1772204809/19_z21fjh.svg"
             alt="Student Project 3"
             className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
           />

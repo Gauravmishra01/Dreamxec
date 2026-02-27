@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { Header } from '../../Header';
 import { Footer } from '../../Footer';
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
+import { Linkedin, Twitter, Instagram, YoutubeIcon } from 'lucide-react';
+import YouTube from "react-youtube";
 
 /* ─────────────────────────────────────────
    SCROLL REVEAL HOOK
@@ -26,27 +27,27 @@ function useScrollReveal(threshold = 0.12) {
    DATA
 ───────────────────────────────────────── */
 const contactCategories = [
-  { icon: "🎓", accent: "#FF7F00", title: "Student Support",        email: "student@dreamxec.org",      details: "For project help, platform issues & student queries" },
-  { icon: "💰", accent: "#003262", title: "Donor Relations",        email: "donor@dreamxec.org",        details: "Pledge queries, impact reports & giving options" },
-  { icon: "🤝", accent: "#0B9C2C", title: "Partnerships & CSR",    email: "partnerships@dreamxec.org", details: "Corporate tie-ups, sponsorships & co-branding" },
-  { icon: "🧑‍🏫", accent: "#FF7F00", title: "Mentorship",           email: "mentorship@dreamxec.org",   details: "Mentor onboarding, project matching & support" },
-  { icon: "🛠️", accent: "#003262", title: "Technical Support",     email: "support@dreamxec.org",      details: "Response time: 24–48 hours" },
-  { icon: "⚖️", accent: "#0B9C2C", title: "Legal Inquiries",       email: "legal@dreamxec.org",        details: "Compliance, IP, policy & legal correspondence" },
-  { icon: "💬", accent: "#FF7F00", title: "General Inquiries",     email: "info@dreamxec.org",         details: "Anything else — we read every email" },
-  { icon: "📬", accent: "#003262", title: "Main Contact",          email: "contact@dreamxec.org",      details: "Reaches the whole team at once" },
+  { icon: "🎓", accent: "#FF7F00", title: "Student Support", email: "student@dreamxec.com", details: "For project help, platform issues & student queries" },
+  { icon: "💰", accent: "#003262", title: "Donor Relations", email: "donor@dreamxec.com", details: "Pledge queries, impact reports & giving options" },
+  { icon: "🤝", accent: "#0B9C2C", title: "Partnerships & CSR", email: "partnerships@dreamxec.com", details: "Corporate tie-ups, sponsorships & co-branding" },
+  { icon: "🧑‍🏫", accent: "#FF7F00", title: "Mentorship", email: "mentorship@dreamxec.com", details: "Mentor onboarding, project matching & support" },
+  { icon: "🛠️", accent: "#003262", title: "Technical Support", email: "support@dreamxec.com", details: "Reach us for any technical issues or questions campaign creation, donation and so on" },
+  { icon: "⚖️", accent: "#0B9C2C", title: "Legal Inquiries", email: "legal@dreamxec.com", details: "Compliance, IP, policy & legal correspondence" },
+  { icon: "💬", accent: "#FF7F00", title: "General Inquiries", email: "info@dreamxec.com", details: "Anything else — we read every email" },
+  { icon: "📬", accent: "#003262", title: "Main Contact", email: "contact@dreamxec.com", details: "Reaches the whole team at once" },
 ];
 
-const founders = [
-  { icon: "👨‍💼", name: "Ashish",   email: "ashish@dreamxec.org",   accent: "#FF7F00", role: "Founder"          },
-  { icon: "👨‍💼", name: "Sanskar Seth", email: "sanskar@dreamxec.org", accent: "#003262", role: "Co-Founder"     },
-  { icon: "👨‍💼", name: "Gaurang",   email: "gaurang@dreamxec.org",  accent: "#0B9C2C", role: "Operations Head"  },
-];
+// const founders = [
+//   { icon: "👨‍💼", name: "Ashish", email: "ashish@dreamxec.com", accent: "#FF7F00", role: "Founder" },
+//   { icon: "👨‍💼", name: "Sanskar Seth", email: "sanskar@dreamxec.com", accent: "#003262", role: "Co-Founder" },
+//   { icon: "👨‍💼", name: "Gaurang", email: "gaurang@dreamxec.com", accent: "#0B9C2C", role: "Operations Head" },
+// ];
 
 const socials = [
-  { icon: "📸", platform: "Instagram", handle: "@dreamxec",                      url: "#",                                         color: "#FF7F00", LucideIcon: Instagram },
-  { icon: "💼", platform: "LinkedIn",  handle: "linkedin.com/company/dreamxec",  url: "#",                                         color: "#003262", LucideIcon: Linkedin  },
-  { icon: "🐦", platform: "Twitter",   handle: "@DreamXecIndia",                 url: "#",                                         color: "#0B9C2C", LucideIcon: Twitter   },
-  { icon: "▶️", platform: "YouTube",   handle: "@dreamxecindia",                 url: "https://www.youtube.com/@dreamxecindia",    color: "#FF0000", LucideIcon: null      },
+  {  platform: "Instagram", handle: "@dreamxec", url: "https://www.instagram.com/dreamxec", color: "#FF7F00", LucideIcon: Instagram },
+  {  platform: "LinkedIn", handle: "linkedin.com/company/dreamxec", url: "https://www.linkedin.com/company/dreamxec", color: "#003262", LucideIcon: Linkedin },
+  {  platform: "Twitter", handle: "@DreamXecIndia", url: "", color: "#0B9C2C", LucideIcon: Twitter },
+  {  platform: "YouTube", handle: "@dreamxecindia", url: "https://www.youtube.com/@dreamxecindia", color: "#FF0000", LucideIcon: YoutubeIcon },
 ];
 
 /* ─────────────────────────────────────────
@@ -54,19 +55,19 @@ const socials = [
 ───────────────────────────────────────── */
 function SectionLabel({ children, accent = "#FF7F00", dark = false }) {
   return (
-    <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:"1rem" }}>
-      <div style={{ width:12, height:12, flexShrink:0, background:accent }} />
+    <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: "1rem" }}>
+      <div style={{ width: 12, height: 12, flexShrink: 0, background: accent }} />
       <div style={{
-        padding:"0.3rem 0.9rem", fontSize:"0.7rem", fontWeight:900,
-        textTransform:"uppercase", letterSpacing:"0.25em",
+        padding: "0.3rem 0.9rem", fontSize: "0.7rem", fontWeight: 900,
+        textTransform: "uppercase", letterSpacing: "0.25em",
         background: dark ? "#FF7F00" : "#003262",
-        color:      dark ? "#003262" : "#fff",
-        border:`2px solid ${dark ? "#FF7F00" : "#003262"}`,
-        fontFamily:"inherit",
+        color: dark ? "#003262" : "#fff",
+        border: `2px solid ${dark ? "#FF7F00" : "#003262"}`,
+        fontFamily: "inherit",
       }}>
         {children}
       </div>
-      <div style={{ width:12, height:12, flexShrink:0, background:"#0B9C2C" }} />
+      <div style={{ width: 12, height: 12, flexShrink: 0, background: "#0B9C2C" }} />
     </div>
   );
 }
@@ -200,11 +201,11 @@ const CSS = `
    PAGE
 ───────────────────────────────────────── */
 const ContactUs = () => {
-  const heroReveal    = useScrollReveal();
-  const reachReveal   = useScrollReveal();
-  const foundReveal   = useScrollReveal();
+  const heroReveal = useScrollReveal();
+  const reachReveal = useScrollReveal();
+  const foundReveal = useScrollReveal();
   const connectReveal = useScrollReveal();
-  const ctaReveal     = useScrollReveal();
+  const ctaReveal = useScrollReveal();
 
   return (
     <>
@@ -221,20 +222,20 @@ const ContactUs = () => {
             §1  HERO
         ══════════════════════════════════════ */}
         <section className="nb-hero">
-          <div style={{ position:"absolute",top:0,right:0,width:320,height:320,background:"#FF7F00",transform:"rotate(-12deg)",opacity:0.04,pointerEvents:"none" }} />
-          <div style={{ position:"absolute",bottom:0,left:0,width:240,height:240,background:"#0B9C2C",transform:"rotate(6deg)",opacity:0.04,pointerEvents:"none" }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 320, height: 320, background: "#FF7F00", transform: "rotate(-12deg)", opacity: 0.04, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, width: 240, height: 240, background: "#0B9C2C", transform: "rotate(6deg)", opacity: 0.04, pointerEvents: "none" }} />
 
           <div ref={heroReveal.ref} className={`nb-hero-inner sr-fade ${heroReveal.isVisible ? "v" : ""}`}>
             <SectionLabel>📬 Get in Touch</SectionLabel>
 
-            <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:"0.75rem",marginBottom:"2rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
               <div className="stamp-block">
-                <div className="stamp-shadow" style={{ background:"#0B9C2C" }} />
-                <h1 className="stamp-h1" style={{ background:"#FF7F00" }}>We're Here.</h1>
+                <div className="stamp-shadow" style={{ background: "#0B9C2C" }} />
+                <h1 className="stamp-h1" style={{ background: "#FF7F00" }}>We're Here.</h1>
               </div>
               <div className="stamp-block">
-                <div className="stamp-shadow" style={{ background:"#FF7F00" }} />
-                <h1 className="stamp-h1" style={{ background:"#003262" }}>Let's Talk.</h1>
+                <div className="stamp-shadow" style={{ background: "#FF7F00" }} />
+                <h1 className="stamp-h1" style={{ background: "#003262" }}>Let's Talk.</h1>
               </div>
             </div>
 
@@ -244,12 +245,12 @@ const ContactUs = () => {
 
             <div className="pill-row">
               {[
-                { label:"24–48 Hr Response", bg:"#FF7F00" },
-                { label:"Real Humans",        bg:"#0B9C2C" },
-                { label:"+91 99109 09802",    bg:"#003262" },
-                { label:"8 Inboxes",          bg:"#FF7F00" },
+                { label: "24–48 Hr Response", bg: "#FF7F00" },
+                { label: "Real Humans", bg: "#0B9C2C" },
+                { label: "+91 99109 09802", bg: "#003262" },
+                { label: "8 Inboxes", bg: "#FF7F00" },
               ].map(({ label, bg }) => (
-                <div key={label} className="pill" style={{ background:bg }}>{label}</div>
+                <div key={label} className="pill" style={{ background: bg }}>{label}</div>
               ))}
             </div>
           </div>
@@ -259,9 +260,9 @@ const ContactUs = () => {
         <div className="nb-stats">
           <div className="nb-stats-inner">
             {[
-              { icon:"📧", num:"8",          label:"Dedicated Inboxes"  },
-              { icon:"⏱️", num:"24 hrs",  label:"Average Response"   },
-              { icon:"📞", num:"Mon – Fri",    label:"Phone Support Hours" },
+              { icon: "📧", num: "8", label: "Dedicated Inboxes" },
+              { icon: "⏱️", num: "24 hrs", label: "Average Response" },
+              { icon: "📞", num: "Mon – Fri", label: "Phone Support Hours" },
             ].map(({ icon, num, label }) => (
               <div className="nb-stat" key={label}>
                 <span className="nb-stat-icon">{icon}</span>
@@ -281,38 +282,38 @@ const ContactUs = () => {
             <h2 className="nb-title">
               Right Inbox. <span className="hl-orange">Right Person.</span>
             </h2>
-            <p style={{ marginTop:"0.75rem",fontWeight:700,color:"rgba(0,50,98,.6)",fontSize:"clamp(0.95rem,1.8vw,1.1rem)",maxWidth:560,lineHeight:1.75,textAlign:"justify" }}>
+            <p style={{ marginTop: "0.75rem", fontWeight: 700, color: "rgba(0,50,98,.6)", fontSize: "clamp(0.95rem,1.8vw,1.1rem)", maxWidth: 560, lineHeight: 1.75, textAlign: "justify" }}>
               Every inquiry lands in a dedicated inbox — so the right team member picks it up and responds fast.
             </p>
           </div>
 
           {/* Phone card */}
-          <div className={`sr-fade ${reachReveal.isVisible ? "v" : ""}`} style={{ marginBottom:"1.5rem" }}>
-            <div className="phone-card" style={{ boxShadow:"5px 5px 0 #FF7F00" }}>
+          <div className={`sr-fade ${reachReveal.isVisible ? "v" : ""}`} style={{ marginBottom: "1.5rem" }}>
+            <div className="phone-card" style={{ boxShadow: "5px 5px 0 #FF7F00" }}>
               <div className="pc-left">📞</div>
               <div className="pc-body">
                 <div className="pc-label">Phone — Mon to Fri, 10am – 6pm IST</div>
                 <a href="tel:+919910909802" className="pc-number">+91 99109 09802</a>
                 <div className="pc-note">For partnerships, urgent project queries & general support</div>
               </div>
-              <div className="pc-bar" style={{ background:"#FF7F00" }} />
+              <div className="pc-bar" style={{ background: "#FF7F00" }} />
             </div>
           </div>
 
           {/* 4-col email grid */}
           <div className={`contact-grid sr-stagger ${reachReveal.isVisible ? "v" : ""}`}>
             {contactCategories.map(({ icon, accent, title, email, details }) => (
-              <div key={email} className="contact-card" style={{ boxShadow:`4px 4px 0 ${accent}` }}>
-                <div className="cc-top" style={{ background:accent }} />
+              <div key={email} className="contact-card" style={{ boxShadow: `4px 4px 0 ${accent}` }}>
+                <div className="cc-top" style={{ background: accent }} />
                 <div className="cc-header">
-                  <div className="cc-icon" style={{ background:accent }}>{icon}</div>
+                  <div className="cc-icon" style={{ background: accent }}>{icon}</div>
                   <div className="cc-title">{title}</div>
                 </div>
                 <div className="cc-body">
                   <a href={`mailto:${email}`} className="cc-email">{email}</a>
                   <div className="cc-detail">{details}</div>
                 </div>
-                <div className="cc-bottom" style={{ background:accent }} />
+                <div className="cc-bottom" style={{ background: accent }} />
               </div>
             ))}
           </div>
@@ -324,60 +325,60 @@ const ContactUs = () => {
         {/* ══════════════════════════════════════
             §4  FOUNDERS — direct lines
         ══════════════════════════════════════ */}
-        <div className="nb-section" style={{ paddingTop:"4rem",paddingBottom:"4rem" }}>
+        {/* <div className="nb-section" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
           <div ref={foundReveal.ref} className={`nb-section-head sr-fade ${foundReveal.isVisible ? "v" : ""}`}>
-            <SectionLabel accent="#0B9C2C">👥 Founder Direct</SectionLabel>
+            <SectionLabel accent="#0B9C2C">👥 Team Direct</SectionLabel>
             <h2 className="nb-title">
-              Reach the <span className="hl-green">Founders Directly</span>
+              Reach the <span className="hl-green">Team Directly</span>
             </h2>
-            <p style={{ marginTop:"0.75rem",fontWeight:700,color:"rgba(0,50,98,.6)",fontSize:"clamp(0.95rem,1.8vw,1.1rem)",maxWidth:520,lineHeight:1.75,textAlign:"justify" }}>
-              For high-priority partnerships, media requests, or anything that needs the founders' attention — write directly to Ashish, Sanskar, or Gaurang.
+            <p style={{ marginTop: "0.75rem", fontWeight: 700, color: "rgba(0,50,98,.6)", fontSize: "clamp(0.95rem,1.8vw,1.1rem)", maxWidth: 520, lineHeight: 1.75, textAlign: "justify" }}>
+              For high-priority partnerships, media requests, or anything that needs the team's attention — write directly to the Team.
             </p>
           </div>
 
           <div className={`founders-grid sr-stagger ${foundReveal.isVisible ? "v" : ""}`}>
             {founders.map(({ icon, name, email, accent, role }) => (
-              <div key={name} className="founder-card" style={{ boxShadow:`5px 5px 0 ${accent}` }}>
-                <div className="fc-top" style={{ background:accent }} />
+              <div key={name} className="founder-card" style={{ boxShadow: `5px 5px 0 ${accent}` }}>
+                <div className="fc-top" style={{ background: accent }} />
                 <div className="fc-body">
                   <div className="fc-left" style={{ background: accent + "22" }}>
-                    <span style={{ fontSize:"2rem" }}>{icon}</span>
-                    <span className="fc-role" style={{ background:accent }}>{role}</span>
+                    <span style={{ fontSize: "2rem" }}>{icon}</span>
+                    <span className="fc-role" style={{ background: accent }}>{role}</span>
                   </div>
                   <div className="fc-content">
                     <div className="fc-name">{name}</div>
                     <a href={`mailto:${email}`} className="fc-email">{email}</a>
                   </div>
                 </div>
-                <div className="fc-bottom" style={{ background:accent }} />
+                <div className="fc-bottom" style={{ background: accent }} />
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* ── STRIPE ── */}
-        <div className="nb-stripe" />
+        {/* <div className="nb-stripe" /> */}
 
         {/* ══════════════════════════════════════
             §5  SOCIALS — dark bg
         ══════════════════════════════════════ */}
         <div className="nb-dark">
-          <div className="nb-section" style={{ padding:"0 2rem" }}>
-            <div ref={connectReveal.ref} className={`nb-section-head sr-fade ${connectReveal.isVisible ? "v" : ""}`} style={{ marginBottom:"2.5rem" }}>
+          <div className="nb-section" style={{ padding: "0 2rem" }}>
+            <div ref={connectReveal.ref} className={`nb-section-head sr-fade ${connectReveal.isVisible ? "v" : ""}`} style={{ marginBottom: "2.5rem" }}>
               <SectionLabel dark>🌐 Connect With Us</SectionLabel>
               <h2 className="nb-title nb-title-dark">
                 Follow Along. <span className="hl-orange">Stay Updated.</span>
               </h2>
-              <p style={{ marginTop:"0.75rem",fontWeight:700,color:"rgba(255,200,150,.75)",fontSize:"1rem",textAlign:"center",maxWidth:480 }}>
+              <p style={{ marginTop: "0.75rem", fontWeight: 700, color: "rgba(255,200,150,.75)", fontSize: "1rem", textAlign: "center", maxWidth: 480 }}>
                 Student launches, donor milestones, mentor spotlights — all happening live on our socials.
               </p>
             </div>
 
             <div className={`social-grid sr-stagger ${connectReveal.isVisible ? "v" : ""}`}>
-              {socials.map(({ icon, platform, handle, url, color, LucideIcon }) => (
-                <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="social-card" style={{ boxShadow:`6px 6px 0 ${color}`, borderColor: "#fff", position:"relative" }}>
-                  <div style={{ background:color,position:"absolute",top:0,left:0,right:0,height:5 }} />
-                  <div className="sc-icon-box" style={{ background:color }}>{icon}</div>
+              {socials.map(({ platform, handle, url, color, LucideIcon }) => (
+                <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="social-card" style={{ boxShadow: `6px 6px 0 ${color}`, borderColor: "#fff", position: "relative" }}>
+                  <div style={{ background: color, position: "absolute", top: 0, left: 0, right: 0, height: 5 }} />
+                  
                   <div>
                     <div className="sc-platform">{platform}</div>
                     <div className="sc-handle">{handle}</div>
@@ -388,7 +389,7 @@ const ContactUs = () => {
                     </div>
                   )}
                   {!LucideIcon && (
-                    <div className="sc-lucide" style={{ color, fontWeight:900, fontSize:"1.1rem" }}>▶</div>
+                    <div className="sc-lucide" style={{ color, fontWeight: 900, fontSize: "1.1rem" }}>▶</div>
                   )}
                 </a>
               ))}
@@ -400,11 +401,11 @@ const ContactUs = () => {
             §6  CTA
         ══════════════════════════════════════ */}
         <section className="nb-cta">
-          <div style={{ position:"absolute",top:"-2rem",right:"-2rem",width:128,height:128,background:"#FF7F00",border:"4px solid #003262",transform:"rotate(12deg)",opacity:0.1,pointerEvents:"none" }} />
-          <div style={{ position:"absolute",bottom:"-2rem",left:"-2rem",width:96,height:96,background:"#0B9C2C",transform:"rotate(-12deg)",opacity:0.1,pointerEvents:"none" }} />
+          <div style={{ position: "absolute", top: "-2rem", right: "-2rem", width: 128, height: 128, background: "#FF7F00", border: "4px solid #003262", transform: "rotate(12deg)", opacity: 0.1, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-2rem", left: "-2rem", width: 96, height: 96, background: "#0B9C2C", transform: "rotate(-12deg)", opacity: 0.1, pointerEvents: "none" }} />
 
           <div ref={ctaReveal.ref} className={`nb-cta-inner sr-fade ${ctaReveal.isVisible ? "v" : ""}`}>
-            <div style={{ display:"flex",justifyContent:"center",marginBottom:"1rem" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
               <SectionLabel>✉️ Let's Talk</SectionLabel>
             </div>
             <h2 className="nb-cta-title">
@@ -414,12 +415,12 @@ const ContactUs = () => {
               Whether you're a student, donor, mentor, corporate partner, or journalist — we want to hear from you. Every message matters, and every message gets a reply.
             </p>
             <div className="tricolor">
-              <div style={{ background:"#FF7F00" }} />
-              <div style={{ background:"#fff",border:"1px solid #eee" }} />
-              <div style={{ background:"#0B9C2C" }} />
+              <div style={{ background: "#FF7F00" }} />
+              <div style={{ background: "#fff", border: "1px solid #eee" }} />
+              <div style={{ background: "#0B9C2C" }} />
             </div>
             <div className="nb-cta-btns">
-              <a href="mailto:contact@dreamxec.org" className="nb-btn-1">✉️ Send Us an Email →</a>
+              <a href="mailto:contact@dreamxec.com" className="nb-btn-1">✉️ Send Us an Email →</a>
               <a href="/" className="nb-btn-2">🏠 Back to Home</a>
             </div>
           </div>

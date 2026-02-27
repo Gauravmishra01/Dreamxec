@@ -57,7 +57,7 @@ const ComingSoon = ({ title, subtitle }: ComingSoonProps) => {
             <div className="w-3 h-3" style={{ background: '#FF7F00' }} />
             <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.25em] text-white"
               style={{ background: '#003366', border: '2px solid #003366' }}>
-              🚧 DreamXec
+               DreamXec
             </div>
             <div className="w-3 h-3" style={{ background: '#0B9C2C' }} />
           </div>

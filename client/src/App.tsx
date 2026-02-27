@@ -33,6 +33,7 @@ import ClubDiscovery from "./components/ClubDiscovery";
 import ClubDetails from "./components/ClubDetails";
 import AuthCallback from './components/AuthCallback';
 import ProfileSetup from './components/ProfileSetup';
+import { trackPageView } from "./lib/analytics";
 import {
   getDonorApplications,
   updateApplicationStatus
@@ -156,6 +157,10 @@ function AppContent() {
 
     loadUser();
   }, []);
+
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
 
   // Load public campaigns and projects
   useEffect(() => {
