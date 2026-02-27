@@ -2,7 +2,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Header } from '../../Header';
 import { Footer } from '../../Footer';
-import { blogPosts, type BlogSection } from '../../../data/blogData';
+import { type BlogSection } from '../../../data/blogData';
+import { useBlogPost } from '../../../hooks/useBlogPost';
+import { useBlogPosts } from '../../../hooks/useBlogPosts';
 
 const categoryColors: Record<string, string> = {
   Innovation: 'bg-dreamxec-orange text-white',
@@ -78,14 +80,32 @@ const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
-  const post = blogPosts.find((p) => p.slug === slug);
-  const relatedPosts = blogPosts
+  const { post, loading: postLoading } = useBlogPost(slug);
+  const { posts, loading: postsLoading } = useBlogPosts();
+  const loading = postLoading || postsLoading;
+
+  const relatedPosts = posts
     .filter((p) => p.id !== post?.id && p.category === post?.category)
     .slice(0, 3);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [slug]);
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-[60vh] flex items-center justify-center py-20">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 rounded-full border-4 border-dreamxec-navy border-t-dreamxec-orange animate-spin" />
+            <p className="text-dreamxec-navy font-sans font-semibold opacity-60">Loading article…</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   if (!post) {
     return (
@@ -112,7 +132,7 @@ const BlogPost = () => {
   }
 
   const badgeClass = categoryColors[post.category] ?? 'bg-dreamxec-navy text-white';
-  const estimatedProgress = Math.min(100, 35 + blogPosts.indexOf(post) * 12);
+  const estimatedProgress = Math.min(100, 35 + posts.indexOf(post) * 12);
 
   return (
     <>
@@ -338,13 +358,13 @@ const BlogPost = () => {
         </div>
 
         {/* ── More Articles ── */}
-        {blogPosts.filter((p) => p.id !== post.id).length > 0 && (
+        {posts.filter((p) => p.id !== post.id).length > 0 && (
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-dreamxec-navy font-display mb-8">
               More From the Blog
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-              {blogPosts
+              {posts
                 .filter((p) => p.id !== post.id)
                 .slice(0, 3)
                 .map((p) => {

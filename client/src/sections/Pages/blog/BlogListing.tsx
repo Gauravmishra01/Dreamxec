@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../Header';
 import { Footer } from '../../Footer';
-import { blogPosts, type BlogPost } from '../../../data/blogData';
+import { type BlogPost } from '../../../data/blogData';
+import { useBlogPosts } from '../../../hooks/useBlogPosts';
 
 const categoryColors: Record<string, string> = {
   Innovation: 'bg-dreamxec-orange text-white',
@@ -12,8 +13,6 @@ const categoryColors: Record<string, string> = {
   'Our Story': 'bg-dreamxec-saffron text-white',
   Impact: 'bg-dreamxec-dark-green text-white',
 };
-
-const CATEGORIES = ['All', ...Array.from(new Set(blogPosts.map((p) => p.category)))];
 
 const BlogCard = ({ post }: { post: BlogPost }) => {
   const navigate = useNavigate();
@@ -95,10 +94,31 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
 };
 
 const BlogListing = () => {
+  const { posts, loading } = useBlogPosts();
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filtered = blogPosts.filter((post) => {
+  const CATEGORIES = useMemo(
+    () => ['All', ...Array.from(new Set(posts.map((p) => p.category)))],
+    [posts]
+  );
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-[60vh] flex items-center justify-center py-20">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 rounded-full border-4 border-dreamxec-navy border-t-dreamxec-orange animate-spin" />
+            <p className="text-dreamxec-navy font-sans font-semibold opacity-60">Loading articles…</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  const filtered = posts.filter((post) => {
     const matchesCategory =
       activeCategory === 'All' || post.category === activeCategory;
     const q = searchQuery.toLowerCase();
