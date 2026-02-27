@@ -23,3 +23,4 @@ tsconfig.tsbuildinfo
 *.sln
 *.sw?
 .env
+server/uploads/
