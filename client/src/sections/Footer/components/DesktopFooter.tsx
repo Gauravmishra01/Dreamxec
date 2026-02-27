@@ -46,10 +46,7 @@ export const DesktopFooter = () => {
               Research Karega India Toh Badhega India
             </h3>
             <p className="text-dreamxec-cream text-sm leading-relaxed text-justify">
-              DreamXec is India's crowdfunding platform dedicated to turning
-              student projects into real-world innovations. We connect the
-              brightest young minds with the capital and mentorship they need to
-              build a self-reliant future.
+              We're India's first online platform that helps raise funds exclusively for student lead innovation projects. Our mission is to lead the unlocking of immense potential of India’s youth and transforming their innovative ideas into real-world impact. We are looking to energise research and innovation during college by creating a dynamic platform where students, mentors, and donors come together to shape the future. 
             </p>
 
             {/* Newsletter Signup */}

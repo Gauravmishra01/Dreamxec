@@ -177,8 +177,7 @@ export const Hero = () => {
           SUBHEADING
       ════════════════════════════════ */}
       <p className="text-lg sm:text-xl md:text-2xl text-center max-w-3xl mb-12 font-bold text-gray-800">
-        DreamXec is India's crowdfunding platform dedicated to turning student projects into real-world innovations.
-      </p>
+        DreamXec is India's first online platform that helps raise funds exclusively for student lead innovation projects.      </p>
 
       {/* ════════════════════════════════
           CALL TO ACTION & ARROW
@@ -192,7 +191,7 @@ export const Hero = () => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-  
+
           <path
             d="M 30 10 C 50 0, 60 20, 40 28 C 20 36, 15 30, 25 22 C 35 14, 55 18, 75 35 C 90 46, 100 48, 112 48"
             stroke="#003366"
@@ -200,7 +199,7 @@ export const Hero = () => {
             strokeLinecap="round"
             fill="none"
           />
-         
+
           <path
             d="M 100 38 L 115 48 L 100 58"
             stroke="#003366"
