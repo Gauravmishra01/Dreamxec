@@ -1,9 +1,10 @@
 // API BASE URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // Types
 export interface ApiResponse<T> {
-  status: 'success' | 'error';
+  status: "success" | "error";
   message?: string;
   data?: T;
   token?: string;
@@ -12,30 +13,30 @@ export interface ApiResponse<T> {
 }
 
 export interface ApiError {
-  status: 'error';
+  status: "error";
   message: string;
 }
 
 // Token helpers
-export const getToken = (): string | null => localStorage.getItem('token');
-export const setToken = (token: string): void => localStorage.setItem('token', token);
-export const removeToken = (): void => localStorage.removeItem('token');
+export const getToken = (): string | null => localStorage.getItem("token");
+export const setToken = (token: string): void =>
+  localStorage.setItem("token", token);
+export const removeToken = (): void => localStorage.removeItem("token");
 
 // Main API request function
 async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<ApiResponse<T>> {
-
   const token = getToken();
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string> ?? {})
+    "Content-Type": "application/json",
+    ...((options.headers as Record<string, string>) ?? {}),
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   try {
@@ -46,35 +47,39 @@ async function apiRequest<T>(
 
     const data = await response.json().catch(() => ({}));
 
-    // --- FIX 1: Gracefully handle NOT LOGGED IN ---
+    // 401 = not authenticated (expected when user is logged out — do NOT log as error)
     if (response.status === 401) {
-      const error = new Error('Not authenticated');
+      const error = new Error(data.message || "Not authenticated");
       (error as any).status = 401;
       throw error;
     }
 
     // --- Other errors ---
     if (!response.ok) {
-      console.error('API Error Response:', {
-        status: response.status,
-        statusText: response.statusText,
-        data,
-      });
-
       // validation errors
       if (data.errors && Array.isArray(data.errors)) {
         const errorMessages = data.errors
           .map((err: any) => `${err.field}: ${err.message}`)
-          .join(', ');
-        throw new Error(`Validation failed: ${errorMessages}`);
+          .join(", ");
+        const valErr = new Error(`Validation failed: ${errorMessages}`);
+        (valErr as any).status = response.status;
+        throw valErr;
       }
 
-      throw new Error(data.message || data.error || 'An error occurred');
+      const apiErr = new Error(
+        data.message || data.error || "An error occurred",
+      );
+      (apiErr as any).status = response.status;
+      (apiErr as any).data = data;
+      throw apiErr;
     }
 
     return data;
-  } catch (error) {
-    console.error('API Error:', error);
+  } catch (error: any) {
+    // Only log truly unexpected errors (not 401 — that's normal for unauthenticated state)
+    if (error?.status !== 401) {
+      console.error("API Error:", error);
+    }
     throw error;
   }
 }

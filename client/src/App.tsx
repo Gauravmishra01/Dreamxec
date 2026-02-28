@@ -30,7 +30,7 @@ import AdminClubVerifications from './components/admin/AdminClubVerifications';
 import AuthCallback from './components/AuthCallback';
 
 // Import API services
-import { login, register, logout as apiLogout, getCurrentUser, initiateGoogleAuth, handleGoogleCallback, initiateLinkedInAuth, handleLinkedInCallback } from './services/authService';
+import { login, register, logout as apiLogout, initiateGoogleAuth, handleGoogleCallback, initiateLinkedInAuth, handleLinkedInCallback } from './services/authService';
 import { getPublicUserProjects, createUserProject, updateUserProject } from './services/userProjectService';
 import { getPublicDonorProjects, createDonorProject, getMyDonorProjects } from './services/donorProjectService';
 import { getAllProjects, verifyUserProject, verifyDonorProject } from './services/adminService';
@@ -58,19 +58,17 @@ import BlogListing from './sections/Pages/blog/BlogListing';
 import BlogPost from './sections/Pages/blog/BlogPost';
 import VerifyPresident from './components/VerifyPresident';
 import { LoaderProvider, useLoader } from './context/LoaderContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import LoadingAnimation from './components/LoadingAnimation';
 
 // Main App Content Component
 function AppContent() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [user, setUser] = useState<User | null>(null);
   const [_isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
   const [userApplications, setUserApplications] = useState<string[]>([]);
-  const [_showCheckEmail, setShowCheckEmail] = useState(false);
-  const [signupEmail, setSignupEmail] = useState('');
+  // Auth state comes from AuthContext — avoids duplicate /auth/me calls
+  const { user, setUser, signupEmail, setSignupEmail, setShowCheckEmail } = useAuth();
   const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
 
@@ -104,7 +102,6 @@ function AppContent() {
       alert(`${provider || 'OAuth'} authentication failed: ${error}`);
       window.history.replaceState({}, '', '/auth');
       navigate('/auth');
-      setLoading(false);
       return;
     }
 
@@ -167,50 +164,13 @@ function AppContent() {
             }
           }
         } finally {
-          setLoading(false);
+          // loading is managed by AuthContext
         }
       };
 
       processOAuthCallback();
     }
   }, [navigate]);
-
-  // Load user from token on mount
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const response = await getCurrentUser();
-        if (response.data?.user) {
-          // ✅ FIX: Include all fields required by User type
-          const userData: User = {
-            id: response.data.user.id,
-            email: response.data.user.email,
-            role: mapBackendRole(response.data.user.role),
-            emailVerified: response.data.user.emailVerified || false,
-            clubIds: response.data.user?.clubIds || [],
-            createdAt: response.data.user.createdAt || new Date().toISOString(),
-            updatedAt: response.data.user.updatedAt || new Date().toISOString(), // Ensure 'updatedAt' is part of the User type
-            isClubPresident: response.data.user?.isClubPresident || false,
-            isClubMember: response.data.user?.isClubMember || false,
-            clubVerified: response.data.user?.clubVerified || false,
-            name: response.data.user.name,
-            studentVerified: response.data.user?.studentVerified,
-          };
-          setUser(userData);
-        }
-      } catch (error: any) {
-        if (error?.response?.status === 401) {
-          setUser(null)
-        } else {
-          console.error('Unexpected /auth/me error:', error);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUser();
-  }, []);
 
   // Load public campaigns and projects
   useEffect(() => {

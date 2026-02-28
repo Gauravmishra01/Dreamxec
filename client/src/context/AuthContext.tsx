@@ -9,6 +9,7 @@ import {
   initiateLinkedInAuth,
 } from '../services/authService';
 import { mapBackendRole, mapFrontendRole } from '../services/mappers';
+import { removeToken } from '../services/api';
 
 type BackendRoleType = 'USER' | 'DONOR' | 'ADMIN' | 'STUDENT_PRESIDENT';
 
@@ -72,14 +73,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Load user from token on mount
   useEffect(() => {
     const loadUser = async () => {
+      // Skip API call if no token is stored — server will always 401
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
       try {
         const response = await getCurrentUser();
         if (response.data?.user) {
           setUser(createUserData(response.data.user));
         }
       } catch (error: unknown) {
-        const err = error as { response?: { status: number } };
-        if (err?.response?.status === 401) {
+        const err = error as { status?: number; response?: { status: number } };
+        // apiRequest throws with .status set directly (not .response.status)
+        if (err?.status === 401 || err?.response?.status === 401) {
+          // Token is invalid/expired — clear it so next load skips the API call
+          removeToken();
           setUser(null);
         } else {
           console.error('Unexpected /auth/me error:', error);
