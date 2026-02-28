@@ -171,8 +171,9 @@ function mapEntry(entry: Record<string, unknown>): BlogPost {
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
   const { data } = await strapiAxios.get("/api/blog-posts", {
     params: {
-      populate: "featuredImage,authorAvatar",
-      "sort[0]": "date:desc",
+      "populate[0]": "featuredImage",
+      "populate[1]": "authorAvatar",
+      sort: "date:desc",
     },
   });
 
@@ -189,7 +190,8 @@ export async function fetchBlogPostBySlug(
   const { data } = await strapiAxios.get("/api/blog-posts", {
     params: {
       "filters[slug][$eq]": slug,
-      populate: "featuredImage,authorAvatar",
+      "populate[0]": "featuredImage",
+      "populate[1]": "authorAvatar",
     },
   });
 

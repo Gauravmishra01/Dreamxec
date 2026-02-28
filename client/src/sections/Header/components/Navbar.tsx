@@ -296,8 +296,6 @@ export const Navbar = ({ currentUser, onLogin, onLogout }: NavbarProps) => {
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const navigate = useNavigate();
 
-  console.log(currentUser);
-
   // Helper to check if user is a student type (regular or president)
   // Presidents also get the clickable profile button
   const isStudentType = currentUser && (currentUser.role === 'student' || currentUser.role === 'STUDENT_PRESIDENT');

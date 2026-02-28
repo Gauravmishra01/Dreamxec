@@ -1370,6 +1370,7 @@ function AppContent() {
                               <Route path="/president/campaigns" element={<PresidentLayout><PresidentCampaigns /></PresidentLayout>} />
                               <Route path="/president/upload-members" element={<PresidentLayout><UploadMembers /></PresidentLayout>} />
                               <Route path="/president/add-member" element={<PresidentLayout><AddMemberManually /></PresidentLayout>} />
+                              <Route path="*" element={null} />
                             </Routes>
 
                             {/* Footer Routes */}

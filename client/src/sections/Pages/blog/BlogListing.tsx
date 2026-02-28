@@ -5,6 +5,9 @@ import { Footer } from '../../Footer';
 import { type BlogPost } from '../../../data/blogData';
 import { useBlogPosts } from '../../../hooks/useBlogPosts';
 
+const FALLBACK_COVER = '/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg';
+const FALLBACK_AVATAR = '/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg';
+
 const categoryColors: Record<string, string> = {
   Innovation: 'bg-dreamxec-orange text-white',
   Guides: 'bg-dreamxec-green text-white',
@@ -27,8 +30,8 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
       {/* Featured Image */}
       <div className="relative w-full aspect-video overflow-hidden flex-shrink-0">
         <img
-          src={post.featuredImage}
-          srcSet={post.featuredImageSrcSet}
+          src={post.featuredImage || FALLBACK_COVER}
+          srcSet={post.featuredImage ? post.featuredImageSrcSet : undefined}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -69,7 +72,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
         <div className="flex items-center justify-between gap-3 mt-auto pt-4 border-t-2 border-dreamxec-navy/10">
           <div className="flex items-center gap-2 min-w-0">
             <img
-              src={post.authorAvatar}
+              src={post.authorAvatar || FALLBACK_AVATAR}
               alt={post.author}
               className="w-8 h-8 rounded-full border-2 border-dreamxec-navy object-cover flex-shrink-0"
               loading="lazy"
@@ -282,8 +285,8 @@ const FeaturedCard = ({ post }: { post: BlogPost }) => {
         {/* Image */}
         <div className="relative w-full aspect-video lg:aspect-auto lg:min-h-[360px] overflow-hidden">
           <img
-            src={post.featuredImage}
-            srcSet={post.featuredImageSrcSet}
+            src={post.featuredImage || FALLBACK_COVER}
+            srcSet={post.featuredImage ? post.featuredImageSrcSet : undefined}
             sizes="(max-width: 1024px) 100vw, 50vw"
             alt={post.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -318,7 +321,7 @@ const FeaturedCard = ({ post }: { post: BlogPost }) => {
           <div className="flex items-center justify-between gap-4 pt-4 border-t-2 border-dreamxec-navy/10 flex-wrap">
             <div className="flex items-center gap-3">
               <img
-                src={post.authorAvatar}
+                src={post.authorAvatar || FALLBACK_AVATAR}
                 alt={post.author}
                 className="w-10 h-10 rounded-full border-2 border-dreamxec-navy object-cover"
               />

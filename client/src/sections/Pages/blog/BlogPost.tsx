@@ -6,6 +6,9 @@ import { type BlogSection } from '../../../data/blogData';
 import { useBlogPost } from '../../../hooks/useBlogPost';
 import { useBlogPosts } from '../../../hooks/useBlogPosts';
 
+const FALLBACK_COVER = '/assets/icon-pack/DX-ILLUSTRATION-PACK/1.svg';
+const FALLBACK_AVATAR = '/assets/icon-pack/DX-ILLUSTRATION-PACK/12.svg';
+
 const categoryColors: Record<string, string> = {
   Innovation: 'bg-dreamxec-orange text-white',
   Guides: 'bg-dreamxec-green text-white',
@@ -146,8 +149,8 @@ const BlogPost = () => {
         <section className="relative w-full max-h-[600px] overflow-hidden">
           <div className="relative w-full aspect-video max-h-[600px]">
             <img
-              src={post.featuredImage}
-              srcSet={post.featuredImageSrcSet}
+              src={post.featuredImage || FALLBACK_COVER}
+              srcSet={post.featuredImage ? post.featuredImageSrcSet : undefined}
               sizes="100vw"
               alt={post.title}
               className="w-full h-full object-cover"
@@ -191,7 +194,7 @@ const BlogPost = () => {
               <div className="flex flex-wrap items-center gap-5 pb-7 border-b-3 border-dreamxec-navy/15 mb-8">
                 <div className="flex items-center gap-3">
                   <img
-                    src={post.authorAvatar}
+                    src={post.authorAvatar || FALLBACK_AVATAR}
                     alt={post.author}
                     className="w-12 h-12 rounded-full border-3 border-dreamxec-navy object-cover"
                   />
@@ -266,7 +269,7 @@ const BlogPost = () => {
               {/* Author bio card */}
               <div className="mt-12 card-pastel rounded-xl border-4 border-dreamxec-navy shadow-pastel-card p-6 sm:p-8 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
                 <img
-                  src={post.authorAvatar}
+                  src={post.authorAvatar || FALLBACK_AVATAR}
                   alt={post.author}
                   className="w-20 h-20 rounded-full border-4 border-dreamxec-navy object-cover flex-shrink-0"
                 />
@@ -325,7 +328,7 @@ const BlogPost = () => {
                       className="w-full text-left flex gap-3 group hover:bg-dreamxec-cream rounded-lg p-2 -mx-2 transition-colors"
                     >
                       <img
-                        src={related.featuredImage}
+                        src={related.featuredImage || FALLBACK_COVER}
                         alt={related.title}
                         className="w-16 h-14 rounded-lg border-2 border-dreamxec-navy object-cover flex-shrink-0"
                       />
@@ -379,8 +382,8 @@ const BlogPost = () => {
                     >
                       <div className="relative aspect-video overflow-hidden">
                         <img
-                          src={p.featuredImage}
-                          srcSet={p.featuredImageSrcSet}
+                          src={p.featuredImage || FALLBACK_COVER}
+                          srcSet={p.featuredImage ? p.featuredImageSrcSet : undefined}
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           alt={p.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
