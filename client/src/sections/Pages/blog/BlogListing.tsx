@@ -28,6 +28,8 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
       <div className="relative w-full aspect-video overflow-hidden flex-shrink-0">
         <img
           src={post.featuredImage}
+          srcSet={post.featuredImageSrcSet}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           loading="lazy"
@@ -281,6 +283,8 @@ const FeaturedCard = ({ post }: { post: BlogPost }) => {
         <div className="relative w-full aspect-video lg:aspect-auto lg:min-h-[360px] overflow-hidden">
           <img
             src={post.featuredImage}
+            srcSet={post.featuredImageSrcSet}
+            sizes="(max-width: 1024px) 100vw, 50vw"
             alt={post.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />

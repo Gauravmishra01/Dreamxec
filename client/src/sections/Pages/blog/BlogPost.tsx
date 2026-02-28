@@ -147,6 +147,8 @@ const BlogPost = () => {
           <div className="relative w-full aspect-video max-h-[600px]">
             <img
               src={post.featuredImage}
+              srcSet={post.featuredImageSrcSet}
+              sizes="100vw"
               alt={post.title}
               className="w-full h-full object-cover"
               style={{ maxHeight: '600px' }}
@@ -378,6 +380,8 @@ const BlogPost = () => {
                       <div className="relative aspect-video overflow-hidden">
                         <img
                           src={p.featuredImage}
+                          srcSet={p.featuredImageSrcSet}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           alt={p.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           loading="lazy"

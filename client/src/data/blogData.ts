@@ -1,5 +1,11 @@
 export interface BlogSection {
-  type: 'heading' | 'subheading' | 'paragraph' | 'quote' | 'bullet-list' | 'callout';
+  type:
+    | "heading"
+    | "subheading"
+    | "paragraph"
+    | "quote"
+    | "bullet-list"
+    | "callout";
   text?: string;
   items?: string[];
 }
@@ -10,6 +16,10 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   featuredImage: string;
+  /** Responsive srcSet for <img srcSet> — populated by Strapi service */
+  featuredImageSrcSet?: string;
+  /** Map of Strapi breakpoint name → url (e.g. small, medium, large) */
+  featuredImageFormats?: Record<string, string>;
   author: string;
   authorRole: string;
   authorAvatar: string;

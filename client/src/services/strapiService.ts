@@ -22,35 +22,99 @@ const strapiAxios = axios.create({
   headers: STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {},
 });
 
+// ─── Image types ──────────────────────────────────────────────────────────────
+
+/** The responsive-image data we expose to components. */
+export interface StrapiImage {
+  url: string;
+  width?: number;
+  height?: number;
+  /** Pre-built srcSet string for <img srcSet> */
+  srcSet?: string;
+  /** Map of breakpoint name → url for manual selection */
+  formats?: Record<string, string>;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/** Prefix a relative path with the Strapi host. */
+function absUrl(url: string): string {
+  if (!url) return "";
+  return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
+}
+
 /**
- * Resolves Strapi media fields to an absolute URL.
+ * Resolves Strapi media fields to a full StrapiImage object.
+ *
  * Handles:
- *  - Strapi v5 flat:  `{ url: "/uploads/..." }`
- *  - Strapi v4 nested: `{ data: { attributes: { url: "/uploads/..." } } }`
+ *  - Strapi v5 flat:  `{ url, width, height, formats: { small, medium, … } }`
+ *  - Strapi v4 nested: `{ data: { attributes: { url, formats } } }`
  *  - Already-absolute URL strings (e.g. Cloudinary / S3)
  *  - Plain string values (when the field is stored as a URL text field)
  */
-function resolveMedia(media: unknown): string {
-  if (!media) return "";
+function resolveImage(media: unknown): StrapiImage {
+  if (!media) return { url: "" };
 
+  // Plain string (external URL or relative path)
   if (typeof media === "string") {
-    return media.startsWith("http") ? media : `${STRAPI_URL}${media}`;
+    return { url: absUrl(media) };
   }
 
-  // Strapi v5 flat image object
-  if (typeof media === "object" && media !== null && "url" in media) {
-    const url = (media as { url: string }).url;
-    return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
+  // Unwrap Strapi v4 envelope if present
+  let obj = media as Record<string, unknown>;
+  if (obj.data && typeof obj.data === "object" && obj.data !== null) {
+    const v4inner = obj.data as Record<string, unknown>;
+    obj = (v4inner.attributes as Record<string, unknown>) ?? v4inner;
   }
 
-  // Strapi v4 nested image object { data: { attributes: { url } } }
-  const v4 = media as { data?: { attributes?: { url?: string } } };
-  const url = v4?.data?.attributes?.url;
-  if (url) return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
+  const url = absUrl((obj.url as string) ?? "");
+  const width = (obj.width as number) ?? undefined;
+  const height = (obj.height as number) ?? undefined;
 
-  return "";
+  // Build formats map + srcSet from Strapi-generated responsive sizes
+  const rawFormats = obj.formats as
+    | Record<string, Record<string, unknown>>
+    | undefined;
+  const formats: Record<string, string> = {};
+  const srcSetParts: string[] = [];
+
+  if (rawFormats && typeof rawFormats === "object") {
+    for (const [key, fmt] of Object.entries(rawFormats)) {
+      if (fmt && typeof fmt === "object" && fmt.url) {
+        const fmtUrl = absUrl(fmt.url as string);
+        const fmtW = fmt.width as number | undefined;
+        formats[key] = fmtUrl;
+        if (fmtW) {
+          srcSetParts.push(`${fmtUrl} ${fmtW}w`);
+        }
+      }
+    }
+  }
+
+  // Add the original as the largest entry
+  if (url && width) {
+    srcSetParts.push(`${url} ${width}w`);
+  }
+
+  // Sort by width ascending
+  srcSetParts.sort((a, b) => {
+    const aW = parseInt(a.split(" ").pop()!);
+    const bW = parseInt(b.split(" ").pop()!);
+    return aW - bW;
+  });
+
+  return {
+    url,
+    width,
+    height,
+    srcSet: srcSetParts.length > 1 ? srcSetParts.join(", ") : undefined,
+    formats: Object.keys(formats).length ? formats : undefined,
+  };
+}
+
+/** Backwards-compatible: resolve to a plain URL string. */
+function resolveMedia(media: unknown): string {
+  return resolveImage(media).url;
 }
 
 /**
@@ -77,21 +141,24 @@ function mapEntry(entry: Record<string, unknown>): BlogPost {
   // Strapi v4 wraps content fields inside .attributes; v5 is flat.
   const a = (entry.attributes as Record<string, unknown> | undefined) ?? entry;
 
+  const featuredImg = resolveImage(a.featuredImage);
+  const avatarImg = resolveImage(a.authorAvatar);
+
   return {
     id: entry.id as number,
     slug: (a.slug as string) ?? "",
     title: (a.title as string) ?? "",
     excerpt: (a.excerpt as string) ?? "",
-    featuredImage: resolveMedia(a.featuredImage),
+    featuredImage: featuredImg.url,
+    featuredImageSrcSet: featuredImg.srcSet,
+    featuredImageFormats: featuredImg.formats,
     author: (a.author as string) ?? "",
     authorRole: (a.authorRole as string) ?? "",
-    // authorAvatar can be a media field or a plain URL text field
-    authorAvatar: resolveMedia(a.authorAvatar),
+    authorAvatar: avatarImg.url,
     date: formatDate(a.date as string),
     readTime: (a.readTime as string) ?? "",
     category: (a.category as string) ?? "",
     tags: Array.isArray(a.tags) ? (a.tags as string[]) : [],
-    // content is stored as a JSON field in Strapi (array of BlogSection objects)
     content: Array.isArray(a.content) ? (a.content as BlogPost["content"]) : [],
   };
 }
